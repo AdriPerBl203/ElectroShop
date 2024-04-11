@@ -2,6 +2,7 @@ package com.AG_AP.electroshop.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -29,7 +30,7 @@ fun SettingScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = 200.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -60,32 +61,39 @@ fun SettingScreen() {
             style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold),
             modifier = Modifier.padding(bottom = 16.dp)
         )
-        OutlinedTextField(
-            value = "",
-            onValueChange = { },
-            label = { Text("Usuario") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 8.dp)
-        )
-        OutlinedTextField(
-            value = "",
-            onValueChange = { },
-            label = { Text("Contraseña") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp)
-        )
 
-        OutlinedTextField(
-            value = "",
-            onValueChange = { },
-            label = { Text("Base de datos") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp)
-        )
+        Box(
+            modifier = Modifier.padding( horizontal = 100.dp )
+        ){
+            Column {
+                OutlinedTextField(
+                    value = "",
+                    onValueChange = { },
+                    label = { Text("Usuario") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp)
+                )
+                OutlinedTextField(
+                    value = "",
+                    onValueChange = { },
+                    label = { Text("Contraseña") },
+                    visualTransformation = PasswordVisualTransformation(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp)
+                )
 
+                OutlinedTextField(
+                    value = "",
+                    onValueChange = { },
+                    label = { Text("Base de datos") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp)
+                )
+            }
+        }
         Row(){
             Button(
                 modifier = Modifier.padding(10.dp),
@@ -106,7 +114,6 @@ fun SettingScreen() {
                 Text(text = "Volver")
             }
         }
-
     }
 }
 
