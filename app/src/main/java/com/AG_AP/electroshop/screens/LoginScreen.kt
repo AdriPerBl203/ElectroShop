@@ -16,6 +16,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,6 +40,13 @@ import com.AG_AP.electroshop.R
 fun FrontView(modifier: Modifier = Modifier) {
     val painter = painterResource(id = R.drawable.emoticono_2)
 
+    // TODO sacar
+    var user by remember {
+        mutableStateOf("")
+    }
+    var password by remember {
+        mutableStateOf("")
+    }
 
     /* Content */
     Box (
@@ -86,8 +97,8 @@ fun FrontView(modifier: Modifier = Modifier) {
                         Box {
                             Column {
                                 OutlinedTextField(
-                                    value = "",
-                                    onValueChange = { it },
+                                    value = user,
+                                    onValueChange = { user = it },
                                     label = { Text("Usuario") }
                                 )
 
@@ -97,8 +108,8 @@ fun FrontView(modifier: Modifier = Modifier) {
                                 )
 
                                 OutlinedTextField(
-                                    value = "",
-                                    onValueChange = { it },
+                                    value = password,
+                                    onValueChange = { password = it },
                                     label = { Text("Contraseña") },
                                     visualTransformation = PasswordVisualTransformation()
                                 )
@@ -115,20 +126,23 @@ fun FrontView(modifier: Modifier = Modifier) {
                 verticalArrangement = Arrangement.Bottom,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(5.dp, end = 10.dp)
+                    .padding(5.dp, end = 10.dp, bottom = 10.dp)
             ) {
                 Box(
-                    contentAlignment = Alignment.BottomEnd
+                    contentAlignment = Alignment.BottomEnd,
+                    modifier = Modifier.clickable {
+                        // TODO hacer cambio a la ventana de ajuste
+                    }
                 ) {
                     Row(
                         verticalAlignment = Alignment.Bottom,
                         horizontalArrangement = Arrangement.End,
                         modifier = Modifier
-                            .background(Color(255, 255, 255, 216), shape = RoundedCornerShape(25.dp))
+                            .background(
+                                Color(255, 255, 255, 216),
+                                shape = RoundedCornerShape(25.dp)
+                            )
                             .padding(15.dp)
-                            .clickable {
-                                // TODO hacer cambio a la ventana de ajuste
-                            }
                     ) {
                         Text(
                             text = "Ajustes",
