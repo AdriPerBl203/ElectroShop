@@ -12,7 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 @Composable
 fun FrontView(modifier: Modifier = Modifier) {
     Row(
-        modifier = Modifier.
+        //modifier = Modifier.
     ) {
 
     }
