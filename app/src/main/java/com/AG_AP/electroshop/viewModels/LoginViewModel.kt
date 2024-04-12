@@ -11,10 +11,32 @@ import android.webkit.WebView
 import android.view.View
 
 
-
 import kotlinx.coroutines.flow.update
-class LoginViewModel: ViewModel() {
+
+class LoginViewModel : ViewModel() {
+
 
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
+
+
+    fun usernameChange(user: String) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                username = user
+            )
+        }
+    }
+
+    fun passwordChange(pass: String) {
+        _uiState.update {
+            currentState ->
+            currentState.copy(
+                password = pass
+            )
+        }
+    }
+
+
+
 }

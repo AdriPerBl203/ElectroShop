@@ -34,9 +34,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.AG_AP.electroshop.viewModels.SettingsViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 
 @Composable
-fun SettingScreen(viewModel: SettingsViewModel = viewModel()) {
+fun SettingScreen(viewModel: SettingsViewModel = viewModel(), navController: NavController) {
     val dataUiState by viewModel.uiState.collectAsState()
 
     //var urlExt by remember {mutableStateOf("")}
@@ -131,7 +132,7 @@ fun SettingScreen(viewModel: SettingsViewModel = viewModel()) {
         Row(){
             Button(
                 modifier = Modifier.padding(10.dp),
-                onClick = { },
+                onClick = { /* TODO */ },
             ) {
                 Text(text = "Guardar")
             }
@@ -143,7 +144,7 @@ fun SettingScreen(viewModel: SettingsViewModel = viewModel()) {
             }
             Button(
                 modifier = Modifier.padding(10.dp),
-                onClick = { },
+                onClick = { navController.navigateUp() },
             ) {
                 Text(text = "Volver")
             }

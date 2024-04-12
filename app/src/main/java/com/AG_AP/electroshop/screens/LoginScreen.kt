@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,22 +32,19 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.AG_AP.electroshop.R
+import com.AG_AP.electroshop.viewModels.LoginViewModel
+import com.AG_AP.electroshop.viewModels.Routes
 
 /**
  * Method that shows the front view of the Login Screen
  */
 @Composable
-fun FrontView(modifier: Modifier = Modifier) {
+fun LoginFrontView(viewModel: LoginViewModel = viewModel(), navController: NavHostController, modifier: Modifier = Modifier) {
     val painter = painterResource(id = R.drawable.emoticono_2)
-
-    // TODO sacar
-    var user by remember {
-        mutableStateOf("")
-    }
-    var password by remember {
-        mutableStateOf("")
-    }
+    val dataUiState by viewModel.uiState.collectAsState()
 
     /* Content */
     Box (
@@ -86,7 +84,7 @@ fun FrontView(modifier: Modifier = Modifier) {
                     ) {
                         Text(
                             text = "Inicio de sesión",
-                            fontSize = 40.sp
+                            fontSize = 32.sp
                         )
                         Spacer(
                             modifier = Modifier
@@ -97,8 +95,8 @@ fun FrontView(modifier: Modifier = Modifier) {
                         Box {
                             Column {
                                 OutlinedTextField(
-                                    value = user,
-                                    onValueChange = { user = it },
+                                    value = dataUiState.username,
+                                    onValueChange = { viewModel.usernameChange(it) },
                                     label = { Text("Usuario") }
                                 )
 
@@ -108,8 +106,8 @@ fun FrontView(modifier: Modifier = Modifier) {
                                 )
 
                                 OutlinedTextField(
-                                    value = password,
-                                    onValueChange = { password = it },
+                                    value = dataUiState.password,
+                                    onValueChange = { viewModel.passwordChange(it) },
                                     label = { Text("Contraseña") },
                                     visualTransformation = PasswordVisualTransformation()
                                 )
@@ -131,7 +129,7 @@ fun FrontView(modifier: Modifier = Modifier) {
                 Box(
                     contentAlignment = Alignment.BottomEnd,
                     modifier = Modifier.clickable {
-                        // TODO hacer cambio a la ventana de ajuste
+                        navController.navigate(route = Routes.ScreenConfig.route)
                     }
                 ) {
                     Row(
@@ -173,6 +171,6 @@ fun FrontView(modifier: Modifier = Modifier) {
     device = Devices.PIXEL_TABLET,
     showBackground = true
 )
-fun FrontViewPreview() {
-    FrontView()
+fun LoginFrontViewPreview() {
+
 }
