@@ -5,20 +5,37 @@ import com.AG_AP.electroshop.endpoints.interfaces.LoginInterface
 import com.AG_AP.electroshop.endpoints.models.login.Login
 import com.AG_AP.electroshop.endpoints.models.login.LoginReturn
 import com.AG_AP.electroshop.endpoints.retrofit.RetrofitClient
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 object LoginObj {
-    suspend fun loginAcces(data: Login, urlInt: String) {
+    fun loginAcces(data: Login, urlInt: String): LoginReturn? {
         RetrofitClient.baseUrl = urlInt
         val apiService = RetrofitClient.retrofit.create(LoginInterface::class.java)
 
-        try {
-            val data = Login("PEPITO_ES","Usuario1234*","manager")
-            val response: LoginReturn = apiService.login(data)
-            Log.d("HTTP_REQUEST", "Response Code: ${response.SessionId}")
-            println("a")
-        } catch (e: Exception) {
-            Log.e("HTTP_REQUESTAaron", "Error: ${e.message}", e)
-            println("b")
-        }
+        val call = apiService.login(data)
+
+        var returnResponse: LoginReturn? = null
+
+
+        call.enqueue(object : Callback<LoginReturn> {
+            override fun onResponse(call: Call<LoginReturn>, response: Response<LoginReturn>) {
+                if (response.isSuccessful) {
+                    val respuesta = response.body()
+                    returnResponse = respuesta
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    returnResponse = null
+
+                }
+            }
+
+            override fun onFailure(call: Call<LoginReturn>, t: Throwable) {
+                t.printStackTrace()
+            }
+        })
+
+        return returnResponse
     }
 }
