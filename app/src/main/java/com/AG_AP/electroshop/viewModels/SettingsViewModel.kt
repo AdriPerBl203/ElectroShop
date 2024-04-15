@@ -1,11 +1,15 @@
 package com.AG_AP.electroshop.viewModels
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.AG_AP.electroshop.endpoints.models.login.Login
+import com.AG_AP.electroshop.endpoints.objects.LoginObj
 import com.AG_AP.electroshop.uiState.SettingUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class SettingsViewModel: ViewModel() {
 
@@ -55,9 +59,22 @@ class SettingsViewModel: ViewModel() {
     }
 
     fun menssageFun(){
+        var urlInt = _uiState.value.urlInt
+        var urlExt = _uiState.value.urlExt
+        var login = _uiState.value.login
+        var password = _uiState.value.password
+        var dataBase = _uiState.value.dataBase
+        var textShow = ""
+
+        viewModelScope.launch {
+            val dataLogin = Login(dataBase,password,login)
+            val data = LoginObj.loginAcces(dataLogin,urlInt)
+            println()
+        }
+
         _uiState.update { currentState -> currentState.copy(
             message = true,
-            text = "Esto es un mensaje que ira cambiando"
+            text = textShow
         ) }
     }
 
