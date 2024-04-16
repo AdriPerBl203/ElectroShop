@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
@@ -35,7 +36,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 
 @Composable
-fun SettingScreen(viewModel: SettingsViewModel = viewModel(), navController: NavController) {
+fun SettingScreen(viewModel: SettingsViewModel = viewModel()/*, navController: NavController*/) {
     val dataUiState by viewModel.uiState.collectAsState()
 
     val customColor = Color(android.graphics.Color.parseColor("#00c9ff"))
@@ -128,6 +129,10 @@ fun SettingScreen(viewModel: SettingsViewModel = viewModel(), navController: Nav
                 )
             }
         }
+        if(dataUiState.progress){
+            CustomLinearProgressBar()
+        }
+
         if (dataUiState.message) {
             Snackbar(
                 modifier = Modifier.padding(16.dp),
@@ -145,6 +150,7 @@ fun SettingScreen(viewModel: SettingsViewModel = viewModel(), navController: Nav
                 }
             )
         }
+
         Row(
             modifier = Modifier
                 .fillMaxSize(),
@@ -165,7 +171,7 @@ fun SettingScreen(viewModel: SettingsViewModel = viewModel(), navController: Nav
             }
             Button(
                 modifier = Modifier.padding(10.dp),
-                onClick = { navController.navigateUp() },
+                onClick = { /*navController.navigateUp()*/ },
             ) {
                 Text(text = "Sincronizar")
             }
@@ -180,9 +186,21 @@ fun SettingScreen(viewModel: SettingsViewModel = viewModel(), navController: Nav
     }
 }
 
+@Composable
+private fun CustomLinearProgressBar(){
+    Column(modifier = Modifier.fillMaxWidth()) {
+        LinearProgressIndicator(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(15.dp),
+            color = Color.Red //progress color
+        )
+    }
+}
+
 @Preview(device = Devices.TABLET, showSystemUi = true)
 @Composable
 fun PreviewSettingScreen() {
-    SettingScreen()
+    //SettingScreen()
 }
 
