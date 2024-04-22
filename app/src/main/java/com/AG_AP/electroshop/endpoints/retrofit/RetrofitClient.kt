@@ -12,50 +12,9 @@ import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
 
 
-
 object RetrofitClient {
 
     var baseUrl: String = "https://10.129.22.179:50000/" // URL base predeterminada
-
-    /*
-    val retrofit: Retrofit by lazy {
-
-        val trustAllCerts: Array<TrustManager> = arrayOf(
-            object : X509TrustManager {
-                override fun checkClientTrusted(chain: Array<out X509Certificate>?, authType: String?) {
-                    // No hacer nada, simplemente confiar
-                }
-
-                override fun checkServerTrusted(chain: Array<out X509Certificate>?, authType: String?) {
-                    // No hacer nada, simplemente confiar
-                }
-
-                override fun getAcceptedIssuers(): Array<X509Certificate> {
-                    return arrayOf() // No devolver nada para aceptar todos los certificados
-                }
-            }
-        )
-
-        val sslContext = SSLContext.getInstance("SSL").apply {
-            init(null, trustAllCerts, SecureRandom())
-        }
-
-        val okHttpClient = OkHttpClient.Builder()
-            .sslSocketFactory(sslContext.socketFactory, trustAllCerts[0] as X509TrustManager)
-            .hostnameVerifier { _, _ -> true } // Permitir todos los nombres de host
-            .connectTimeout(200, TimeUnit.SECONDS) // Establecer tiempo de espera de conexión
-            .readTimeout(200, TimeUnit.SECONDS) // Establecer tiempo de espera de lectura
-            .writeTimeout(200, TimeUnit.SECONDS)
-            .build()
-
-        Retrofit.Builder()
-            .baseUrl(baseUrl)
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(okHttpClient)
-            .build()
-    }
-
-     */
 
     fun getUnsafeOkHttpClient(): OkHttpClient {
         try {
