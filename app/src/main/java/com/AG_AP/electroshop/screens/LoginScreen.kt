@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,15 +40,19 @@ import com.AG_AP.electroshop.viewModels.LoginViewModel
 import com.AG_AP.electroshop.viewModels.Routes
 
 /**
- * Method that shows the front view of the Login Screen
+ * Method that shows the front view of the Login Screen TODO sacarlo todo a metodos extras
  */
 @Composable
-fun LoginFrontView(viewModel: LoginViewModel = viewModel(), navController: NavHostController, modifier: Modifier = Modifier) {
+fun LoginFrontView(
+    viewModel: LoginViewModel = viewModel(),
+    navController: NavHostController,
+    modifier: Modifier = Modifier
+) {
     val painter = painterResource(id = R.drawable.emoticono_2)
     val dataUiState by viewModel.uiState.collectAsState()
 
     /* Content */
-    Box (
+    Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxSize()
@@ -112,6 +117,36 @@ fun LoginFrontView(viewModel: LoginViewModel = viewModel(), navController: NavHo
                                     visualTransformation = PasswordVisualTransformation()
                                 )
                             }
+                        }
+
+                    }
+                }
+
+                /* Middle buttons */
+                Box(
+                    modifier = Modifier
+                        .padding(5.dp)
+                ) {
+                    Row {
+                        Button(
+                            onClick = {
+                                /*TODO*/
+                            }
+                        ) {
+                            Text(
+                                text = "Enviar datos"
+                            )
+                        }
+                        Spacer(
+                            modifier = Modifier
+                                .padding(5.dp)
+                        )
+                        Button(
+                            onClick = {
+                                viewModel.resetData()
+                            }
+                        ) {
+                            Text(text = "Limpiar pantalla")
                         }
 
                     }

@@ -9,7 +9,7 @@ import com.AG_AP.electroshop.screens.LoginFrontView
 import com.AG_AP.electroshop.screens.SettingScreen
 
 /**
- * Method called at the begining of the initialization
+ * Method called at the beginning of the initialization
  */
 @Composable
 fun AppNav(navController: NavHostController = rememberNavController()) {
@@ -30,7 +30,7 @@ fun AppNav(navController: NavHostController = rememberNavController()) {
         composable(
             route = Routes.ScreenConfig.route
         ) {
-            SettingScreen(/*navController = navController*/)
+            SettingScreen(navController = navController)
         }
 
         /* Menu Screen */

@@ -1,8 +1,8 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
-    id("kotlin-kapt")
-    id("com.google.dagger.hilt.android")
+    //id("kotlin-kapt")
+    //id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -75,6 +75,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    /*
     // Room
     implementation("androidx.room:room-compiler:2.6.1")
     kapt("androidx.room:room-compiler:2.6.1")
@@ -85,6 +86,8 @@ dependencies {
     // Dagger Hilt
     implementation("com.google.dagger:hilt-android:2.46.1")
     kapt("com.google.dagger:hilt-compiler:2.46.1")
+
+     */
 
 }
 
