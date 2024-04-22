@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.AG_AP.electroshop.endpoints.models.login.Login
 import com.AG_AP.electroshop.endpoints.objects.LoginObj
+import com.AG_AP.electroshop.funtions.Config
+import com.AG_AP.electroshop.funtions.validarURL
 import com.AG_AP.electroshop.uiState.SettingUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -63,19 +65,48 @@ class SettingsViewModel: ViewModel() {
         var urlExt = _uiState.value.urlExt
         var login = _uiState.value.login
         var password = _uiState.value.password
-        var dataBase = _uiState.value.dataBase
+        val dataBase = _uiState.value.dataBase
         var textShow = ""
 
-        viewModelScope.launch {
-            val dataLogin = Login(dataBase,password,login)
-            val data = LoginObj.loginAcces(dataLogin,urlInt)
-            println()
+        if(urlInt.isEmpty() || urlExt.isEmpty() || login.isEmpty() || password.isEmpty() || dataBase.isEmpty()){
+            textShow = "Todos los campos deben de estar rellenos."
+            _uiState.update { currentState -> currentState.copy(
+                message = true,
+                text = textShow
+            ) }
+            return;
         }
 
-        _uiState.update { currentState -> currentState.copy(
-            message = true,
-            text = textShow
-        ) }
+        if(!validarURL(urlInt) || !validarURL(urlExt)){
+            textShow = "Campos de las URL no validos."
+            _uiState.update { currentState -> currentState.copy(
+                message = true,
+                text = textShow
+            ) }
+            return;
+        }
+
+        println()
+        /*Hacer la conexió*/
+        viewModelScope.launch {
+            _uiState.update { currentState -> currentState.copy(
+                progress = true,
+            ) }
+            val dataLogin = Login(dataBase,password,login)
+            //val data = LoginObj.loginAccess(dataLogin,urlInt)
+            val data = LoginObj.loginAcessTwoversion(dataLogin,urlInt)
+            var text:String=""
+            if(data){
+                text ="Conexión realizada ${Config.cookie}"
+            }else{
+                text ="Conexión NO realizada"
+            }
+            _uiState.update { currentState -> currentState.copy(
+                message = true,
+                text = text,
+                progress = false
+            ) }
+        }
     }
 
     fun menssageFunFalse(){

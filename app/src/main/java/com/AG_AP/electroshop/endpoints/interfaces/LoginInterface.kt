@@ -8,6 +8,8 @@ import retrofit2.http.POST
 
 interface LoginInterface {
 
+    //@POST("b1s/v1/Login")
+    //fun login(@Body data: Login): Call<LoginReturn>
     @POST("b1s/v1/Login")
-    fun login(@Body data: Login): Call<LoginReturn>
+    suspend fun login(@Body data: Login): LoginReturn
 }
