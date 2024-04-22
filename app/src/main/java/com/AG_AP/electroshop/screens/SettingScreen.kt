@@ -52,8 +52,8 @@ fun SettingScreen(viewModel: SettingsViewModel = viewModel(), navController: Nav
         Box(
             modifier= Modifier
                 .padding(horizontal = 100.dp)
-                .background(color=customColor)
-                .border(width = 1.dp,Color.Black)
+                .background(color = customColor)
+                .border(width = 1.dp, Color.Black)
         ){
             Column(
                 modifier = Modifier.padding(start = 15.dp, end = 15.dp,top=20.dp, bottom = 20.dp)
@@ -86,8 +86,8 @@ fun SettingScreen(viewModel: SettingsViewModel = viewModel(), navController: Nav
         Box(
             modifier = Modifier
                 .padding(horizontal = 100.dp)
-                .background(color=customColor)
-                .border(width = 1.dp,Color.Black)
+                .background(color = customColor)
+                .border(width = 1.dp, Color.Black)
         ){
             Column(
                 modifier = Modifier.padding(start = 15.dp, end = 15.dp,top=20.dp, bottom = 20.dp)
@@ -189,6 +189,7 @@ fun SettingScreen(viewModel: SettingsViewModel = viewModel(), navController: Nav
 @Composable
 private fun CustomLinearProgressBar(){
     Column(modifier = Modifier.fillMaxWidth()) {
+        Spacer(modifier = Modifier.padding(5.dp))
         LinearProgressIndicator(
             modifier = Modifier
                 .fillMaxWidth()
