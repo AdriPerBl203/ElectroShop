@@ -7,10 +7,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import com.AG_AP.electroshop.screens.ScaffoldActivity
 import com.AG_AP.electroshop.ui.theme.ElectroShopTheme
 import com.AG_AP.electroshop.viewModels.AppNav
 import com.AG_AP.electroshop.screens.SettingScreen
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,7 +21,10 @@ class MainActivity : ComponentActivity() {
             ElectroShopTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    AppNav()
+                    //AppNav()
+                    //SettingScreen()
+                    //ActivityScreen()
+                    ScaffoldActivity()
                 }
             }
         }

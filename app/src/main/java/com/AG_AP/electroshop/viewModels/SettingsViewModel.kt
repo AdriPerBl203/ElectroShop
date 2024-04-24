@@ -6,14 +6,17 @@ import com.AG_AP.electroshop.endpoints.models.login.Login
 import com.AG_AP.electroshop.endpoints.objects.LoginObj
 import com.AG_AP.electroshop.funtions.Config
 import com.AG_AP.electroshop.funtions.validarURL
+import com.AG_AP.electroshop.repository.electroShopRepository
 import com.AG_AP.electroshop.uiState.SettingUiState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-
-class SettingsViewModel: ViewModel() {
+import javax.inject.Inject
+@HiltViewModel
+class SettingsViewModel @Inject constructor(private val repository: electroShopRepository) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SettingUiState())
     val uiState: StateFlow<SettingUiState> = _uiState.asStateFlow()
