@@ -16,13 +16,12 @@ object LoginObj {
         RetrofitClient.baseUrl = urlInt
         val apiService = RetrofitClient.retrofit.create(LoginInterface::class.java)
         var request:LoginReturn? = null
-        try {
+        return try {
             request = apiService.login(data)
             Config.rulUse = urlInt
-            Config.cookie = request.SessionId
-            return true
+            true
         } catch (e: Exception) {
-            return false
+            false
         }
     }
 }

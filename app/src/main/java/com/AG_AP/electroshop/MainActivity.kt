@@ -13,6 +13,7 @@ import com.AG_AP.electroshop.firebase.models.Price
 import com.AG_AP.electroshop.ui.theme.ElectroShopTheme
 import com.AG_AP.electroshop.viewModels.AppNav
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

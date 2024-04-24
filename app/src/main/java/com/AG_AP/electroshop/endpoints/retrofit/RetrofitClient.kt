@@ -41,6 +41,9 @@ object RetrofitClient {
                 .connectTimeout(120, TimeUnit.SECONDS) // Establecer tiempo de espera de conexión
                 .readTimeout(120, TimeUnit.SECONDS) // Establecer tiempo de espera de lectura
                 .writeTimeout(120, TimeUnit.SECONDS)
+                .addInterceptor(CookiesInterceptor())
+            //
+            //
 
             return httpClientBuilder.build()
         } catch (e: Exception) {

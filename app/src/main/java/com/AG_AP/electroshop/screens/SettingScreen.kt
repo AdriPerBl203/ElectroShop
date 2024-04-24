@@ -36,7 +36,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 
 @Composable
-fun SettingScreen(viewModel: SettingsViewModel = viewModel(), navController: NavController) {
+fun SettingScreen(viewModel: SettingsViewModel = viewModel()/*, navController: NavControllr*/) {
     val dataUiState by viewModel.uiState.collectAsState()
 
     val customColor = Color(android.graphics.Color.parseColor("#00c9ff"))
@@ -177,7 +177,7 @@ fun SettingScreen(viewModel: SettingsViewModel = viewModel(), navController: Nav
             }
             Button(
                 modifier = Modifier.padding(10.dp),
-                onClick = { navController.navigateUp() },
+                onClick = { /*navController.navigateUp()*/ },
             ) {
                 Text(text = "Volver")
             }
@@ -187,7 +187,7 @@ fun SettingScreen(viewModel: SettingsViewModel = viewModel(), navController: Nav
 }
 
 @Composable
-private fun CustomLinearProgressBar(){
+fun CustomLinearProgressBar(){
     Column(modifier = Modifier.fillMaxWidth()) {
         Spacer(modifier = Modifier.padding(5.dp))
         LinearProgressIndicator(

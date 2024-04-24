@@ -30,7 +30,7 @@ fun AppNav(navController: NavHostController = rememberNavController()) {
         composable(
             route = Routes.ScreenConfig.route
         ) {
-            SettingScreen(navController = navController)
+            SettingScreen(/*navController = navController*/)
         }
 
         /* Menu Screen */
