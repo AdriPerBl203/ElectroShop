@@ -3,7 +3,12 @@ package com.AG_AP.electroshop.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.AG_AP.electroshop.endpoints.models.login.Login
+import com.AG_AP.electroshop.endpoints.objects.ActivityObj
+import com.AG_AP.electroshop.endpoints.objects.BusinessPartnersObj
+import com.AG_AP.electroshop.endpoints.objects.ItemObj
 import com.AG_AP.electroshop.endpoints.objects.LoginObj
+import com.AG_AP.electroshop.endpoints.objects.OrdersObj
+import com.AG_AP.electroshop.endpoints.objects.PurchaseOrdersObj
 import com.AG_AP.electroshop.funtions.Config
 import com.AG_AP.electroshop.funtions.validarURL
 import com.AG_AP.electroshop.repository.electroShopRepository
@@ -89,7 +94,6 @@ class SettingsViewModel @Inject constructor(private val repository: electroShopR
             return;
         }
 
-        println()
         /*Hacer la conexió*/
         viewModelScope.launch {
             _uiState.update { currentState -> currentState.copy(
@@ -100,7 +104,14 @@ class SettingsViewModel @Inject constructor(private val repository: electroShopR
             val data = LoginObj.loginAcessTwoversion(dataLogin,urlInt)
             var text:String=""
             if(data){
-                text ="Conexión realizada ${Config.cookie}"
+                //pruebas para traer articulos, clientes, pedidos,
+                val items = ItemObj.getItems(Config.rulUse)
+                val BusinessPartners = BusinessPartnersObj.getBusinessPartners(Config.rulUse)
+                val activities = ActivityObj.getActivities(Config.rulUse)
+                val orders = OrdersObj.getOrders(Config.rulUse)
+                val pruchaseOrders = PurchaseOrdersObj.getPurchaseOrders(Config.rulUse)
+                println("")
+                //fin pruebas
             }else{
                 text ="Conexión NO realizada"
             }
