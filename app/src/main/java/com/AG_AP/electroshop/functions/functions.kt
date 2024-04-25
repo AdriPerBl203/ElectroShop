@@ -1,4 +1,4 @@
-package com.AG_AP.electroshop.funtions
+package com.AG_AP.electroshop.functions
 
 import java.net.URL
 
