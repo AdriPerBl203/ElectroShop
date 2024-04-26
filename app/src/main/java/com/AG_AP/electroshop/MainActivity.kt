@@ -10,16 +10,16 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.AG_AP.electroshop.firebase.PriceListCRUD
 import com.AG_AP.electroshop.firebase.models.Price
+import com.AG_AP.electroshop.screens.SettingScreen
 import com.AG_AP.electroshop.ui.theme.ElectroShopTheme
 import com.AG_AP.electroshop.viewModels.AppNav
 
-@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
 
-        //PriceListCRUD.insertPrecio(6, 2, "ARON")
+        //PriceListCRUD.insertPrecio(5, 3, "Joselito")
         /*
         PriceListCRUD.getPrecioById(6) {
             price -> Log.e("Pruebas", "Prueba ${price.toString()}")
@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
 
         // PriceListCRUD.updatePrecioById(6, Price(1, 33, "EUR"))
 
-        PriceListCRUD.deletePrecioById("uun5BNGcHfUOymScIJoY")
+        //PriceListCRUD.deletePrecioById("uun5BNGcHfUOymScIJoY")
 
         setContent {
             ElectroShopTheme {
@@ -44,7 +44,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    AppNav()
+                    //AppNav()
+                    SettingScreen()
                 }
             }
         }
