@@ -1,5 +1,8 @@
 package com.AG_AP.electroshop.firebase.models
 
+import com.google.firebase.database.IgnoreExtraProperties
+
+@IgnoreExtraProperties
 data class Item(
     val itemName: String,
     val itemType: ItemType,

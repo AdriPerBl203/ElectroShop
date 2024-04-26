@@ -89,7 +89,7 @@ object ItemCRUD : DatabaseInitializer() {
 
     fun getItemById(itemId: String, callback: (Item?) -> Unit) {
         database
-            .collection(coleccion)
+            .collection(this.coleccion)
             .document(itemId)
             .get()
             .addOnSuccessListener {
@@ -150,7 +150,7 @@ object ItemCRUD : DatabaseInitializer() {
 
     fun getAllItems(callback: (MutableList<Item>) -> Unit) {
         database
-            .collection(coleccion)
+            .collection(this.coleccion)
             .get()
             .addOnSuccessListener { lista ->
                 val listaItems = mutableListOf<Item>()
@@ -210,7 +210,7 @@ object ItemCRUD : DatabaseInitializer() {
 
     fun updateItemById(itemId: String, item: Item) {
         database
-            .collection(coleccion)
+            .collection(this.coleccion)
             .document(itemId)
             .update(item.toHashMap())
             .addOnSuccessListener {
@@ -223,7 +223,7 @@ object ItemCRUD : DatabaseInitializer() {
 
     fun deleteItemById(itemId: String) {
         database
-            .collection(coleccion)
+            .collection(this.coleccion)
             .document(itemId)
             .delete()
             .addOnSuccessListener {

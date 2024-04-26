@@ -10,13 +10,13 @@ object PriceListCRUD: DatabaseInitializer() {
     @SuppressLint("StaticFieldLeak")
     override var database: FirebaseFirestore = DatabaseInitializer().database
 
-    val coleccion = "SEIListaPrecios"
+    val coleccion = "SEIlistaPrecios"
 
     fun insertPrecio(priceList: Int, price: Number, currency: String) {
         val precio = Price(priceList, price, currency).toHashMap()
 
         database
-            .collection(coleccion)
+            .collection(this.coleccion)
             .document(priceList.toString())
             .set(precio)
             .addOnSuccessListener {
@@ -29,7 +29,7 @@ object PriceListCRUD: DatabaseInitializer() {
 
     fun getPrecioById(idPrecio: String, callback: (Price?) -> Unit) {
         database
-            .collection(coleccion)
+            .collection(this.coleccion)
             .document(idPrecio)
             .get()
             .addOnSuccessListener {
@@ -57,7 +57,7 @@ object PriceListCRUD: DatabaseInitializer() {
 
     fun getAllPrecios(callback: (MutableList<Price>) -> Unit) {
         database
-            .collection(coleccion)
+            .collection(this.coleccion)
             .get()
             .addOnSuccessListener {
                 lista ->
@@ -88,7 +88,7 @@ object PriceListCRUD: DatabaseInitializer() {
 
     fun updatePrecioById(idPrecio: String, price: Price) {
         database
-            .collection(coleccion)
+            .collection(this.coleccion)
             .document(idPrecio)
             .update(price.toHashMap())
             .addOnSuccessListener {
@@ -101,7 +101,7 @@ object PriceListCRUD: DatabaseInitializer() {
 
     fun deletePrecioById(idPrecio: String) {
         database
-            .collection(coleccion)
+            .collection(this.coleccion)
             .document(idPrecio)
             .delete()
             .addOnSuccessListener {
