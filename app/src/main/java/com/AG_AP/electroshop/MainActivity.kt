@@ -13,6 +13,7 @@ import com.AG_AP.electroshop.firebase.PriceListCRUD
 import com.AG_AP.electroshop.firebase.models.Item
 import com.AG_AP.electroshop.firebase.models.ItemType
 import com.AG_AP.electroshop.firebase.models.Price
+import com.AG_AP.electroshop.screens.SettingScreen
 import com.AG_AP.electroshop.ui.theme.ElectroShopTheme
 import com.AG_AP.electroshop.viewModels.AppNav
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -25,7 +26,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
 
-        //PriceListCRUD.insertPrecio(6, 2, "ARON")
+        //PriceListCRUD.insertPrecio(5, 3, "Joselito")
         /*
         PriceListCRUD.getPrecioById("6") { price ->
             Log.e("Pruebas", "Prueba precio ${price.toString()}")
@@ -56,7 +57,6 @@ class MainActivity : ComponentActivity() {
         }
          */
 
-
         setContent {
             ElectroShopTheme {
                 // A surface container using the 'background' color from the theme
@@ -64,7 +64,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    AppNav()
+                    //AppNav()
+                    SettingScreen()
                 }
             }
         }

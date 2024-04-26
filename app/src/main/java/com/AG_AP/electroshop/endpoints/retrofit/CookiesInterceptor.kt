@@ -2,6 +2,7 @@ package com.AG_AP.electroshop.endpoints.retrofit
 
 import okhttp3.Interceptor
 import okhttp3.Response
+import android.util.Log
 
 class CookiesInterceptor : Interceptor {
     private var routeId: String? = null
@@ -18,6 +19,11 @@ class CookiesInterceptor : Interceptor {
         }
         val modifiedRequest = modifiedRequestBuilder.build()
         val response = chain.proceed(modifiedRequest)
+        if (!response.isSuccessful) {
+            val responseBody = response.body
+            val errorBody = responseBody?.string()
+            Log.e("ERROR400RONIN", "Error body: $errorBody")
+        }
         // Obtener las cookies de la respuesta
         val cookies = response.headers("Set-Cookie")
         // Iterar sobre las cookies para buscar las cookies "ROUTEID" y "B1SESSION"
