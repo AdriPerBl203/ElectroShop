@@ -3,7 +3,6 @@ package com.AG_AP.electroshop.endpoints.objects
 import com.AG_AP.electroshop.endpoints.interfaces.ItemInterface
 import com.AG_AP.electroshop.endpoints.models.item.getItems.GetItems
 import com.AG_AP.electroshop.endpoints.retrofit.RetrofitClient
-import com.AG_AP.electroshop.funtions.Config
 
 object ItemObj {
     suspend fun getItems(urlInt: String): GetItems? {

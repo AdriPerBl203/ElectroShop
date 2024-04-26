@@ -134,7 +134,7 @@ object PriceListCRUD {
                 Log.e("Pruebas", "Borrado el precio con id: $idPrecio")
             }
             .addOnFailureListener {
-                Log.e("Errores", "Error en get update precio por id $it")
+                Log.e("Errores", "Error en delete precio por id $it")
             }
     }
 

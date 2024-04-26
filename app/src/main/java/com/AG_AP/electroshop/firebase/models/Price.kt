@@ -10,11 +10,10 @@ data class Price(
 ) {
     fun toHashMap(): HashMap<String, Any> {
         val hashMap = HashMap<String, Any>()
-        hashMap["priceList"] = priceList
-        hashMap["price"] = price
-        hashMap["currency"] = currency
+        hashMap["PriceList"] = priceList
+        hashMap["Price"] = price
+        hashMap["Currency"] = currency
         return hashMap
     }
-
 }
 
