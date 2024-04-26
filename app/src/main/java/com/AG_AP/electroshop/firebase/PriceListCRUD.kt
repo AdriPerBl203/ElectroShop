@@ -4,39 +4,13 @@ import android.annotation.SuppressLint
 import android.util.Log
 import com.AG_AP.electroshop.firebase.models.Price
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.firestoreSettings
-import com.google.firebase.firestore.memoryCacheSettings
-import com.google.firebase.firestore.persistentCacheSettings
 
-object PriceListCRUD {
+object PriceListCRUD: DatabaseInitializer() {
 
     @SuppressLint("StaticFieldLeak")
-    private var database: FirebaseFirestore = getInstance()
+    override var database: FirebaseFirestore = DatabaseInitializer().database
 
-    val coleccion = "listaPrecios"
-
-    fun getInstance(): FirebaseFirestore {
-        database = FirebaseFirestore.getInstance()
-
-        val settings = firestoreSettings {
-            setLocalCacheSettings(memoryCacheSettings { setupCacheSize() })
-            setLocalCacheSettings(persistentCacheSettings {})
-        }
-
-        database.firestoreSettings = settings
-
-        return database
-    }
-
-    private fun setupCacheSize() {
-        val settings = firestoreSettings {
-            setLocalCacheSettings(persistentCacheSettings {
-                // Set size to 100 MB
-                setSizeBytes(1024 * 1024 * 100)
-            })
-        }
-        database.firestoreSettings = settings
-    }
+    val coleccion = "SEIListaPrecios"
 
     fun insertPrecio(priceList: Int, price: Number, currency: String) {
         val precio = Price(priceList, price, currency).toHashMap()
@@ -134,7 +108,7 @@ object PriceListCRUD {
                 Log.e("Pruebas", "Borrado el precio con id: $idPrecio")
             }
             .addOnFailureListener {
-                Log.e("Errores", "Error en get update precio por id $it")
+                Log.e("Errores", "Error en delete precio por id $it")
             }
     }
 

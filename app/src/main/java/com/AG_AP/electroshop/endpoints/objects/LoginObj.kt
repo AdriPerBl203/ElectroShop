@@ -1,14 +1,10 @@
 package com.AG_AP.electroshop.endpoints.objects
 
-import android.util.Log
 import com.AG_AP.electroshop.endpoints.interfaces.LoginInterface
 import com.AG_AP.electroshop.endpoints.models.login.Login
 import com.AG_AP.electroshop.endpoints.models.login.LoginReturn
 import com.AG_AP.electroshop.endpoints.retrofit.RetrofitClient
 import com.AG_AP.electroshop.functions.Config
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 object LoginObj {
 
