@@ -15,7 +15,7 @@ object ItemCRUD {
     @SuppressLint("StaticFieldLeak")
     private var database: FirebaseFirestore = getInstance()
 
-    val coleccion = "productos"
+    val coleccion = "SEIproductos"
 
     fun getInstance(): FirebaseFirestore {
         database = FirebaseFirestore.getInstance()
