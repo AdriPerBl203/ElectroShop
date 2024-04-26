@@ -119,6 +119,8 @@ object ItemCRUD : DatabaseInitializer() {
                         itemPrice = null
                     }
 
+                    val manageSerialNumbers = datosItem["ManageSerialNumbers"] as String
+                    val autoCreateSerialNumbersOnRelease = datosItem["AutoCreateSerialNumbersOnRelease"] as String
 
                     val itemType: ItemType = when (itemTypeString) {
                         "I" -> ItemType.I
@@ -132,7 +134,9 @@ object ItemCRUD : DatabaseInitializer() {
                         itemName,
                         itemType,
                         mainSupplier,
-                        itemPrice
+                        itemPrice,
+                        manageSerialNumbers,
+                        autoCreateSerialNumbersOnRelease
                     )
 
                     callback(item)
@@ -181,6 +185,8 @@ object ItemCRUD : DatabaseInitializer() {
                         itemPrice = null
                     }
 
+                    val manageSerialNumbers = datosItem["ManageSerialNumbers"] as String
+                    val autoCreateSerialNumbersOnRelease = datosItem["AutoCreateSerialNumbersOnRelease"] as String
 
                     val itemType: ItemType = when (itemTypeString) {
                         "I" -> ItemType.I
@@ -194,7 +200,9 @@ object ItemCRUD : DatabaseInitializer() {
                         itemName,
                         itemType,
                         mainSupplier,
-                        itemPrice
+                        itemPrice,
+                        manageSerialNumbers,
+                        autoCreateSerialNumbersOnRelease
                     )
 
                     listaItems.add(item)
