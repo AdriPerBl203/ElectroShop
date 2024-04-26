@@ -89,7 +89,7 @@ object ItemCRUD : DatabaseInitializer() {
 
     fun getItemById(itemId: String, callback: (Item?) -> Unit) {
         database
-            .collection(coleccion)
+            .collection(this.coleccion)
             .document(itemId)
             .get()
             .addOnSuccessListener {
@@ -119,6 +119,8 @@ object ItemCRUD : DatabaseInitializer() {
                         itemPrice = null
                     }
 
+                    val manageSerialNumbers = datosItem["ManageSerialNumbers"] as String
+                    val autoCreateSerialNumbersOnRelease = datosItem["AutoCreateSerialNumbersOnRelease"] as String
 
                     val itemType: ItemType = when (itemTypeString) {
                         "I" -> ItemType.I
@@ -132,7 +134,9 @@ object ItemCRUD : DatabaseInitializer() {
                         itemName,
                         itemType,
                         mainSupplier,
-                        itemPrice
+                        itemPrice,
+                        manageSerialNumbers,
+                        autoCreateSerialNumbersOnRelease
                     )
 
                     callback(item)
@@ -150,7 +154,7 @@ object ItemCRUD : DatabaseInitializer() {
 
     fun getAllItems(callback: (MutableList<Item>) -> Unit) {
         database
-            .collection(coleccion)
+            .collection(this.coleccion)
             .get()
             .addOnSuccessListener { lista ->
                 val listaItems = mutableListOf<Item>()
@@ -181,6 +185,8 @@ object ItemCRUD : DatabaseInitializer() {
                         itemPrice = null
                     }
 
+                    val manageSerialNumbers = datosItem["ManageSerialNumbers"] as String
+                    val autoCreateSerialNumbersOnRelease = datosItem["AutoCreateSerialNumbersOnRelease"] as String
 
                     val itemType: ItemType = when (itemTypeString) {
                         "I" -> ItemType.I
@@ -194,7 +200,9 @@ object ItemCRUD : DatabaseInitializer() {
                         itemName,
                         itemType,
                         mainSupplier,
-                        itemPrice
+                        itemPrice,
+                        manageSerialNumbers,
+                        autoCreateSerialNumbersOnRelease
                     )
 
                     listaItems.add(item)
@@ -210,7 +218,7 @@ object ItemCRUD : DatabaseInitializer() {
 
     fun updateItemById(itemId: String, item: Item) {
         database
-            .collection(coleccion)
+            .collection(this.coleccion)
             .document(itemId)
             .update(item.toHashMap())
             .addOnSuccessListener {
@@ -223,7 +231,7 @@ object ItemCRUD : DatabaseInitializer() {
 
     fun deleteItemById(itemId: String) {
         database
-            .collection(coleccion)
+            .collection(this.coleccion)
             .document(itemId)
             .delete()
             .addOnSuccessListener {

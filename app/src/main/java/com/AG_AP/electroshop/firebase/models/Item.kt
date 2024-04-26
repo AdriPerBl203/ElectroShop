@@ -7,7 +7,9 @@ data class Item(
     val itemName: String,
     val itemType: ItemType,
     val mainSupplier: String,
-    val itemPrice: List<Price>?
+    val itemPrice: List<Price>?,
+    val manageSerialNumbers: String,
+    val autoCreateSerialNumbersOnRelease: String
 ) {
     fun toHashMap(): HashMap<String, Any> {
         val hashMap = HashMap<String, Any>()
@@ -26,6 +28,8 @@ data class Item(
             }
             hashMap["ItemPrices"] = itemPricesList
         }
+        hashMap["ManageSerialNumbers"] = manageSerialNumbers
+        hashMap["AutoCreateSerialNumbersOnRelease"] = autoCreateSerialNumbersOnRelease
         return hashMap
     }
 
@@ -42,10 +46,11 @@ data class Item(
                     precioMap["Currency"] as String
                 )
             }
-
         } else {
             null
         }
-        return Item(itemName, itemType, mainSupplier, itemPrices)
+        val manageSerialNumbers = map["ManageSerialNumber"] as String
+        val autoCreateSerialNumbersOnRelease = map["AutoCreateSerialNumbersOnRelease"] as String
+        return Item(itemName, itemType, mainSupplier, itemPrices, manageSerialNumbers, autoCreateSerialNumbersOnRelease)
     }
 }

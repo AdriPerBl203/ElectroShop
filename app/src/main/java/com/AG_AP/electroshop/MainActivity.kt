@@ -11,6 +11,14 @@ import androidx.compose.ui.Modifier
 import com.AG_AP.electroshop.endpoints.objects.ActivityObj
 import com.AG_AP.electroshop.firebase.ActivityCRUD
 import com.AG_AP.electroshop.screens.ScaffoldActivity
+import com.AG_AP.electroshop.firebase.ItemCRUD
+import com.AG_AP.electroshop.firebase.PriceListCRUD
+import com.AG_AP.electroshop.firebase.SEIConfigCRUD
+import com.AG_AP.electroshop.firebase.models.Item
+import com.AG_AP.electroshop.firebase.models.ItemType
+import com.AG_AP.electroshop.firebase.models.Price
+import com.AG_AP.electroshop.firebase.models.SEIConfig
+import com.AG_AP.electroshop.screens.SettingScreen
 import com.AG_AP.electroshop.ui.theme.ElectroShopTheme
 
 
@@ -49,13 +57,22 @@ class MainActivity : ComponentActivity() {
             Log.e("Pruebas", "$it")
         }
          */
-
+         
         /*
         ActivityCRUD.getAllActivity() {lista ->
             Log.e("lista","${lista}")
             Log.e("lista","${lista}")
         }
         */
+
+        SEIConfigCRUD.insertSEIConfig(SEIConfig(1, 3, "JSF", "usuario", "N", "N", "N", "N"))
+        /*
+        SEIConfigCRUD.getAllSEIConfig() { lista ->
+            Log.e("Pruebas", "$lista")
+        }
+         */
+        //SEIConfigCRUD.updateSEIConfigById("JSF", SEIConfig(1, 3, "AGA", "usuario", "N", "N", "N", "N"))
+        SEIConfigCRUD.deleteSEIConfigById("JSF")
 
         setContent {
             ElectroShopTheme {
