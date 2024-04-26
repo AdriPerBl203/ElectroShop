@@ -6,40 +6,13 @@ import com.AG_AP.electroshop.firebase.models.Item
 import com.AG_AP.electroshop.firebase.models.ItemType
 import com.AG_AP.electroshop.firebase.models.Price
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.firestoreSettings
-import com.google.firebase.firestore.memoryCacheSettings
-import com.google.firebase.firestore.persistentCacheSettings
 
-object ItemCRUD {
+object ItemCRUD : DatabaseInitializer() {
 
     @SuppressLint("StaticFieldLeak")
-    private var database: FirebaseFirestore = getInstance()
+    override var database: FirebaseFirestore = DatabaseInitializer().database
 
     val coleccion = "SEIproductos"
-
-    fun getInstance(): FirebaseFirestore {
-        database = FirebaseFirestore.getInstance()
-
-        val settings = firestoreSettings {
-            setLocalCacheSettings(memoryCacheSettings { setupCacheSize() })
-            setLocalCacheSettings(persistentCacheSettings {})
-        }
-
-        database.firestoreSettings = settings
-
-        return database
-    }
-
-    private fun setupCacheSize() {
-        val settings = firestoreSettings {
-            setLocalCacheSettings(persistentCacheSettings {
-                // Set size to 100 MB
-                setSizeBytes(1024 * 1024 * 100)
-            })
-        }
-        database.firestoreSettings = settings
-    }
-
 
     fun insertItem(item: Item) {
         database
@@ -123,7 +96,6 @@ object ItemCRUD {
                 if (it.exists()) {
                     val datosItem = it.data
 
-
                     val itemName = datosItem?.get("ItemName") as String
                     val itemTypeString = datosItem["ItemType"] as String
                     val mainSupplier = datosItem["Mainsupplier"] as String
@@ -175,6 +147,66 @@ object ItemCRUD {
 
 
     }
+
+    fun getAllItems(callback: (MutableList<Item>) -> Unit) {
+        database
+            .collection(coleccion)
+            .get()
+            .addOnSuccessListener { lista ->
+                val listaItems = mutableListOf<Item>()
+
+                for (document in lista) {
+                    val datosItem = document.data
+
+                    val itemName = datosItem.get("ItemName") as String
+                    val itemTypeString = datosItem["ItemType"] as String
+                    val mainSupplier = datosItem["Mainsupplier"] as String
+                    var itemPrice: MutableList<Price>? = mutableListOf()
+                    try {
+                        //Busca por "ItemPrices", si salta una excepcion es que no existe
+                        val listaPrecios = datosItem["ItemPrices"] as List<HashMap<String, Any>>
+
+                        if (listaPrecios.isNotEmpty()) {
+                            for (precio in listaPrecios) {
+                                val currency = precio["Currency"].toString()
+                                val price = precio["Price"].toString().toInt()
+                                val priceList = precio["PriceList"].toString().toInt()
+
+                                itemPrice?.add(Price(priceList, price, currency))
+                            }
+                        } else {
+                            itemPrice = null
+                        }
+                    } catch (e: Exception) {
+                        itemPrice = null
+                    }
+
+
+                    val itemType: ItemType = when (itemTypeString) {
+                        "I" -> ItemType.I
+                        "L" -> ItemType.L
+                        "T" -> ItemType.T
+                        "F" -> ItemType.F
+                        else -> ItemType.I
+                    }
+
+                    val item = Item(
+                        itemName,
+                        itemType,
+                        mainSupplier,
+                        itemPrice
+                    )
+
+                    listaItems.add(item)
+                }
+                callback(listaItems)
+            }
+            .addOnFailureListener {
+                Log.e("Errores", "Error en get all item $it")
+                callback(mutableListOf())
+            }
+    }
+
 
     fun updateItemById(itemId: String, item: Item) {
         database
