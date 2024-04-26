@@ -46,8 +46,8 @@ class MainActivity : ComponentActivity() {
 
          */
 
-        val precio = Price(3, 56, "PAPA")
-        ItemCRUD.insertItem(Item("Pruebita", ItemType.I, "Ricardo", listOf(precio)))
+        val precio = Price(1, 5, "JSON")
+        ItemCRUD.insertItem(Item("Ordenador HP - Json", ItemType.I, "Pedro", listOf(precio)))
         //ItemCRUD.updateItemById("OjwrKOFcSMSlfaxKrVSj", Item("Prueba prueba", ItemType.I, "Ricardo", listOf(precio)))
         //ItemCRUD.deleteItemById("OjwrKOFcSMSlfaxKrVSj")
 
