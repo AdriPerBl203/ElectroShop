@@ -8,17 +8,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.AG_AP.electroshop.firebase.ItemCRUD
-import com.AG_AP.electroshop.firebase.PriceListCRUD
-import com.AG_AP.electroshop.firebase.models.Item
-import com.AG_AP.electroshop.firebase.models.ItemType
-import com.AG_AP.electroshop.firebase.models.Price
-import com.AG_AP.electroshop.screens.SettingScreen
+import com.AG_AP.electroshop.endpoints.objects.ActivityObj
+import com.AG_AP.electroshop.firebase.ActivityCRUD
+import com.AG_AP.electroshop.screens.ScaffoldActivity
 import com.AG_AP.electroshop.ui.theme.ElectroShopTheme
-import com.AG_AP.electroshop.viewModels.AppNav
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 
 class MainActivity : ComponentActivity() {
@@ -57,6 +50,13 @@ class MainActivity : ComponentActivity() {
         }
          */
 
+        /*
+        ActivityCRUD.getAllActivity() {lista ->
+            Log.e("lista","${lista}")
+            Log.e("lista","${lista}")
+        }
+        */
+
         setContent {
             ElectroShopTheme {
                 // A surface container using the 'background' color from the theme
@@ -65,7 +65,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     //AppNav()
-                    SettingScreen()
+                    ScaffoldActivity()
                 }
             }
         }

@@ -261,13 +261,13 @@ fun ScaffoldActivity(viewModel: ActivityViewModel = viewModel()) {
             ) {
                 Button(
                     modifier=Modifier.padding(start = 15.dp, end = 15.dp),
-                    onClick = { /*viewModel.guardar(false)*/ }
+                    onClick = { viewModel.guardar(false) }
                 ) {
                     Text(text = "Añadir y nuevo")
                 }
                 Button(
                     modifier=Modifier.padding(start = 15.dp, end = 15.dp),
-                    onClick = { /*viewModel.guardar(true)*/ }
+                    onClick = { viewModel.guardar(true) }
                 ) {
                     Text(text = "Añadir y ver")
                 }

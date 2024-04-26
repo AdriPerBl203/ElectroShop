@@ -3,6 +3,8 @@ package com.AG_AP.electroshop.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.AG_AP.electroshop.firebase.ActivityCRUD
+import com.AG_AP.electroshop.firebase.models.Activity
 import com.AG_AP.electroshop.uiState.ActivityUiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -81,7 +83,6 @@ class ActivityViewModel : ViewModel() {
     }
 
     fun update() {
-        /*
         var nota = _uiState.value.nota
         var ActivityDate = _uiState.value.ActivityDate
         var ActivityTime = _uiState.value.ActivityTime
@@ -93,11 +94,11 @@ class ActivityViewModel : ViewModel() {
         val Priority = _uiState.value.Priority
         val pedidoCliente = _uiState.value.U_SEIPEDIDOCLIENTE.toInt()
         val pedidoCompra = _uiState.value.U_SEIPEDIDOCOMPRAS.toInt()
-        val updateActivity = Actividad(ClgCode.toInt(),nota,ActivityDate,ActivityTime,CardCode,EndTime,Action,Tel,ClgCode,Priority,pedidoCompra,pedidoCliente)
+        val Activity = Activity(nota,ActivityDate,ActivityTime,CardCode,EndTime,Action,Tel,ClgCode,Priority,pedidoCompra,pedidoCliente)
         var text ="Actividad actualizada"
         viewModelScope.launch {
             try{
-                repository.updateActividad(updateActivity)
+                ActivityCRUD.updateActivityById(Activity)
             }catch (e:Exception){
                 println(e.message)
                 text= "Hubo un error con la actuzalicacion de la actividad."
@@ -108,32 +109,18 @@ class ActivityViewModel : ViewModel() {
                 text = text
             ) }
         }
-        */
     }
 
     fun borrar() {
-        /*
-        var nota = _uiState.value.nota
-        var ActivityDate = _uiState.value.ActivityDate
-        var ActivityTime = _uiState.value.ActivityTime
-        var CardCode = _uiState.value.CardCode
-        val EndTime = _uiState.value.EndTime
-        val Action = _uiState.value.Action
-        val Tel = _uiState.value.Tel
         val ClgCode = _uiState.value.ClgCode
-        val Priority = _uiState.value.Priority
-        val pedidoCliente = _uiState.value.U_SEIPEDIDOCLIENTE.toInt()
-        val pedidoCompra = _uiState.value.U_SEIPEDIDOCOMPRAS.toInt()
-        val deleteActivity = Actividad(ClgCode.toInt(),nota,ActivityDate,ActivityTime,CardCode,EndTime,Action,Tel,ClgCode,Priority,pedidoCompra,pedidoCliente)
         var text ="Actividad eliminada"
         viewModelScope.launch {
             try{
-                repository.deleteActividad(deleteActivity)
+                ActivityCRUD.deleteActivityById(ClgCode)
             }catch (e:Exception){
                 println(e.message)
                 text= "Hubo un error con la actuzalicacion de la actividad."
             }
-            println("aaa")
             _uiState.update { currentState -> currentState.copy(
                 message = true,
                 text = text,
@@ -150,11 +137,9 @@ class ActivityViewModel : ViewModel() {
                 U_SEIPEDIDOCOMPRAS = ""
             ) }
         }
-        */
     }
 
     fun find() {
-/*
         if(_uiState.value.ClgCode.isEmpty()){
             _uiState.update { currentState -> currentState.copy(
                 message = true,
@@ -164,20 +149,21 @@ class ActivityViewModel : ViewModel() {
         }
 
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getActividadById(_uiState.value.ClgCode.toInt()).collect { item ->
-                if(item != null){
+            ActivityCRUD.getActivityById(_uiState.value.ClgCode.toInt()){Activity ->
+
+                if(Activity != null){
                     _uiState.update { currentState -> currentState.copy(
-                        nota = item.nota,
-                        ActivityDate = item.ActivityDate,
-                        ActivityTime = item.ActivityTime,
-                        CardCode= item.CardCode,
-                        EndTime= item.EndTime,
-                        Action= item.Action,
-                        Priority = item.Priority,
-                        Tel = item.Tel,
-                        ClgCode = item.ClgCode,
-                        U_SEIPEDIDOCLIENTE = item.U_SEIPEDIDOCLIENTE.toString(),
-                        U_SEIPEDIDOCOMPRAS = item.U_SEIPEDIDOCOMPRAS.toString()
+                        nota = Activity.nota,
+                        ActivityDate = Activity.ActivityDate,
+                        ActivityTime = Activity.ActivityTime,
+                        CardCode= Activity.CardCode,
+                        EndTime= Activity.EndTime,
+                        Action= Activity.Action,
+                        Priority = Activity.Priority,
+                        Tel = Activity.Tel,
+                        ClgCode = Activity.ClgCode,
+                        U_SEIPEDIDOCLIENTE = Activity.U_SEIPEDIDOCLIENTE.toString(),
+                        U_SEIPEDIDOCOMPRAS = Activity.U_SEIPEDIDOCOMPRAS.toString()
                     ) }
                 }else{
                     _uiState.update { currentState -> currentState.copy(
@@ -187,11 +173,9 @@ class ActivityViewModel : ViewModel() {
                 }
             }
         }
-        */
     }
 
     fun guardar(persistencia:Boolean) {
-        /*
         var nota = _uiState.value.nota
         var ActivityDate = _uiState.value.ActivityDate
         var ActivityTime = _uiState.value.ActivityTime
@@ -203,12 +187,11 @@ class ActivityViewModel : ViewModel() {
         val Priority = _uiState.value.Priority
         val pedidoCliente = _uiState.value.U_SEIPEDIDOCLIENTE.toInt()
         val pedidoCompra = _uiState.value.U_SEIPEDIDOCOMPRAS.toInt()
-        val newActivity = Actividad(0,nota,ActivityDate,ActivityTime,CardCode,EndTime,Action,Tel,ClgCode,Priority,pedidoCompra,pedidoCliente)
-        //val newActivity = Actividad(0,nota,ActivityDate,ActivityTime,CardCode,EndTime,Action)
+        val newActivity = Activity(nota,ActivityDate,ActivityTime,CardCode,EndTime,Action,Tel,ClgCode,Priority,pedidoCompra,pedidoCliente)
         var text ="Nueva Actividad añadida"
         viewModelScope.launch {
             try{
-                repository.addActividad(newActivity)
+                ActivityCRUD.insertActivity(newActivity)
             }catch (e:Exception){
                 println(e.message)
                 text= "Hubo un error con la creación de la actividad."
@@ -234,7 +217,6 @@ class ActivityViewModel : ViewModel() {
                 ) }
             }
         }
-        */
     }
 
     fun menssageFunFalse() {
