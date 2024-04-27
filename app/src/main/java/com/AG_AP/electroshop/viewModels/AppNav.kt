@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import com.AG_AP.electroshop.screens.LoginFrontView
 import com.AG_AP.electroshop.screens.MenuFrontView
 import com.AG_AP.electroshop.screens.ScaffoldActivity
+import com.AG_AP.electroshop.screens.ScaffoldBusinessPartner
 import com.AG_AP.electroshop.screens.SettingScreen
 
 /**
@@ -43,6 +44,12 @@ fun AppNav(navController: NavHostController = rememberNavController()) {
             route = Routes.ScreenActivity.route
         ) {
             ScaffoldActivity(navController = navController)
+        }
+
+        composable(
+            route = Routes.BusinessPartnerActivity.route
+        ) {
+            ScaffoldBusinessPartner(navController = navController)
         }
 
     }

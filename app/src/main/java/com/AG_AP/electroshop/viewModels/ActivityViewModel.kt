@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 
-class ActivityViewModel : ViewModel() {
+class ActivityViewModel : ViewModel(),ActionViewModel {
 
     private val _uiState = MutableStateFlow(ActivityUiState())
     val uiState: StateFlow<ActivityUiState> = _uiState.asStateFlow()
@@ -82,7 +82,7 @@ class ActivityViewModel : ViewModel() {
         ) }
     }
 
-    fun update() {
+    override fun update() {
         var nota = _uiState.value.nota
         var ActivityDate = _uiState.value.ActivityDate
         var ActivityTime = _uiState.value.ActivityTime
@@ -111,7 +111,7 @@ class ActivityViewModel : ViewModel() {
         }
     }
 
-    fun borrar() {
+    override fun borrar() {
         val ClgCode = _uiState.value.ClgCode
         var text ="Actividad eliminada"
         viewModelScope.launch {
@@ -139,7 +139,7 @@ class ActivityViewModel : ViewModel() {
         }
     }
 
-    fun find() {
+    override fun find() {
         if(_uiState.value.ClgCode.isEmpty()){
             _uiState.update { currentState -> currentState.copy(
                 message = true,
@@ -175,7 +175,7 @@ class ActivityViewModel : ViewModel() {
         }
     }
 
-    fun guardar(persistencia:Boolean) {
+    override fun guardar(persistencia:Boolean) {
         var nota = _uiState.value.nota
         var ActivityDate = _uiState.value.ActivityDate
         var ActivityTime = _uiState.value.ActivityTime
@@ -219,7 +219,7 @@ class ActivityViewModel : ViewModel() {
         }
     }
 
-    fun menssageFunFalse() {
+    override fun menssageFunFalse() {
         _uiState.update { currentState -> currentState.copy(
             message = false
         ) }
