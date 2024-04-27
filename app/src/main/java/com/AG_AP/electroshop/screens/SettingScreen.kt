@@ -36,7 +36,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 
 @Composable
-fun SettingScreen(viewModel: SettingsViewModel = viewModel()/*, navController: NavControllr*/) {
+fun SettingScreen(viewModel: SettingsViewModel = viewModel(), navController: NavController) {
     val dataUiState by viewModel.uiState.collectAsState()
 
     val customColor = Color(android.graphics.Color.parseColor("#00c9ff"))
@@ -177,7 +177,7 @@ fun SettingScreen(viewModel: SettingsViewModel = viewModel()/*, navController: N
             }
             Button(
                 modifier = Modifier.padding(10.dp),
-                onClick = { /*navController.navigateUp()*/ },
+                onClick = { navController.navigateUp() },
             ) {
                 Text(text = "Volver")
             }

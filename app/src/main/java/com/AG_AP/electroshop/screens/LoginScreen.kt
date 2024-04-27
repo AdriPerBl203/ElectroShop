@@ -130,7 +130,7 @@ fun LoginFrontView(
                     Row {
                         Button(
                             onClick = {
-                                /*TODO*/
+                                navController.navigate(route = Routes.ScreenMenu.route)
                             }
                         ) {
                             Text(
