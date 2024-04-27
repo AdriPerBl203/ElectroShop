@@ -48,7 +48,7 @@ fun LoginFrontView(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    val painter = painterResource(id = R.drawable.emoticono_2)
+    //val painter = painterResource(id = R.drawable.emoticono_2)
     val dataUiState by viewModel.uiState.collectAsState()
 
     /* Content */

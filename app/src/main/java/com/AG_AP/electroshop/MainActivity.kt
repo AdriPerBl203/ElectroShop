@@ -20,6 +20,7 @@ import com.AG_AP.electroshop.firebase.models.Price
 import com.AG_AP.electroshop.firebase.models.SEIConfig
 import com.AG_AP.electroshop.screens.SettingScreen
 import com.AG_AP.electroshop.ui.theme.ElectroShopTheme
+import com.AG_AP.electroshop.viewModels.AppNav
 
 
 class MainActivity : ComponentActivity() {
@@ -81,8 +82,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    //AppNav()
-                    ScaffoldActivity()
+                    AppNav()
+                    //ScaffoldActivity()
                 }
             }
         }
