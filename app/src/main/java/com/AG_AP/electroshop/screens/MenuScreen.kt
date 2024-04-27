@@ -1,40 +1,45 @@
 package com.AG_AP.electroshop.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.AG_AP.electroshop.uiState.MenuUiState
 import com.AG_AP.electroshop.viewModels.MenuViewModel
-import kotlinx.coroutines.launch
+import com.AG_AP.electroshop.viewModels.Routes
 
 
 /**
@@ -42,7 +47,11 @@ import kotlinx.coroutines.launch
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MenuFrontView(viewModel: MenuViewModel = viewModel(), modifier: Modifier = Modifier) {
+fun MenuFrontView(
+    viewModel: MenuViewModel = viewModel(),
+    modifier: Modifier = Modifier,
+    navController: NavHostController
+) {
     val dataUiState by viewModel.uiState.collectAsState()
     val scope = rememberCoroutineScope()
 
@@ -68,7 +77,19 @@ fun MenuFrontView(viewModel: MenuViewModel = viewModel(), modifier: Modifier = M
 
         },
         floatingActionButtonPosition = FabPosition.End,
-
+        bottomBar = {
+            BottomAppBar(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.primary,
+            ) {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                    text = "Seidor S.A",
+                )
+            }
+        }
 
 
     ) {
@@ -76,7 +97,8 @@ fun MenuFrontView(viewModel: MenuViewModel = viewModel(), modifier: Modifier = M
 
             innerPadding ->
         MenuBody(
-            innerPadding = innerPadding
+            innerPadding = innerPadding,
+            navController
         )
 
     }
@@ -99,7 +121,7 @@ fun TopBar(onMenuButtonClick: () -> Unit, menuUiState: MenuUiState) {
             }
         },
         colors = TopAppBarDefaults.mediumTopAppBarColors(
-            containerColor = Color.Cyan
+            containerColor = MaterialTheme.colorScheme.primaryContainer
         ),
 
         /* Barra de navegacion */
@@ -116,11 +138,92 @@ fun TopBar(onMenuButtonClick: () -> Unit, menuUiState: MenuUiState) {
  * Method that contains most of the important usages of the App
  */
 @Composable
-fun MenuBody(innerPadding: PaddingValues) {
+fun MenuBody(innerPadding: PaddingValues, navController: NavHostController) {
     Box(
         modifier = Modifier.padding(innerPadding)
     ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 25.dp),
+            contentAlignment= Alignment.TopCenter
+        ){
+            Column (
+                modifier = Modifier.padding(5.dp).background(MaterialTheme.colorScheme.primaryContainer),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ){
+                Row (
 
+                ){
+                    ElevatedButton(
+                        modifier= Modifier.padding(30.dp).width(200.dp),
+                        onClick = { navController.navigate(route = Routes.ScreenActivity.route) }
+                    ) {
+                        Text("Actividades")
+                    }
+                    ElevatedButton(
+                        modifier= Modifier.padding(30.dp).width(200.dp),
+                        onClick = { /* TODO*/ }
+                    ) {
+                        Text("Historial de actividades")
+                    }
+                }
+                Row (
+
+                ){
+                    ElevatedButton(
+                        modifier= Modifier.padding(30.dp).width(200.dp),
+                        onClick = { /* TODO*/ }
+                    ) {
+                        Text("Clientes")
+                    }
+
+                    ElevatedButton(
+                        modifier= Modifier.padding(30.dp).width(200.dp),
+                        onClick = { /* TODO*/ }
+                    ) {
+                        Text("Historial de clientes")
+                    }
+                }
+
+                Row (
+
+                ){
+                    ElevatedButton(
+                        modifier= Modifier.padding(30.dp).width(200.dp),
+                        onClick = { /* TODO*/ }
+                    ) {
+                        Text("Pedido de cliente")
+                    }
+
+                    ElevatedButton(
+                        modifier= Modifier.padding(30.dp).width(200.dp),
+                        onClick = { /* TODO*/ }
+                    ) {
+                        Text("Historial pedido cliente")
+                    }
+                }
+
+                Row (
+
+                ){
+                    ElevatedButton(
+                        modifier= Modifier.padding(30.dp).width(200.dp),
+                        onClick = { /* TODO*/ }
+                    ) {
+                        Text("Pedido de compra")
+                    }
+
+                    ElevatedButton(
+                        modifier= Modifier.padding(30.dp).width(200.dp),
+                        onClick = { /* TODO*/ }
+                    ) {
+                        Text("Historial pedido compra")
+                    }
+                }
+            }
+
+        }
     }
 }
 
@@ -171,5 +274,5 @@ val sections = listOf(
 )
 @Composable
 fun MenuFrontViewPreview() {
-    MenuFrontView()
+    //MenuFrontView(navController = navController)
 }

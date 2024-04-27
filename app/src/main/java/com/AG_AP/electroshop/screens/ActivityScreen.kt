@@ -1,15 +1,10 @@
 package com.AG_AP.electroshop.screens
 
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -18,7 +13,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -40,14 +34,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.AG_AP.electroshop.viewModels.ActivityViewModel
 
 
@@ -240,7 +229,7 @@ fun ActivityView(innerPadding: PaddingValues, viewModel: ActivityViewModel) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScaffoldActivity(viewModel: ActivityViewModel = viewModel()) {
+fun ScaffoldActivity(viewModel: ActivityViewModel = viewModel(), navController: NavHostController) {
 
     Scaffold(
         topBar = {
@@ -285,7 +274,7 @@ fun ScaffoldActivity(viewModel: ActivityViewModel = viewModel()) {
                 }
                 Button(
                     modifier=Modifier.padding(start = 15.dp, end = 15.dp),
-                    onClick = { /*TODO*/ }
+                    onClick = { navController.navigateUp() }
                 ) {
                     Text(text = "Volver")
                 }
