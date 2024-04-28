@@ -43,8 +43,11 @@ import com.AG_AP.electroshop.viewModels.ActivityViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ActivityView(innerPadding: PaddingValues, viewModel: ActivityViewModel) {
+fun ActivityView(innerPadding: PaddingValues, viewModel: ActivityViewModel, id: String?) {
     val dataUiState by viewModel.uiState.collectAsState()
+    if(!id.isNullOrEmpty()){
+        viewModel.changeClgCode(id)
+    }
     Column(
         modifier= Modifier
             .padding(innerPadding)
@@ -229,7 +232,7 @@ fun ActivityView(innerPadding: PaddingValues, viewModel: ActivityViewModel) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScaffoldActivity(viewModel: ActivityViewModel = viewModel(), navController: NavHostController) {
+fun ScaffoldActivity(viewModel: ActivityViewModel = viewModel(), navController: NavHostController,id:String? =null) {
 
     Scaffold(
         topBar = {
@@ -287,7 +290,7 @@ fun ScaffoldActivity(viewModel: ActivityViewModel = viewModel(), navController: 
         }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(start = 50.dp, top = 20.dp)){
-            ActivityView(innerPadding,viewModel)
+            ActivityView(innerPadding,viewModel,id)
         }
     }
 }

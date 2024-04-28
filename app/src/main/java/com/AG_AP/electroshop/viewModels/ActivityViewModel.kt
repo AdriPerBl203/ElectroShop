@@ -19,6 +19,13 @@ class ActivityViewModel : ViewModel(),ActionViewModel {
     private val _uiState = MutableStateFlow(ActivityUiState())
     val uiState: StateFlow<ActivityUiState> = _uiState.asStateFlow()
 
+    init {
+        val id:String = _uiState.value.ClgCode
+        if(id.isNotEmpty()){
+            find()
+        }
+    }
+
     //cambiar en los campo
     fun changenota(it: String) {
         _uiState.update { currentState -> currentState.copy(

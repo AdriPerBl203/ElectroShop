@@ -5,5 +5,6 @@ enum class Routes(val route: String) {
     ScreenConfig(route = "SettingScreen"),
     ScreenMenu(route = "MenuScreen"),
     ScreenActivity(route = "ActivityScreen"),
-    BusinessPartnerActivity(route = "BusinessPartnerActivity")
+    BusinessPartnerActivity(route = "BusinessPartnerActivity"),
+    ListActivity(route = "ListActivity")
 }
