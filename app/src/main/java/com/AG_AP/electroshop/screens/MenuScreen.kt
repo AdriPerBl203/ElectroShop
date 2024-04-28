@@ -163,7 +163,7 @@ fun MenuBody(innerPadding: PaddingValues, navController: NavHostController) {
                     }
                     ElevatedButton(
                         modifier= Modifier.padding(30.dp).width(200.dp),
-                        onClick = { /* TODO*/ }
+                        onClick = { navController.navigate(route = Routes.ListActivity.route) }
                     ) {
                         Text("Historial de actividades")
                     }
