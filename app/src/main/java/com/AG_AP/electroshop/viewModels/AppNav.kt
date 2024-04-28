@@ -58,6 +58,14 @@ fun AppNav(navController: NavHostController = rememberNavController()) {
         }
 
         composable(
+            route = Routes.ScreenActivityAux.route + "/{id}",
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id")
+            ScaffoldActivity(navController = navController, id = id)
+        }
+
+        composable(
             route = Routes.BusinessPartnerActivity.route
         ) {
             ScaffoldBusinessPartner(navController = navController)
