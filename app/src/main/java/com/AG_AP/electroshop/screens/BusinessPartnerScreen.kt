@@ -116,7 +116,7 @@ fun BusinessPartnerView(innerPadding: PaddingValues, viewModel: BusinessPartnerV
                     modifier = Modifier
                         .width(300.dp)
                         .padding(8.dp),
-                    label = { Text("Teléfono") }
+                    label = { Text("Email") }
                 )
 
             }
