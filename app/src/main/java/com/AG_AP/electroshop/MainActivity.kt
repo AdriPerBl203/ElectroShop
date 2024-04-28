@@ -10,6 +10,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.AG_AP.electroshop.endpoints.objects.ActivityObj
 import com.AG_AP.electroshop.firebase.ActivityCRUD
+import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
 import com.AG_AP.electroshop.screens.ScaffoldActivity
 import com.AG_AP.electroshop.firebase.ItemCRUD
 import com.AG_AP.electroshop.firebase.PriceListCRUD
@@ -74,6 +75,10 @@ class MainActivity : ComponentActivity() {
          */
         //SEIConfigCRUD.updateSEIConfigById("JSF", SEIConfig(1, 3, "AGA", "usuario", "N", "N", "N", "N"))
         SEIConfigCRUD.deleteSEIConfigById("JSF")
+
+        BusinessPartnerCRUD.getAllObject { lista ->
+            Log.e("Pruebas", "$lista")
+        }
 
         setContent {
             ElectroShopTheme {

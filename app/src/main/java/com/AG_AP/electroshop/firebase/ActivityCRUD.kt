@@ -15,7 +15,7 @@ object ActivityCRUD : DatabaseInitializer() {
 
     fun insertActivity(activity : Activity) {
 
-        PriceListCRUD.database
+        this.database
             .collection(this.coleccion)
             .document(activity.ClgCode.toString())
             .set(activity.toHashMap())
