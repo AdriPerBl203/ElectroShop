@@ -51,10 +51,15 @@ import androidx.navigation.NavHostController
 import com.AG_AP.electroshop.firebase.models.Activity
 import com.AG_AP.electroshop.uiState.ListActivityUiState
 import com.AG_AP.electroshop.viewModels.ListActivityViewModel
+import com.AG_AP.electroshop.viewModels.Routes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListActivityView(innerPadding: PaddingValues, viewModel: ListActivityViewModel) {
+fun ListActivityView(
+    innerPadding: PaddingValues,
+    viewModel: ListActivityViewModel,
+    navController: NavHostController
+) {
     val dataUiState by viewModel.uiState.collectAsState()
     Row (
         modifier = Modifier
@@ -76,7 +81,7 @@ fun ListActivityView(innerPadding: PaddingValues, viewModel: ListActivityViewMod
                 .background(MaterialTheme.colorScheme.primaryContainer),
             horizontalAlignment= Alignment.CenterHorizontally
         ) {
-            ListActivityColumn(viewModel,dataUiState)
+            ListActivityColumn(viewModel,dataUiState,navController)
         }
     }
 }
@@ -119,7 +124,7 @@ fun ScaffoldListActivity(viewModel: ListActivityViewModel = viewModel(), navCont
         }
     ) { innerPadding ->
         Box(modifier = Modifier.padding( top = 20.dp)){
-            ListActivityView(innerPadding,viewModel)
+            ListActivityView(innerPadding,viewModel,navController)
         }
     }
 }
@@ -135,7 +140,11 @@ fun ListActivityViewPreview() {
 }
 
 @Composable
-fun ListActivityColumn(viewModel: ListActivityViewModel, dataUiState: ListActivityUiState) {
+fun ListActivityColumn(
+    viewModel: ListActivityViewModel,
+    dataUiState: ListActivityUiState,
+    navController: NavHostController
+) {
     Text(
         modifier = Modifier.fillMaxWidth(),
         textAlign= TextAlign.Center,
@@ -143,7 +152,7 @@ fun ListActivityColumn(viewModel: ListActivityViewModel, dataUiState: ListActivi
     )
     Spacer(modifier = Modifier.height(40.dp))
     //val dataList = listOf("Item 1", "Item 2", "Item 3", "Item 4", "Item 5")
-    LazyColumnExample(dataUiState.ListActivity)
+    LazyColumnExample(dataUiState.ListActivity,navController)
 
 }
 
@@ -220,17 +229,17 @@ fun FilterActivity(viewModel: ListActivityViewModel, dataUiState: ListActivityUi
 }
 
 @Composable
-fun LazyColumnExample(data: List<Activity?>) {
+fun LazyColumnExample(data: List<Activity?>, navController: NavHostController) {
     LazyColumn {
         items(data) { item ->
             // Aquí defines cómo se muestra cada elemento de la lista
-            ElevatedCardExample(item)
+            ElevatedCardExample(item,navController)
         }
     }
 }
 
 @Composable
-fun ElevatedCardExample(x: Activity?) {
+fun ElevatedCardExample(x: Activity?, navController: NavHostController) {
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp
@@ -242,20 +251,20 @@ fun ElevatedCardExample(x: Activity?) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement= Arrangement.SpaceAround
-        ){
+        ) {
+            if (x != null) {
             Column {
-                if (x != null) {
-                    Text(
-                        text = x.ClgCode,
-                        modifier = Modifier
-                            .padding(16.dp),
-                        textAlign = TextAlign.Center,
-                    )
-                }
+                Text(
+                    text = x.ClgCode,
+                    modifier = Modifier
+                        .padding(16.dp),
+                    textAlign = TextAlign.Center,
+                )
             }
-            Button(onClick = { /*TODO*/ }) {
+            Button(onClick = { navController.navigate(route = Routes.ScreenActivityAux.route + "/${x.ClgCode}") }) {
                 Text(text = "Ver")
             }
+        }
         }
     }
 }
