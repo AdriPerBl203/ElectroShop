@@ -74,7 +74,7 @@ class MainActivity : ComponentActivity() {
         }
          */
         //SEIConfigCRUD.updateSEIConfigById("JSF", SEIConfig(1, 3, "AGA", "usuario", "N", "N", "N", "N"))
-        SEIConfigCRUD.deleteSEIConfigById("JSF")
+        //SEIConfigCRUD.deleteSEIConfigById("JSF")
 
         BusinessPartnerCRUD.getAllObject { lista ->
             Log.e("Pruebas", "$lista")
@@ -91,7 +91,5 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-
-
     }
 }

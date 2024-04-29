@@ -13,6 +13,8 @@ import android.webkit.WebView
 import android.view.View
 import at.favre.lib.crypto.bcrypt.BCrypt
 import com.AG_AP.electroshop.MainActivity
+import com.AG_AP.electroshop.firebase.SEIConfigCRUD
+import com.AG_AP.electroshop.functions.SessionObj
 
 
 import kotlinx.coroutines.flow.update
@@ -50,17 +52,53 @@ class LoginViewModel : ViewModel() {
         }
     }
 
-    fun saveConnection(username: String, pass: String) {
-        if (username.isNotEmpty() && pass.isNotEmpty()) {
-            val hashedPass = encryptPass(pass)
+    fun saveConnection() {
+        val userName = _uiState.value.username
+        val pass = _uiState.value.password
+        if (userName.isNotEmpty() && pass.isNotEmpty()) {
+            //val hashedPass = encryptPass(pass)
             //TODO sacar la contraseña de la base de datos y compararla con la que se pasa
-
-            if (validateUsername(username) && validatePass(pass, hashedPass)) {
-
+            if (validateUsername(userName) /*&& validatePass(pass, hashedPass)*/) {
+                SEIConfigCRUD.getSEIConfigById(userName){ data ->
+                    if(data != null){
+                        if(data.U_password == pass){
+                            SessionObj.inserData(
+                                data.U_name,
+                                data.U_articulo,
+                                data.U_actividad,
+                                data.U_PedidoCI,
+                                data.U_PedidoCO
+                            )
+                            _uiState.update { currentState -> currentState.copy(
+                                paso = true,
+                            ) }
+                        }else{
+                            _uiState.update { currentState -> currentState.copy(
+                                message = true,
+                                text = "Usuario o contraseña incorrecta."
+                            ) }
+                        }
+                    }else{
+                        _uiState.update { currentState -> currentState.copy(
+                            message = true,
+                            text = "Usuario o contraseña incorrecta."
+                        ) }
+                    }
+                }
 
             }
-
+        }else{
+            _uiState.update { currentState -> currentState.copy(
+                text = "Usuario o contraseña vacía.",
+                message = true
+            ) }
         }
+    }
+
+    fun menssageFunFalse(){
+        _uiState.update { currentState -> currentState.copy(
+            message = false
+        ) }
     }
 
 
@@ -69,7 +107,7 @@ class LoginViewModel : ViewModel() {
      * @return false when the username String contains any of the illegal characters, otherwise
      * a true is thrown when it doesn't contains any.
      */
-    fun validateUsername(username: String): Boolean {
+    private fun validateUsername(username: String): Boolean {
         var notValidCharacters: String = "-/*ñÑ|&/"
 
         notValidCharacters.forEach {

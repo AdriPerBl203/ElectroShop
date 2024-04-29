@@ -98,7 +98,8 @@ fun MenuFrontView(
             innerPadding ->
         MenuBody(
             innerPadding = innerPadding,
-            navController
+            navController,
+            dataUiState
         )
 
     }
@@ -138,7 +139,11 @@ fun TopBar(onMenuButtonClick: () -> Unit, menuUiState: MenuUiState) {
  * Method that contains most of the important usages of the App
  */
 @Composable
-fun MenuBody(innerPadding: PaddingValues, navController: NavHostController) {
+fun MenuBody(
+    innerPadding: PaddingValues,
+    navController: NavHostController,
+    dataUiState: MenuUiState
+) {
     Box(
         modifier = Modifier.padding(innerPadding)
     ) {
@@ -155,17 +160,19 @@ fun MenuBody(innerPadding: PaddingValues, navController: NavHostController) {
                 Row (
 
                 ){
-                    ElevatedButton(
-                        modifier= Modifier.padding(30.dp).width(200.dp),
-                        onClick = { navController.navigate(route = Routes.ScreenActivity.route) }
-                    ) {
-                        Text("Actividades")
-                    }
-                    ElevatedButton(
-                        modifier= Modifier.padding(30.dp).width(200.dp),
-                        onClick = { navController.navigate(route = Routes.ListActivity.route) }
-                    ) {
-                        Text("Historial de actividades")
+                    if(dataUiState.articulo == "S"){
+                        ElevatedButton(
+                            modifier= Modifier.padding(30.dp).width(200.dp),
+                            onClick = { navController.navigate(route = Routes.ScreenActivity.route) }
+                        ) {
+                            Text("Actividades")
+                        }
+                        ElevatedButton(
+                            modifier= Modifier.padding(30.dp).width(200.dp),
+                            onClick = { navController.navigate(route = Routes.ListActivity.route) }
+                        ) {
+                            Text("Historial de actividades")
+                        }
                     }
                 }
                 Row (
@@ -189,40 +196,43 @@ fun MenuBody(innerPadding: PaddingValues, navController: NavHostController) {
                 Row (
 
                 ){
-                    ElevatedButton(
-                        modifier= Modifier.padding(30.dp).width(200.dp),
-                        onClick = { /* TODO*/ }
-                    ) {
-                        Text("Pedido de cliente")
-                    }
+                    if(dataUiState.pedidoCL == "S"){
+                        ElevatedButton(
+                            modifier= Modifier.padding(30.dp).width(200.dp),
+                            onClick = { /* TODO*/ }
+                        ) {
+                            Text("Pedido de cliente")
+                        }
 
-                    ElevatedButton(
-                        modifier= Modifier.padding(30.dp).width(200.dp),
-                        onClick = { /* TODO*/ }
-                    ) {
-                        Text("Historial pedido cliente")
+                        ElevatedButton(
+                            modifier= Modifier.padding(30.dp).width(200.dp),
+                            onClick = { /* TODO*/ }
+                        ) {
+                            Text("Historial pedido cliente")
+                        }
                     }
                 }
 
                 Row (
 
                 ){
-                    ElevatedButton(
-                        modifier= Modifier.padding(30.dp).width(200.dp),
-                        onClick = { /* TODO*/ }
-                    ) {
-                        Text("Pedido de compra")
-                    }
+                    if(dataUiState.pedidoCL == "S"){
+                        ElevatedButton(
+                            modifier= Modifier.padding(30.dp).width(200.dp),
+                            onClick = { /* TODO*/ }
+                        ) {
+                            Text("Pedido de compra")
+                        }
 
-                    ElevatedButton(
-                        modifier= Modifier.padding(30.dp).width(200.dp),
-                        onClick = { /* TODO*/ }
-                    ) {
-                        Text("Historial pedido compra")
+                        ElevatedButton(
+                            modifier= Modifier.padding(30.dp).width(200.dp),
+                            onClick = { /* TODO*/ }
+                        ) {
+                            Text("Historial pedido compra")
+                        }
                     }
                 }
             }
-
         }
     }
 }
