@@ -106,17 +106,9 @@ class SettingsViewModel : ViewModel() {
             val dataLogin = Login(dataBase,password,login)
             val data = LoginObj.loginAcessTwoversion(dataLogin,urlInt)
             var text:String=""
-            /**/
-            text ="Conexión realizada"
-            _uiState.update { currentState -> currentState.copy(
-                message = true,
-                text = text,
-                progress = false
-            ) }
-            /**/
             if(data){
                 //traer articulos, clientes, pedidos....
-                /*val items = ItemObj.getItems(Config.rulUse)
+                val items = ItemObj.getItems(Config.rulUse)
                 val BusinessPartners = BusinessPartnersObj.getBusinessPartners(Config.rulUse)
                 val activities = ActivityObj.getActivities(Config.rulUse)
                 val orders = OrdersObj.getOrders(Config.rulUse)
@@ -136,7 +128,7 @@ class SettingsViewModel : ViewModel() {
                         text = text,
                         progress = false
                     ) }
-                }*/
+                }
             }else{
                 text ="Conexión NO realizada"
             }
