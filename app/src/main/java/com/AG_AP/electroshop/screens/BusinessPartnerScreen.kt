@@ -40,15 +40,19 @@ import com.AG_AP.electroshop.viewModels.BusinessPartnerViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BusinessPartnerView(innerPadding: PaddingValues, viewModel: BusinessPartnerViewModel) {
+fun BusinessPartnerView(
+    innerPadding: PaddingValues,
+    viewModel: BusinessPartnerViewModel,
+    id: String?
+) {
     val dataUiState by viewModel.uiState.collectAsState()
     Column(
-        modifier= Modifier
+        modifier = Modifier
             .padding(innerPadding)
             .verticalScroll(rememberScrollState())
     ) {
-        Row (
-        ){
+        Row(
+        ) {
             Column {
 
                 OutlinedTextField(
@@ -148,8 +152,15 @@ fun BusinessPartnerView(innerPadding: PaddingValues, viewModel: BusinessPartnerV
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScaffoldBusinessPartner(viewModel: BusinessPartnerViewModel = viewModel(), navController: NavHostController) {
-
+fun ScaffoldBusinessPartner(
+    viewModel: BusinessPartnerViewModel = viewModel(),
+    navController: NavHostController,
+    id: String? = null
+) {
+    if (!id.isNullOrEmpty()) {
+        viewModel.changeCardCode(id)
+        viewModel.refresh()
+    }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -168,31 +179,31 @@ fun ScaffoldBusinessPartner(viewModel: BusinessPartnerViewModel = viewModel(), n
                 contentColor = MaterialTheme.colorScheme.primary,
             ) {
                 Button(
-                    modifier= Modifier.padding(start = 15.dp, end = 15.dp),
+                    modifier = Modifier.padding(start = 15.dp, end = 15.dp),
                     onClick = { viewModel.guardar(false) }
                 ) {
                     Text(text = "Añadir y nuevo")
                 }
                 Button(
-                    modifier= Modifier.padding(start = 15.dp, end = 15.dp),
+                    modifier = Modifier.padding(start = 15.dp, end = 15.dp),
                     onClick = { viewModel.guardar(true) }
                 ) {
                     Text(text = "Añadir y ver")
                 }
                 Button(
-                    modifier= Modifier.padding(start = 15.dp, end = 15.dp),
+                    modifier = Modifier.padding(start = 15.dp, end = 15.dp),
                     onClick = { viewModel.update() }
                 ) {
                     Text(text = "Actualizar")
                 }
                 Button(
-                    modifier= Modifier.padding(start = 15.dp, end = 15.dp),
+                    modifier = Modifier.padding(start = 15.dp, end = 15.dp),
                     onClick = { viewModel.borrar() }
                 ) {
                     Text(text = "Borrar")
                 }
                 Button(
-                    modifier= Modifier.padding(start = 15.dp, end = 15.dp),
+                    modifier = Modifier.padding(start = 15.dp, end = 15.dp),
                     onClick = { navController.navigateUp() }
                 ) {
                     Text(text = "Volver")
@@ -205,8 +216,8 @@ fun ScaffoldBusinessPartner(viewModel: BusinessPartnerViewModel = viewModel(), n
             }
         }
     ) { innerPadding ->
-        Box(modifier = Modifier.padding(start = 50.dp, top = 20.dp)){
-            BusinessPartnerView(innerPadding,viewModel)
+        Box(modifier = Modifier.padding(start = 50.dp, top = 20.dp)) {
+            BusinessPartnerView(innerPadding, viewModel, id)
         }
     }
 }

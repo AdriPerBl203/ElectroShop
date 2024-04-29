@@ -1,5 +1,6 @@
 package com.AG_AP.electroshop
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -7,7 +8,9 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import com.AG_AP.electroshop.endpoints.objects.ActivityObj
 import com.AG_AP.electroshop.firebase.ActivityCRUD
 import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
@@ -54,12 +57,15 @@ class MainActivity : ComponentActivity() {
         //ItemCRUD.insertItem(Item("Ordenador HP - Json", ItemType.I, "Pedro", listOf(precio)))
         //ItemCRUD.updateItemById("OjwrKOFcSMSlfaxKrVSj", Item("Prueba prueba", ItemType.I, "Ricardo", listOf(precio)))
         //ItemCRUD.deleteItemById("OjwrKOFcSMSlfaxKrVSj")
+
         /*
+
+
         ItemCRUD.getAllItems {
             Log.e("Pruebas", "$it")
         }
-         */
-         
+*/
+
         /*
         ActivityCRUD.getAllActivity() {lista ->
             Log.e("lista","${lista}")
@@ -67,21 +73,26 @@ class MainActivity : ComponentActivity() {
         }
         */
 
-        SEIConfigCRUD.insertSEIConfig(SEIConfig(1, 3, "JSF", "usuario", "N", "N", "N", "N"))
+        //SEIConfigCRUD.insertSEIConfig(SEIConfig(1, 3, "JSF", "usuario", "N", "N", "N", "N"))
+
         /*
         SEIConfigCRUD.getAllSEIConfig() { lista ->
             Log.e("Pruebas", "$lista")
         }
          */
+
         //SEIConfigCRUD.updateSEIConfigById("JSF", SEIConfig(1, 3, "AGA", "usuario", "N", "N", "N", "N"))
         //SEIConfigCRUD.deleteSEIConfigById("JSF")
 
+        /*
         BusinessPartnerCRUD.getAllObject { lista ->
             Log.e("Pruebas", "$lista")
         }
 
+         */
+
         setContent {
-            ElectroShopTheme {
+            BlueSkyTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -91,5 +102,27 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
+
     }
+}
+
+// Define los colores de tu tema
+private val azureBlue = Color(0xFF50A7FF)
+private val skyBlue = Color(0xFF87CEEB)
+private val deepBlue = Color(0xFF2E2EFD)
+private val boneWhite = Color(0xFFF8EFFA)
+
+// Define el tema personalizado "BlueSkyTheme"
+@Composable
+fun BlueSkyTheme(content: @Composable () -> Unit) {
+    MaterialTheme(
+        colorScheme = MaterialTheme.colorScheme.copy(
+            primary = azureBlue,
+            primaryContainer = skyBlue,
+            secondary = deepBlue,
+            background = boneWhite
+        ),
+        content = content
+    )
 }

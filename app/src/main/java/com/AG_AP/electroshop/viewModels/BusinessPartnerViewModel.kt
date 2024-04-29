@@ -14,35 +14,63 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class BusinessPartnerViewModel : ViewModel(),ActionViewModel {
+class BusinessPartnerViewModel : ViewModel(), ActionViewModel {
 
     private val _uiState = MutableStateFlow(BusinessPartnerUiState())
     val uiState: StateFlow<BusinessPartnerUiState> = _uiState.asStateFlow()
 
+    init {
+        val id: String = _uiState.value.CardCode
+        if (id.isNotEmpty()) {
+            find()
+        }
+    }
+
+    fun refresh() {
+        val id: String = _uiState.value.CardCode
+        if (id.isNotEmpty()) {
+            find()
+        }
+    }
+
     fun changeCardCode(it: String) {
-        _uiState.update { currentState -> currentState.copy(
-            CardCode = it
-        ) }
+        _uiState.update { currentState ->
+            currentState.copy(
+                CardCode = it
+            )
+        }
     }
+
     fun changeCardType(it: String) {
-        _uiState.update { currentState -> currentState.copy(
-            CardType = it
-        ) }
+        _uiState.update { currentState ->
+            currentState.copy(
+                CardType = it
+            )
+        }
     }
+
     fun changeCardName(it: String) {
-        _uiState.update { currentState -> currentState.copy(
-            CardName = it
-        ) }
+        _uiState.update { currentState ->
+            currentState.copy(
+                CardName = it
+            )
+        }
     }
+
     fun changeCellular(it: String) {
-        _uiState.update { currentState -> currentState.copy(
-            Cellular = it
-        ) }
+        _uiState.update { currentState ->
+            currentState.copy(
+                Cellular = it
+            )
+        }
     }
+
     fun changeEmailAddress(it: String) {
-        _uiState.update { currentState -> currentState.copy(
-            EmailAddress = it
-        ) }
+        _uiState.update { currentState ->
+            currentState.copy(
+                EmailAddress = it
+            )
+        }
     }
 
     override fun guardar(data: Boolean) {
@@ -51,30 +79,35 @@ class BusinessPartnerViewModel : ViewModel(),ActionViewModel {
         var CardName = _uiState.value.CardName
         var EmailAddress = _uiState.value.EmailAddress
         val Cellular = _uiState.value.Cellular
-        val dataAux:BusinessPartner = BusinessPartner(CardCode,CardType,CardName,EmailAddress,Cellular)
-        var text ="Nuevo cliente añadida"
+        val dataAux: BusinessPartner =
+            BusinessPartner(CardCode, CardType, CardName, EmailAddress, Cellular)
+        var text = "Nuevo cliente añadida"
         viewModelScope.launch {
-            try{
+            try {
                 BusinessPartnerCRUD.insert(dataAux)
-            }catch (e:Exception){
+            } catch (e: Exception) {
                 println(e.message)
-                text= "Hubo un error con la creación del cliente."
+                text = "Hubo un error con la creación del cliente."
             }
             println("aaa")
-            _uiState.update { currentState -> currentState.copy(
-                message = true,
-                text = text
-            ) }
-            if(!data){
-                _uiState.update { currentState -> currentState.copy(
+            _uiState.update { currentState ->
+                currentState.copy(
                     message = true,
-                    text = text,
-                    CardCode="",
-                    CardName = "",
-                    Cellular ="",
-                    EmailAddress ="",
-                    CardType = "Cliente"
-                ) }
+                    text = text
+                )
+            }
+            if (!data) {
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        message = true,
+                        text = text,
+                        CardCode = "",
+                        CardName = "",
+                        Cellular = "",
+                        EmailAddress = "",
+                        CardType = "Cliente"
+                    )
+                }
             }
         }
     }
@@ -85,77 +118,90 @@ class BusinessPartnerViewModel : ViewModel(),ActionViewModel {
         var CardName = _uiState.value.CardName
         var EmailAddress = _uiState.value.EmailAddress
         val Cellular = _uiState.value.Cellular
-        val data:BusinessPartner = BusinessPartner(CardCode,CardType,CardName,EmailAddress,Cellular)
-        var text ="Actividad actualizada"
+        val data: BusinessPartner =
+            BusinessPartner(CardCode, CardType, CardName, EmailAddress, Cellular)
+        var text = "Actividad actualizada"
         viewModelScope.launch {
-            try{
+            try {
                 BusinessPartnerCRUD.updateObjectById(data)
-            }catch (e:Exception){
+            } catch (e: Exception) {
                 println(e.message)
-                text= "Hubo un error con la actuzalicacion del cliente."
+                text = "Hubo un error con la actuzalicacion del cliente."
             }
             println("aaa")
-            _uiState.update { currentState -> currentState.copy(
-                message = true,
-                text = text
-            ) }
+            _uiState.update { currentState ->
+                currentState.copy(
+                    message = true,
+                    text = text
+                )
+            }
         }
     }
 
     override fun borrar() {
         val id = _uiState.value.CardCode
-        var text ="Cliente eliminado"
+        var text = "Cliente eliminado"
         viewModelScope.launch {
-            try{
+            try {
                 BusinessPartnerCRUD.deleteObjectById(id)
-            }catch (e:Exception){
+            } catch (e: Exception) {
                 println(e.message)
-                text= "Hubo un error borrando el cliente."
+                text = "Hubo un error borrando el cliente."
             }
-            _uiState.update { currentState -> currentState.copy(
-                message = true,
-                text = text,
-                CardCode="",
-                CardName = "",
-                Cellular ="",
-                EmailAddress ="",
-                CardType = "Cliente"
-            ) }
+            _uiState.update { currentState ->
+                currentState.copy(
+                    message = true,
+                    text = text,
+                    CardCode = "",
+                    CardName = "",
+                    Cellular = "",
+                    EmailAddress = "",
+                    CardType = "Cliente"
+                )
+            }
         }
     }
 
     override fun find() {
-        if(_uiState.value.CardCode.isEmpty()){
-            _uiState.update { currentState -> currentState.copy(
-                message = true,
-                text = "Formato no válido"
-            ) }
+        if (_uiState.value.CardCode.isEmpty()) {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    message = true,
+                    text = "Formato no válido"
+                )
+            }
             return
         }
         viewModelScope.launch(Dispatchers.IO) {
-            BusinessPartnerCRUD.getObjectById(_uiState.value.CardCode.toInt()){ dataAux ->
+            BusinessPartnerCRUD.getObjectById(_uiState.value.CardCode.toInt()) { dataAux ->
 
-                if(dataAux != null && dataAux is BusinessPartner){
-                    _uiState.update { currentState -> currentState.copy(
-                        CardCode = dataAux.CardCode,
-                        CardType = dataAux.CardType,
-                        CardName = dataAux.CardName,
-                        Cellular= dataAux.Cellular,
-                        EmailAddress= dataAux.EmailAddress
-                    ) }
-                }else{
-                    _uiState.update { currentState -> currentState.copy(
-                        message = true,
-                        text = "Cliente no encontrada con número: ${_uiState.value.CardCode}"
-                    ) }
+                if (dataAux != null && dataAux is BusinessPartner) {
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            CardCode = dataAux.CardCode,
+                            CardType = dataAux.CardType,
+                            CardName = dataAux.CardName,
+                            Cellular = dataAux.Cellular,
+                            EmailAddress = dataAux.EmailAddress
+                        )
+                    }
+                } else {
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            message = true,
+                            text = "Cliente no encontrada con número: ${_uiState.value.CardCode}"
+                        )
+                    }
                 }
             }
         }
     }
 
     override fun menssageFunFalse() {
-        _uiState.update { currentState -> currentState.copy(
-            message = false
-        ) }
+        _uiState.update { currentState ->
+            currentState.copy(
+                message = false
+            )
+        }
     }
 }

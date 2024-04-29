@@ -1,6 +1,7 @@
 package com.AG_AP.electroshop.viewModels
 
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.AG_AP.electroshop.firebase.ActivityCRUD
@@ -22,6 +23,13 @@ class ActivityViewModel : ViewModel(),ActionViewModel {
     init {
         val id:String = _uiState.value.ClgCode
         if(id.isNotEmpty()){
+            find()
+        }
+    }
+
+    fun refreshScreen() {
+        val id: String = _uiState.value.ClgCode
+        if (id.isNotEmpty()) {
             find()
         }
     }
@@ -66,6 +74,7 @@ class ActivityViewModel : ViewModel(),ActionViewModel {
     }
 
     fun changeClgCode(it: String) {
+        Log.e("Pruebas", it)
         _uiState.update { currentState -> currentState.copy(
             ClgCode = it
         ) }
@@ -157,7 +166,6 @@ class ActivityViewModel : ViewModel(),ActionViewModel {
 
         viewModelScope.launch(Dispatchers.IO) {
             ActivityCRUD.getActivityById(_uiState.value.ClgCode.toInt()){Activity ->
-
                 if(Activity != null){
                     _uiState.update { currentState -> currentState.copy(
                         nota = Activity.nota,

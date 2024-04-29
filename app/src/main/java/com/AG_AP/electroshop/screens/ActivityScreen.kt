@@ -40,27 +40,24 @@ import androidx.navigation.NavHostController
 import com.AG_AP.electroshop.viewModels.ActivityViewModel
 
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ActivityView(innerPadding: PaddingValues, viewModel: ActivityViewModel, id: String?) {
     val dataUiState by viewModel.uiState.collectAsState()
-    if(!id.isNullOrEmpty()){
-        viewModel.changeClgCode(id)
-    }
     Column(
-        modifier= Modifier
+        modifier = Modifier
             .padding(innerPadding)
             .verticalScroll(rememberScrollState())
     ) {
-        Row (
+        Row(
             /*modifier= Modifier
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState()),
             horizontalArrangement= Arrangement.Center*/
-        ){
+        ) {
             Column {
-                val coffeeDrinks = arrayOf("Llamada telefónica", "Reunión", "Tarea", "Nota", "Campaña","Otros")
+                val coffeeDrinks =
+                    arrayOf("Llamada telefónica", "Reunión", "Tarea", "Nota", "Campaña", "Otros")
                 var expanded by remember { mutableStateOf(false) }
 
                 ExposedDropdownMenuBox(
@@ -232,8 +229,15 @@ fun ActivityView(innerPadding: PaddingValues, viewModel: ActivityViewModel, id: 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScaffoldActivity(viewModel: ActivityViewModel = viewModel(), navController: NavHostController,id:String? =null) {
-
+fun ScaffoldActivity(
+    viewModel: ActivityViewModel = viewModel(),
+    navController: NavHostController,
+    id: String? = null
+) {
+    if (!id.isNullOrEmpty()) {
+        viewModel.changeClgCode(id)
+        viewModel.refreshScreen()
+    }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -252,31 +256,31 @@ fun ScaffoldActivity(viewModel: ActivityViewModel = viewModel(), navController: 
                 contentColor = MaterialTheme.colorScheme.primary,
             ) {
                 Button(
-                    modifier=Modifier.padding(start = 15.dp, end = 15.dp),
+                    modifier = Modifier.padding(start = 15.dp, end = 15.dp),
                     onClick = { viewModel.guardar(false) }
                 ) {
                     Text(text = "Añadir y nuevo")
                 }
                 Button(
-                    modifier=Modifier.padding(start = 15.dp, end = 15.dp),
+                    modifier = Modifier.padding(start = 15.dp, end = 15.dp),
                     onClick = { viewModel.guardar(true) }
                 ) {
                     Text(text = "Añadir y ver")
                 }
                 Button(
-                    modifier=Modifier.padding(start = 15.dp, end = 15.dp),
+                    modifier = Modifier.padding(start = 15.dp, end = 15.dp),
                     onClick = { viewModel.update() }
                 ) {
                     Text(text = "Actualizar")
                 }
                 Button(
-                    modifier=Modifier.padding(start = 15.dp, end = 15.dp),
+                    modifier = Modifier.padding(start = 15.dp, end = 15.dp),
                     onClick = { viewModel.borrar() }
                 ) {
                     Text(text = "Borrar")
                 }
                 Button(
-                    modifier=Modifier.padding(start = 15.dp, end = 15.dp),
+                    modifier = Modifier.padding(start = 15.dp, end = 15.dp),
                     onClick = { navController.navigateUp() }
                 ) {
                     Text(text = "Volver")
@@ -289,8 +293,8 @@ fun ScaffoldActivity(viewModel: ActivityViewModel = viewModel(), navController: 
             }
         }
     ) { innerPadding ->
-        Box(modifier = Modifier.padding(start = 50.dp, top = 20.dp)){
-            ActivityView(innerPadding,viewModel,id)
+        Box(modifier = Modifier.padding(start = 50.dp, top = 20.dp)) {
+            ActivityView(innerPadding, viewModel, id)
         }
     }
 }

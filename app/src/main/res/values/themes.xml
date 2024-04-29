@@ -2,4 +2,11 @@
 <resources>
 
     <style name="Theme.ElectroShop" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <!-- Definición del tema -->
+    <style name="BlueSkyTheme" parent="Theme.MaterialComponents.Light">
+        <item name="colorPrimary">@color/azure_blue</item>
+        <item name="colorPrimaryVariant">@color/sky_blue</item>
+        <item name="colorSecondary">@color/deep_blue</item>
+    </style>
 </resources>
