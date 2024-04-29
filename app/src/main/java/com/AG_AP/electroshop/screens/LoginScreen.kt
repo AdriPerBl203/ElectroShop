@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -51,6 +52,10 @@ fun LoginFrontView(
 ) {
     //val painter = painterResource(id = R.drawable.emoticono_2)
     val dataUiState by viewModel.uiState.collectAsState()
+
+    if(dataUiState.paso){
+        navController.navigate(route = Routes.ScreenMenu.route)
+    }
 
     /* Content */
     Box(
@@ -131,7 +136,7 @@ fun LoginFrontView(
                     Row {
                         Button(
                             onClick = {
-                                navController.navigate(route = Routes.ScreenMenu.route)
+                                viewModel.saveConnection()
                             }
                         ) {
                             Text(
@@ -151,6 +156,23 @@ fun LoginFrontView(
                         }
 
                     }
+                }
+                if (dataUiState.message) {
+                    Snackbar(
+                        modifier = Modifier.padding(16.dp),
+                        action = {
+                            Button(
+                                onClick = {
+                                    viewModel.menssageFunFalse()
+                                }
+                            ) {
+                                Text("Cerrar")
+                            }
+                        },
+                        content = {
+                            Text(dataUiState.text)
+                        }
+                    )
                 }
             }
 
