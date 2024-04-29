@@ -26,7 +26,7 @@ class MenuViewModel : ViewModel() {
 
     fun closeSession(navController: NavHostController) {
         SessionObj.reset()
-        navController.navigate(route = Routes.ScreenLogin.route)
+        navController.navigateUp()
     }
 
 }

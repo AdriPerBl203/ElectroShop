@@ -94,8 +94,7 @@ fun ListBusinessPartnerView(
 @Composable
 fun ScaffoldListBusinessPartner(
     viewModel: ListBusinessPartnerViewModel = viewModel(),
-    navController: NavHostController,
-
+    navController: NavHostController
 ) {
 
     Scaffold(
@@ -270,7 +269,7 @@ fun ElevatedCardBusinessPartner(x: BusinessPartner?, navController: NavHostContr
                         textAlign = TextAlign.Center,
                     )
                 }
-                Button(onClick = { navController.navigate(route = Routes.BusinessPartner.route + "/${x.CardCode}") }) {
+                Button(onClick = { navController.navigate(route = Routes.BusinessPartnerAux.route + "/${x.CardCode}") }) {
                     Text(text = "Ver")
                 }
             }

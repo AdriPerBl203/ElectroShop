@@ -188,7 +188,7 @@ fun MenuBody(
 
                     ElevatedButton(
                         modifier= Modifier.padding(30.dp).width(200.dp),
-                        onClick = { /* TODO*/ }
+                        onClick = { navController.navigate(route = Routes.ScreenBusinessPartnerList.route) }
                     ) {
                         Text("Historial de clientes")
                     }
