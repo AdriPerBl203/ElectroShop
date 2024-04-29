@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -68,10 +69,10 @@ fun MenuFrontView(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    /*TODO*/
+                    viewModel.closeSession(navController)
                 }
             ) {
-                Icon(imageVector = Icons.Filled.Add, contentDescription = "Crear")
+                Icon(imageVector = Icons.Filled.Person, contentDescription = "Crear")
             }
 
 

@@ -1,6 +1,7 @@
 package com.AG_AP.electroshop.viewModels
 
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavHostController
 import com.AG_AP.electroshop.functions.SessionObj
 import com.AG_AP.electroshop.uiState.MenuUiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,4 +23,10 @@ class MenuViewModel : ViewModel() {
             pedidoCO= SessionObj.pedidoCO,
         ) }
     }
+
+    fun closeSession(navController: NavHostController) {
+        SessionObj.reset()
+        navController.navigate(route = Routes.ScreenLogin.route)
+    }
+
 }
