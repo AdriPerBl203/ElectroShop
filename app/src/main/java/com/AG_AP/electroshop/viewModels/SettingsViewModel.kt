@@ -106,6 +106,7 @@ class SettingsViewModel : ViewModel() {
             val dataLogin = Login(dataBase,password,login)
             val data = LoginObj.loginAcessTwoversion(dataLogin,urlInt)
             var text:String=""
+            Log.e("SettingScreen", "Conexión realizada")
             if(data){
                 text ="Conexión realizada"
                 _uiState.update { currentState -> currentState.copy(
@@ -113,6 +114,11 @@ class SettingsViewModel : ViewModel() {
                     text = text,
                     progress = false
                 ) }
+
+                val userForUdo = UDOobj.getUserTableUDO(Config.rulUse)
+
+                println("")
+
                 //traer articulos, clientes, pedidos....
                /* val items = ItemObj.getItems(Config.rulUse)
                 val BusinessPartners = BusinessPartnersObj.getBusinessPartners(Config.rulUse)
@@ -136,7 +142,12 @@ class SettingsViewModel : ViewModel() {
                     ) }
                 }*/
             }else{
-                text ="Conexión NO realizada"
+                text ="Conexión NO realizada."
+                _uiState.update { currentState -> currentState.copy(
+                    message = true,
+                    text = text,
+                    progress = false
+                ) }
             }
 
         }
