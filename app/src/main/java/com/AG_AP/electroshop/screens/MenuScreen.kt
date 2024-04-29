@@ -181,7 +181,7 @@ fun MenuBody(
                 ){
                     ElevatedButton(
                         modifier= Modifier.padding(30.dp).width(200.dp),
-                        onClick = { navController.navigate(route = Routes.BusinessPartnerActivity.route) }
+                        onClick = { navController.navigate(route = Routes.BusinessPartner.route) }
                     ) {
                         Text("Clientes")
                     }
