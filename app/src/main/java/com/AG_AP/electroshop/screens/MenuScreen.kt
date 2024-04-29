@@ -9,14 +9,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FabPosition
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -64,23 +62,9 @@ fun MenuFrontView(
                 menuUiState = dataUiState
             )
         },
-        /* Boton flotante */
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    /*TODO*/
-                }
-            ) {
-                Icon(imageVector = Icons.Filled.Add, contentDescription = "Crear")
-            }
-
-
-        },
-        floatingActionButtonPosition = FabPosition.End,
         bottomBar = {
             BottomAppBar(
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                contentColor = MaterialTheme.colorScheme.primary,
+                containerColor = MaterialTheme.colorScheme.primaryContainer
             ) {
                 Text(
                     modifier = Modifier
@@ -126,7 +110,7 @@ fun TopBar(onMenuButtonClick: () -> Unit, menuUiState: MenuUiState) {
 
         /* Barra de navegacion */
         navigationIcon = {
-            IconButton(onClick = { /*TODO*/}) {
+            IconButton(onClick = { /*TODO*/ }) {
                 Icon(imageVector = Icons.Filled.Menu, contentDescription = "Abrir menu")
             }
         }
@@ -146,77 +130,111 @@ fun MenuBody(innerPadding: PaddingValues, navController: NavHostController) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(top = 25.dp),
-            contentAlignment= Alignment.TopCenter
-        ){
-            Column (
-                modifier = Modifier.padding(5.dp).background(MaterialTheme.colorScheme.primaryContainer),
+            contentAlignment = Alignment.TopCenter
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(5.dp)
+                    .background(MaterialTheme.colorScheme.primaryContainer, shape = RoundedCornerShape(25.dp)),
                 horizontalAlignment = Alignment.CenterHorizontally
-            ){
-                Row (
+            ) {
+                Row(
 
-                ){
+                ) {
                     ElevatedButton(
-                        modifier= Modifier.padding(30.dp).width(200.dp),
-                        onClick = { navController.navigate(route = Routes.ScreenActivity.route) }
+                        modifier = Modifier
+                            .padding(30.dp)
+                            .width(200.dp),
+                        onClick = {
+                            navController.navigate(route = Routes.ScreenActivity.route)
+                        }
                     ) {
                         Text("Actividades")
                     }
                     ElevatedButton(
-                        modifier= Modifier.padding(30.dp).width(200.dp),
-                        onClick = { navController.navigate(route = Routes.ListActivity.route) }
+                        modifier = Modifier
+                            .padding(30.dp)
+                            .width(200.dp),
+                        onClick = {
+                            navController.navigate(route = Routes.ListActivity.route)
+                        }
                     ) {
                         Text("Historial de actividades")
                     }
                 }
-                Row (
+                Row(
 
-                ){
+                ) {
                     ElevatedButton(
-                        modifier= Modifier.padding(30.dp).width(200.dp),
-                        onClick = { navController.navigate(route = Routes.BusinessPartnerActivity.route) }
+                        modifier = Modifier
+                            .padding(30.dp)
+                            .width(200.dp),
+                        onClick = {
+                            navController.navigate(route = Routes.BusinessPartner.route)
+                        }
                     ) {
                         Text("Clientes")
                     }
 
                     ElevatedButton(
-                        modifier= Modifier.padding(30.dp).width(200.dp),
-                        onClick = { /* TODO*/ }
+                        modifier = Modifier
+                            .padding(30.dp)
+                            .width(200.dp),
+                        onClick = {
+                            navController.navigate(route = Routes.ScreenBusinessPartnerList.route)
+                        }
                     ) {
                         Text("Historial de clientes")
                     }
                 }
 
-                Row (
+                Row(
 
-                ){
+                ) {
                     ElevatedButton(
-                        modifier= Modifier.padding(30.dp).width(200.dp),
-                        onClick = { /* TODO*/ }
+                        modifier = Modifier
+                            .padding(30.dp)
+                            .width(200.dp),
+                        onClick = {
+                            /* TODO*/
+                        }
                     ) {
                         Text("Pedido de cliente")
                     }
 
                     ElevatedButton(
-                        modifier= Modifier.padding(30.dp).width(200.dp),
-                        onClick = { /* TODO*/ }
+                        modifier = Modifier
+                            .padding(30.dp)
+                            .width(200.dp),
+                        onClick = {
+                            /* TODO*/
+                        }
                     ) {
                         Text("Historial pedido cliente")
                     }
                 }
 
-                Row (
+                Row(
 
-                ){
+                ) {
                     ElevatedButton(
-                        modifier= Modifier.padding(30.dp).width(200.dp),
-                        onClick = { /* TODO*/ }
+                        modifier = Modifier
+                            .padding(30.dp)
+                            .width(200.dp),
+                        onClick = {
+                            /* TODO*/
+                        }
                     ) {
                         Text("Pedido de compra")
                     }
 
                     ElevatedButton(
-                        modifier= Modifier.padding(30.dp).width(200.dp),
-                        onClick = { /* TODO*/ }
+                        modifier = Modifier
+                            .padding(30.dp)
+                            .width(200.dp),
+                        onClick = {
+                            /* TODO*/
+                        }
                     ) {
                         Text("Historial pedido compra")
                     }
@@ -264,8 +282,6 @@ val sections = listOf(
     "Actividades"
 )
 
-
-// TODO funcion que muestre la cantidad de acciones disponibles con un array
 
 @Preview(
     showBackground = true,

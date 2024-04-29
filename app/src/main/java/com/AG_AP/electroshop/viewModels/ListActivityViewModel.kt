@@ -14,7 +14,7 @@ class ListActivityViewModel : ViewModel() {
     val uiState: StateFlow<ListActivityUiState> = _uiState.asStateFlow()
 
     init {
-        ActivityCRUD.getAllActivity() {lista ->
+        ActivityCRUD.getAllActivity() { lista ->
             _uiState.update { currentState -> currentState.copy(
                 ListActivity = lista
             ) }

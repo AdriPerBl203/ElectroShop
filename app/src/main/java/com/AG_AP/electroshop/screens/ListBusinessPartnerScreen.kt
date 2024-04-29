@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
@@ -48,16 +49,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.AG_AP.electroshop.firebase.models.Activity
-import com.AG_AP.electroshop.uiState.ListActivityUiState
-import com.AG_AP.electroshop.viewModels.ListActivityViewModel
+import com.AG_AP.electroshop.firebase.models.BusinessPartner
+import com.AG_AP.electroshop.uiState.ListBusinessPartnerUiState
+import com.AG_AP.electroshop.viewModels.ListBusinessPartnerViewModel
 import com.AG_AP.electroshop.viewModels.Routes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListActivityView(
+fun ListBusinessPartnerView(
     innerPadding: PaddingValues,
-    viewModel: ListActivityViewModel,
+    viewModel: ListBusinessPartnerViewModel,
     navController: NavHostController
 ) {
     val dataUiState by viewModel.uiState.collectAsState()
@@ -75,7 +76,7 @@ fun ListActivityView(
                 .background(MaterialTheme.colorScheme.background)
 
         ) {
-            FilterActivity(viewModel, dataUiState)
+            //FilterBusinessPartner(viewModel, dataUiState)
         }
         Column(
             modifier = Modifier
@@ -83,7 +84,7 @@ fun ListActivityView(
                 .background(MaterialTheme.colorScheme.background),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            ListActivityColumn(viewModel, dataUiState, navController)
+            ListBusinessPartnerColumn(viewModel, dataUiState, navController)
         }
     }
 }
@@ -91,9 +92,10 @@ fun ListActivityView(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScaffoldListActivity(
-    viewModel: ListActivityViewModel = viewModel(),
-    navController: NavHostController
+fun ScaffoldListBusinessPartner(
+    viewModel: ListBusinessPartnerViewModel = viewModel(),
+    navController: NavHostController,
+
 ) {
 
     Scaffold(
@@ -104,7 +106,7 @@ fun ScaffoldListActivity(
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 title = {
-                    Text("Listado de actividades")
+                    Text("Listado de interlocutores")
                 }
             )
         },
@@ -124,12 +126,12 @@ fun ScaffoldListActivity(
         },
         floatingActionButton = {
             FloatingActionButton(onClick = { /* tODO */ }) {
-                Icon(Icons.Default.Add, contentDescription = "Buscar")
+                Icon(Icons.Default.Search, contentDescription = "Buscar")
             }
         }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
-            ListActivityView(innerPadding, viewModel, navController)
+            ListBusinessPartnerView(innerPadding, viewModel, navController)
         }
     }
 }
@@ -140,30 +142,30 @@ fun ScaffoldListActivity(
     device = Devices.TABLET
 )
 @Composable
-fun ListActivityViewPreview() {
+fun ListBusinessPartnerViewPreview() {
     //ListActivityViewPre()
 }
 
 @Composable
-fun ListActivityColumn(
-    viewModel: ListActivityViewModel,
-    dataUiState: ListActivityUiState,
+fun ListBusinessPartnerColumn(
+    viewModel: ListBusinessPartnerViewModel,
+    dataUiState: ListBusinessPartnerUiState,
     navController: NavHostController
 ) {
     Text(
         modifier = Modifier.fillMaxWidth(),
         textAlign = TextAlign.Center,
-        text = "Listado de actividades"
+        text = "Listado de interlocutores"
     )
     Spacer(modifier = Modifier.height(40.dp))
-    //val dataList = listOf("Item 1", "Item 2", "Item 3", "Item 4", "Item 5")
-    LazyColumnExample(dataUiState.ListActivity, navController)
+    LazyColumnBusinessPartner(dataUiState.ListBusinessPartner, navController)
 
 }
 
+/*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FilterActivity(viewModel: ListActivityViewModel, dataUiState: ListActivityUiState) {
+fun FilterBusinessPartner(viewModel: ListBusinessPartnerViewModel, dataUiState: ListBusinessPartnerUiState) {
     Text(
         modifier = Modifier.fillMaxWidth(),
         textAlign = TextAlign.Center,
@@ -233,18 +235,20 @@ fun FilterActivity(viewModel: ListActivityViewModel, dataUiState: ListActivityUi
     }
 }
 
+ */
+
 @Composable
-fun LazyColumnExample(data: List<Activity?>, navController: NavHostController) {
+fun LazyColumnBusinessPartner(data: List<BusinessPartner?>, navController: NavHostController) {
     LazyColumn {
         items(data) { item ->
             // Aquí defines cómo se muestra cada elemento de la lista
-            ElevatedCardExample(item, navController)
+            ElevatedCardBusinessPartner(item, navController)
         }
     }
 }
 
 @Composable
-fun ElevatedCardExample(x: Activity?, navController: NavHostController) {
+fun ElevatedCardBusinessPartner(x: BusinessPartner?, navController: NavHostController) {
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp
@@ -260,22 +264,16 @@ fun ElevatedCardExample(x: Activity?, navController: NavHostController) {
             if (x != null) {
                 Column {
                     Text(
-                        text = x.ClgCode,
+                        text = x.CardCode,
                         modifier = Modifier
                             .padding(16.dp),
                         textAlign = TextAlign.Center,
                     )
                 }
-                Button(
-                    onClick = {
-                        navController.navigate(route = Routes.ScreenActivityAux.route + "/${x.ClgCode}")
-                    }
-                ) {
+                Button(onClick = { navController.navigate(route = Routes.BusinessPartner.route + "/${x.CardCode}") }) {
                     Text(text = "Ver")
                 }
             }
         }
     }
 }
-
-

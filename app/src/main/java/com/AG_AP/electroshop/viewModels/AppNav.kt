@@ -7,11 +7,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.AG_AP.electroshop.firebase.ActivityCRUD
 import com.AG_AP.electroshop.screens.LoginFrontView
 import com.AG_AP.electroshop.screens.MenuFrontView
 import com.AG_AP.electroshop.screens.ScaffoldActivity
 import com.AG_AP.electroshop.screens.ScaffoldBusinessPartner
 import com.AG_AP.electroshop.screens.ScaffoldListActivity
+import com.AG_AP.electroshop.screens.ScaffoldListBusinessPartner
 import com.AG_AP.electroshop.screens.SettingScreen
 
 /**
@@ -66,7 +68,7 @@ fun AppNav(navController: NavHostController = rememberNavController()) {
         }
 
         composable(
-            route = Routes.BusinessPartnerActivity.route
+            route = Routes.BusinessPartner.route
         ) {
             ScaffoldBusinessPartner(navController = navController)
         }
@@ -77,5 +79,18 @@ fun AppNav(navController: NavHostController = rememberNavController()) {
             ScaffoldListActivity(navController = navController)
         }
 
+        composable(
+            route = Routes.ScreenBusinessPartnerList.route
+        ) {
+            ScaffoldListBusinessPartner(navController = navController)
+        }
+
+        composable(
+            route = Routes.BusinessPartnerAux.route + "/{id}",
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id")
+            ScaffoldBusinessPartner(navController = navController, id = id)
+        }
     }
 }

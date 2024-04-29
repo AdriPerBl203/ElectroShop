@@ -12,9 +12,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
@@ -39,21 +41,18 @@ import androidx.navigation.NavController
 fun SettingScreen(viewModel: SettingsViewModel = viewModel(), navController: NavController) {
     val dataUiState by viewModel.uiState.collectAsState()
 
-    val customColor = Color(android.graphics.Color.parseColor("#00c9ff"))
-    val whiteCustom = Color(android.graphics.Color.parseColor("#FAEBD7"))
-
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = whiteCustom)
+            .background(color = MaterialTheme.colorScheme.background)
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.Center,
     ) {
         Box(
             modifier= Modifier
                 .padding(horizontal = 100.dp)
-                .background(color = customColor)
-                .border(width = 1.dp, Color.Black)
+                .background(color = MaterialTheme.colorScheme.primaryContainer, shape = RoundedCornerShape(25.dp))
+                .border(width = 1.dp, Color.Black, shape = RoundedCornerShape(25.dp))
         ){
             Column(
                 modifier = Modifier.padding(start = 15.dp, end = 15.dp,top=20.dp, bottom = 20.dp)
@@ -86,8 +85,8 @@ fun SettingScreen(viewModel: SettingsViewModel = viewModel(), navController: Nav
         Box(
             modifier = Modifier
                 .padding(horizontal = 100.dp)
-                .background(color = customColor)
-                .border(width = 1.dp, Color.Black)
+                .background(color = MaterialTheme.colorScheme.primaryContainer, shape = RoundedCornerShape(25.dp))
+                .border(width = 1.dp, Color.Black, shape = RoundedCornerShape(25.dp))
         ){
             Column(
                 modifier = Modifier.padding(start = 15.dp, end = 15.dp,top=20.dp, bottom = 20.dp)
