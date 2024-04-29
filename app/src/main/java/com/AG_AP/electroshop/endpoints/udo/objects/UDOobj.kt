@@ -7,6 +7,7 @@ import com.AG_AP.electroshop.endpoints.udo.models.CreateTable
 import com.AG_AP.electroshop.endpoints.udo.models.createUdo.CreateUdo
 import com.AG_AP.electroshop.endpoints.udo.models.createUserUDO.CreateUserUDO
 import com.AG_AP.electroshop.endpoints.udo.models.createUserUDO.CreateUserUdoRes
+import com.AG_AP.electroshop.endpoints.udo.models.getUserUdo.SeiConfigUser
 import retrofit2.Response
 
 object UDOobj {
@@ -55,4 +56,15 @@ object UDOobj {
             null
         }
     }
+
+    suspend fun getUserTableUDO(urlInt: String): SeiConfigUser? {
+        RetrofitClient.baseUrl = urlInt
+        return try {
+            apiService.getUsers()
+        } catch (e: Exception) {
+            println(e.message)
+            null
+        }
+    }
+
 }
