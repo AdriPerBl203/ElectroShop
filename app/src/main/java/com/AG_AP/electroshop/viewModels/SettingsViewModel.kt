@@ -3,22 +3,28 @@ package com.AG_AP.electroshop.viewModels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.AG_AP.electroshop.endpoints.models.activity.Activity
+import com.AG_AP.electroshop.endpoints.models.businessPartners.BusinessPartners
 import com.AG_AP.electroshop.endpoints.models.login.Login
 import com.AG_AP.electroshop.endpoints.objects.ActivityObj
 import com.AG_AP.electroshop.endpoints.objects.BusinessPartnersObj
-import com.AG_AP.electroshop.endpoints.objects.ItemObj
 import com.AG_AP.electroshop.endpoints.objects.LoginObj
-import com.AG_AP.electroshop.endpoints.objects.OrdersObj
-import com.AG_AP.electroshop.endpoints.objects.PurchaseOrdersObj
 import com.AG_AP.electroshop.endpoints.udo.models.CreateField
 import com.AG_AP.electroshop.endpoints.udo.models.createUdo.CreateUdo
 import com.AG_AP.electroshop.endpoints.udo.models.createUdo.UserObjectMDFindColumn
 import com.AG_AP.electroshop.endpoints.udo.models.createUdo.UserObjectMDFormColumn
 import com.AG_AP.electroshop.endpoints.udo.models.createUserUDO.CreateUserUDO
+import com.AG_AP.electroshop.endpoints.udo.models.getUserUdo.SeiConfigUser
 import com.AG_AP.electroshop.endpoints.udo.objects.UDOobj
+import com.AG_AP.electroshop.firebase.ActivityCRUD
+import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
+import com.AG_AP.electroshop.firebase.SEIConfigCRUD
+import com.AG_AP.electroshop.firebase.models.BusinessPartner
+import com.AG_AP.electroshop.firebase.models.SEIConfig
 import com.AG_AP.electroshop.functions.Config
 import com.AG_AP.electroshop.functions.validarURL
 import com.AG_AP.electroshop.uiState.SettingUiState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -115,13 +121,14 @@ class SettingsViewModel : ViewModel() {
                     progress = false
                 ) }
 
-                val userForUdo = UDOobj.getUserTableUDO(Config.rulUse)
+                deleteAndInsertUserUdo()
+                deleteAndInsertBusinessPartner()
+                deleteAndInsertActivity()
 
                 println("")
 
                 //traer articulos, clientes, pedidos....
                /* val items = ItemObj.getItems(Config.rulUse)
-                val BusinessPartners = BusinessPartnersObj.getBusinessPartners(Config.rulUse)
                 val activities = ActivityObj.getActivities(Config.rulUse)
                 val orders = OrdersObj.getOrders(Config.rulUse)
                 val pruchaseOrders = PurchaseOrdersObj.getPurchaseOrders(Config.rulUse)
@@ -149,7 +156,6 @@ class SettingsViewModel : ViewModel() {
                     progress = false
                 ) }
             }
-
         }
     }
 
@@ -213,5 +219,97 @@ class SettingsViewModel : ViewModel() {
         UDOobj.createuserSEICONFIG(Config.rulUse,user3)
         UDOobj.createuserSEICONFIG(Config.rulUse,user4)
         Log.e("UDO","Usuarios añadidos")
+    }
+
+    private suspend fun UserUdoInsertFireBase(userForUdo: SeiConfigUser?) {
+        if(userForUdo is SeiConfigUser){
+            userForUdo.value.forEach { element->
+            SEIConfigCRUD.insertSEIConfig(
+                SEIConfig(
+                element.Code.toInt(),
+                element.U_Empleado,
+                element.U_name,
+                element.U_password,
+                element.U_articulo,
+                element.U_actividad,
+                element.U_PedidoCl,
+                element.U_PedidoCO
+            )
+            )
+        }
+        }
+    }
+
+    private fun deleteAndInsertUserUdo() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val userForUdo = UDOobj.getUserTableUDO(Config.rulUse)
+            if(userForUdo is SeiConfigUser ){
+                userForUdo.value.forEach { element->
+                    Log.e("JOSELITOO",element.U_name)
+                    SEIConfigCRUD.deleteSEIConfigById(element.U_name)
+                }
+                println("aaaaaaaaaaaaaaaaaaa")
+            }
+
+            UserUdoInsertFireBase(userForUdo)
+        }
+    }
+
+    private fun deleteAndInsertBusinessPartner() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val BusinessPartners = BusinessPartnersObj.getBusinessPartners(Config.rulUse)
+            if(BusinessPartners is BusinessPartners){
+                BusinessPartners.value.forEach { element->
+                    BusinessPartnerCRUD.deleteObjectById(element.CardCode)
+                }
+
+                BusinessPartners.value.forEach { element ->
+                    var email:String =""
+                    var phone1:String =""
+                    if(!element.Phone1.isNullOrEmpty()){
+                        phone1 = element.Phone1
+                    }
+                    if(!element.EmailAddress.isNullOrEmpty()){
+                        email = element.EmailAddress
+                    }
+
+                    BusinessPartnerCRUD.insert(BusinessPartner(
+                        element.CardCode,
+                        element.CardType,
+                        element.CardName,
+                        phone1,
+                        email,
+
+                    ))
+                }
+            }
+        }
+    }
+
+    private fun deleteAndInsertActivity() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val activities : Activity? = ActivityObj.getActivities(Config.rulUse)
+            if(activities is Activity){
+                activities.value.forEach{element ->
+                    ActivityCRUD.deleteActivityById(element.ActivityCode.toString())
+                }
+                activities.value.forEach{element ->
+                    val activity : com.AG_AP.electroshop.firebase.models.Activity = com.AG_AP.electroshop.firebase.models.Activity(
+                        element.Notes ?: "",
+                        element.ActivityDate ?: "",
+                        element.ActivityTime ?: "",
+                        element.CardCode ?: "",
+                        element.EndTime ?: "",
+                        element.Activity ?: "",
+                        element.Notes ?: "",//
+                        element.ActivityCode.toString() ?: "",
+                        element.Priority ?: "",
+                        element.U_SEIPEDIDOCOMPRAS ?: 0,
+                        element.U_SEIPEDIDOCLIENTE ?: 0,
+                    )
+                    ActivityCRUD.insertActivity(activity)
+                }
+            }
+        }
     }
 }

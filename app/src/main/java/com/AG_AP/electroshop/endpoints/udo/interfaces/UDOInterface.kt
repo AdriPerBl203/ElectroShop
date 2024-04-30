@@ -21,5 +21,5 @@ interface UDOInterface {
     @POST("b1s/v1/SEICONFIG")
     suspend fun createUSerSEICONFIG(@Body data: CreateUserUDO): CreateUserUdoRes
     @GET("b1s/v1/SEICONFIG")
-    suspend fun getUsers(): SeiConfigUser
+    suspend fun getUsers(): SeiConfigUser?
 }

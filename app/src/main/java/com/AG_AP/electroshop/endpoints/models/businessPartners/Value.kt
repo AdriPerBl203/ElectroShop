@@ -5,7 +5,7 @@ data class Value(
     val CardType: String,
     val CardCode: String,
     val CardName: String,
-    val Phone1: Any,
-    val Phone2: Any,
-    val EmailAddress: Any
+    val Phone1: String,
+    val Phone2: String,
+    val EmailAddress: String
 )

@@ -8,5 +8,5 @@ interface ActionFirebase {
     fun getObjectById(id: Int,callback:(Any?)->Unit)
     fun getAllObject(callback: (MutableList<*>?) -> Unit)
     fun updateObjectById(data: Any)
-    fun deleteObjectById(id: String)
+    suspend fun deleteObjectById(id: String)
 }
