@@ -1,13 +1,18 @@
 package com.AG_AP.electroshop.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -250,7 +255,8 @@ fun PurchaseOrderView(innerPadding: PaddingValues/*, viewModel: ActivityViewMode
                 .padding(top = 30.dp)
                 .background(Color.Red)
         ){
-            Text(text = "aaaa")
+            //Text(text = "aaaa")
+            tableDocumentLine()
         }
         Column {
             /*if (dataUiState.message) {
@@ -273,6 +279,32 @@ fun PurchaseOrderView(innerPadding: PaddingValues/*, viewModel: ActivityViewMode
         }
     }
 
+}
+@Composable
+fun tableDocumentLine() {
+    val sections = (0 until 5).toList()
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(4),
+        /*horizontalArrangement = Arrangement.spacedBy(1.dp),
+        verticalArrangement = Arrangement.spacedBy(1.dp)*/
+    ) {
+        sections.forEachIndexed { index, items ->
+
+            items(
+                items,
+                // not required as it is the default
+                span = { GridItemSpan(1) }
+            ) {
+                Text(
+                    "Item $it",
+                    Modifier
+                        .border(1.dp, Color.Blue)
+                        .height(80.dp)
+                        .wrapContentSize()
+                )
+            }
+        }
+    }
 }
 
 
