@@ -12,7 +12,7 @@ object SEIConfigCRUD {
 
     private val coleccion = "SEIConfig"
 
-    fun insertSEIConfig(config: SEIConfig) {
+    suspend fun insertSEIConfig(config: SEIConfig) {
         database
             .collection(coleccion)
             .document(config.U_name)
@@ -67,7 +67,7 @@ object SEIConfigCRUD {
             }
     }
 
-    fun getAllSEIConfig(callback: (MutableList<SEIConfig>?) -> Unit) {
+    suspend fun getAllSEIConfig(callback: (MutableList<SEIConfig>?) -> Unit) {
         database
             .collection(coleccion)
             .get()
@@ -122,7 +122,7 @@ object SEIConfigCRUD {
             }
     }
 
-    fun deleteSEIConfigById(idConfig: String) {
+     suspend fun deleteSEIConfigById(idConfig: String) {
         database
             .collection(coleccion)
             .document(idConfig)
@@ -133,6 +133,18 @@ object SEIConfigCRUD {
             .addOnFailureListener {
                 Log.e("Errores", "Ha ocurrido un error borrando SEIConfig con id: $idConfig")
             }
+    }
+
+    suspend fun getU_nameTheUser():MutableList<String?>{
+        var uNameList = mutableListOf<String?>()
+        this.getAllSEIConfig { element->
+            if(element is MutableList<SEIConfig>){
+                element.forEach { element->
+                    uNameList.add(element.U_name)
+                }
+            }
+        }
+        return uNameList
     }
 
 

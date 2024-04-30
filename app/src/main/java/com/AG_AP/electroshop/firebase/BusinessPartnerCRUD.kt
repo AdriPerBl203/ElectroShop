@@ -116,7 +116,7 @@ object BusinessPartnerCRUD : ActionFirebase {
         }
     }
 
-    override fun deleteObjectById(id: String) {
+    override suspend fun deleteObjectById(id: String) {
         this.database
             .collection(this.coleccion)
             .document(id)
