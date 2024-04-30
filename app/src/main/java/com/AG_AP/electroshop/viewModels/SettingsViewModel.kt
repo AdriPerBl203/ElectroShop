@@ -1,6 +1,8 @@
 package com.AG_AP.electroshop.viewModels
 
+import android.content.Context
 import android.util.Log
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.AG_AP.electroshop.endpoints.models.activity.Activity
@@ -22,8 +24,10 @@ import com.AG_AP.electroshop.firebase.SEIConfigCRUD
 import com.AG_AP.electroshop.firebase.models.BusinessPartner
 import com.AG_AP.electroshop.firebase.models.SEIConfig
 import com.AG_AP.electroshop.functions.Config
+import com.AG_AP.electroshop.functions.ConfigurationApplication
 import com.AG_AP.electroshop.functions.validarURL
 import com.AG_AP.electroshop.uiState.SettingUiState
+import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -78,7 +82,7 @@ class SettingsViewModel : ViewModel() {
         ) }
     }
 
-    fun menssageFun(){
+    fun test(){
         var urlInt = _uiState.value.urlInt
         var urlExt = _uiState.value.urlExt
         var login = _uiState.value.login
@@ -114,42 +118,15 @@ class SettingsViewModel : ViewModel() {
             var text:String=""
             Log.e("SettingScreen", "Conexión realizada")
             if(data){
-                text ="Conexión realizada"
+                text ="Test realizado con éxito."
                 _uiState.update { currentState -> currentState.copy(
                     message = true,
                     text = text,
-                    progress = false
+                    progress = false,
+                    ButtomEnable = true
                 ) }
-
-                deleteAndInsertUserUdo()
-                deleteAndInsertBusinessPartner()
-                deleteAndInsertActivity()
-
-                println("")
-
-                //traer articulos, clientes, pedidos....
-               /* val items = ItemObj.getItems(Config.rulUse)
-                val activities = ActivityObj.getActivities(Config.rulUse)
-                val orders = OrdersObj.getOrders(Config.rulUse)
-                val pruchaseOrders = PurchaseOrdersObj.getPurchaseOrders(Config.rulUse)
-                Log.e("SettingViewModel","Datos obtenidos")
-
-                //UDO
-                val res : Boolean = UDOobj.createTable(Config.rulUse)
-                if(res){
-                    viewModelScope.launch {
-                        creatingUDO()
-                        createUsers()
-                    }
-                    text ="Conexión realizada"
-                    _uiState.update { currentState -> currentState.copy(
-                        message = true,
-                        text = text,
-                        progress = false
-                    ) }
-                }*/
             }else{
-                text ="Conexión NO realizada."
+                text ="Test NO realizado con éxito."
                 _uiState.update { currentState -> currentState.copy(
                     message = true,
                     text = text,
@@ -311,5 +288,72 @@ class SettingsViewModel : ViewModel() {
                 }
             }
         }
+    }
+
+    fun sync() {
+        /*deleteAndInsertUserUdo()
+        deleteAndInsertBusinessPartner()
+        deleteAndInsertActivity()*/
+
+        Log.e("JOSELETE","AAAa")
+
+        //traer articulos, clientes, pedidos....
+        /* val items = ItemObj.getItems(Config.rulUse)
+         val activities = ActivityObj.getActivities(Config.rulUse)
+         val orders = OrdersObj.getOrders(Config.rulUse)
+         val pruchaseOrders = PurchaseOrdersObj.getPurchaseOrders(Config.rulUse)
+         Log.e("SettingViewModel","Datos obtenidos")
+
+         //UDO
+         val res : Boolean = UDOobj.createTable(Config.rulUse)
+         if(res){
+             viewModelScope.launch {
+                 creatingUDO()
+                 createUsers()
+             }
+             text ="Conexión realizada"
+             _uiState.update { currentState -> currentState.copy(
+                 message = true,
+                 text = text,
+                 progress = false
+             ) }
+         }*/
+    }
+
+    fun saveConfiguration(context: Context) {
+        val urlInt = _uiState.value.urlInt
+        val urlExt = _uiState.value.urlExt
+        val login = _uiState.value.login
+        val password = _uiState.value.password
+        val dataBase = _uiState.value.dataBase
+        val dataConfiguration = ConfigurationApplication(login,password,dataBase,urlExt,urlInt)
+        val gson = Gson()
+        val jsonData:String = gson.toJson(dataConfiguration)
+
+        val sharedPref = context?.getSharedPreferences("configuration", Context.MODE_PRIVATE)
+        val dataConfig = sharedPref?.edit()
+        dataConfig?.putString("configuration", jsonData)
+        dataConfig?.apply()
+
+        val jsonStringRecuperada = sharedPref?.getString("configuration", null)
+        val miObjetoRecuperado = gson.fromJson(jsonStringRecuperada, ConfigurationApplication::class.java)
+
+    }
+
+    fun initData(context: Context){
+        val gson = Gson()
+        val sharedPref = context?.getSharedPreferences("configuration", Context.MODE_PRIVATE)
+        val json = sharedPref?.getString("configuration", null)
+        if (!json.isNullOrEmpty()) {
+            val dataConfig = gson.fromJson(json, ConfigurationApplication::class.java)
+            _uiState.update { currentState -> currentState.copy(
+                urlInt = dataConfig.urlInt,
+                urlExt = dataConfig.urlExt,
+                login = dataConfig.login,
+                password = dataConfig.password,
+                dataBase = dataConfig.dataBase,
+            ) }
+        }
+
     }
 }

@@ -1,5 +1,6 @@
 package com.AG_AP.electroshop.viewModels
 
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -7,7 +8,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.AG_AP.electroshop.firebase.ActivityCRUD
 import com.AG_AP.electroshop.screens.LoginFrontView
 import com.AG_AP.electroshop.screens.MenuFrontView
 import com.AG_AP.electroshop.screens.ScaffoldActivity
@@ -20,7 +20,7 @@ import com.AG_AP.electroshop.screens.SettingScreen
  * Method called at the beginning of the initialization
  */
 @Composable
-fun AppNav(navController: NavHostController = rememberNavController()) {
+fun AppNav(navController: NavHostController = rememberNavController(),context: Context) {
     /* Starts with Login Screen */
     NavHost(
         navController = navController,
@@ -36,7 +36,7 @@ fun AppNav(navController: NavHostController = rememberNavController()) {
         composable(
             route = Routes.ScreenConfig.route
         ) {
-            SettingScreen(navController = navController)
+            SettingScreen(navController = navController,context=context)
         }
 
         composable(

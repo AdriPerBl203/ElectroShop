@@ -98,7 +98,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    AppNav()
+                    val context: Context = application.applicationContext
+                    AppNav(context=context)
                 }
             }
         }
