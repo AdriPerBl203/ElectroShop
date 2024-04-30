@@ -2,18 +2,24 @@ package com.AG_AP.electroshop.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -40,8 +46,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -57,19 +65,20 @@ fun PurchaseOrderView(innerPadding: PaddingValues/*, viewModel: ActivityViewMode
         viewModel.changeClgCode(id)
     }*/
     Column(
-        modifier= Modifier
+        modifier = Modifier
             .padding(innerPadding)
-            .verticalScroll(rememberScrollState())
+        //.verticalScroll(rememberScrollState())
     ) {
-        Row (
+        Row(
             /*modifier= Modifier
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState()),
             horizontalArrangement= Arrangement.Center*/
-        ){
+        ) {
             Column(
             ) {
-                val coffeeDrinks = arrayOf("Llamada telefónica", "Reunión", "Tarea", "Nota", "Campaña","Otros")
+                val coffeeDrinks =
+                    arrayOf("Llamada telefónica", "Reunión", "Tarea", "Nota", "Campaña", "Otros")
                 var expanded by remember { mutableStateOf(false) }
 
                 ExposedDropdownMenuBox(
@@ -130,7 +139,8 @@ fun PurchaseOrderView(innerPadding: PaddingValues/*, viewModel: ActivityViewMode
 
             Column(
             ) {
-                val coffeeDrinks = arrayOf("Llamada telefónica", "Reunión", "Tarea", "Nota", "Campaña","Otros")
+                val coffeeDrinks =
+                    arrayOf("Llamada telefónica", "Reunión", "Tarea", "Nota", "Campaña", "Otros")
                 var expanded by remember { mutableStateOf(false) }
 
                 ExposedDropdownMenuBox(
@@ -190,7 +200,8 @@ fun PurchaseOrderView(innerPadding: PaddingValues/*, viewModel: ActivityViewMode
             }
             Column(
             ) {
-                val coffeeDrinks = arrayOf("Llamada telefónica", "Reunión", "Tarea", "Nota", "Campaña","Otros")
+                val coffeeDrinks =
+                    arrayOf("Llamada telefónica", "Reunión", "Tarea", "Nota", "Campaña", "Otros")
                 var expanded by remember { mutableStateOf(false) }
 
                 ExposedDropdownMenuBox(
@@ -249,14 +260,16 @@ fun PurchaseOrderView(innerPadding: PaddingValues/*, viewModel: ActivityViewMode
                 )
             }
         }
-        Row(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 30.dp)
-                .background(Color.Red)
-        ){
+                .padding(top = 30.dp, end = 30.dp)
+                .background(MaterialTheme.colorScheme.background)
+        ) {
+
             //Text(text = "aaaa")
-            tableDocumentLine()
+            TableDocumentLine()
+
         }
         Column {
             /*if (dataUiState.message) {
@@ -280,30 +293,50 @@ fun PurchaseOrderView(innerPadding: PaddingValues/*, viewModel: ActivityViewMode
     }
 
 }
+
 @Composable
-fun tableDocumentLine() {
-    val sections = (0 until 5).toList()
+fun TableDocumentLine(modifier: Modifier = Modifier) {
+    val sections = (1 until 100).toList()
+
+    val numRows = 100
+    val numCols = 5
+
+    // Datos de ejemplo para las cabeceras
+    val headers = listOf("Nº", "Nombre", "Cantidad", "Precio", "% de descuento")
+
     LazyVerticalGrid(
-        columns = GridCells.Fixed(4),
+        columns = GridCells.Fixed(numCols)
+    ) {
+        items(items = headers) {
+            Text(
+                it,
+                Modifier
+                    .border(1.dp, MaterialTheme.colorScheme.primary)
+                    .height(65.dp)
+                    .wrapContentSize()
+            )
+        }
+    }
+
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(numCols),
         /*horizontalArrangement = Arrangement.spacedBy(1.dp),
         verticalArrangement = Arrangement.spacedBy(1.dp)*/
     ) {
-        sections.forEachIndexed { index, items ->
-
+        sections.forEach { items ->
             items(
-                items,
-                // not required as it is the default
-                span = { GridItemSpan(1) }
+                items
             ) {
                 Text(
-                    "Item $it",
+                    "Objeto: $it",
                     Modifier
-                        .border(1.dp, Color.Blue)
-                        .height(80.dp)
+                        .border(1.dp, MaterialTheme.colorScheme.primary)
+                        .height(65.dp)
                         .wrapContentSize()
                 )
             }
         }
+
     }
 }
 
@@ -330,31 +363,31 @@ fun ScaffoldPurchaseOrder(/*viewModel: ActivityViewModel = viewModel(), navContr
                 contentColor = MaterialTheme.colorScheme.primary,
             ) {
                 Button(
-                    modifier= Modifier.padding(start = 15.dp, end = 15.dp),
+                    modifier = Modifier.padding(start = 15.dp, end = 15.dp),
                     onClick = { /*viewModel.guardar(false)*/ }
                 ) {
                     Text(text = "Añadir y nuevo")
                 }
                 Button(
-                    modifier= Modifier.padding(start = 15.dp, end = 15.dp),
+                    modifier = Modifier.padding(start = 15.dp, end = 15.dp),
                     onClick = { /*viewModel.guardar(true)*/ }
                 ) {
                     Text(text = "Añadir y ver")
                 }
                 Button(
-                    modifier= Modifier.padding(start = 15.dp, end = 15.dp),
+                    modifier = Modifier.padding(start = 15.dp, end = 15.dp),
                     onClick = { /*viewModel.update()*/ }
                 ) {
                     Text(text = "Actualizar")
                 }
                 Button(
-                    modifier= Modifier.padding(start = 15.dp, end = 15.dp),
+                    modifier = Modifier.padding(start = 15.dp, end = 15.dp),
                     onClick = { /*viewModel.borrar()*/ }
                 ) {
                     Text(text = "Borrar")
                 }
                 Button(
-                    modifier= Modifier.padding(start = 15.dp, end = 15.dp),
+                    modifier = Modifier.padding(start = 15.dp, end = 15.dp),
                     onClick = { /*navController.navigateUp()*/ }
                 ) {
                     Text(text = "Volver")
@@ -367,12 +400,11 @@ fun ScaffoldPurchaseOrder(/*viewModel: ActivityViewModel = viewModel(), navContr
             }
         }
     ) { innerPadding ->
-        Box(modifier = Modifier.padding(start = 50.dp, top = 20.dp)){
+        Box(modifier = Modifier.padding(start = 50.dp, top = 20.dp)) {
             PurchaseOrderView(innerPadding/*,viewModel,id*/)
         }
     }
 }
-
 
 
 @Preview(
