@@ -18,6 +18,10 @@ object SessionObj {
         pedidoCO =""
     }
 
+    fun checkLogin():Boolean{
+        return this.name==""
+    }
+
     fun inserData(name:String,articulo:String,actividad:String,pedidoCL:String,pedidoCO:String){
         this.name=name
         this.articulo=articulo
