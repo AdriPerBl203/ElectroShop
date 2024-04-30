@@ -1,5 +1,6 @@
 package com.AG_AP.electroshop.firebase
 
+import android.annotation.SuppressLint
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestoreSettings
 import com.google.firebase.firestore.memoryCacheSettings
@@ -8,8 +9,9 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 
-open class DatabaseInitializer() {
+internal object DatabaseInitializer {
 
+    @SuppressLint("StaticFieldLeak")
     open var database: FirebaseFirestore = getInstance()
 
     /*
@@ -21,7 +23,7 @@ open class DatabaseInitializer() {
      */
 
     private fun getInstance(): FirebaseFirestore {
-        database = FirebaseFirestore.getInstance()
+        database = FirebaseFirestore.getInstance() //FIXME tengo que arreglar que no se cree una instancia una vez que ya exista
 
         val settings = firestoreSettings {
             setLocalCacheSettings(memoryCacheSettings { setupCacheSize() })

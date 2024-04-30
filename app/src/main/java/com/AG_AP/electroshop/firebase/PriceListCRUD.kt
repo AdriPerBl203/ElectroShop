@@ -5,10 +5,10 @@ import android.util.Log
 import com.AG_AP.electroshop.firebase.models.Price
 import com.google.firebase.firestore.FirebaseFirestore
 
-object PriceListCRUD: DatabaseInitializer() {
+object PriceListCRUD {
 
     @SuppressLint("StaticFieldLeak")
-    override var database: FirebaseFirestore = DatabaseInitializer().database
+    var database: FirebaseFirestore = DatabaseInitializer.database
 
     val coleccion = "SEIlistaPrecios"
 

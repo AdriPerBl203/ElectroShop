@@ -6,10 +6,10 @@ import com.AG_AP.electroshop.firebase.models.Activity
 import com.AG_AP.electroshop.firebase.models.BusinessPartner
 import com.google.firebase.firestore.FirebaseFirestore
 
-object BusinessPartnerCRUD : DatabaseInitializer(),ActionFirebase {
+object BusinessPartnerCRUD : ActionFirebase {
 
     @SuppressLint("StaticFieldLeak")
-    override var database: FirebaseFirestore = DatabaseInitializer().database
+    var database: FirebaseFirestore = DatabaseInitializer.database
 
     val coleccion = "SEIbusinessPartner"
     override fun insert(data: Any) {

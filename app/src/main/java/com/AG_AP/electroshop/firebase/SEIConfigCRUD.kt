@@ -5,10 +5,10 @@ import android.util.Log
 import com.AG_AP.electroshop.firebase.models.SEIConfig
 import com.google.firebase.firestore.FirebaseFirestore
 
-object SEIConfigCRUD : DatabaseInitializer() {
+object SEIConfigCRUD {
 
     @SuppressLint("StaticFieldLeak")
-    override var database: FirebaseFirestore = DatabaseInitializer().database
+    var database: FirebaseFirestore = DatabaseInitializer.database
 
     private val coleccion = "SEIConfig"
 
