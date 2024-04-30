@@ -29,4 +29,8 @@ class MenuViewModel : ViewModel() {
         navController.navigate(route = Routes.ScreenLogin.route)
     }
 
+    fun viewEnd(navController: NavHostController) {
+        navController.navigate(route = Routes.ScreenLogin.route)
+    }
+
 }
