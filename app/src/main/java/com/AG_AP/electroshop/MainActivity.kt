@@ -37,6 +37,7 @@ class MainActivity : ComponentActivity() {
 private val azureBlue = Color(0xFF50A7FF)
 private val skyBlue = Color(0xFF87CEEB)
 private val deepBlue = Color(0xFF2E2EFD)
+private val cyanBlue = Color(0xFF6CBEF5)
 private val boneWhite = Color(0xFFF8EFFA)
 
 // Define el tema personalizado "BlueSkyTheme"
@@ -46,6 +47,7 @@ fun BlueSkyTheme(content: @Composable () -> Unit) {
         colorScheme = MaterialTheme.colorScheme.copy(
             primary = azureBlue,
             primaryContainer = skyBlue,
+            secondaryContainer = cyanBlue,
             secondary = deepBlue,
             background = boneWhite
         ),

@@ -2,26 +2,18 @@ package com.AG_AP.electroshop.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.BottomAppBar
@@ -35,21 +27,17 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -117,7 +105,7 @@ fun PurchaseOrderView(innerPadding: PaddingValues/*, viewModel: ActivityViewMode
                     modifier = Modifier
                         .width(300.dp)
                         .padding(8.dp),
-                    label = { Text("Nota") }
+                    label = { Text("Nombre") }
                 )
                 OutlinedTextField(
                     value = "",
@@ -125,7 +113,7 @@ fun PurchaseOrderView(innerPadding: PaddingValues/*, viewModel: ActivityViewMode
                     modifier = Modifier
                         .width(300.dp)
                         .padding(8.dp),
-                    label = { Text("Fecha") }
+                    label = { Text("Fecha documento") }
                 )
                 OutlinedTextField(
                     value = "",
@@ -133,7 +121,7 @@ fun PurchaseOrderView(innerPadding: PaddingValues/*, viewModel: ActivityViewMode
                     modifier = Modifier
                         .width(300.dp)
                         .padding(8.dp),
-                    label = { Text("Hora inicio") }
+                    label = { Text("Fecha de entrega") }
                 )
             }
 
@@ -172,31 +160,6 @@ fun PurchaseOrderView(innerPadding: PaddingValues/*, viewModel: ActivityViewMode
                         }
                     }
                 }
-
-                OutlinedTextField(
-                    value = "",
-                    onValueChange = { /*viewModel.changenota(it)*/ },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    label = { Text("Nota") }
-                )
-                OutlinedTextField(
-                    value = "",
-                    onValueChange = { /*viewModel.changeActivityDate(it)*/ },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    label = { Text("Fecha") }
-                )
-                OutlinedTextField(
-                    value = "",
-                    onValueChange = { /*viewModel.changeActivityTime(it)*/ },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    label = { Text("Hora inicio") }
-                )
             }
             Column(
             ) {
@@ -233,7 +196,6 @@ fun PurchaseOrderView(innerPadding: PaddingValues/*, viewModel: ActivityViewMode
                         }
                     }
                 }
-
                 OutlinedTextField(
                     value = "",
                     onValueChange = { /*viewModel.changenota(it)*/ },
@@ -296,10 +258,11 @@ fun PurchaseOrderView(innerPadding: PaddingValues/*, viewModel: ActivityViewMode
 
 @Composable
 fun TableDocumentLine(modifier: Modifier = Modifier) {
-    val sections = (1 until 100).toList()
+
 
     val numRows = 100
     val numCols = 5
+    val sections = (1 until 100).toList()
 
     // Datos de ejemplo para las cabeceras
     val headers = listOf("Nº", "Nombre", "Cantidad", "Precio", "% de descuento")
@@ -308,13 +271,21 @@ fun TableDocumentLine(modifier: Modifier = Modifier) {
         columns = GridCells.Fixed(numCols)
     ) {
         items(items = headers) {
-            Text(
-                it,
-                Modifier
+            Box(
+                modifier = Modifier
                     .border(1.dp, MaterialTheme.colorScheme.primary)
-                    .height(65.dp)
-                    .wrapContentSize()
-            )
+                    .background(MaterialTheme.colorScheme.secondaryContainer)
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    it,
+                    Modifier
+                        .height(50.dp)
+                        .wrapContentSize()
+                )
+            }
+
         }
     }
 
@@ -323,20 +294,15 @@ fun TableDocumentLine(modifier: Modifier = Modifier) {
         /*horizontalArrangement = Arrangement.spacedBy(1.dp),
         verticalArrangement = Arrangement.spacedBy(1.dp)*/
     ) {
-        sections.forEach { items ->
-            items(
-                items
-            ) {
-                Text(
-                    "Objeto: $it",
-                    Modifier
-                        .border(1.dp, MaterialTheme.colorScheme.primary)
-                        .height(65.dp)
-                        .wrapContentSize()
-                )
-            }
+        items(count = numRows) {
+            Text(
+                "Objeto: $it",
+                Modifier
+                    .border(1.dp, MaterialTheme.colorScheme.primary)
+                    .height(50.dp)
+                    .wrapContentSize()
+            )
         }
-
     }
 }
 
