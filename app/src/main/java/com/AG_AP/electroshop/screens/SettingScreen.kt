@@ -1,5 +1,6 @@
 package com.AG_AP.electroshop.screens
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -38,9 +39,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 
 @Composable
-fun SettingScreen(viewModel: SettingsViewModel = viewModel(), navController: NavController) {
+fun SettingScreen(
+    viewModel: SettingsViewModel = viewModel(),
+    navController: NavController,
+    context: Context
+) {
     val dataUiState by viewModel.uiState.collectAsState()
-
+    viewModel.initData(context)
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -158,19 +163,20 @@ fun SettingScreen(viewModel: SettingsViewModel = viewModel(), navController: Nav
         ){
             Button(
                 modifier = Modifier.padding(10.dp),
-                onClick = { /* TODO */ },
+                onClick = { viewModel.saveConfiguration(context) },
+                enabled = dataUiState.ButtomEnable
             ) {
                 Text(text = "Guardar")
             }
             Button(
                 modifier = Modifier.padding(10.dp),
-                onClick = { viewModel.menssageFun() },
+                onClick = { viewModel.test() },
             ) {
                 Text(text = "Test")
             }
             Button(
                 modifier = Modifier.padding(10.dp),
-                onClick = {  },
+                onClick = { viewModel.sync() },
             ) {
                 Text(text = "Sincronizar")
             }
