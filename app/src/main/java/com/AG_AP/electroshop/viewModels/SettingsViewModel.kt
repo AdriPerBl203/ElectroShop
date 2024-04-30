@@ -291,11 +291,20 @@ class SettingsViewModel : ViewModel() {
     }
 
     fun sync() {
-        /*deleteAndInsertUserUdo()
+        _uiState.update { currentState -> currentState.copy(
+            progress = true,
+        ) }
+        deleteAndInsertUserUdo()
         deleteAndInsertBusinessPartner()
-        deleteAndInsertActivity()*/
+        deleteAndInsertActivity()
 
         Log.e("JOSELETE","AAAa")
+
+        _uiState.update { currentState -> currentState.copy(
+            message = true,
+            text = "Sincronización realizada",
+            progress = false
+        ) }
 
         //traer articulos, clientes, pedidos....
         /* val items = ItemObj.getItems(Config.rulUse)
