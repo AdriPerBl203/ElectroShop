@@ -23,7 +23,7 @@ internal object DatabaseInitializer {
      */
 
     private fun getInstance(): FirebaseFirestore {
-        database = FirebaseFirestore.getInstance() //FIXME tengo que arreglar que no se cree una instancia una vez que ya exista
+        database = FirebaseFirestore.getInstance()
 
         val settings = firestoreSettings {
             setLocalCacheSettings(memoryCacheSettings { setupCacheSize() })

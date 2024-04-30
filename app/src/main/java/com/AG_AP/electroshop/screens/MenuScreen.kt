@@ -80,8 +80,7 @@ fun MenuFrontView(
         floatingActionButtonPosition = FabPosition.End,
         bottomBar = {
             BottomAppBar(
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                contentColor = MaterialTheme.colorScheme.primary,
+                containerColor = MaterialTheme.colorScheme.primaryContainer
             ) {
                 Text(
                     modifier = Modifier
