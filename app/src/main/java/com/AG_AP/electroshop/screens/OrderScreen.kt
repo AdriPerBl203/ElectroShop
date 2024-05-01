@@ -16,7 +16,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowLeft
 import androidx.compose.material.icons.filled.ArrowRight
 import androidx.compose.material3.BottomAppBar
@@ -25,7 +24,6 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -129,7 +127,7 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel/*, id: Stri
             ) {
 
                 OutlinedTextField(
-                    value = "",
+                    value = dataUiState.TaxDate,
                     onValueChange = { /*viewModel.changenota(it)*/ },
                     modifier = Modifier
                         .width(300.dp)
@@ -199,7 +197,7 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel/*, id: Stri
                     modifier= Modifier.background(MaterialTheme.colorScheme.primary).border(
                         BorderStroke(0.5.dp, Color.Black)
                     ).padding(end = 0.5.dp),
-                    onClick = {/*TODO*/}
+                    onClick = {viewModel.deleteLine()}
                 ){
                     Icon(imageVector  = Icons.Filled.ArrowLeft, "")
                 }
@@ -207,7 +205,7 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel/*, id: Stri
                     modifier= Modifier.background(MaterialTheme.colorScheme.primary).border(
                         BorderStroke(0.5.dp, Color.Black)
                     ).padding(start = 0.5.dp),
-                    onClick = {/*TODO*/}
+                    onClick = {viewModel.addLine()}
                 ){
                     Icon(
                         imageVector  = Icons.Filled.ArrowRight, ""
@@ -243,10 +241,7 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel/*, id: Stri
 @Composable
 fun TableDocumentLine(dataUiState: OrderUiState, viewModel: OrderViewModel) {
 
-
-    val numRows = 100
     val numCols = 5
-    val sections = (1 until 100).toList()
 
     // Datos de ejemplo para las cabeceras
     val headers = listOf("Nº", "Nombre", "Cantidad", "Precio", "% de descuento")
@@ -273,37 +268,8 @@ fun TableDocumentLine(dataUiState: OrderUiState, viewModel: OrderViewModel) {
         }
     }
 
-    /*LazyVerticalGrid(
-        columns = GridCells.Fixed(numCols),
-        /*horizontalArrangement = Arrangement.spacedBy(1.dp),
-        verticalArrangement = Arrangement.spacedBy(1.dp)*/
-    ) {
-        items(count = numRows) {
-            Text(
-                "Objeto: $it",
-                Modifier
-                    .border(1.dp, MaterialTheme.colorScheme.primary)
-                    .height(50.dp)
-                    .wrapContentSize()
-            )
-        }
-    }*/
-    val entrees: MutableList<String> = mutableListOf()
-    var index:Int =0
-    dataUiState.DocumentLine.forEach{ element ->
-        entrees.add(index,element?.LineNum.toString())
-        index++
-        entrees.add(index,element?.ItenCode.toString())
-        index++
-        entrees.add(index,element?.ItemDescription.toString())
-        index++
-        entrees.add(index,element?.Quantity.toString())
-        index++
-        entrees.add(index,element?.Price.toString())
-        index++
-    }
     LazyVerticalGrid(columns = GridCells.Fixed(5)) {
-        items(entrees) { it ->
+        items(dataUiState.DocumentLineList) { it ->
                 Box(
                     modifier = Modifier
                         .border(1.dp, MaterialTheme.colorScheme.primary)
@@ -335,7 +301,7 @@ fun ScaffoldOrder(viewModel: OrderViewModel = viewModel(), navController: NavHos
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 title = {
-                    Text("Pedido de compra")
+                    Text("Pedido de cliente")
                 }
             )
         },
