@@ -80,6 +80,9 @@ class OrderViewModel : ViewModel(),ActionViewModel {
 
     fun deleteLine(){
         val size = _uiState.value.DocumentLine.size
+        if(size-1 ==4){
+            return
+        }
         var listAux: MutableList<ArticleUiState?> = _uiState.value.DocumentLine
         listAux.removeAt(size -1)
         var tastAux = _uiState.value.trash

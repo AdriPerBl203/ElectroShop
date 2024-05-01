@@ -308,7 +308,6 @@ class SettingsViewModel : ViewModel() {
 
         //traer articulos, clientes, pedidos....
         /* val items = ItemObj.getItems(Config.rulUse)
-         val activities = ActivityObj.getActivities(Config.rulUse)
          val orders = OrdersObj.getOrders(Config.rulUse)
          val pruchaseOrders = PurchaseOrdersObj.getPurchaseOrders(Config.rulUse)
          Log.e("SettingViewModel","Datos obtenidos")
