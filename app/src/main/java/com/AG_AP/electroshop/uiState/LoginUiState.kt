@@ -10,7 +10,7 @@ data class LoginUiState(
     val message:Boolean = false,
     val text:String = "",
     val progress:Boolean = false,
-    val paso:Boolean= false,
     val iconPass: ImageVector = Icons.Filled.VisibilityOff,
-    val seePass: Boolean = false
+    val seePass: Boolean = false,
+    val circularProgress:Boolean = false
 )

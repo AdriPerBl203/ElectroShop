@@ -4,6 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavHostController
 import com.AG_AP.electroshop.uiState.LoginUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -48,13 +49,16 @@ class LoginViewModel : ViewModel() {
         }
     }
 
-    fun saveConnection() {
+    fun saveConnection(navController: NavHostController) {
         val userName = _uiState.value.username
         val pass = _uiState.value.password
         if (userName.isNotEmpty() && pass.isNotEmpty()) {
             //val hashedPass = encryptPass(pass)
             //TODO sacar la contraseña de la base de datos y compararla con la que se pasa
             if (validateUsername(userName) /*&& validatePass(pass, hashedPass)*/) {
+                _uiState.update { currentState -> currentState.copy(
+                    circularProgress = true
+                ) }
                 SEIConfigCRUD.getSEIConfigById(userName){ data ->
                     if(data != null){
                         if(data.U_password == pass){
@@ -65,18 +69,18 @@ class LoginViewModel : ViewModel() {
                                 data.U_PedidoCI,
                                 data.U_PedidoCO
                             )
-                            _uiState.update { currentState -> currentState.copy(
-                                paso = true,
-                            ) }
+                            navController.navigate(route = Routes.ScreenMenu.route)
                         }else{
                             _uiState.update { currentState -> currentState.copy(
                                 message = true,
+                                circularProgress = false,
                                 text = "Usuario o contraseña incorrecta."
                             ) }
                         }
                     }else{
                         _uiState.update { currentState -> currentState.copy(
                             message = true,
+                            circularProgress = false,
                             text = "Usuario o contraseña incorrecta."
                         ) }
                     }
