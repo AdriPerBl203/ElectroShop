@@ -9,7 +9,8 @@ data class SettingUiState(
     val ButtomEnable:Boolean = false,
     val text:String = "",
     val message:Boolean = false,
-    val progress:Boolean = false
+    val progress:Boolean = false,
+    val init:Boolean = true
 )
 /*
 *

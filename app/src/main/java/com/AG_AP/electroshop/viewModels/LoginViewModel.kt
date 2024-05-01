@@ -1,18 +1,14 @@
 package com.AG_AP.electroshop.viewModels
 
-import android.content.Context
-import android.database.sqlite.SQLiteDatabase
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.lifecycle.ViewModel
-import com.AG_AP.electroshop.R
 import com.AG_AP.electroshop.uiState.LoginUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import android.widget.ImageView
-import android.webkit.WebView
-import android.view.View
 import at.favre.lib.crypto.bcrypt.BCrypt
-import com.AG_AP.electroshop.MainActivity
 import com.AG_AP.electroshop.firebase.SEIConfigCRUD
 import com.AG_AP.electroshop.functions.SessionObj
 
@@ -134,7 +130,19 @@ class LoginViewModel : ViewModel() {
         return BCrypt.verifyer().verify(pass.toCharArray(), hash).verified
     }
 
-
+    fun showPass() {
+        if(_uiState.value.iconPass == Icons.Filled.VisibilityOff){
+            _uiState.update { currentState -> currentState.copy(
+                iconPass = Icons.Filled.Visibility,
+                seePass = true
+            ) }
+        }else{
+            _uiState.update { currentState -> currentState.copy(
+                iconPass = Icons.Filled.VisibilityOff,
+                seePass = false
+            ) }
+        }
+    }
 
 
 }
