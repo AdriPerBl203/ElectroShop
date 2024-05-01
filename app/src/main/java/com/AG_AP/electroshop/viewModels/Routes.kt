@@ -9,5 +9,6 @@ enum class Routes(val route: String) {
     BusinessPartner(route = "BusinessPartner"),
     BusinessPartnerAux(route = "BusinessPartner"),
     ListActivity(route = "ListActivity"),
-    ScreenBusinessPartnerList(route = "BusinessPartnerList")
+    ScreenBusinessPartnerList(route = "BusinessPartnerList"),
+    ScreenOrder(route = "Order")
 }
