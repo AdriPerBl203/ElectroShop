@@ -20,4 +20,15 @@ object LoginObj {
             false
         }
     }
+
+    suspend fun logout(urlInt: String): Boolean {
+        RetrofitClient.baseUrl = urlInt
+        val apiService = RetrofitClient.retrofit.create(LoginInterface::class.java)
+        return try {
+            apiService.logout()
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
 }

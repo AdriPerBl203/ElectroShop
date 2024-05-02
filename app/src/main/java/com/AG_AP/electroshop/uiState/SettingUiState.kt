@@ -10,7 +10,10 @@ data class SettingUiState(
     val text:String = "",
     val message:Boolean = false,
     val progress:Boolean = false,
-    val init:Boolean = true
+    val init:Boolean = true,
+    val syncProgress:Boolean = false,
+    val checkUserUdo:Boolean = false,
+    val textShow:Boolean =true
 )
 /*
 *

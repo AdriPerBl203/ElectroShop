@@ -4,6 +4,7 @@ import com.google.firebase.database.IgnoreExtraProperties
 
 @IgnoreExtraProperties
 data class Item(
+    val ItemCode:String,
     val itemName: String,
     val itemType: ItemType,
     val mainSupplier: String,
@@ -16,6 +17,7 @@ data class Item(
         hashMap["Series"] = 73
         hashMap["ItemName"] = itemName
         hashMap["ItemType"] = itemType
+        hashMap["ItemCode"] = ItemCode
         hashMap["Mainsupplier"] = mainSupplier
         if (!itemPrice.isNullOrEmpty()) {
             val itemPricesList = mutableListOf<HashMap<String, Any>>()
@@ -35,6 +37,7 @@ data class Item(
 
     fun fromHashMap(map: HashMap<String, Any>): Item {
         val itemName = map["ItemName"] as String
+        val ItemCode = map["ItemCode"] as String
         val itemType = map["ItemType"] as ItemType
         val mainSupplier = map["Mainsupplier"] as String
         val itemPrices = if (map.containsKey("ItemPrices")) {
@@ -51,6 +54,6 @@ data class Item(
         }
         val manageSerialNumbers = map["ManageSerialNumber"] as String
         val autoCreateSerialNumbersOnRelease = map["AutoCreateSerialNumbersOnRelease"] as String
-        return Item(itemName, itemType, mainSupplier, itemPrices, manageSerialNumbers, autoCreateSerialNumbersOnRelease)
+        return Item(ItemCode,itemName, itemType, mainSupplier, itemPrices, manageSerialNumbers, autoCreateSerialNumbersOnRelease)
     }
 }

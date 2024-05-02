@@ -17,7 +17,7 @@ object ItemCRUD {
     fun insertItem(item: Item) {
         database
             .collection(coleccion)
-            .document(item.itemName)
+            .document(item.ItemCode)
             .set(item.toHashMap())
             .addOnSuccessListener {
                 Log.e("Pruebas", "Se ha insertado el item ${item.toString()}")
@@ -97,6 +97,7 @@ object ItemCRUD {
                     val datosItem = it.data
 
                     val itemName = datosItem?.get("ItemName") as String
+                    val itemCode = datosItem?.get("itemCode") as String
                     val itemTypeString = datosItem["ItemType"] as String
                     val mainSupplier = datosItem["Mainsupplier"] as String
                     var itemPrice: MutableList<Price>? = mutableListOf()
@@ -131,6 +132,7 @@ object ItemCRUD {
                     }
 
                     val item = Item(
+                        itemCode,
                         itemName,
                         itemType,
                         mainSupplier,
@@ -163,6 +165,7 @@ object ItemCRUD {
                     val datosItem = document.data
 
                     val itemName = datosItem.get("ItemName") as String
+                    val itemCode = datosItem.get("itemCode") as String
                     val itemTypeString = datosItem["ItemType"] as String
                     val mainSupplier = datosItem["Mainsupplier"] as String
                     var itemPrice: MutableList<Price>? = mutableListOf()
@@ -197,6 +200,7 @@ object ItemCRUD {
                     }
 
                     val item = Item(
+                        itemCode,
                         itemName,
                         itemType,
                         mainSupplier,
