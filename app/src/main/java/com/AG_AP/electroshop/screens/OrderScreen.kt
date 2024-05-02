@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
@@ -40,12 +42,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.AG_AP.electroshop.viewModels.OrderViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.AG_AP.electroshop.components.DatePicker
 import com.AG_AP.electroshop.uiState.OrderUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,16 +62,8 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel/*, id: Stri
             .padding(innerPadding)
         //.verticalScroll(rememberScrollState())
     ) {
-        Row(
-            /*modifier= Modifier
-                .padding(innerPadding)
-                .verticalScroll(rememberScrollState()),
-            horizontalArrangement= Arrangement.Center*/
-            modifier=Modifier.fillMaxWidth()
-        ) {
-            Column(
-                modifier = Modifier.padding(top=18.dp)
-            ) {
+        Row {
+            Column {
                 val coffeeDrinks =
                     arrayOf("Llamada telefónica", "Reunión", "Tarea", "Nota", "Campaña", "Otros")
                 var expanded by remember { mutableStateOf(false) }
@@ -83,9 +79,7 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel/*, id: Stri
                         onValueChange = {},
                         readOnly = true,
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                        modifier = Modifier
-                            .menuAnchor()
-                            .padding(start = 10.dp)
+                        modifier = Modifier.menuAnchor()
                     )
 
                     ExposedDropdownMenu(
@@ -105,79 +99,39 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel/*, id: Stri
                 }
 
                 OutlinedTextField(
-                    value = "",
-                    onValueChange = { /*viewModel.changenota(it)*/ },
+                    value = dataUiState.CardName,
+                    onValueChange = { viewModel.changeName(it) },
                     modifier = Modifier
                         .width(300.dp)
                         .padding(8.dp),
                     label = { Text("Nombre") }
                 )
-                OutlinedTextField(
-                    value = "",
-                    onValueChange = { /*viewModel.changeActivityDate(it)*/ },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    label = { Text("Fecha documento") }
-                )
-            }
-            Column(
-            ) {
 
                 OutlinedTextField(
-                    value = dataUiState.TaxDate,
-                    onValueChange = { /*viewModel.changenota(it)*/ },
+                    value = dataUiState.DiscountPercent,
+                    onValueChange = { viewModel.changeDiscount(it) },
                     modifier = Modifier
                         .width(300.dp)
                         .padding(8.dp),
-                    label = { Text("Nota") }
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    suffix = { Text(text = "%") },
+                    label = { Text("Descuento %") }
                 )
-                //DatePicker(viewModel = viewModel)
-                OutlinedTextField(
-                    value = "",
-                    onValueChange = { /*viewModel.changeActivityTime(it)*/ },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    label = { Text("Hora inicio") }
-                )
-                OutlinedTextField(
-                    value = "",
-                    onValueChange = { /*viewModel.changeActivityTime(it)*/ },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    label = { Text("Hora inicio") }
-                )
-            }
-            Column(
-            ) {
 
-                OutlinedTextField(
-                    value = "",
-                    onValueChange = { /*viewModel.changenota(it)*/ },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    label = { Text("Nota") }
-                )
-                //DatePicker(viewModel = viewModel)
-                OutlinedTextField(
-                    value = "",
-                    onValueChange = { /*viewModel.changeActivityTime(it)*/ },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    label = { Text("Hora inicio") }
-                )
-                OutlinedTextField(
-                    value = "",
-                    onValueChange = { /*viewModel.changeActivityTime(it)*/ },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    label = { Text("Hora inicio") }
-                )
+
+            }
+
+            Column {
+                DatePicker("Fecha contabilizacion ") { fechaDocumento ->
+                    viewModel.changeTaxDate(fechaDocumento)
+                }
+
+                DatePicker("Fecha entrega ") { fechaDocumento ->
+                    viewModel.changeDocDueDate(fechaDocumento)
+                }
+                DatePicker("Fecha contabilizacion ") { fechaDocumento ->
+                    viewModel.changeDocDate(fechaDocumento)
+                }
             }
         }
         Column(
@@ -186,54 +140,60 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel/*, id: Stri
                 .padding(top = 30.dp, end = 30.dp)
                 .background(MaterialTheme.colorScheme.background)
         ) {
-            Row {
-                IconButton(
-                    modifier = Modifier
-                        .background(MaterialTheme.colorScheme.primary)
-                        .border(
-                            BorderStroke(0.5.dp, Color.Black)
-                        )
-                        .padding(end = 0.5.dp),
-                    onClick = { viewModel.deleteLine() }
-                ) {
-                    Text(text = "-")
-                }
-                IconButton(
-                    modifier = Modifier
-                        .background(MaterialTheme.colorScheme.primary)
-                        .border(
-                            BorderStroke(0.5.dp, Color.Black)
-                        )
-                        .padding(start = 0.5.dp),
-                    onClick = { viewModel.addLine() }
-                ) {
-                    Text(text = "+")
-                }
-            }
-            TableDocumentLineOrder(dataUiState,viewModel)
-
-        }
-        Column {
-            /*if (dataUiState.message) {
-                Snackbar(
-                    modifier = Modifier.padding(16.dp),
-                    action = {
-                        Button(
-                            onClick = {
-                                viewModel.menssageFunFalse()
-                            }
-                        ) {
-                            Text("Cerrar")
-                        }
-                    },
-                    content = {
-                        Text(dataUiState.text)
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 30.dp, end = 30.dp)
+                    .background(MaterialTheme.colorScheme.background)
+            ) {
+                Row {
+                    IconButton(
+                        modifier = Modifier
+                            .background(MaterialTheme.colorScheme.primary)
+                            .border(
+                                BorderStroke(0.5.dp, Color.Black)
+                            )
+                            .padding(end = 0.5.dp),
+                        onClick = { viewModel.deleteLine() }
+                    ) {
+                        Text(text = "-")
                     }
-                )
-            }*/
+                    IconButton(
+                        modifier = Modifier
+                            .background(MaterialTheme.colorScheme.primary)
+                            .border(
+                                BorderStroke(0.5.dp, Color.Black)
+                            )
+                            .padding(start = 0.5.dp),
+                        onClick = { viewModel.addLine() }
+                    ) {
+                        Text(text = "+")
+                    }
+                }
+                TableDocumentLineOrder(dataUiState, viewModel)
+
+            }
+            Column {
+                /*if (dataUiState.message) {
+                    Snackbar(
+                        modifier = Modifier.padding(16.dp),
+                        action = {
+                            Button(
+                                onClick = {
+                                    viewModel.menssageFunFalse()
+                                }
+                            ) {
+                                Text("Cerrar")
+                            }
+                        },
+                        content = {
+                            Text(dataUiState.text)
+                        }
+                    )
+                }*/
+            }
         }
     }
-
 }
 
 @Composable
@@ -267,21 +227,62 @@ fun TableDocumentLineOrder(dataUiState: OrderUiState, viewModel: OrderViewModel)
     }
 
     LazyVerticalGrid(columns = GridCells.Fixed(5)) {
-        items(dataUiState.DocumentLineList) { it ->
-                Box(
-                    modifier = Modifier
-                        .border(1.dp, MaterialTheme.colorScheme.primary)
-                        .background(MaterialTheme.colorScheme.secondaryContainer)
-                        .fillMaxWidth(),
-                    contentAlignment = Alignment.Center
-                ) {
+        itemsIndexed(dataUiState.DocumentLineList) { index, it ->
+            Box(
+                modifier = Modifier
+                    .border(1.dp, MaterialTheme.colorScheme.primary)
+                    .background(MaterialTheme.colorScheme.secondaryContainer)
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                if (index % 5 == 1) {
+                    OutlinedTextField(
+                        value = "",
+                        onValueChange = { it },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.secondaryContainer)
+                            .height(50.dp)
+                    )
+                } else if (index % 5 == 2) {
+                    OutlinedTextField(
+                        value = "",
+                        onValueChange = { it },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.secondaryContainer)
+                            .height(50.dp)
+                    )
+                } else if (index % 5 == 3) {
+                    OutlinedTextField(
+                        value = "0.0",
+                        onValueChange = { it },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.secondaryContainer)
+                            .height(50.dp)
+                    )
+                } else if (index % 5 == 4) {
+                    OutlinedTextField(
+                        value = "0.0",
+                        onValueChange = { it },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        suffix = { Text(text = "%") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.secondaryContainer)
+                            .height(50.dp)
+                    )
+                } else {
                     Text(
                         it,
                         Modifier
                             .height(50.dp)
-                            .wrapContentSize()
+                            .wrapContentSize(),
                     )
                 }
+            }
         }
     }
 }
@@ -289,7 +290,10 @@ fun TableDocumentLineOrder(dataUiState: OrderUiState, viewModel: OrderViewModel)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScaffoldOrder(viewModel: OrderViewModel = viewModel(), navController: NavHostController/*, id:String? =null*/) {
+fun ScaffoldOrder(
+    viewModel: OrderViewModel = viewModel(),
+    navController: NavHostController/*, id:String? =null*/
+) {
 
     Scaffold(
         topBar = {
@@ -334,7 +338,7 @@ fun ScaffoldOrder(viewModel: OrderViewModel = viewModel(), navController: NavHos
                 }
                 Button(
                     modifier = Modifier.padding(start = 15.dp, end = 15.dp),
-                    onClick = { /*navController.navigateUp()*/ }
+                    onClick = { navController.popBackStack() }
                 ) {
                     Text(text = "Volver")
                 }

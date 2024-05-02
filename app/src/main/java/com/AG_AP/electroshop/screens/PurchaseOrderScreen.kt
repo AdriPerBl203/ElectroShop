@@ -1,5 +1,6 @@
 package com.AG_AP.electroshop.screens
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -12,9 +13,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -117,6 +122,7 @@ fun PurchaseOrderView(
                         .width(300.dp)
                         .padding(8.dp),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    suffix = { Text(text = "%") },
                     label = { Text("Descuento %") }
                 )
 
@@ -227,12 +233,11 @@ fun TableDocumentLinePurchase(
                         .wrapContentSize()
                 )
             }
-
         }
     }
 
     LazyVerticalGrid(columns = GridCells.Fixed(5)) {
-        items(dataUiState.DocumentLineList) { it ->
+        itemsIndexed(dataUiState.DocumentLineList) { index, it ->
             Box(
                 modifier = Modifier
                     .border(1.dp, MaterialTheme.colorScheme.primary)
@@ -240,12 +245,53 @@ fun TableDocumentLinePurchase(
                     .fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
-                    it,
-                    Modifier
-                        .height(50.dp)
-                        .wrapContentSize()
-                )
+                if (index % 5 == 1) {
+                    OutlinedTextField(
+                        value = "",
+                        onValueChange = { it },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.secondaryContainer)
+                            .height(50.dp)
+                    )
+                } else if (index % 5 == 2) {
+                    OutlinedTextField(
+                        value = "",
+                        onValueChange = { it },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.secondaryContainer)
+                            .height(50.dp)
+                    )
+                } else if (index % 5 == 3) {
+                    OutlinedTextField(
+                        value = "0.0",
+                        onValueChange = { it },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.secondaryContainer)
+                            .height(50.dp)
+                    )
+                } else if (index % 5 == 4) {
+                    OutlinedTextField(
+                        value = "0.0",
+                        onValueChange = { it },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        suffix = { Text(text = "%") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.secondaryContainer)
+                            .height(50.dp)
+                    )
+                } else {
+                    Text(
+                        it,
+                        Modifier
+                            .height(50.dp)
+                            .wrapContentSize(),
+                    )
+                }
             }
         }
     }

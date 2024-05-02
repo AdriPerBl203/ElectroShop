@@ -93,4 +93,24 @@ class OrderViewModel : ViewModel(),ActionViewModel {
             trash= tastAux
         ) }
     }
+
+    fun changeTaxDate(fechaDocumento: String) {
+        //TODO
+    }
+
+    fun changeDiscount(it: String) {
+        //TODO
+    }
+
+    fun changeName(it: String) {
+        //TODO
+    }
+
+    fun changeDocDueDate(fechaDocumento: String) {
+        //TODO
+    }
+
+    fun changeDocDate(fechaDocumento: String) {
+        //TODO
+    }
 }
