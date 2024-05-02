@@ -16,8 +16,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowLeft
-import androidx.compose.material.icons.filled.ArrowRight
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
@@ -188,31 +186,31 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel/*, id: Stri
                 .padding(top = 30.dp, end = 30.dp)
                 .background(MaterialTheme.colorScheme.background)
         ) {
-
-            //Text(text = "aaaa")
-            Row (
-
-            ){
+            Row {
                 IconButton(
-                    modifier= Modifier.background(MaterialTheme.colorScheme.primary).border(
-                        BorderStroke(0.5.dp, Color.Black)
-                    ).padding(end = 0.5.dp),
-                    onClick = {viewModel.deleteLine()}
-                ){
-                    Icon(imageVector  = Icons.Filled.ArrowLeft, "")
+                    modifier = Modifier
+                        .background(MaterialTheme.colorScheme.primary)
+                        .border(
+                            BorderStroke(0.5.dp, Color.Black)
+                        )
+                        .padding(end = 0.5.dp),
+                    onClick = { viewModel.deleteLine() }
+                ) {
+                    Text(text = "-")
                 }
                 IconButton(
-                    modifier= Modifier.background(MaterialTheme.colorScheme.primary).border(
-                        BorderStroke(0.5.dp, Color.Black)
-                    ).padding(start = 0.5.dp),
-                    onClick = {viewModel.addLine()}
-                ){
-                    Icon(
-                        imageVector  = Icons.Filled.ArrowRight, ""
-                    )
+                    modifier = Modifier
+                        .background(MaterialTheme.colorScheme.primary)
+                        .border(
+                            BorderStroke(0.5.dp, Color.Black)
+                        )
+                        .padding(start = 0.5.dp),
+                    onClick = { viewModel.addLine() }
+                ) {
+                    Text(text = "+")
                 }
             }
-            TableDocumentLine(dataUiState,viewModel)
+            TableDocumentLineOrder(dataUiState,viewModel)
 
         }
         Column {
@@ -239,7 +237,7 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel/*, id: Stri
 }
 
 @Composable
-fun TableDocumentLine(dataUiState: OrderUiState, viewModel: OrderViewModel) {
+fun TableDocumentLineOrder(dataUiState: OrderUiState, viewModel: OrderViewModel) {
 
     val numCols = 5
 

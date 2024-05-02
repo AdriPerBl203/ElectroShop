@@ -44,7 +44,7 @@ class OrderViewModel : ViewModel(),ActionViewModel {
         _uiState.value.DocumentLine.forEach{ element ->
             _uiState.value.DocumentLineList.add(index,element?.LineNum.toString())
             index++
-            _uiState.value.DocumentLineList.add(index,element?.ItenCode.toString())
+            _uiState.value.DocumentLineList.add(index,element?.ItemCode.toString())
             index++
             _uiState.value.DocumentLineList.add(index,element?.ItemDescription.toString())
             index++

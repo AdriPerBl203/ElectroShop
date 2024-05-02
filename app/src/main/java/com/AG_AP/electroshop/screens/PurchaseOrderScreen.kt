@@ -1,5 +1,6 @@
 package com.AG_AP.electroshop.screens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.BottomAppBar
@@ -24,6 +26,7 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -32,24 +35,29 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.AG_AP.electroshop.components.DatePicker
-import com.AG_AP.electroshop.viewModels.ActivityViewModel
+import com.AG_AP.electroshop.uiState.PurchaseOrderUiState
 import com.AG_AP.electroshop.viewModels.PurchaseOrderViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PurchaseOrderView(innerPadding: PaddingValues, viewModel: PurchaseOrderViewModel/*, id: String?*/) {
+fun PurchaseOrderView(
+    innerPadding: PaddingValues,
+    viewModel: PurchaseOrderViewModel/*, id: String?*/
+) {
     val dataUiState by viewModel.uiState.collectAsState()
 
     Column(
@@ -57,14 +65,8 @@ fun PurchaseOrderView(innerPadding: PaddingValues, viewModel: PurchaseOrderViewM
             .padding(innerPadding)
         //.verticalScroll(rememberScrollState())
     ) {
-        Row(
-            /*modifier= Modifier
-                .padding(innerPadding)
-                .verticalScroll(rememberScrollState()),
-            horizontalArrangement= Arrangement.Center*/
-        ) {
-            Column(
-            ) {
+        Row {
+            Column {
                 val coffeeDrinks =
                     arrayOf("Llamada telefónica", "Reunión", "Tarea", "Nota", "Campaña", "Otros")
                 var expanded by remember { mutableStateOf(false) }
@@ -100,119 +102,38 @@ fun PurchaseOrderView(innerPadding: PaddingValues, viewModel: PurchaseOrderViewM
                 }
 
                 OutlinedTextField(
-                    value = "",
-                    onValueChange = { /*viewModel.changenota(it)*/ },
+                    value = dataUiState.CardName,
+                    onValueChange = { viewModel.changeName(it) },
                     modifier = Modifier
                         .width(300.dp)
                         .padding(8.dp),
                     label = { Text("Nombre") }
                 )
+
                 OutlinedTextField(
-                    value = "",
-                    onValueChange = { /*viewModel.changeActivityDate(it)*/ },
+                    value = dataUiState.DiscountPercent,
+                    onValueChange = { viewModel.changeDiscount(it) },
                     modifier = Modifier
                         .width(300.dp)
                         .padding(8.dp),
-                    label = { Text("Fecha documento") }
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    label = { Text("Descuento %") }
                 )
-                OutlinedTextField(
-                    value = "",
-                    onValueChange = { /*viewModel.changeActivityTime(it)*/ },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    label = { Text("Fecha de entrega") }
-                )
+
+
             }
 
-            Column(
-            ) {
-                val coffeeDrinks =
-                    arrayOf("Llamada telefónica", "Reunión", "Tarea", "Nota", "Campaña", "Otros")
-                var expanded by remember { mutableStateOf(false) }
-
-                ExposedDropdownMenuBox(
-                    expanded = expanded,
-                    onExpandedChange = {
-                        expanded = !expanded
-                    }
-                ) {
-                    TextField(
-                        value = "",
-                        onValueChange = {},
-                        readOnly = true,
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                        modifier = Modifier.menuAnchor()
-                    )
-
-                    ExposedDropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false }
-                    ) {
-                        coffeeDrinks.forEach { item ->
-                            DropdownMenuItem(
-                                text = { Text(text = item) },
-                                onClick = {
-                                    //viewModel.changeAction(item)
-                                    expanded = false
-                                }
-                            )
-                        }
-                    }
+            Column {
+                DatePicker("Fecha contabilizacion ") { fechaDocumento ->
+                    viewModel.changeTaxDate(fechaDocumento)
                 }
-            }
-            Column(
-            ) {
-                val coffeeDrinks =
-                    arrayOf("Llamada telefónica", "Reunión", "Tarea", "Nota", "Campaña", "Otros")
-                var expanded by remember { mutableStateOf(false) }
 
-                ExposedDropdownMenuBox(
-                    expanded = expanded,
-                    onExpandedChange = {
-                        expanded = !expanded
-                    }
-                ) {
-                    TextField(
-                        value = "",
-                        onValueChange = {},
-                        readOnly = true,
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                        modifier = Modifier.menuAnchor()
-                    )
-
-                    ExposedDropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false }
-                    ) {
-                        coffeeDrinks.forEach { item ->
-                            DropdownMenuItem(
-                                text = { Text(text = item) },
-                                onClick = {
-                                    //viewModel.changeAction(item)
-                                    expanded = false
-                                }
-                            )
-                        }
-                    }
+                DatePicker("Fecha entrega ") { fechaDocumento ->
+                    viewModel.changeDocDueDate(fechaDocumento)
                 }
-                OutlinedTextField(
-                    value = "",
-                    onValueChange = { /*viewModel.changenota(it)*/ },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    label = { Text("Nota") }
-                )
-                DatePicker(viewModel = viewModel)
-                OutlinedTextField(
-                    value = "",
-                    onValueChange = { /*viewModel.changeActivityTime(it)*/ },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    label = { Text("Hora inicio") }
-                )
+                DatePicker("Fecha contabilizacion ") { fechaDocumento ->
+                    viewModel.changeDocDate(fechaDocumento)
+                }
             }
         }
         Column(
@@ -221,44 +142,72 @@ fun PurchaseOrderView(innerPadding: PaddingValues, viewModel: PurchaseOrderViewM
                 .padding(top = 30.dp, end = 30.dp)
                 .background(MaterialTheme.colorScheme.background)
         ) {
-
-            //Text(text = "aaaa")
-            TableDocumentLine()
-
-        }
-        Column {
-            /*if (dataUiState.message) {
-                Snackbar(
-                    modifier = Modifier.padding(16.dp),
-                    action = {
-                        Button(
-                            onClick = {
-                                viewModel.menssageFunFalse()
-                            }
-                        ) {
-                            Text("Cerrar")
-                        }
-                    },
-                    content = {
-                        Text(dataUiState.text)
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 30.dp, end = 30.dp)
+                    .background(MaterialTheme.colorScheme.background)
+            ) {
+                Row {
+                    IconButton(
+                        modifier = Modifier
+                            .background(MaterialTheme.colorScheme.primary)
+                            .border(
+                                BorderStroke(0.5.dp, Color.Black)
+                            )
+                            .padding(end = 0.5.dp),
+                        onClick = { viewModel.deleteLine() }
+                    ) {
+                        Text(text = "-")
                     }
-                )
-            }*/
+                    IconButton(
+                        modifier = Modifier
+                            .background(MaterialTheme.colorScheme.primary)
+                            .border(
+                                BorderStroke(0.5.dp, Color.Black)
+                            )
+                            .padding(start = 0.5.dp),
+                        onClick = { viewModel.addLine() }
+                    ) {
+                        Text(text = "+")
+                    }
+                }
+                TableDocumentLinePurchase(dataUiState, viewModel)
+
+            }
+            Column {
+                /*if (dataUiState.message) {
+                    Snackbar(
+                        modifier = Modifier.padding(16.dp),
+                        action = {
+                            Button(
+                                onClick = {
+                                    viewModel.menssageFunFalse()
+                                }
+                            ) {
+                                Text("Cerrar")
+                            }
+                        },
+                        content = {
+                            Text(dataUiState.text)
+                        }
+                    )
+                }*/
+            }
         }
     }
-
 }
 
 @Composable
-fun TableDocumentLine(modifier: Modifier = Modifier) {
+fun TableDocumentLinePurchase(
+    dataUiState: PurchaseOrderUiState,
+    viewModel: PurchaseOrderViewModel
+) {
 
-
-    val numRows = 100
     val numCols = 5
-    val sections = (1 until 100).toList()
 
     // Datos de ejemplo para las cabeceras
-    val headers = listOf("Nº", "Nombre", "Cantidad", "Precio", "% de descuento")
+    val headers = listOf("#", "Nº", "Cantidad", "Precio", "% de descuento")
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(numCols)
@@ -282,19 +231,22 @@ fun TableDocumentLine(modifier: Modifier = Modifier) {
         }
     }
 
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(numCols),
-        /*horizontalArrangement = Arrangement.spacedBy(1.dp),
-        verticalArrangement = Arrangement.spacedBy(1.dp)*/
-    ) {
-        items(count = numRows) {
-            Text(
-                "Objeto: $it",
-                Modifier
+    LazyVerticalGrid(columns = GridCells.Fixed(5)) {
+        items(dataUiState.DocumentLineList) { it ->
+            Box(
+                modifier = Modifier
                     .border(1.dp, MaterialTheme.colorScheme.primary)
-                    .height(50.dp)
-                    .wrapContentSize()
-            )
+                    .background(MaterialTheme.colorScheme.secondaryContainer)
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    it,
+                    Modifier
+                        .height(50.dp)
+                        .wrapContentSize()
+                )
+            }
         }
     }
 }
@@ -302,7 +254,10 @@ fun TableDocumentLine(modifier: Modifier = Modifier) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScaffoldPurchaseOrder(viewModel: PurchaseOrderViewModel = viewModel(), navController: NavHostController/*, id:String? =null*/) {
+fun ScaffoldPurchaseOrder(
+    viewModel: PurchaseOrderViewModel = viewModel(),
+    navController: NavHostController/*, id:String? =null*/
+) {
 
     Scaffold(
         topBar = {
@@ -347,7 +302,7 @@ fun ScaffoldPurchaseOrder(viewModel: PurchaseOrderViewModel = viewModel(), navCo
                 }
                 Button(
                     modifier = Modifier.padding(start = 15.dp, end = 15.dp),
-                    onClick = { /*navController.navigateUp()*/ }
+                    onClick = { navController.popBackStack() }
                 ) {
                     Text(text = "Volver")
                 }
@@ -365,13 +320,3 @@ fun ScaffoldPurchaseOrder(viewModel: PurchaseOrderViewModel = viewModel(), navCo
     }
 }
 
-
-@Preview(
-    showBackground = true,
-    showSystemUi = true,
-    device = Devices.TABLET
-)
-@Composable
-fun PurchaseOrderPreview() {
-    //ScaffoldPurchaseOrder()
-}

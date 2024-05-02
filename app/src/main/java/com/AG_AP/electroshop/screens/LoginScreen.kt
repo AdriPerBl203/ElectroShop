@@ -41,7 +41,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.AG_AP.electroshop.R
-import com.AG_AP.electroshop.compoments.CircularIndicator
+import com.AG_AP.electroshop.components.CircularIndicator
 import com.AG_AP.electroshop.viewModels.LoginViewModel
 import com.AG_AP.electroshop.viewModels.Routes
 

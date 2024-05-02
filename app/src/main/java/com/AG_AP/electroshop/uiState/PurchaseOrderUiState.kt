@@ -6,13 +6,24 @@ data class PurchaseOrderUiState(
     val DocDate: String = "",
     val DocDueDate: String = "",
     val TaxDate: String = "",
-    val DiscountPercent: String ="", //Descuento
-    val DocumentLine: List<ArticleUiState?> = listOf()
-    /*val Comments: String = "",
-    val CardCode: String = "",
-    val CardCode: String = "",
-    val CardCode: String = "",
-    val CardCode: String = "",
-    val CardCode: String = "",
-    val CardCode: String = ""*/
+    val DiscountPercent: String = "0.0", //Descuento
+    val DocumentLine: MutableList<ArticleUiState?> = listOf(
+        ArticleUiState(
+            0,"","",0.0F,0.0F,0.0F
+        ),
+        ArticleUiState(
+            1,"","",0.0F,0.0F,0.0F
+        ),
+        ArticleUiState(
+            2,"","",0.0F,0.0F,0.0F
+        ),
+        ArticleUiState(
+            3,"","",0.0F,0.0F,0.0F
+        ),
+        ArticleUiState(
+            4,"","",0.0F,0.0F,0.0F
+        )
+    ).toMutableList(),
+    val DocumentLineList: MutableList<String> = mutableListOf(),
+    val trash:Int =0
 )

@@ -18,16 +18,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
 import java.util.*
-import com.AG_AP.electroshop.viewModels.DatePickerViewModel
 
 @Composable
-fun DatePicker(viewModel: DatePickerViewModel) {
-    var fecha: String by rememberSaveable {
-        mutableStateOf(viewModel.selectedDate)
+fun DatePicker(label: String, callback: (String) -> Unit) {
+    var fecha: String by remember {
+        mutableStateOf("")
     }
 
     val anio: Int
@@ -43,16 +41,16 @@ fun DatePicker(viewModel: DatePickerViewModel) {
         LocalContext.current,
         { _: DatePicker, anio: Int, mes: Int, dia: Int ->
             fecha = "$dia/${mes + 1}/$anio"
-
+            callback(fecha)
         }, anio, mes, dia
     )
     Box(modifier = Modifier.fillMaxWidth()) {
-        Row(modifier = Modifier.align(Alignment.Center)) {
+        Row {
             OutlinedTextField(
                 value = fecha,
                 onValueChange = { fecha = it },
                 readOnly = true,
-                label = { Text(text = "Selecciona fecha") },
+                label = { Text(text = label) },
                 )
             Icon(
                 imageVector = Icons.Filled.DateRange,
@@ -65,13 +63,5 @@ fun DatePicker(viewModel: DatePickerViewModel) {
                     }
             )
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewDatePickerDemo() {
-    MaterialTheme {
-        //MiDatePicker()
     }
 }

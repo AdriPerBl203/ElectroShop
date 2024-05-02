@@ -1,4 +1,4 @@
-package com.AG_AP.electroshop.compoments
+package com.AG_AP.electroshop.components
 
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CircularProgressIndicator
