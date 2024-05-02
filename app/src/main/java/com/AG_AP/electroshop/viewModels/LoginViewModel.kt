@@ -1,18 +1,15 @@
 package com.AG_AP.electroshop.viewModels
 
-import android.content.Context
-import android.database.sqlite.SQLiteDatabase
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.lifecycle.ViewModel
-import com.AG_AP.electroshop.R
+import androidx.navigation.NavHostController
 import com.AG_AP.electroshop.uiState.LoginUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import android.widget.ImageView
-import android.webkit.WebView
-import android.view.View
 import at.favre.lib.crypto.bcrypt.BCrypt
-import com.AG_AP.electroshop.MainActivity
 import com.AG_AP.electroshop.firebase.SEIConfigCRUD
 import com.AG_AP.electroshop.functions.SessionObj
 
@@ -52,13 +49,16 @@ class LoginViewModel : ViewModel() {
         }
     }
 
-    fun saveConnection() {
+    fun saveConnection(navController: NavHostController) {
         val userName = _uiState.value.username
         val pass = _uiState.value.password
         if (userName.isNotEmpty() && pass.isNotEmpty()) {
             //val hashedPass = encryptPass(pass)
             //TODO sacar la contraseña de la base de datos y compararla con la que se pasa
             if (validateUsername(userName) /*&& validatePass(pass, hashedPass)*/) {
+                _uiState.update { currentState -> currentState.copy(
+                    circularProgress = true
+                ) }
                 SEIConfigCRUD.getSEIConfigById(userName){ data ->
                     if(data != null){
                         if(data.U_password == pass){
@@ -69,18 +69,18 @@ class LoginViewModel : ViewModel() {
                                 data.U_PedidoCI,
                                 data.U_PedidoCO
                             )
-                            _uiState.update { currentState -> currentState.copy(
-                                paso = true,
-                            ) }
+                            navController.navigate(route = Routes.ScreenMenu.route)
                         }else{
                             _uiState.update { currentState -> currentState.copy(
                                 message = true,
+                                circularProgress = false,
                                 text = "Usuario o contraseña incorrecta."
                             ) }
                         }
                     }else{
                         _uiState.update { currentState -> currentState.copy(
                             message = true,
+                            circularProgress = false,
                             text = "Usuario o contraseña incorrecta."
                         ) }
                     }
@@ -134,7 +134,19 @@ class LoginViewModel : ViewModel() {
         return BCrypt.verifyer().verify(pass.toCharArray(), hash).verified
     }
 
-
+    fun showPass() {
+        if(_uiState.value.iconPass == Icons.Filled.VisibilityOff){
+            _uiState.update { currentState -> currentState.copy(
+                iconPass = Icons.Filled.Visibility,
+                seePass = true
+            ) }
+        }else{
+            _uiState.update { currentState -> currentState.copy(
+                iconPass = Icons.Filled.VisibilityOff,
+                seePass = false
+            ) }
+        }
+    }
 
 
 }

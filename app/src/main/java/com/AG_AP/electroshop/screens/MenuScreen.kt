@@ -203,7 +203,7 @@ fun MenuBody(
                     if(dataUiState.pedidoCL == "S"){
                         ElevatedButton(
                             modifier= Modifier.padding(30.dp).width(200.dp),
-                            onClick = { /* TODO*/ }
+                            onClick = { navController.navigate(route = Routes.ScreenOrder.route) }
                         ) {
                             Text("Pedido de cliente")
                         }

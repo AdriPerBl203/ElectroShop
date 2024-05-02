@@ -1,6 +1,7 @@
 package com.AG_AP.electroshop.screens
 
 import android.content.Context
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -12,10 +13,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ContentPasteSearch
+import androidx.compose.material.icons.filled.KeyboardReturn
+import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -26,6 +34,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -162,28 +171,45 @@ fun SettingScreen(
 
         ){
             Button(
+
                 modifier = Modifier.padding(10.dp),
                 onClick = { viewModel.saveConfiguration(context) },
                 enabled = dataUiState.ButtomEnable
             ) {
+                Icon(
+                    imageVector = Icons.Filled.Save,
+                    contentDescription = "Cart button icon",
+                    modifier = Modifier.size(20.dp))
                 Text(text = "Guardar")
             }
             Button(
                 modifier = Modifier.padding(10.dp),
                 onClick = { viewModel.test() },
             ) {
+                Icon(
+                    imageVector = Icons.Filled.ContentPasteSearch,
+                    contentDescription = "Cart button icon",
+                    modifier = Modifier.size(20.dp))
                 Text(text = "Test")
             }
             Button(
                 modifier = Modifier.padding(10.dp),
                 onClick = { viewModel.sync() },
             ) {
+                Icon(
+                    imageVector = Icons.Filled.Sync,
+                    contentDescription = "Cart button icon",
+                    modifier = Modifier.size(20.dp))
                 Text(text = "Sincronizar")
             }
             Button(
                 modifier = Modifier.padding(10.dp),
                 onClick = { navController.navigateUp() },
             ) {
+                Icon(
+                    imageVector = Icons.Filled.KeyboardReturn,
+                    contentDescription = "Cart button icon",
+                    modifier = Modifier.size(20.dp))
                 Text(text = "Volver")
             }
 
