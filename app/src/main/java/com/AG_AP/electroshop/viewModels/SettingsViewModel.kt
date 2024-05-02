@@ -7,9 +7,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.AG_AP.electroshop.endpoints.models.activity.Activity
 import com.AG_AP.electroshop.endpoints.models.businessPartners.BusinessPartners
+import com.AG_AP.electroshop.endpoints.models.item.getItems.GetItems
+import com.AG_AP.electroshop.endpoints.models.item.getItems.ItemPrice
 import com.AG_AP.electroshop.endpoints.models.login.Login
 import com.AG_AP.electroshop.endpoints.objects.ActivityObj
 import com.AG_AP.electroshop.endpoints.objects.BusinessPartnersObj
+import com.AG_AP.electroshop.endpoints.objects.ItemObj
 import com.AG_AP.electroshop.endpoints.objects.LoginObj
 import com.AG_AP.electroshop.endpoints.udo.models.CreateField
 import com.AG_AP.electroshop.endpoints.udo.models.createUdo.CreateUdo
@@ -20,8 +23,12 @@ import com.AG_AP.electroshop.endpoints.udo.models.getUserUdo.SeiConfigUser
 import com.AG_AP.electroshop.endpoints.udo.objects.UDOobj
 import com.AG_AP.electroshop.firebase.ActivityCRUD
 import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
+import com.AG_AP.electroshop.firebase.ItemCRUD
 import com.AG_AP.electroshop.firebase.SEIConfigCRUD
 import com.AG_AP.electroshop.firebase.models.BusinessPartner
+import com.AG_AP.electroshop.firebase.models.Item
+import com.AG_AP.electroshop.firebase.models.ItemType
+import com.AG_AP.electroshop.firebase.models.Price
 import com.AG_AP.electroshop.firebase.models.SEIConfig
 import com.AG_AP.electroshop.functions.Config
 import com.AG_AP.electroshop.functions.ConfigurationApplication
@@ -117,6 +124,7 @@ class SettingsViewModel : ViewModel() {
             val data = LoginObj.loginAcessTwoversion(dataLogin,urlInt)
             var text:String=""
             Log.e("SettingScreen", "Conexión realizada")
+            //LoginObj.logout(urlInt)
             if(data){
                 text ="Test realizado con éxito."
                 _uiState.update { currentState -> currentState.copy(
@@ -138,7 +146,10 @@ class SettingsViewModel : ViewModel() {
 
     fun menssageFunFalse(){
         _uiState.update { currentState -> currentState.copy(
-            message = false
+            message = false,
+            textShow=true,
+            syncProgress=false,
+            checkUserUdo=false
         ) }
     }
 
@@ -213,6 +224,10 @@ class SettingsViewModel : ViewModel() {
                 element.U_PedidoCO
             )
             )
+                _uiState.update { currentState -> currentState.copy(
+                    checkUserUdo = true
+                ) }
+                Log.e("JOSELITOLOQUITO","Usuarios check")
         }
         }
     }
@@ -260,6 +275,8 @@ class SettingsViewModel : ViewModel() {
                     ))
                 }
             }
+
+            Log.e("sync","clientes sincronizados")
         }
     }
 
@@ -287,23 +304,27 @@ class SettingsViewModel : ViewModel() {
                     ActivityCRUD.insertActivity(activity)
                 }
             }
+
+            Log.e("sync","actividades sincronizados")
         }
     }
 
     fun sync() {
-        _uiState.update { currentState -> currentState.copy(
-            progress = true,
-        ) }
-        deleteAndInsertUserUdo()
-        deleteAndInsertBusinessPartner()
-        deleteAndInsertActivity()
+        //deleteAndInsertItem()
+        //deleteAndInsertUserUdo()
+        //deleteAndInsertBusinessPartner()
+        //deleteAndInsertActivity()
+        deleteAndInsertOrders()
+        deleteAndInsertPurchaseOrders()
 
         Log.e("JOSELETE","AAAa")
 
         _uiState.update { currentState -> currentState.copy(
             message = true,
             text = "Sincronización realizada",
-            progress = false
+            progress = false,
+            syncProgress=true,
+            textShow=false
         ) }
 
         //traer articulos, clientes, pedidos....
@@ -328,6 +349,51 @@ class SettingsViewModel : ViewModel() {
          }*/
     }
 
+    private fun deleteAndInsertPurchaseOrders() {
+        TODO("Not yet implemented")
+    }
+
+    private fun deleteAndInsertOrders() {
+        TODO("Not yet implemented")
+    }
+
+    private fun deleteAndInsertItem() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val items : GetItems? = ItemObj.getItems(Config.rulUse)
+            if(items is GetItems){
+                items.value.forEach{element ->
+                    ItemCRUD.deleteItemById(element.ItemCode.toString())
+                }
+                items.value.forEach{element ->
+                    //lista de precios
+                    val listPrice: MutableList<Price> = mutableListOf()
+                    element.ItemPrices.forEachIndexed { index, itemPrice ->
+                        listPrice.add(
+                            index,
+                            Price(
+                                itemPrice.PriceList ?:0,
+                                itemPrice.Price ?:0.0F,
+                                itemPrice.Currency ?:""
+                            )
+                        )
+                    }
+                    val item : Item = Item(
+                        element.ItemCode ?: "",
+                        element.ItemName ?: "",
+                        ItemType.I,
+                        element.ItemName ?: "",
+                        listPrice.toList(),
+                                element.ItemName ?: "",
+                                element.ItemName ?: ""
+                    )
+                    ItemCRUD.insertItem(item)
+                }
+            }
+
+            Log.e("sync","actividades sincronizados")
+        }
+    }
+
     fun saveConfiguration(context: Context) {
         val urlInt = _uiState.value.urlInt
         val urlExt = _uiState.value.urlExt
@@ -343,8 +409,13 @@ class SettingsViewModel : ViewModel() {
         dataConfig?.putString("configuration", jsonData)
         dataConfig?.apply()
 
-        val jsonStringRecuperada = sharedPref?.getString("configuration", null)
-        val miObjetoRecuperado = gson.fromJson(jsonStringRecuperada, ConfigurationApplication::class.java)
+        //val jsonStringRecuperada = sharedPref?.getString("configuration", null)
+        //val miObjetoRecuperado = gson.fromJson(jsonStringRecuperada, ConfigurationApplication::class.java)
+        _uiState.update { currentState -> currentState.copy(
+            message = true,
+            text = "Configuración guardada con éxito.",
+            progress = false
+        ) }
 
     }
 

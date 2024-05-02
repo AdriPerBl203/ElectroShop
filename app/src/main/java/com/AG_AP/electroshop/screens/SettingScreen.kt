@@ -18,6 +18,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.ContentPasteSearch
 import androidx.compose.material.icons.filled.KeyboardReturn
 import androidx.compose.material.icons.filled.Save
@@ -46,6 +47,7 @@ import androidx.compose.ui.unit.sp
 import com.AG_AP.electroshop.viewModels.SettingsViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.AG_AP.electroshop.compoments.CircularIndicator
 
 @Composable
 fun SettingScreen(
@@ -65,7 +67,10 @@ fun SettingScreen(
         Box(
             modifier= Modifier
                 .padding(horizontal = 100.dp)
-                .background(color = MaterialTheme.colorScheme.primaryContainer, shape = RoundedCornerShape(25.dp))
+                .background(
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                    shape = RoundedCornerShape(25.dp)
+                )
                 .border(width = 1.dp, Color.Black, shape = RoundedCornerShape(25.dp))
         ){
             Column(
@@ -99,7 +104,10 @@ fun SettingScreen(
         Box(
             modifier = Modifier
                 .padding(horizontal = 100.dp)
-                .background(color = MaterialTheme.colorScheme.primaryContainer, shape = RoundedCornerShape(25.dp))
+                .background(
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                    shape = RoundedCornerShape(25.dp)
+                )
                 .border(width = 1.dp, Color.Black, shape = RoundedCornerShape(25.dp))
         ){
             Column(
@@ -159,7 +167,42 @@ fun SettingScreen(
                     }
                 },
                 content = {
-                    Text(dataUiState.text)
+                    if(dataUiState.textShow){
+                        Text(dataUiState.text)
+                    }
+                    if(dataUiState.syncProgress){
+                        Column(){
+                            Row(){
+                                Text("Sincronizando clientes")
+                                CircularIndicator(10.dp)
+                            }
+                            Row(){
+                                Text("Sincronizando usuarios")
+                                if(dataUiState.checkUserUdo){
+                                    Icon(imageVector = Icons.Filled.CheckCircle, contentDescription = "")
+                                }else{
+                                    CircularIndicator(10.dp)
+                                }
+                            }
+                            Row(){
+                                Text("Sincronizando actividades")
+                                CircularIndicator(10.dp)
+                            }
+                            Row(){
+                                Text("Sincronizando articulos")
+                                CircularIndicator(10.dp)
+                            }
+                            Row(){
+                                Text("Sincronizando pedido de compra")
+                                CircularIndicator(10.dp)
+                            }
+                            Row(){
+                                Text("Sincronizando pedido de cliente")
+                                CircularIndicator(10.dp)
+                            }
+                        }
+
+                    }
                 }
             )
         }
