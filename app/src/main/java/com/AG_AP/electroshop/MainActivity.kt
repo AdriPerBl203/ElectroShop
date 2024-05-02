@@ -2,7 +2,6 @@ package com.AG_AP.electroshop
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,20 +10,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.AG_AP.electroshop.endpoints.objects.ActivityObj
-import com.AG_AP.electroshop.firebase.ActivityCRUD
-import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
-import com.AG_AP.electroshop.screens.ScaffoldActivity
-import com.AG_AP.electroshop.firebase.ItemCRUD
-import com.AG_AP.electroshop.firebase.PriceListCRUD
-import com.AG_AP.electroshop.firebase.SEIConfigCRUD
-import com.AG_AP.electroshop.firebase.models.Item
-import com.AG_AP.electroshop.firebase.models.ItemType
-import com.AG_AP.electroshop.firebase.models.Price
-import com.AG_AP.electroshop.firebase.models.SEIConfig
-import com.AG_AP.electroshop.screens.SettingScreen
-import com.AG_AP.electroshop.ui.theme.ElectroShopTheme
+import androidx.lifecycle.lifecycleScope
+import com.AG_AP.electroshop.firebase.models.DocumentLineFireBase
+import com.AG_AP.electroshop.firebase.models.OrderFireBase
 import com.AG_AP.electroshop.viewModels.AppNav
+import kotlinx.coroutines.launch
 
 
 class MainActivity : ComponentActivity() {
@@ -90,6 +80,55 @@ class MainActivity : ComponentActivity() {
         }
 
          */
+        val order = OrderFireBase(
+            1,
+            "",
+            "",
+            "",
+            "",
+            "",
+            0.0,
+            listOf(
+                DocumentLineFireBase(
+                    "1",2.0,0.0,1,11.0
+                ),
+                DocumentLineFireBase(
+                    "2",0.0,0.3,1,10.0
+                )
+            ),
+        )
+
+        val order2 = OrderFireBase(
+            2,
+            "",
+            "",
+            "",
+            "",
+            "",
+            0.0,
+            listOf(
+                DocumentLineFireBase(
+                    "1",2.0,0.0,1,11.0
+                ),
+                DocumentLineFireBase(
+                    "2",0.0,0.3,1,10.0
+                )
+            ),
+        )
+
+        lifecycleScope.launch {
+            //OrderCRUD.insert(order)
+            //OrderCRUD.insert(order2)
+            //OrderCRUD.deleteObjectById("1")
+            /*OrderCRUD.getAllObject { lista ->
+                Log.e("OrderCRUD",lista.toString())
+            }
+            OrderCRUD.getObjectById(1){it ->
+                Log.e("OrderCRUD",it.toString())
+            }
+            */
+
+        }
 
         setContent {
             BlueSkyTheme {
