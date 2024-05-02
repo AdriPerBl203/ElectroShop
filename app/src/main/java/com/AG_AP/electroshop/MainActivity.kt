@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.lifecycleScope
+import com.AG_AP.electroshop.firebase.OrderCRUD
 import com.AG_AP.electroshop.firebase.models.DocumentLineFireBase
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
 import com.AG_AP.electroshop.viewModels.AppNav
@@ -80,26 +81,9 @@ class MainActivity : ComponentActivity() {
         }
 
          */
-        val order = OrderFireBase(
-            1,
-            "",
-            "",
-            "",
-            "",
-            "",
-            0.0,
-            listOf(
-                DocumentLineFireBase(
-                    "1",2.0,0.0,1,11.0
-                ),
-                DocumentLineFireBase(
-                    "2",0.0,0.3,1,10.0
-                )
-            ),
-        )
 
-        val order2 = OrderFireBase(
-            2,
+        /*val order2 = OrderFireBase(
+            9,
             "",
             "",
             "",
@@ -118,7 +102,7 @@ class MainActivity : ComponentActivity() {
 
         lifecycleScope.launch {
             //OrderCRUD.insert(order)
-            //OrderCRUD.insert(order2)
+            OrderCRUD.insert(order2)
             //OrderCRUD.deleteObjectById("1")
             /*OrderCRUD.getAllObject { lista ->
                 Log.e("OrderCRUD",lista.toString())
@@ -128,7 +112,7 @@ class MainActivity : ComponentActivity() {
             }
             */
 
-        }
+        }*/
 
         setContent {
             BlueSkyTheme {

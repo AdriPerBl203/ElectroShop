@@ -51,16 +51,16 @@ object OrderCRUD : ActionFirebase {
                         for (x in documentLineAux) {
                             val ItemCode = x["ItemCode"].toString()
                             val Quantity = x["Quantity"].toString().toDouble()
-                            //val DiscountPercent = x["DiscountPercent"].toString().toDouble()
-                            //val LineNum = x["LineNum"].toString().toInt()
+                            val DiscountPercentLine = x["DiscountPercent"].toString().toDouble()
+                            val LineNum = x["LineNum"].toString().toInt()
                             val Price = x["Price"].toString().toDouble()
 
                             documentLine.add(
                                 DocumentLineFireBase(
                                     ItemCode,
                                     Quantity,
-                                    0.0,
-                                    0,
+                                    DiscountPercentLine,
+                                    LineNum,
                                     Price
                                 )
                             )
@@ -116,16 +116,16 @@ object OrderCRUD : ActionFirebase {
                             for (x in documentLineAux) {
                                 val ItemCode = x["ItemCode"].toString()
                                 val Quantity = x["Quantity"].toString().toDouble()
-                                //val DiscountPercent = x["DiscountPercent"].toString().toDouble() ?: 0.0
-                                //val LineNum = x["LineNum"].toString().toInt() ?: 0
+                                val DiscountPercentLine = x["DiscountPercent"].toString().toDouble() ?: 0.0
+                                val LineNum = x["LineNum"].toString().toInt() ?: 0
                                 val Price = x["Price"].toString().toDouble()
 
                                 documentLine.add(
                                     DocumentLineFireBase(
                                         ItemCode,
                                         Quantity,
-                                        0.0,
-                                        0,
+                                        DiscountPercentLine,
+                                        LineNum,
                                         Price
                                     )
                                 )

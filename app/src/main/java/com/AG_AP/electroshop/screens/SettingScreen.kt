@@ -47,7 +47,7 @@ import androidx.compose.ui.unit.sp
 import com.AG_AP.electroshop.viewModels.SettingsViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.AG_AP.electroshop.compoments.CircularIndicator
+import com.AG_AP.electroshop.components.CircularIndicator
 
 @Composable
 fun SettingScreen(
