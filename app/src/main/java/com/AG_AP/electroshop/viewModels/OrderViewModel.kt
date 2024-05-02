@@ -44,7 +44,7 @@ class OrderViewModel : ViewModel(),ActionViewModel {
         _uiState.value.DocumentLine.forEach{ element ->
             _uiState.value.DocumentLineList.add(index,element?.LineNum.toString())
             index++
-            _uiState.value.DocumentLineList.add(index,element?.ItenCode.toString())
+            _uiState.value.DocumentLineList.add(index,element?.ItemCode.toString())
             index++
             _uiState.value.DocumentLineList.add(index,element?.ItemDescription.toString())
             index++
@@ -92,5 +92,25 @@ class OrderViewModel : ViewModel(),ActionViewModel {
             DocumentLineList = DocumentLineForMutableList(),
             trash= tastAux
         ) }
+    }
+
+    fun changeTaxDate(fechaDocumento: String) {
+        //TODO
+    }
+
+    fun changeDiscount(it: String) {
+        //TODO
+    }
+
+    fun changeName(it: String) {
+        //TODO
+    }
+
+    fun changeDocDueDate(fechaDocumento: String) {
+        //TODO
+    }
+
+    fun changeDocDate(fechaDocumento: String) {
+        //TODO
     }
 }

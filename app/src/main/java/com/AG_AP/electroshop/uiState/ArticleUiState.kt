@@ -2,7 +2,7 @@ package com.AG_AP.electroshop.uiState
 
 data class ArticleUiState(
     val LineNum:Int =0,
-    val ItenCode:String ="",
+    val ItemCode:String ="",
     val ItemDescription:String="",
     val Quantity: Float= 0.0F,
     val Price: Float = 0.0F,
