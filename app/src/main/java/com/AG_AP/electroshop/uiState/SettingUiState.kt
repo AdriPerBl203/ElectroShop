@@ -13,7 +13,15 @@ data class SettingUiState(
     val init:Boolean = true,
     val syncProgress:Boolean = false,
     val checkUserUdo:Boolean = false,
-    val textShow:Boolean =true
+    val checkBusinessPartner:Boolean = false,
+    val checkActivity:Boolean = false,
+    val checkItem:Boolean = false,
+    val checkOrder:Boolean = false,
+    val checkPurchaseOrder:Boolean = false,
+    val textShow:Boolean =true,
+    val btnSyncEnable:Boolean =true,
+    val btnEnable:Boolean =true,
+    val btnExitEnable:Boolean =true
 )
 /*
 *
