@@ -10,7 +10,7 @@ object PurchaseOrderCRUD : ActionFirebase {
     @SuppressLint("StaticFieldLeak")
     var database: FirebaseFirestore = DatabaseInitializer.database
 
-    val coleccion = "SEIorders"
+    val coleccion = "SEIPurchaseOrders"
     override fun insert(data: Any) {
         val dataAux: OrderFireBase
         if(data is OrderFireBase){

@@ -10,10 +10,14 @@ import com.AG_AP.electroshop.endpoints.models.businessPartners.BusinessPartners
 import com.AG_AP.electroshop.endpoints.models.item.getItems.GetItems
 import com.AG_AP.electroshop.endpoints.models.item.getItems.ItemPrice
 import com.AG_AP.electroshop.endpoints.models.login.Login
+import com.AG_AP.electroshop.endpoints.models.orders.Orders
+import com.AG_AP.electroshop.endpoints.models.purchaseOrders.PurchaseOrders
 import com.AG_AP.electroshop.endpoints.objects.ActivityObj
 import com.AG_AP.electroshop.endpoints.objects.BusinessPartnersObj
 import com.AG_AP.electroshop.endpoints.objects.ItemObj
 import com.AG_AP.electroshop.endpoints.objects.LoginObj
+import com.AG_AP.electroshop.endpoints.objects.OrdersObj
+import com.AG_AP.electroshop.endpoints.objects.PurchaseOrdersObj
 import com.AG_AP.electroshop.endpoints.udo.models.CreateField
 import com.AG_AP.electroshop.endpoints.udo.models.createUdo.CreateUdo
 import com.AG_AP.electroshop.endpoints.udo.models.createUdo.UserObjectMDFindColumn
@@ -24,10 +28,14 @@ import com.AG_AP.electroshop.endpoints.udo.objects.UDOobj
 import com.AG_AP.electroshop.firebase.ActivityCRUD
 import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
 import com.AG_AP.electroshop.firebase.ItemCRUD
+import com.AG_AP.electroshop.firebase.OrderCRUD
+import com.AG_AP.electroshop.firebase.PurchaseOrderCRUD
 import com.AG_AP.electroshop.firebase.SEIConfigCRUD
 import com.AG_AP.electroshop.firebase.models.BusinessPartner
+import com.AG_AP.electroshop.firebase.models.DocumentLineFireBase
 import com.AG_AP.electroshop.firebase.models.Item
 import com.AG_AP.electroshop.firebase.models.ItemType
+import com.AG_AP.electroshop.firebase.models.OrderFireBase
 import com.AG_AP.electroshop.firebase.models.Price
 import com.AG_AP.electroshop.firebase.models.SEIConfig
 import com.AG_AP.electroshop.functions.Config
@@ -310,10 +318,10 @@ class SettingsViewModel : ViewModel() {
     }
 
     fun sync() {
-        //deleteAndInsertItem()
-        //deleteAndInsertUserUdo()
-        //deleteAndInsertBusinessPartner()
-        //deleteAndInsertActivity()
+        deleteAndInsertItem()
+        deleteAndInsertUserUdo()
+        deleteAndInsertBusinessPartner()
+        deleteAndInsertActivity()
         deleteAndInsertOrders()
         deleteAndInsertPurchaseOrders()
 
@@ -326,11 +334,7 @@ class SettingsViewModel : ViewModel() {
             syncProgress=true,
             textShow=false
         ) }
-
-        //traer articulos, clientes, pedidos....
-        /* val items = ItemObj.getItems(Config.rulUse)
-         val orders = OrdersObj.getOrders(Config.rulUse)
-         val pruchaseOrders = PurchaseOrdersObj.getPurchaseOrders(Config.rulUse)
+        /*
          Log.e("SettingViewModel","Datos obtenidos")
 
          //UDO
@@ -350,11 +354,82 @@ class SettingsViewModel : ViewModel() {
     }
 
     private fun deleteAndInsertPurchaseOrders() {
-        TODO("Not yet implemented")
+        viewModelScope.launch(Dispatchers.IO) {
+            val purchaseOrders : PurchaseOrders? = PurchaseOrdersObj.getPurchaseOrders(Config.rulUse)
+            if(purchaseOrders is PurchaseOrders){
+                purchaseOrders.value.forEach{element ->
+                    PurchaseOrderCRUD.deleteObjectById(element.DocNum.toString())
+                }
+                purchaseOrders.value.forEach{element ->
+                    val documentList: MutableList<DocumentLineFireBase> = mutableListOf()
+                    element.DocumentLines.forEachIndexed { index, it ->
+                        documentList.add(
+                            index,
+                            DocumentLineFireBase(
+                                it.ItemCode,
+                                it.Quantity,
+                                it.DiscountPercent,
+                                it.LineNum,
+                                it.Price,
+                            )
+                        )
+                    }
+                    val PurchaseOrderInsert : OrderFireBase = OrderFireBase(
+                        element.DocNum,
+                        element.CardCode,
+                        element.CardName,
+                        element.DocDate,
+                        element.DocDueDate,
+                        element.TaxDate,
+                        element.DiscountPercent,
+                        documentList,
+                    )
+                    PurchaseOrderCRUD.insert(PurchaseOrderInsert)
+                }
+            }
+
+            Log.e("sync","PurchaseOrder sync")
+        }
     }
 
     private fun deleteAndInsertOrders() {
-        TODO("Not yet implemented")
+        viewModelScope.launch(Dispatchers.IO) {
+            val orders : Orders? = OrdersObj.getOrders(Config.rulUse)
+            if(orders is Orders){
+                orders.value.forEach{element ->
+                    OrderCRUD.deleteObjectById(element.DocNum.toString())
+                }
+                orders.value.forEach{element ->
+                    //lista de precios
+                    val documentList: MutableList<DocumentLineFireBase> = mutableListOf()
+                    element.DocumentLines.forEachIndexed { index, it ->
+                        documentList.add(
+                            index,
+                            DocumentLineFireBase(
+                                it.ItemCode,
+                                it.Quantity,
+                                it.DiscountPercent,
+                                it.LineNum,
+                                it.Price,
+                            )
+                        )
+                    }
+                    val orderInsert : OrderFireBase = OrderFireBase(
+                        element.DocNum,
+                        element.CardCode,
+                        element.CardName,
+                        element.DocDate,
+                        element.DocDueDate,
+                        element.TaxDate,
+                        element.DiscountPercent,
+                        documentList,
+                    )
+                    OrderCRUD.insert(orderInsert)
+                }
+            }
+
+            Log.e("sync","order sync")
+        }
     }
 
     private fun deleteAndInsertItem() {
