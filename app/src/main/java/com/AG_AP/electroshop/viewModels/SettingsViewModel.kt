@@ -157,7 +157,12 @@ class SettingsViewModel : ViewModel() {
             message = false,
             textShow=true,
             syncProgress=false,
-            checkUserUdo=false
+            checkUserUdo=false,
+            checkBusinessPartner=false,
+            checkActivity = false,
+            checkItem = false,
+            checkOrder = false,
+            checkPurchaseOrder = false
         ) }
     }
 
@@ -232,11 +237,11 @@ class SettingsViewModel : ViewModel() {
                 element.U_PedidoCO
             )
             )
-                _uiState.update { currentState -> currentState.copy(
-                    checkUserUdo = true
-                ) }
                 Log.e("JOSELITOLOQUITO","Usuarios check")
         }
+            _uiState.update { currentState -> currentState.copy(
+                checkUserUdo = true
+            ) }
         }
     }
 
@@ -282,6 +287,9 @@ class SettingsViewModel : ViewModel() {
 
                     ))
                 }
+                _uiState.update { currentState -> currentState.copy(
+                    checkBusinessPartner = true
+                ) }
             }
 
             Log.e("sync","clientes sincronizados")
@@ -311,6 +319,9 @@ class SettingsViewModel : ViewModel() {
                     )
                     ActivityCRUD.insertActivity(activity)
                 }
+                _uiState.update { currentState -> currentState.copy(
+                    checkActivity = true
+                ) }
             }
 
             Log.e("sync","actividades sincronizados")
@@ -318,10 +329,10 @@ class SettingsViewModel : ViewModel() {
     }
 
     fun sync() {
-        deleteAndInsertItem()
-        deleteAndInsertUserUdo()
-        deleteAndInsertBusinessPartner()
-        deleteAndInsertActivity()
+        deleteAndInsertItem()//
+        deleteAndInsertUserUdo() //
+        deleteAndInsertBusinessPartner() //
+        deleteAndInsertActivity()//
         deleteAndInsertOrders()
         deleteAndInsertPurchaseOrders()
 
@@ -386,6 +397,10 @@ class SettingsViewModel : ViewModel() {
                     )
                     PurchaseOrderCRUD.insert(PurchaseOrderInsert)
                 }
+
+                _uiState.update { currentState -> currentState.copy(
+                    checkPurchaseOrder = true
+                ) }
             }
 
             Log.e("sync","PurchaseOrder sync")
@@ -426,6 +441,9 @@ class SettingsViewModel : ViewModel() {
                     )
                     OrderCRUD.insert(orderInsert)
                 }
+                _uiState.update { currentState -> currentState.copy(
+                    checkOrder = true
+                ) }
             }
 
             Log.e("sync","order sync")
@@ -463,6 +481,9 @@ class SettingsViewModel : ViewModel() {
                     )
                     ItemCRUD.insertItem(item)
                 }
+                _uiState.update { currentState -> currentState.copy(
+                    checkItem = true
+                ) }
             }
 
             Log.e("sync","actividades sincronizados")

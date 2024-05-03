@@ -173,32 +173,60 @@ fun SettingScreen(
                     if(dataUiState.syncProgress){
                         Column(){
                             Row(){
-                                Text("Sincronizando clientes")
-                                CircularIndicator(10.dp)
-                            }
-                            Row(){
-                                Text("Sincronizando usuarios")
-                                if(dataUiState.checkUserUdo){
-                                    Icon(imageVector = Icons.Filled.CheckCircle, contentDescription = "")
-                                }else{
-                                    CircularIndicator(10.dp)
+                                Column(){
+                                    Row(){
+                                        Text("Sincronizando clientes")
+                                        if(dataUiState.checkBusinessPartner){
+                                            Icon(imageVector = Icons.Filled.CheckCircle, contentDescription = "", tint= MaterialTheme.colorScheme.surface)
+                                        }else{
+                                            CircularIndicator(20.dp)
+                                        }
+                                    }
+                                    Row(){
+                                        Text("Sincronizando usuarios")
+                                        if(dataUiState.checkUserUdo){
+                                            Icon(imageVector = Icons.Filled.CheckCircle, contentDescription = "", tint= MaterialTheme.colorScheme.surface)
+                                        }else{
+                                            CircularIndicator(20.dp)
+                                        }
+                                    }
+                                    Row(){
+                                        Text("Sincronizando actividades")
+                                        if(dataUiState.checkActivity){
+                                            Icon(imageVector = Icons.Filled.CheckCircle, contentDescription = "", tint= MaterialTheme.colorScheme.surface)
+                                        }else{
+                                            CircularIndicator(20.dp)
+                                        }
+                                    }
                                 }
-                            }
-                            Row(){
-                                Text("Sincronizando actividades")
-                                CircularIndicator(10.dp)
-                            }
-                            Row(){
-                                Text("Sincronizando articulos")
-                                CircularIndicator(10.dp)
-                            }
-                            Row(){
-                                Text("Sincronizando pedido de compra")
-                                CircularIndicator(10.dp)
-                            }
-                            Row(){
-                                Text("Sincronizando pedido de cliente")
-                                CircularIndicator(10.dp)
+                                Column(
+                                    modifier = Modifier.padding(start = 10.dp)
+                                ){
+                                    Row(){
+                                        Text("Sincronizando articulos")
+                                        if(dataUiState.checkItem){
+                                            Icon(imageVector = Icons.Filled.CheckCircle, contentDescription = "", tint= MaterialTheme.colorScheme.surface)
+                                        }else{
+                                            CircularIndicator(20.dp)
+                                        }
+                                    }
+                                    Row(){
+                                        Text("Sincronizando pedido de compra")
+                                        if(dataUiState.checkOrder){
+                                            Icon(imageVector = Icons.Filled.CheckCircle, contentDescription = "", tint= MaterialTheme.colorScheme.surface)
+                                        }else{
+                                            CircularIndicator(20.dp)
+                                        }
+                                    }
+                                    Row(){
+                                        Text("Sincronizando pedido de cliente")
+                                        if(dataUiState.checkPurchaseOrder){
+                                            Icon(imageVector = Icons.Filled.CheckCircle, contentDescription = "", tint= MaterialTheme.colorScheme.surface)
+                                        }else{
+                                            CircularIndicator(20.dp)
+                                        }
+                                    }
+                                }
                             }
                         }
 
