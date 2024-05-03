@@ -72,12 +72,20 @@ class DialogBPViewModel : ViewModel() {
 
                         businessPartnerAuxList.add(businessPartner)
                         lineNum++
-                        Log.i("Pruebas", businessPartner.toString())
                     }
                 }
                 changeBusinessPartnerList(businessPartnerAuxList)
             }
         }
+    }
+
+    fun verDatosLog(id: Int) {
+        Log.e("Pruebas", uiState.value.BusinessPartnerList.get(id).toString())
+    }
+
+    fun returnData(id: Int, callback: (BusinessPartnerUiState) -> Unit) {
+        val businessPartnerToReturn = uiState.value.BusinessPartnerList[id]
+        callback(businessPartnerToReturn)
     }
 
 

@@ -31,67 +31,6 @@ import com.AG_AP.electroshop.viewModels.AppNav
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
-        //PriceListCRUD.insertPrecio(5, 3, "Joselito")
-        /*
-        PriceListCRUD.getPrecioById("6") { price ->
-            Log.e("Pruebas", "Prueba precio ${price.toString()}")
-        }
-         */
-        /*
-        PriceListCRUD.getAllPrecios { price ->
-            Log.e("Pruebas", "Prueba ${price.toString()}")
-        }
-         */
-        // PriceListCRUD.updatePrecioById(6, Price(1, 33, "EUR"))
-        //PriceListCRUD.deletePrecioById("uun5BNGcHfUOymScIJoY")
-
-        /*
-        ItemCRUD.getItemById("Pruebita") { item ->
-            Log.e("Pruebas", "Prueba ${item.toString()}")
-        }
-
-         */
-
-        //val precio = Price(1, 5, "JSON")
-        //ItemCRUD.insertItem(Item("Ordenador HP - Json", ItemType.I, "Pedro", listOf(precio)))
-        //ItemCRUD.updateItemById("OjwrKOFcSMSlfaxKrVSj", Item("Prueba prueba", ItemType.I, "Ricardo", listOf(precio)))
-        //ItemCRUD.deleteItemById("OjwrKOFcSMSlfaxKrVSj")
-
-        /*
-
-
-        ItemCRUD.getAllItems {
-            Log.e("Pruebas", "$it")
-        }
-*/
-
-        /*
-        ActivityCRUD.getAllActivity() {lista ->
-            Log.e("lista","${lista}")
-            Log.e("lista","${lista}")
-        }
-        */
-
-        //SEIConfigCRUD.insertSEIConfig(SEIConfig(1, 3, "JSF", "usuario", "N", "N", "N", "N"))
-
-        /*
-        SEIConfigCRUD.getAllSEIConfig() { lista ->
-            Log.e("Pruebas", "$lista")
-        }
-         */
-
-        //SEIConfigCRUD.updateSEIConfigById("JSF", SEIConfig(1, 3, "AGA", "usuario", "N", "N", "N", "N"))
-        //SEIConfigCRUD.deleteSEIConfigById("JSF")
-
-        /*
-        BusinessPartnerCRUD.getAllObject { lista ->
-            Log.e("Pruebas", "$lista")
-        }
-
-         */
-
         setContent {
             BlueSkyTheme {
                 // A surface container using the 'background' color from the theme
@@ -100,8 +39,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val context: Context = application.applicationContext
-                    //AppNav(context=context)
-                    Pantalla()
+                    AppNav(context=context)
                 }
             }
         }
