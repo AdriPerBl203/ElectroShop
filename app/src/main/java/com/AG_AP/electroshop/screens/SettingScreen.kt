@@ -33,6 +33,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -152,87 +153,94 @@ fun SettingScreen(
         }
         if(dataUiState.progress){
             CustomLinearProgressBar()
+            //CircularIndicator(50.dp)
         }
 
         if (dataUiState.message) {
-            Snackbar(
-                modifier = Modifier.padding(16.dp),
-                action = {
-                    Button(
-                        onClick = {
-                            viewModel.menssageFunFalse()
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                Snackbar(
+                    modifier = Modifier.padding(start=50.dp,top=16.dp).align(alignment = Alignment.CenterVertically),
+                    action = {
+                        Button(
+                            onClick = {
+                                viewModel.menssageFunFalse()
+                            },
+                            enabled = dataUiState.btnEnable
+                        ) {
+                            Text("Cerrar")
                         }
-                    ) {
-                        Text("Cerrar")
-                    }
-                },
-                content = {
-                    if(dataUiState.textShow){
-                        Text(dataUiState.text)
-                    }
-                    if(dataUiState.syncProgress){
-                        Column(){
-                            Row(){
-                                Column(){
-                                    Row(){
-                                        Text("Sincronizando clientes")
-                                        if(dataUiState.checkBusinessPartner){
-                                            Icon(imageVector = Icons.Filled.CheckCircle, contentDescription = "", tint= MaterialTheme.colorScheme.surface)
-                                        }else{
-                                            CircularIndicator(20.dp)
+                    },
+                    content = {
+                        if(dataUiState.textShow){
+                            Text(dataUiState.text)
+                        }
+                        if(dataUiState.syncProgress){
+                            Column(){
+                                Row(){
+                                    Column(){
+                                        Row(){
+                                            Text("Sincronizando clientes")
+                                            if(dataUiState.checkBusinessPartner){
+                                                Icon(imageVector = Icons.Filled.CheckCircle, contentDescription = "", tint= MaterialTheme.colorScheme.surface)
+                                            }else{
+                                                CircularIndicator(25.dp)
+                                            }
+                                        }
+                                        Row(){
+                                            Text("Sincronizando usuarios")
+                                            if(dataUiState.checkUserUdo){
+                                                Icon(imageVector = Icons.Filled.CheckCircle, contentDescription = "", tint= MaterialTheme.colorScheme.surface)
+                                            }else{
+                                                CircularIndicator(25.dp)
+                                            }
+                                        }
+                                        Row(){
+                                            Text("Sincronizando actividades")
+                                            if(dataUiState.checkActivity){
+                                                Icon(imageVector = Icons.Filled.CheckCircle, contentDescription = "", tint= MaterialTheme.colorScheme.surface)
+                                            }else{
+                                                CircularIndicator(25.dp)
+                                            }
                                         }
                                     }
-                                    Row(){
-                                        Text("Sincronizando usuarios")
-                                        if(dataUiState.checkUserUdo){
-                                            Icon(imageVector = Icons.Filled.CheckCircle, contentDescription = "", tint= MaterialTheme.colorScheme.surface)
-                                        }else{
-                                            CircularIndicator(20.dp)
+                                    Column(
+                                        modifier = Modifier.padding(start = 10.dp)
+                                    ){
+                                        Row(){
+                                            Text("Sincronizando articulos")
+                                            if(dataUiState.checkItem){
+                                                Icon(imageVector = Icons.Filled.CheckCircle, contentDescription = "", tint= MaterialTheme.colorScheme.surface)
+                                            }else{
+                                                CircularIndicator(25.dp)
+                                            }
                                         }
-                                    }
-                                    Row(){
-                                        Text("Sincronizando actividades")
-                                        if(dataUiState.checkActivity){
-                                            Icon(imageVector = Icons.Filled.CheckCircle, contentDescription = "", tint= MaterialTheme.colorScheme.surface)
-                                        }else{
-                                            CircularIndicator(20.dp)
+                                        Row(){
+                                            Text("Sincronizando pedido de compra")
+                                            if(dataUiState.checkOrder){
+                                                Icon(imageVector = Icons.Filled.CheckCircle, contentDescription = "", tint= MaterialTheme.colorScheme.surface)
+                                            }else{
+                                                CircularIndicator(25.dp)
+                                            }
                                         }
-                                    }
-                                }
-                                Column(
-                                    modifier = Modifier.padding(start = 10.dp)
-                                ){
-                                    Row(){
-                                        Text("Sincronizando articulos")
-                                        if(dataUiState.checkItem){
-                                            Icon(imageVector = Icons.Filled.CheckCircle, contentDescription = "", tint= MaterialTheme.colorScheme.surface)
-                                        }else{
-                                            CircularIndicator(20.dp)
-                                        }
-                                    }
-                                    Row(){
-                                        Text("Sincronizando pedido de compra")
-                                        if(dataUiState.checkOrder){
-                                            Icon(imageVector = Icons.Filled.CheckCircle, contentDescription = "", tint= MaterialTheme.colorScheme.surface)
-                                        }else{
-                                            CircularIndicator(20.dp)
-                                        }
-                                    }
-                                    Row(){
-                                        Text("Sincronizando pedido de cliente")
-                                        if(dataUiState.checkPurchaseOrder){
-                                            Icon(imageVector = Icons.Filled.CheckCircle, contentDescription = "", tint= MaterialTheme.colorScheme.surface)
-                                        }else{
-                                            CircularIndicator(20.dp)
+                                        Row(){
+                                            Text("Sincronizando pedido de cliente")
+                                            if(dataUiState.checkPurchaseOrder){
+                                                Icon(imageVector = Icons.Filled.CheckCircle, contentDescription = "", tint= MaterialTheme.colorScheme.surface)
+                                            }else{
+                                                CircularIndicator(25.dp)
+                                            }
                                         }
                                     }
                                 }
                             }
-                        }
 
+                        }
                     }
-                }
-            )
+                )
+            }
         }
 
         Row(
@@ -266,6 +274,7 @@ fun SettingScreen(
             Button(
                 modifier = Modifier.padding(10.dp),
                 onClick = { viewModel.sync() },
+                enabled = dataUiState.btnSyncEnable
             ) {
                 Icon(
                     imageVector = Icons.Filled.Sync,
@@ -276,6 +285,7 @@ fun SettingScreen(
             Button(
                 modifier = Modifier.padding(10.dp),
                 onClick = { navController.navigateUp() },
+                enabled = dataUiState.btnExitEnable
             ) {
                 Icon(
                     imageVector = Icons.Filled.KeyboardReturn,
@@ -296,7 +306,7 @@ fun CustomLinearProgressBar(){
             modifier = Modifier
                 .fillMaxWidth()
                 .height(15.dp),
-            color = Color.Red //progress color
+            color = MaterialTheme.colorScheme.primaryContainer //progress color
         )
     }
 }
