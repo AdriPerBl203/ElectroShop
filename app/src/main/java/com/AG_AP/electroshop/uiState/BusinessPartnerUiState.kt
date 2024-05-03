@@ -1,6 +1,7 @@
 package com.AG_AP.electroshop.uiState
 
 data class BusinessPartnerUiState(
+    val LineNum: Int = 0,
     val CardCode:String ="",
     val CardType:String ="Cliente",
     val CardName:String ="",
