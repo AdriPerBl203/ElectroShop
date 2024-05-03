@@ -44,6 +44,7 @@ import com.AG_AP.electroshop.functions.validarURL
 import com.AG_AP.electroshop.uiState.SettingUiState
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -335,16 +336,19 @@ class SettingsViewModel : ViewModel() {
         deleteAndInsertActivity()//
         deleteAndInsertOrders()
         deleteAndInsertPurchaseOrders()
-
-        Log.e("JOSELETE","AAAa")
-
         _uiState.update { currentState -> currentState.copy(
             message = true,
             text = "Sincronización realizada",
             progress = false,
             syncProgress=true,
-            textShow=false
+            textShow=false,
+            btnSyncEnable = false,
+            btnEnable=false,
+            btnExitEnable=false
         ) }
+        enablebtn()
+
+
         /*
          Log.e("SettingViewModel","Datos obtenidos")
 
@@ -362,6 +366,24 @@ class SettingsViewModel : ViewModel() {
                  progress = false
              ) }
          }*/
+    }
+
+    private fun enablebtn() {
+        viewModelScope.launch(Dispatchers.IO) {
+            var aux: Boolean = true
+            while (aux){
+                if(_uiState.value.checkUserUdo && _uiState.value.checkBusinessPartner && _uiState.value.checkActivity && _uiState.value.checkItem && _uiState.value.checkOrder && _uiState.value.checkPurchaseOrder){
+                    aux = false
+                } else {
+                    delay(1000)
+                }
+            }
+            _uiState.update { currentState -> currentState.copy(
+                btnSyncEnable = true,
+                btnEnable=true,
+                btnExitEnable=true
+            ) }
+        }
     }
 
     private fun deleteAndInsertPurchaseOrders() {
