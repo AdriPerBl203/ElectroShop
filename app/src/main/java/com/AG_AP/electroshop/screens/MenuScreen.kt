@@ -11,11 +11,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.AccountTree
 import androidx.compose.material.icons.filled.AddBusiness
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Article
 import androidx.compose.material.icons.filled.ContentPasteSearch
-import androidx.compose.material.icons.filled.CurrencyLira
 import androidx.compose.material.icons.filled.KeyboardReturn
 import androidx.compose.material.icons.filled.LocalActivity
 import androidx.compose.material.icons.filled.Reorder
@@ -49,11 +49,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.AG_AP.electroshop.components.DialogListDraw
 import com.AG_AP.electroshop.components.ListActionDraw
 import com.AG_AP.electroshop.functions.SessionObj
 import com.AG_AP.electroshop.uiState.MenuUiState
 import com.AG_AP.electroshop.viewModels.MenuViewModel
 import com.AG_AP.electroshop.viewModels.Routes
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
@@ -70,6 +72,12 @@ fun MenuFrontView(
     val dataUiState by viewModel.uiState.collectAsState()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    /*TODO*/
+    if(dataUiState.dialog){
+        DialogListDraw {
+            viewModel.closedDialog()
+        }
+    }
 
     if (SessionObj.checkLogin()) {
         viewModel.viewEnd(navController)
@@ -139,19 +147,22 @@ fun MenuFrontView(
 fun ListDraw(viewModel: MenuViewModel, navController: NavHostController) {
     val list : List<ListActionDraw> = listOf(
         ListActionDraw("Subir actividades",Icons.Filled.LocalActivity){
-
+            viewModel.upActivities()
         },
         ListActionDraw("Subir articulos",Icons.Filled.Article){
-
+            viewModel.upItems()
         },
         ListActionDraw("Subir clientes",Icons.Filled.AccountCircle){
-
+            viewModel.upBusinessPartners()
         },
         ListActionDraw("Subir pedido de compra",Icons.Filled.Reorder){
-
+            viewModel.upPurchaseOrders()
         },
         ListActionDraw("Subir pedido de cliente",Icons.Filled.AddBusiness){
-
+            viewModel.upOrder()
+        },
+        ListActionDraw("Subir todo",Icons.Filled.AccountTree){
+            viewModel.upTotal()
         },
         ListActionDraw("Cerrar sesión",Icons.Filled.KeyboardReturn) {
             viewModel.closeSession(navController)
@@ -173,6 +184,7 @@ fun ListDraw(viewModel: MenuViewModel, navController: NavHostController) {
                     },
                     trailingContent = {
                         IconButton(onClick = {
+                            viewModel.showDialog()
                             x.action()
                         }) {
                             Icon(imageVector = Icons.Filled.AddCircle, contentDescription = "Settings", tint = MaterialTheme.colorScheme.primaryContainer)

@@ -5,5 +5,6 @@ data class MenuUiState (
     val articulo:String ="N",
     val actividad:String ="N",
     val pedidoCL:String ="N",
-    val pedidoCO:String ="N"
+    val pedidoCO:String ="N",
+    val dialog:Boolean =false,
 )
