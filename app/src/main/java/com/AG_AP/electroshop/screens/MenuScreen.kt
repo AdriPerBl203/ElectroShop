@@ -10,22 +10,33 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.AddBusiness
+import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.Article
+import androidx.compose.material.icons.filled.ContentPasteSearch
+import androidx.compose.material.icons.filled.CurrencyLira
+import androidx.compose.material.icons.filled.KeyboardReturn
+import androidx.compose.material.icons.filled.LocalActivity
+import androidx.compose.material.icons.filled.Reorder
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -38,10 +49,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.AG_AP.electroshop.components.ListActionDraw
 import com.AG_AP.electroshop.functions.SessionObj
 import com.AG_AP.electroshop.uiState.MenuUiState
 import com.AG_AP.electroshop.viewModels.MenuViewModel
 import com.AG_AP.electroshop.viewModels.Routes
+import kotlinx.coroutines.launch
 
 
 /**
@@ -55,17 +68,23 @@ fun MenuFrontView(
     navController: NavHostController
 ) {
     val dataUiState by viewModel.uiState.collectAsState()
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
-    if(SessionObj.checkLogin()){
+    if (SessionObj.checkLogin()) {
         viewModel.viewEnd(navController)
     }
 
     /* Top border */
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            ListDraw(viewModel,navController)
+        },
+    ) {
     Scaffold(
         topBar = {
             TopBar(
-                onMenuButtonClick = { /*TODO*/ },
                 menuUiState = dataUiState
             )
         },
@@ -73,10 +92,15 @@ fun MenuFrontView(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    viewModel.closeSession(navController)
+                    //viewModel.closeSession(navController)
+                    scope.launch {
+                        drawerState.apply {
+                            if (isClosed) open() else close()
+                        }
+                    }
                 }
             ) {
-                Icon(imageVector = Icons.Filled.Person, contentDescription = "Crear")
+                Icon(imageVector = Icons.Filled.ContentPasteSearch, contentDescription = "opciones")
             }
 
 
@@ -107,12 +131,63 @@ fun MenuFrontView(
         )
 
     }
+}
 
+}
+
+@Composable
+fun ListDraw(viewModel: MenuViewModel, navController: NavHostController) {
+    val list : List<ListActionDraw> = listOf(
+        ListActionDraw("Subir actividades",Icons.Filled.LocalActivity){
+
+        },
+        ListActionDraw("Subir articulos",Icons.Filled.Article){
+
+        },
+        ListActionDraw("Subir clientes",Icons.Filled.AccountCircle){
+
+        },
+        ListActionDraw("Subir pedido de compra",Icons.Filled.Reorder){
+
+        },
+        ListActionDraw("Subir pedido de cliente",Icons.Filled.AddBusiness){
+
+        },
+        ListActionDraw("Cerrar sesión",Icons.Filled.KeyboardReturn) {
+            viewModel.closeSession(navController)
+        }
+    )
+    ModalDrawerSheet {
+        Column(
+            modifier = Modifier.padding(top=10.dp)
+        ) {
+            for (x in list){
+                ListItem(
+                    headlineContent = { Text(x.text) },
+                    leadingContent = {
+                        Icon(
+                            x.icon,
+                            contentDescription = "Localized description",
+                            tint = MaterialTheme.colorScheme.primaryContainer
+                        )
+                    },
+                    trailingContent = {
+                        IconButton(onClick = {
+                            x.action()
+                        }) {
+                            Icon(imageVector = Icons.Filled.AddCircle, contentDescription = "Settings", tint = MaterialTheme.colorScheme.primaryContainer)
+                        }
+                    }
+                )
+            }
+        }
+
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(onMenuButtonClick: () -> Unit, menuUiState: MenuUiState) {
+fun TopBar( menuUiState: MenuUiState) {
     TopAppBar(
         title = {
             Box(
@@ -127,14 +202,7 @@ fun TopBar(onMenuButtonClick: () -> Unit, menuUiState: MenuUiState) {
         },
         colors = TopAppBarDefaults.mediumTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer
-        ),
-
-        /* Barra de navegacion */
-        navigationIcon = {
-            IconButton(onClick = { /*TODO*/}) {
-                Icon(imageVector = Icons.Filled.Menu, contentDescription = "Abrir menu")
-            }
-        }
+        )
 
     )
 }
@@ -158,7 +226,9 @@ fun MenuBody(
             contentAlignment= Alignment.TopCenter
         ){
             Column (
-                modifier = Modifier.padding(5.dp).background(MaterialTheme.colorScheme.primaryContainer),
+                modifier = Modifier
+                    .padding(5.dp)
+                    .background(MaterialTheme.colorScheme.primaryContainer),
                 horizontalAlignment = Alignment.CenterHorizontally
             ){
                 Row (
@@ -166,13 +236,17 @@ fun MenuBody(
                 ){
                     if(dataUiState.articulo == "S"){
                         ElevatedButton(
-                            modifier= Modifier.padding(30.dp).width(200.dp),
+                            modifier= Modifier
+                                .padding(30.dp)
+                                .width(200.dp),
                             onClick = { navController.navigate(route = Routes.ScreenActivity.route) }
                         ) {
                             Text("Actividades")
                         }
                         ElevatedButton(
-                            modifier= Modifier.padding(30.dp).width(200.dp),
+                            modifier= Modifier
+                                .padding(30.dp)
+                                .width(200.dp),
                             onClick = { navController.navigate(route = Routes.ListActivity.route) }
                         ) {
                             Text("Historial de actividades")
@@ -183,14 +257,18 @@ fun MenuBody(
 
                 ){
                     ElevatedButton(
-                        modifier= Modifier.padding(30.dp).width(200.dp),
+                        modifier= Modifier
+                            .padding(30.dp)
+                            .width(200.dp),
                         onClick = { navController.navigate(route = Routes.BusinessPartner.route) }
                     ) {
                         Text("Clientes")
                     }
 
                     ElevatedButton(
-                        modifier= Modifier.padding(30.dp).width(200.dp),
+                        modifier= Modifier
+                            .padding(30.dp)
+                            .width(200.dp),
                         onClick = { navController.navigate(route = Routes.ScreenBusinessPartnerList.route) }
                     ) {
                         Text("Historial de clientes")
@@ -202,14 +280,18 @@ fun MenuBody(
                 ){
                     if(dataUiState.pedidoCL == "S"){
                         ElevatedButton(
-                            modifier= Modifier.padding(30.dp).width(200.dp),
+                            modifier= Modifier
+                                .padding(30.dp)
+                                .width(200.dp),
                             onClick = { navController.navigate(route = Routes.ScreenOrder.route) }
                         ) {
                             Text("Pedido de cliente")
                         }
 
                         ElevatedButton(
-                            modifier= Modifier.padding(30.dp).width(200.dp),
+                            modifier= Modifier
+                                .padding(30.dp)
+                                .width(200.dp),
                             onClick = { /* TODO*/ }
                         ) {
                             Text("Historial pedido cliente")
@@ -222,14 +304,18 @@ fun MenuBody(
                 ){
                     if(dataUiState.pedidoCL == "S"){
                         ElevatedButton(
-                            modifier= Modifier.padding(30.dp).width(200.dp),
+                            modifier= Modifier
+                                .padding(30.dp)
+                                .width(200.dp),
                             onClick = { navController.navigate(route = Routes.PurchaseOrderScreen.route) }
                         ) {
                             Text("Pedido de compra")
                         }
 
                         ElevatedButton(
-                            modifier= Modifier.padding(30.dp).width(200.dp),
+                            modifier= Modifier
+                                .padding(30.dp)
+                                .width(200.dp),
                             onClick = { /* TODO*/ }
                         ) {
                             Text("Historial pedido compra")
