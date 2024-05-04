@@ -7,4 +7,5 @@ data class MenuUiState (
     val pedidoCL:String ="N",
     val pedidoCO:String ="N",
     val dialog:Boolean =false,
+    val InfoDialog:String = ""
 )

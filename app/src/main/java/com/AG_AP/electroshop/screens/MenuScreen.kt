@@ -55,7 +55,6 @@ import com.AG_AP.electroshop.functions.SessionObj
 import com.AG_AP.electroshop.uiState.MenuUiState
 import com.AG_AP.electroshop.viewModels.MenuViewModel
 import com.AG_AP.electroshop.viewModels.Routes
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
@@ -74,9 +73,10 @@ fun MenuFrontView(
     val scope = rememberCoroutineScope()
     /*TODO*/
     if(dataUiState.dialog){
-        DialogListDraw {
-            viewModel.closedDialog()
-        }
+        DialogListDraw(
+            infoDialog= dataUiState.InfoDialog,
+            actionItemList = {viewModel.closedDialog()}
+        )
     }
 
     if (SessionObj.checkLogin()) {
@@ -146,25 +146,25 @@ fun MenuFrontView(
 @Composable
 fun ListDraw(viewModel: MenuViewModel, navController: NavHostController) {
     val list : List<ListActionDraw> = listOf(
-        ListActionDraw("Subir actividades",Icons.Filled.LocalActivity){
+        ListActionDraw("Subir actividades",Icons.Filled.LocalActivity,"Sincronizando actividades"){
             viewModel.upActivities()
         },
-        ListActionDraw("Subir articulos",Icons.Filled.Article){
+        ListActionDraw("Subir articulos",Icons.Filled.Article,"Sincronizando Articulos"){
             viewModel.upItems()
         },
-        ListActionDraw("Subir clientes",Icons.Filled.AccountCircle){
+        ListActionDraw("Subir clientes",Icons.Filled.AccountCircle,"Sincronizando clientes"){
             viewModel.upBusinessPartners()
         },
-        ListActionDraw("Subir pedido de compra",Icons.Filled.Reorder){
+        ListActionDraw("Subir pedido de compra",Icons.Filled.Reorder,"Sincronizando pedido de compra"){
             viewModel.upPurchaseOrders()
         },
-        ListActionDraw("Subir pedido de cliente",Icons.Filled.AddBusiness){
+        ListActionDraw("Subir pedido de cliente",Icons.Filled.AddBusiness,"Sincronizando pedido de cliente"){
             viewModel.upOrder()
         },
-        ListActionDraw("Subir todo",Icons.Filled.AccountTree){
+        ListActionDraw("Subir todo",Icons.Filled.AccountTree,"Sincronizando todo"){
             viewModel.upTotal()
         },
-        ListActionDraw("Cerrar sesión",Icons.Filled.KeyboardReturn) {
+        ListActionDraw("Cerrar sesión",Icons.Filled.KeyboardReturn,"Cerrar sesión") {
             viewModel.closeSession(navController)
         }
     )
@@ -184,7 +184,7 @@ fun ListDraw(viewModel: MenuViewModel, navController: NavHostController) {
                     },
                     trailingContent = {
                         IconButton(onClick = {
-                            viewModel.showDialog()
+                            viewModel.showDialog(x.textDialog)
                             x.action()
                         }) {
                             Icon(imageVector = Icons.Filled.AddCircle, contentDescription = "Settings", tint = MaterialTheme.colorScheme.primaryContainer)

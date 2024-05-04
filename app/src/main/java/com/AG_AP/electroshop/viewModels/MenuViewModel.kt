@@ -40,8 +40,9 @@ class MenuViewModel : ViewModel() {
         ) }
     }
 
-    fun showDialog() {
+    fun showDialog(textDialog: String) {
         _uiState.update { currentState -> currentState.copy(
+            InfoDialog = textDialog,
             dialog = true
         ) }
     }
