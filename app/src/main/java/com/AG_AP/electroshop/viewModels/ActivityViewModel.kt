@@ -5,7 +5,10 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.AG_AP.electroshop.firebase.ActivityCRUD
+import com.AG_AP.electroshop.firebase.OrderCRUD
+import com.AG_AP.electroshop.firebase.PurchaseOrderCRUD
 import com.AG_AP.electroshop.firebase.models.Activity
+import com.AG_AP.electroshop.firebase.models.OrderFireBase
 import com.AG_AP.electroshop.uiState.ActivityUiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,6 +27,26 @@ class ActivityViewModel : ViewModel(),ActionViewModel {
         val id:String = _uiState.value.ClgCode
         if(id.isNotEmpty()){
             find()
+        }
+
+        //order
+        OrderCRUD.getAllObject { list ->
+            val mutableList = list as? MutableList<OrderFireBase>
+            mutableList?.let {
+                _uiState.update { currentState -> currentState.copy(
+                    ListOrders = it.toList()
+                ) }
+            }
+        }
+
+        //purchaseOrder
+        PurchaseOrderCRUD.getAllObject { list ->
+            val mutableList = list as? MutableList<OrderFireBase>
+            mutableList?.let {
+                _uiState.update { currentState -> currentState.copy(
+                    ListPurchaseOrders = it.toList()
+                ) }
+            }
         }
     }
 
@@ -237,6 +260,30 @@ class ActivityViewModel : ViewModel(),ActionViewModel {
     override fun menssageFunFalse() {
         _uiState.update { currentState -> currentState.copy(
             message = false
+        ) }
+    }
+
+    fun showDialogPurchaseOrder(){
+        _uiState.update { currentState -> currentState.copy(
+            showDialogPurchaseOrder = true
+        ) }
+    }
+
+    fun showDialogOrder(){
+        _uiState.update { currentState -> currentState.copy(
+            showDialogOrder = true
+        ) }
+    }
+
+    fun closerDialogPurchaseOrder(){
+        _uiState.update { currentState -> currentState.copy(
+            showDialogPurchaseOrder = false
+        ) }
+    }
+
+    fun closerDialogOrder(){
+        _uiState.update { currentState -> currentState.copy(
+            showDialogOrder = false
         ) }
     }
 }

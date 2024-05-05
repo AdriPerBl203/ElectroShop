@@ -1,6 +1,7 @@
 package com.AG_AP.electroshop.screens
 
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,6 +20,7 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -37,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.AG_AP.electroshop.components.DialogActivity
 import com.AG_AP.electroshop.viewModels.ActivityViewModel
 
 
@@ -44,6 +47,23 @@ import com.AG_AP.electroshop.viewModels.ActivityViewModel
 @Composable
 fun ActivityView(innerPadding: PaddingValues, viewModel: ActivityViewModel, id: String?) {
     val dataUiState by viewModel.uiState.collectAsState()
+
+    if(dataUiState.showDialogPurchaseOrder){
+        DialogActivity(
+            data ={dataUiState.ListPurchaseOrders},
+            "Seleccione pedido de compra",
+            { viewModel.closerDialogPurchaseOrder() },
+            {data -> viewModel.changePedidoCompra(data) }
+        )
+    }
+    if(dataUiState.showDialogOrder){
+        DialogActivity(
+            data ={dataUiState.ListOrders},
+            "Seleccione pedido de cliente" ,
+            {viewModel.closerDialogOrder()},
+            {data -> viewModel.changePedidoCliente(data) }
+        )
+    }
     Column(
         modifier = Modifier
             .padding(innerPadding)
@@ -121,7 +141,17 @@ fun ActivityView(innerPadding: PaddingValues, viewModel: ActivityViewModel, id: 
                     modifier = Modifier
                         .width(300.dp)
                         .padding(8.dp),
-                    label = { Text("Asociar con pedido de cliente") }
+                    label = { Text("Asociar con pedido de cliente") },
+                    readOnly = true,
+                    trailingIcon={
+                        IconButton(
+                            onClick = {
+                                viewModel.showDialogOrder()
+                            }
+                        ) {
+                            Icon(Icons.Filled.Add, contentDescription = "Shopping Cart Icon")
+                        }
+                    }
                 )
             }
 
@@ -188,7 +218,17 @@ fun ActivityView(innerPadding: PaddingValues, viewModel: ActivityViewModel, id: 
                     modifier = Modifier
                         .width(300.dp)
                         .padding(8.dp),
-                    label = { Text("Asociar con pedido de compra") }
+                    label = { Text("Asociar con pedido de compra") },
+                    readOnly = true,
+                    trailingIcon={
+                        IconButton(
+                            onClick = {
+                                viewModel.showDialogPurchaseOrder()
+                            }
+                        ) {
+                            Icon(Icons.Filled.Add, contentDescription = "Shopping Cart Icon")
+                        }
+                    }
                 )
 
             }
