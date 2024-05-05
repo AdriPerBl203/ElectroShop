@@ -1,6 +1,7 @@
 package com.AG_AP.electroshop.screens
 
 
+import android.app.TimePickerDialog
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
@@ -36,17 +38,46 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.AG_AP.electroshop.components.DialogActivity
 import com.AG_AP.electroshop.viewModels.ActivityViewModel
+import java.util.Calendar
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ActivityView(innerPadding: PaddingValues, viewModel: ActivityViewModel, id: String?) {
     val dataUiState by viewModel.uiState.collectAsState()
+
+    val mContext = LocalContext.current
+    val mCalendar = Calendar.getInstance()
+    val mHour = mCalendar[Calendar.HOUR_OF_DAY]
+    val mMinute = mCalendar[Calendar.MINUTE]
+    val DialogStartTime = TimePickerDialog(
+        mContext,
+        { _, mHour: Int, mMinute: Int ->
+            val formattedHour = if (mHour < 10) "0$mHour" else "$mHour"
+            val formattedMinute = if (mMinute < 10) "0$mMinute" else "$mMinute"
+            viewModel.changeStartTime("$formattedHour:$formattedMinute:00")
+        },
+        mHour,
+        mMinute,
+        false
+    )
+    val DialogStartEnd = TimePickerDialog(
+        mContext,
+        { _, mHour: Int, mMinute: Int ->
+            val formattedHour = if (mHour < 10) "0$mHour" else "$mHour"
+            val formattedMinute = if (mMinute < 10) "0$mMinute" else "$mMinute"
+            viewModel.changeEndTime("$formattedHour:$formattedMinute:00")
+        },
+        mHour,
+        mMinute,
+        false
+    )
 
     if(dataUiState.showDialogPurchaseOrder){
         DialogActivity(
@@ -132,7 +163,17 @@ fun ActivityView(innerPadding: PaddingValues, viewModel: ActivityViewModel, id: 
                     modifier = Modifier
                         .width(300.dp)
                         .padding(8.dp),
-                    label = { Text("Hora inicio") }
+                    label = { Text("Hora inicio") },
+                    readOnly = true,
+                    trailingIcon={
+                        IconButton(
+                            onClick = {
+                                DialogStartTime.show()
+                            }
+                        ) {
+                            Icon(Icons.Filled.AccessTime, contentDescription = "Shopping Cart Icon")
+                        }
+                    }
                 )
 
                 OutlinedTextField(
@@ -141,7 +182,7 @@ fun ActivityView(innerPadding: PaddingValues, viewModel: ActivityViewModel, id: 
                     modifier = Modifier
                         .width(300.dp)
                         .padding(8.dp),
-                    label = { Text("Asociar con pedido de cliente") },
+                    label = { Text("Asociar pedido de cliente") },
                     readOnly = true,
                     trailingIcon={
                         IconButton(
@@ -164,7 +205,17 @@ fun ActivityView(innerPadding: PaddingValues, viewModel: ActivityViewModel, id: 
                     modifier = Modifier
                         .width(300.dp)
                         .padding(8.dp),
-                    label = { Text("Hora fin") }
+                    label = { Text("Hora fin") },
+                    readOnly = true,
+                    trailingIcon={
+                        IconButton(
+                            onClick = {
+                                DialogStartEnd.show()
+                            }
+                        ) {
+                            Icon(Icons.Filled.AccessTime, contentDescription = "Shopping Cart Icon")
+                        }
+                    }
                 )
                 OutlinedTextField(
                     value = dataUiState.CardCode,
@@ -218,7 +269,7 @@ fun ActivityView(innerPadding: PaddingValues, viewModel: ActivityViewModel, id: 
                     modifier = Modifier
                         .width(300.dp)
                         .padding(8.dp),
-                    label = { Text("Asociar con pedido de compra") },
+                    label = { Text("Asociar pedido de compra") },
                     readOnly = true,
                     trailingIcon={
                         IconButton(

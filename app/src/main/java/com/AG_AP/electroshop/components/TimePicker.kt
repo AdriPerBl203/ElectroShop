@@ -39,7 +39,7 @@ fun MyContent(){
         mContext,
         {_, mHour : Int, mMinute: Int ->
             mTime.value = "$mHour:$mMinute"
-        }, mHour, mMinute, false
+        }, mHour, mMinute, true
     )
 
     Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {

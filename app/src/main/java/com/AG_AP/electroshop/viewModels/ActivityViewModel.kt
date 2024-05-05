@@ -286,4 +286,10 @@ class ActivityViewModel : ViewModel(),ActionViewModel {
             showDialogOrder = false
         ) }
     }
+
+    fun changeStartTime(data :String){
+        _uiState.update { currentState -> currentState.copy(
+            ActivityTime = data
+        ) }
+    }
 }
