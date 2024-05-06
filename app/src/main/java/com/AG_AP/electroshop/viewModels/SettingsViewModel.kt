@@ -318,6 +318,7 @@ class SettingsViewModel : ViewModel() {
                         element.Priority ?: "",
                         element.U_SEIPEDIDOCOMPRAS ?: 0,
                         element.U_SEIPEDIDOCLIENTE ?: 0,
+                        true
                     )
                     ActivityCRUD.insertActivity(activity)
                 }
@@ -338,28 +339,27 @@ class SettingsViewModel : ViewModel() {
 
         viewModelScope.launch() {
             if (!json.isNullOrEmpty()) {
+                _uiState.update { currentState -> currentState.copy(
+                    message = true,
+                    text = "Sincronización realizada",
+                    progress = false,
+                    syncProgress=true,
+                    textShow=false,
+                    btnSyncEnable = false,
+                    btnEnable=false,
+                    btnExitEnable=false
+                ) }
                 val dataLogin = Login(dataConfig.dataBase,dataConfig.password,dataConfig.login)
                 LoginObj.loginAcessTwoversion(dataLogin,dataConfig.urlInt)
+                deleteAndInsertItem()//
+                deleteAndInsertUserUdo() //
+                deleteAndInsertBusinessPartner() //
+                deleteAndInsertActivity()//
+                deleteAndInsertOrders()
+                deleteAndInsertPurchaseOrders()
+                enablebtn(dataConfig.urlInt)
             }
         }
-
-        deleteAndInsertItem()//
-        deleteAndInsertUserUdo() //
-        deleteAndInsertBusinessPartner() //
-        deleteAndInsertActivity()//
-        deleteAndInsertOrders()
-        deleteAndInsertPurchaseOrders()
-        _uiState.update { currentState -> currentState.copy(
-            message = true,
-            text = "Sincronización realizada",
-            progress = false,
-            syncProgress=true,
-            textShow=false,
-            btnSyncEnable = false,
-            btnEnable=false,
-            btnExitEnable=false
-        ) }
-        enablebtn(dataConfig.urlInt)
 
 
         /*
@@ -387,6 +387,7 @@ class SettingsViewModel : ViewModel() {
             while (aux){
                 if(_uiState.value.checkUserUdo && _uiState.value.checkBusinessPartner && _uiState.value.checkActivity && _uiState.value.checkItem && _uiState.value.checkOrder && _uiState.value.checkPurchaseOrder){
                     aux = false
+                    LoginObj.logout(url)
                 } else {
                     delay(1000)
                 }
@@ -396,7 +397,6 @@ class SettingsViewModel : ViewModel() {
                 btnEnable=true,
                 btnExitEnable=true
             ) }
-            LoginObj.logout(url)
         }
     }
 

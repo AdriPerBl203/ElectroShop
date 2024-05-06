@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.AG_AP.electroshop.firebase.models.BusinessPartner
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
 
 
@@ -52,6 +53,20 @@ fun DialogActivity(data:()->List<Any> ,infoDialog:String,clasedDialog:()->Unit,r
                                 trailingContent = {
                                     IconButton(onClick = {
                                         returnData(x.DocNum.toString())
+                                        clasedDialog()
+                                    }) {
+                                        Icon(imageVector = Icons.Filled.AddCircle, contentDescription = "Settings", tint = MaterialTheme.colorScheme.primaryContainer)
+                                    }
+                                }
+                            )
+                        }
+
+                        if(x is BusinessPartner){
+                            ListItem(
+                                headlineContent = { Text("${x.CardCode} -- ${x.CardName}") },
+                                trailingContent = {
+                                    IconButton(onClick = {
+                                        returnData(x.CardCode)
                                         clasedDialog()
                                     }) {
                                         Icon(imageVector = Icons.Filled.AddCircle, contentDescription = "Settings", tint = MaterialTheme.colorScheme.primaryContainer)

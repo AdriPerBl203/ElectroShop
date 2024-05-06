@@ -95,6 +95,14 @@ fun ActivityView(innerPadding: PaddingValues, viewModel: ActivityViewModel, id: 
             {data -> viewModel.changePedidoCliente(data) }
         )
     }
+    if(dataUiState.showDialogBussinesPartner){
+        DialogActivity(
+            data ={dataUiState.ListBusinessPartner},
+            "Seleccione cliente" ,
+            {viewModel.closerDialogBusinessPartner()},
+            {data -> viewModel.changeCardCode(data) }
+        )
+    }
     Column(
         modifier = Modifier
             .padding(innerPadding)
@@ -223,7 +231,17 @@ fun ActivityView(innerPadding: PaddingValues, viewModel: ActivityViewModel, id: 
                     modifier = Modifier
                         .width(300.dp)
                         .padding(8.dp),
-                    label = { Text("Código cliente") }
+                    label = { Text("Código cliente") },
+                    readOnly = true,
+                    trailingIcon={
+                        IconButton(
+                            onClick = {
+                                viewModel.showDialogBusinessPartner()
+                            }
+                        ) {
+                            Icon(Icons.Filled.Add, contentDescription = "Shopping Cart Icon")
+                        }
+                    }
                 )
                 OutlinedTextField(
                     value = dataUiState.Tel,
@@ -290,7 +308,8 @@ fun ActivityView(innerPadding: PaddingValues, viewModel: ActivityViewModel, id: 
                     modifier = Modifier
                         .width(300.dp)
                         .padding(8.dp),
-                    label = { Text("Id") }
+                    label = { Text("Id") },
+                    enabled= false
                 )
             }
         }

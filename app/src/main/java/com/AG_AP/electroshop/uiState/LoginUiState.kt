@@ -5,8 +5,8 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.ui.graphics.vector.ImageVector
 
 data class LoginUiState(
-    val username:String = "",
-    val password:String = "",
+    val username:String = "manager",
+    val password:String = "usuario",
     val message:Boolean = false,
     val text:String = "",
     val progress:Boolean = false,
