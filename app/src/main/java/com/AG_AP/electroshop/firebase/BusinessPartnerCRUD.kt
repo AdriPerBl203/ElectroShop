@@ -63,6 +63,40 @@ object BusinessPartnerCRUD : ActionFirebase {
             }
     }
 
+    override fun getObjectByIdToString(id: String, callback: (Any?) -> Unit) {
+        this.database
+            .collection(this.coleccion)
+            .document(id)
+            .get()
+            .addOnSuccessListener {
+                if (it.exists()) {
+                    val data = it.data
+                    Log.e("Pruebas", "Datos: ${data.toString()}")
+
+
+                    val CardCode = data?.get("CardCode").toString() ?: ""
+                    val CardType = data?.get("CardType").toString() ?: ""
+                    val CardName = data?.get("CardName").toString() ?: ""
+                    val Cellular = data?.get("Cellular").toString() ?: ""
+                    val EmailAddress = data?.get("EmailAddress").toString() ?: ""
+
+                    val dataReturn: BusinessPartner = BusinessPartner(
+                        CardCode,
+                        CardType,
+                        CardName,
+                        Cellular,
+                        EmailAddress
+                    )
+                    callback(dataReturn)
+                } else {
+                    callback(null)
+                }
+            }
+            .addOnFailureListener {
+                Log.e("Errores", "Error en get business partner por id, posiblemente no exista $it")
+            }
+    }
+
     override fun getAllObject(callback: (MutableList<*>?) -> Unit) {
         this.database
             .collection(this.coleccion)
