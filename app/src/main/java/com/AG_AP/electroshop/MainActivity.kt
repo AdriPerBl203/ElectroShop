@@ -11,6 +11,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.AG_AP.electroshop.functions.Config
+import com.AG_AP.electroshop.components.Pantalla
+import com.AG_AP.electroshop.endpoints.objects.ActivityObj
+import com.AG_AP.electroshop.firebase.ActivityCRUD
+import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
+import com.AG_AP.electroshop.screens.ScaffoldActivity
+import com.AG_AP.electroshop.firebase.ItemCRUD
+import com.AG_AP.electroshop.firebase.OrderCRUD
+import com.AG_AP.electroshop.firebase.PriceListCRUD
+import com.AG_AP.electroshop.firebase.SEIConfigCRUD
+import com.AG_AP.electroshop.firebase.models.Item
+import com.AG_AP.electroshop.firebase.models.ItemType
+import com.AG_AP.electroshop.firebase.models.Price
+import com.AG_AP.electroshop.firebase.models.SEIConfig
+import com.AG_AP.electroshop.screens.SettingScreen
+import com.AG_AP.electroshop.ui.theme.ElectroShopTheme
 import com.AG_AP.electroshop.viewModels.AppNav
 
 

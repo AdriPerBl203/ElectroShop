@@ -45,13 +45,15 @@ object BusinessPartnerCRUD : ActionFirebase {
                     val CardName = data?.get("CardName").toString() ?: ""
                     val Cellular = data?.get("Cellular").toString() ?: ""
                     val EmailAddress = data?.get("EmailAddress").toString() ?: ""
+                    val SAP = data?.get("SAP").toString().toBoolean()
 
                     val dataReturn: BusinessPartner = BusinessPartner(
                         CardCode,
                         CardType,
                         CardName,
                         Cellular,
-                        EmailAddress
+                        EmailAddress,
+                        SAP
                     )
                     callback(dataReturn)
                 } else {
@@ -79,13 +81,15 @@ object BusinessPartnerCRUD : ActionFirebase {
                     val CardName = data?.get("CardName").toString() ?: ""
                     val Cellular = data?.get("Cellular").toString() ?: ""
                     val EmailAddress = data?.get("EmailAddress").toString() ?: ""
+                    val SAP = data?.get("SAP").toString().toBoolean()
 
                     val dataReturn: BusinessPartner = BusinessPartner(
                         CardCode,
                         CardType,
                         CardName,
                         Cellular,
-                        EmailAddress
+                        EmailAddress,
+                        SAP
                     )
                     callback(dataReturn)
                 } else {
@@ -113,13 +117,15 @@ object BusinessPartnerCRUD : ActionFirebase {
                     val CardName = data?.get("CardName").toString()
                     val Cellular = data?.get("Cellular").toString()
                     val EmailAddress = data?.get("EmailAddress").toString()
+                    val SAP = data?.get("SAP").toString().toBoolean()
 
                     val dataReturn: BusinessPartner = BusinessPartner(
                         CardCode,
                         CardType,
                         CardName,
                         Cellular,
-                        EmailAddress
+                        EmailAddress,
+                        SAP
                     )
 
                     dataList.add(dataReturn)

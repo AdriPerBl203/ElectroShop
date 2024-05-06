@@ -5,7 +5,7 @@ data class DocumentLineFireBase(
     val Quantity: Double,
     val DiscountPercent: Double,
     val LineNum: Int,
-    val Price: Double,
+    val Price: Double
 ){
     fun toHashMap(): HashMap<String, Any> {
         val hashMap = HashMap<String, Any>()

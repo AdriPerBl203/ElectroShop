@@ -78,7 +78,7 @@ class BusinessPartnerViewModel : ViewModel(), ActionViewModel {
         var EmailAddress = _uiState.value.EmailAddress
         val Cellular = _uiState.value.Cellular
         val dataAux: BusinessPartner =
-            BusinessPartner(CardCode, CardType, CardName, EmailAddress, Cellular)
+            BusinessPartner(CardCode, CardType, CardName, EmailAddress, Cellular, false)
         var text = "Nuevo cliente añadido"
         viewModelScope.launch {
             try {
@@ -120,7 +120,7 @@ class BusinessPartnerViewModel : ViewModel(), ActionViewModel {
         var EmailAddress = _uiState.value.EmailAddress
         val Cellular = _uiState.value.Cellular
         val data: BusinessPartner =
-            BusinessPartner(CardCode, CardType, CardName, EmailAddress, Cellular)
+            BusinessPartner(CardCode, CardType, CardName, EmailAddress, Cellular, false)
         var text = "Actividad actualizada"
         viewModelScope.launch {
             try {

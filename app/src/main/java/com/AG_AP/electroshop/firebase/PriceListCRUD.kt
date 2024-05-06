@@ -12,8 +12,8 @@ object PriceListCRUD {
 
     val coleccion = "SEIlistaPrecios"
 
-    fun insertPrecio(priceList: Int, price: Number, currency: String) {
-        val precio = Price(priceList, price, currency).toHashMap()
+    fun insertPrecio(priceList: Int, price: Number, currency: String, SAP: Boolean) {
+        val precio = Price(priceList, price, currency, SAP).toHashMap()
 
         database
             .collection(this.coleccion)
@@ -41,10 +41,11 @@ object PriceListCRUD {
                     val priceListDatos = datosPrice?.get("priceList")
                     val priceDatos = datosPrice?.get("price")
                     val currency = datosPrice?.get("currency")
+                    val SAP = datosPrice?.get("SAP").toString().toBoolean()
 
                     Log.wtf("Pruebas", "PriceList: ${priceListDatos.toString().toInt()}, PriceDatos: ${priceDatos.toString().toBigDecimal()}, currency: ${currency.toString()}")
 
-                    val price = Price(priceListDatos.toString().toInt(), priceDatos.toString().toBigDecimal(), currency.toString())
+                    val price = Price(priceListDatos.toString().toInt(), priceDatos.toString().toBigDecimal(), currency.toString(), SAP)
                     callback(price)
                 } else {
                     callback(null)
@@ -69,11 +70,13 @@ object PriceListCRUD {
                     val priceListDatos = datosPrice?.get("priceList")
                     val priceDatos = datosPrice?.get("price")
                     val currency = datosPrice?.get("currency")
+                    val SAP = datosPrice?.get("SAP").toString().toBoolean()
 
                     val price = Price(
                         priceListDatos.toString().toInt(),
                         priceDatos.toString().toBigDecimal(),
-                        currency.toString()
+                        currency.toString(),
+                        SAP
                     )
                     preciosList.add(price)
                 }

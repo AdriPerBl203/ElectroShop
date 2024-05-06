@@ -44,6 +44,7 @@ object PurchaseOrderCRUD : ActionFirebase {
                     val DocDueDate = dato.get("DocDueDate") as String
                     val TaxDate = dato.get("TaxDate") as String
                     val DiscountPercent = dato.get("DiscountPercent") as Double
+                    val SAP = dato.get("SAP").toString().toBoolean()
 
                     var documentLine: MutableList<DocumentLineFireBase> = mutableListOf()
                     try {
@@ -77,7 +78,8 @@ object PurchaseOrderCRUD : ActionFirebase {
                         DocDueDate,
                         TaxDate,
                         DiscountPercent,
-                        documentLine.toList()
+                        documentLine.toList(),
+                        SAP
                     )
 
                     callback(Order)
@@ -109,6 +111,7 @@ object PurchaseOrderCRUD : ActionFirebase {
                     val DocDueDate = dato.get("DocDueDate") as String
                     val TaxDate = dato.get("TaxDate") as String
                     val DiscountPercent = dato.get("DiscountPercent") as Double
+                    val SAP = dato.get("SAP").toString().toBoolean()
 
                     var documentLine: MutableList<DocumentLineFireBase> = mutableListOf()
                     try {
@@ -142,7 +145,8 @@ object PurchaseOrderCRUD : ActionFirebase {
                         DocDueDate,
                         TaxDate,
                         DiscountPercent,
-                        documentLine.toList()
+                        documentLine.toList(),
+                        SAP
                     )
 
                     callback(Order)
@@ -173,6 +177,7 @@ object PurchaseOrderCRUD : ActionFirebase {
                     val DocDueDate = dato.get("DocDueDate") as String
                     val TaxDate = dato.get("TaxDate") as String
                     val DiscountPercent = dato.get("DiscountPercent") as Double
+                    val SAP = dato.get("SAP").toString().toBoolean()
 
                     var documentLine: MutableList<DocumentLineFireBase> = mutableListOf()
                     try {
@@ -206,7 +211,8 @@ object PurchaseOrderCRUD : ActionFirebase {
                         DocDueDate,
                         TaxDate,
                         DiscountPercent.toDouble(),
-                        documentLine.toList()
+                        documentLine.toList(),
+                        SAP
                     )
 
 
