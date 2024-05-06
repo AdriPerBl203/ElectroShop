@@ -286,7 +286,7 @@ class SettingsViewModel : ViewModel() {
                         element.CardName,
                         phone1,
                         email,
-
+                        false
                     ))
                 }
                 _uiState.update { currentState -> currentState.copy(
@@ -417,7 +417,7 @@ class SettingsViewModel : ViewModel() {
                                 it.Quantity,
                                 it.DiscountPercent,
                                 it.LineNum,
-                                it.Price,
+                                it.Price
                             )
                         )
                     }
@@ -430,6 +430,7 @@ class SettingsViewModel : ViewModel() {
                         element.TaxDate,
                         element.DiscountPercent,
                         documentList,
+                        true
                     )
                     PurchaseOrderCRUD.insert(PurchaseOrderInsert)
                 }
@@ -474,6 +475,7 @@ class SettingsViewModel : ViewModel() {
                         element.TaxDate,
                         element.DiscountPercent,
                         documentList,
+                        true
                     )
                     OrderCRUD.insert(orderInsert)
                 }
@@ -502,7 +504,8 @@ class SettingsViewModel : ViewModel() {
                             Price(
                                 itemPrice.PriceList ?:0,
                                 itemPrice.Price ?:0.0F,
-                                itemPrice.Currency ?:""
+                                itemPrice.Currency ?:"",
+                                true
                             )
                         )
                     }
@@ -513,7 +516,8 @@ class SettingsViewModel : ViewModel() {
                         element.ItemName ?: "",
                         listPrice.toList(),
                                 element.ItemName ?: "",
-                                element.ItemName ?: ""
+                                element.ItemName ?: "",
+                        true
                     )
                     ItemCRUD.insertItem(item)
                 }

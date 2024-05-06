@@ -55,7 +55,6 @@ object OrderCRUD : ActionFirebase {
                             val DiscountPercentLine = x["DiscountPercent"].toString().toDouble()
                             val LineNum = x["LineNum"].toString().toInt()
                             val Price = x["Price"].toString().toDouble()
-                            val SAP = x["SAP"].toString().toBoolean()
 
                             documentLine.add(
                                 DocumentLineFireBase(
@@ -63,8 +62,7 @@ object OrderCRUD : ActionFirebase {
                                     Quantity,
                                     DiscountPercentLine,
                                     LineNum,
-                                    Price,
-                                    SAP
+                                    Price
                                 )
                             )
                         }
@@ -124,7 +122,6 @@ object OrderCRUD : ActionFirebase {
                             val DiscountPercentLine = x["DiscountPercent"].toString().toDouble()
                             val LineNum = x["LineNum"].toString().toInt()
                             val Price = x["Price"].toString().toDouble()
-                            val SAP = x["SAP"].toString().toBoolean()
 
                             documentLine.add(
                                 DocumentLineFireBase(
@@ -132,8 +129,7 @@ object OrderCRUD : ActionFirebase {
                                     Quantity,
                                     DiscountPercentLine,
                                     LineNum,
-                                    Price,
-                                    SAP
+                                    Price
                                 )
                             )
                         }
@@ -193,7 +189,6 @@ object OrderCRUD : ActionFirebase {
                                 x["DiscountPercent"].toString().toDouble() ?: 0.0
                             val LineNum = x["LineNum"].toString().toInt() ?: 0
                             val Price = x["Price"].toString().toDouble()
-                            val SAP = x["SAP"].toString().toBoolean()
 
                             documentLine.add(
                                 DocumentLineFireBase(
@@ -201,8 +196,7 @@ object OrderCRUD : ActionFirebase {
                                     Quantity,
                                     DiscountPercentLine,
                                     LineNum,
-                                    Price,
-                                    SAP
+                                    Price
                                 )
                             )
                         }
