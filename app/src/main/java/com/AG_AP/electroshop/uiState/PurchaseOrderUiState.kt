@@ -3,27 +3,31 @@ package com.AG_AP.electroshop.uiState
 data class PurchaseOrderUiState(
     val CardCode: String = "",
     val CardName: String = "",
+    val DocNum: Int = -1,
     val DocDate: String = "",
     val DocDueDate: String = "",
     val TaxDate: String = "",
-    val DiscountPercent: String = "0.0", //Descuento
+    val DiscountPercent: Double = 0.0, //Descuento
     val DocumentLine: MutableList<ArticleUiState?> = listOf(
         ArticleUiState(
-            0,"","",0.0F,0.0F,0.0F
+            0, "", "", 0.0F, 0.0F, 0.0F
         ),
         ArticleUiState(
-            1,"","",0.0F,0.0F,0.0F
+            1, "", "", 0.0F, 0.0F, 0.0F
         ),
         ArticleUiState(
-            2,"","",0.0F,0.0F,0.0F
+            2, "", "", 0.0F, 0.0F, 0.0F
         ),
         ArticleUiState(
-            3,"","",0.0F,0.0F,0.0F
+            3, "", "", 0.0F, 0.0F, 0.0F
         ),
         ArticleUiState(
-            4,"","",0.0F,0.0F,0.0F
+            4, "", "", 0.0F, 0.0F, 0.0F
         )
     ).toMutableList(),
     val DocumentLineList: MutableList<String> = mutableListOf(),
-    val trash:Int =0
+    val trash: Int = 0,
+    val message:Boolean = false,
+    val progress:Boolean = false,
+    val text:String = ""
 )

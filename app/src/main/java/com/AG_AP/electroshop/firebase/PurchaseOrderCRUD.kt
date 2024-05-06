@@ -51,6 +51,7 @@ object PurchaseOrderCRUD : ActionFirebase {
                         val documentLineAux = dato["DocumentLines"] as List<HashMap<String, Any>>
                         for (x in documentLineAux) {
                             val ItemCode = x["ItemCode"].toString()
+                            val ItemDescription = x["ItemDescription"].toString()
                             val Quantity = x["Quantity"].toString().toDouble()
                             val DiscountPercentLine = x["DiscountPercent"].toString().toDouble()
                             val LineNum = x["LineNum"].toString().toInt()
@@ -59,6 +60,7 @@ object PurchaseOrderCRUD : ActionFirebase {
                             documentLine.add(
                                 DocumentLineFireBase(
                                     ItemCode,
+                                    ItemDescription,
                                     Quantity,
                                     DiscountPercentLine,
                                     LineNum,
@@ -118,6 +120,7 @@ object PurchaseOrderCRUD : ActionFirebase {
                         val documentLineAux = dato["DocumentLines"] as List<HashMap<String, Any>>
                         for (x in documentLineAux) {
                             val ItemCode = x["ItemCode"].toString()
+                            val ItemDescription = x["ItemDescription"].toString()
                             val Quantity = x["Quantity"].toString().toDouble()
                             val DiscountPercentLine = x["DiscountPercent"].toString().toDouble()
                             val LineNum = x["LineNum"].toString().toInt()
@@ -126,6 +129,7 @@ object PurchaseOrderCRUD : ActionFirebase {
                             documentLine.add(
                                 DocumentLineFireBase(
                                     ItemCode,
+                                    ItemDescription,
                                     Quantity,
                                     DiscountPercentLine,
                                     LineNum,
@@ -184,6 +188,7 @@ object PurchaseOrderCRUD : ActionFirebase {
                         val documentLineAux = dato["DocumentLines"] as List<HashMap<String, Any>>
                         for (x in documentLineAux) {
                             val ItemCode = x["ItemCode"].toString()
+                            val ItemDescription = x["ItemDescription"].toString()
                             val Quantity = x["Quantity"].toString().toDouble()
                             val DiscountPercentLine = x["DiscountPercent"].toString().toDouble() ?: 0.0
                             val LineNum = x["LineNum"].toString().toInt() ?: 0
@@ -192,6 +197,7 @@ object PurchaseOrderCRUD : ActionFirebase {
                             documentLine.add(
                                 DocumentLineFireBase(
                                     ItemCode,
+                                    ItemDescription,
                                     Quantity,
                                     DiscountPercentLine,
                                     LineNum,

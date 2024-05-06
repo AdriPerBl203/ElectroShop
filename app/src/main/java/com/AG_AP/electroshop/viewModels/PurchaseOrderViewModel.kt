@@ -2,12 +2,18 @@ package com.AG_AP.electroshop.viewModels
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.AG_AP.electroshop.firebase.OrderCRUD
+import com.AG_AP.electroshop.firebase.models.DocumentLineFireBase
+import com.AG_AP.electroshop.firebase.models.OrderFireBase
 import com.AG_AP.electroshop.uiState.ArticleUiState
 import com.AG_AP.electroshop.uiState.PurchaseOrderUiState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class PurchaseOrderViewModel : ViewModel(), ActionViewModel {
 
@@ -16,6 +22,13 @@ class PurchaseOrderViewModel : ViewModel(), ActionViewModel {
 
     init {
         documentLineForMutableList()
+    }
+
+    fun refresh() {
+        val docNum: Int = _uiState.value.DocNum
+        if (docNum != -1) {
+            find()
+        }
     }
 
     fun changeCardCode(cardCode: String) {
@@ -38,23 +51,22 @@ class PurchaseOrderViewModel : ViewModel(), ActionViewModel {
         try {
             val disc = discount.toFloat()
 
-            if (disc >= 100.0F) {
+            if (disc >= 100.0) {
                 _uiState.update { currentState ->
                     currentState.copy(
-                        DiscountPercent = "100.0"
+                        DiscountPercent = 100.0
                     )
                 }
-            } else if (disc <= 0.0F) {
+            } else if (disc <= 0.0) {
                 _uiState.update { currentState ->
                     currentState.copy(
-                        DiscountPercent = "0.0"
+                        DiscountPercent = 0.0
                     )
                 }
-            }
-            else {
+            } else {
                 _uiState.update { currentState ->
                     currentState.copy(
-                        DiscountPercent = discount
+                        DiscountPercent = discount.toDouble()
                     )
                 }
             }
@@ -99,7 +111,7 @@ class PurchaseOrderViewModel : ViewModel(), ActionViewModel {
     }
 
     override fun find() {
-        TODO("Not yet implemented")
+        TODO()
     }
 
     override fun menssageFunFalse() {

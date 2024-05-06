@@ -100,6 +100,15 @@ fun AppNav(navController: NavHostController = rememberNavController(),context: C
         }
 
         composable(
+            route = Routes.ScreenOrderAux.route + "/{id}",
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id")
+            ScaffoldOrder(navController = navController, id = id)
+        }
+
+
+        composable(
             route = Routes.BusinessPartnerAux.route + "/{id}",
             arguments = listOf(navArgument("id") { type = NavType.StringType })
         ) { backStackEntry ->

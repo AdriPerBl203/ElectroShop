@@ -54,7 +54,7 @@ import com.AG_AP.electroshop.uiState.OrderUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel/*, id: String?*/) {
+fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String?) {
     val dataUiState by viewModel.uiState.collectAsState()
 
     Column(
@@ -108,7 +108,7 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel/*, id: Stri
                 )
 
                 OutlinedTextField(
-                    value = dataUiState.DiscountPercent,
+                    value = dataUiState.DiscountPercent.toString(),
                     onValueChange = { viewModel.changeDiscount(it) },
                     modifier = Modifier
                         .width(300.dp)
@@ -122,7 +122,7 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel/*, id: Stri
             }
 
             Column {
-                DatePicker("Fecha contabilizacion ") { fechaDocumento ->
+                DatePicker("Fecha contabilizacion " /* TODO meter el value */ ) { fechaDocumento ->
                     viewModel.changeTaxDate(fechaDocumento)
                 }
 
@@ -146,30 +146,33 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel/*, id: Stri
                     .padding(top = 30.dp, end = 30.dp)
                     .background(MaterialTheme.colorScheme.background)
             ) {
-                Row {
-                    IconButton(
-                        modifier = Modifier
-                            .background(MaterialTheme.colorScheme.primary)
-                            .border(
-                                BorderStroke(0.5.dp, Color.Black)
-                            )
-                            .padding(end = 0.5.dp),
-                        onClick = { viewModel.deleteLine() }
-                    ) {
-                        Text(text = "-")
-                    }
-                    IconButton(
-                        modifier = Modifier
-                            .background(MaterialTheme.colorScheme.primary)
-                            .border(
-                                BorderStroke(0.5.dp, Color.Black)
-                            )
-                            .padding(start = 0.5.dp),
-                        onClick = { viewModel.addLine() }
-                    ) {
-                        Text(text = "+")
+                if (id == null) {
+                    Row {
+                        IconButton(
+                            modifier = Modifier
+                                .background(MaterialTheme.colorScheme.primary)
+                                .border(
+                                    BorderStroke(0.5.dp, Color.Black)
+                                )
+                                .padding(end = 0.5.dp),
+                            onClick = { viewModel.deleteLine() }
+                        ) {
+                            Text(text = "-")
+                        }
+                        IconButton(
+                            modifier = Modifier
+                                .background(MaterialTheme.colorScheme.primary)
+                                .border(
+                                    BorderStroke(0.5.dp, Color.Black)
+                                )
+                                .padding(start = 0.5.dp),
+                            onClick = { viewModel.addLine() }
+                        ) {
+                            Text(text = "+")
+                        }
                     }
                 }
+
                 TableDocumentLineOrder(dataUiState, viewModel)
 
             }
@@ -202,7 +205,7 @@ fun TableDocumentLineOrder(dataUiState: OrderUiState, viewModel: OrderViewModel)
     val numCols = 5
 
     // Datos de ejemplo para las cabeceras
-    val headers = listOf("Nº", "Nombre", "Cantidad", "Precio", "% de descuento")
+    val headers = listOf("Nº", "Código Articulo", "Cantidad", "Precio", "% de descuento")
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(numCols)
@@ -292,9 +295,13 @@ fun TableDocumentLineOrder(dataUiState: OrderUiState, viewModel: OrderViewModel)
 @Composable
 fun ScaffoldOrder(
     viewModel: OrderViewModel = viewModel(),
-    navController: NavHostController/*, id:String? =null*/
+    navController: NavHostController,
+    id: String? = null
 ) {
-
+    if (id != null) {
+        viewModel.changeDocNum(id.toInt())
+        viewModel.refresh()
+    }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -346,7 +353,7 @@ fun ScaffoldOrder(
         }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(start = 50.dp, top = 20.dp)) {
-            OrderView(innerPadding, viewModel)
+            OrderView(innerPadding, viewModel, id)
         }
     }
 }

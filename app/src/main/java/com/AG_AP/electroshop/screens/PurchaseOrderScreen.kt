@@ -116,7 +116,7 @@ fun PurchaseOrderView(
                 )
 
                 OutlinedTextField(
-                    value = dataUiState.DiscountPercent,
+                    value = dataUiState.DiscountPercent.toString(),
                     onValueChange = { viewModel.changeDiscount(it) },
                     modifier = Modifier
                         .width(300.dp)
@@ -302,9 +302,13 @@ fun TableDocumentLinePurchase(
 @Composable
 fun ScaffoldPurchaseOrder(
     viewModel: PurchaseOrderViewModel = viewModel(),
-    navController: NavHostController/*, id:String? =null*/
+    navController: NavHostController,
+    id: String? = null
 ) {
-
+    if (id != null) {
+        viewModel.changeName(id)
+        viewModel.refresh()
+    }
     Scaffold(
         topBar = {
             TopAppBar(

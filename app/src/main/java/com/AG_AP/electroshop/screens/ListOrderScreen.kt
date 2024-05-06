@@ -263,7 +263,7 @@ fun ElevatedCardOrder(x: OrderFireBase?, navController: NavHostController) {
                         textAlign = TextAlign.Center,
                     )
                 }
-                Button(onClick = { navController.navigate(route = Routes.BusinessPartnerAux.route + "/${x.CardCode}") }) {
+                Button(onClick = { navController.navigate(route = Routes.ScreenOrderAux.route + "/${x.DocNum}") }) {
                     Text(text = "Ver")
                 }
             }
