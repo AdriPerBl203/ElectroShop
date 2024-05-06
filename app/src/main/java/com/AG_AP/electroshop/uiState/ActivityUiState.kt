@@ -1,5 +1,6 @@
 package com.AG_AP.electroshop.uiState
 
+import com.AG_AP.electroshop.firebase.models.BusinessPartner
 import com.AG_AP.electroshop.firebase.models.DocumentLineFireBase
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
 
@@ -7,7 +8,7 @@ data class ActivityUiState(
     val nota:String = "Esto es una nota",
     val ActivityDate:String = "2016-08-30",
     val ActivityTime:String = "",
-    val CardCode:String = "C01",
+    val CardCode:String = "",
     val EndTime:String = "",
     val Tel:String = "654354654",
     val ClgCode:String = "",
@@ -20,8 +21,10 @@ data class ActivityUiState(
     val text:String = "",
     val showDialogOrder:Boolean = false,
     val showDialogPurchaseOrder:Boolean = false,
+    val showDialogBussinesPartner:Boolean = false,
     val ListOrders:List<OrderFireBase> = listOf(),
-    val ListPurchaseOrders:List<OrderFireBase> = listOf()
+    val ListPurchaseOrders:List<OrderFireBase> = listOf(),
+    val ListBusinessPartner:List<BusinessPartner> = listOf()
 )
 /*val nota:String = "Esto es una nota",
 val ActivityDate:String = "2016-08-30",

@@ -27,6 +27,20 @@ object ActivityCRUD {
             }
     }
 
+    fun insertActivityForFireBase(activity : Activity) {
+
+        this.database
+            .collection(this.coleccion)
+            .document()
+            .set(activity.toHashMap())
+            .addOnSuccessListener {
+                Log.e("ActivityFireBase", "Creado Actividad: ${it.toString()}")
+            }
+            .addOnFailureListener { e ->
+                Log.w("ActivityFireBase", "Error añadiendo el documento $e")
+            }
+    }
+
     fun getActivityById(id: Int,callback:(Activity?)->Unit) {
         this.database
             .collection(this.coleccion)
@@ -61,7 +75,8 @@ object ActivityCRUD {
                         ClgCode,
                         Priority,
                         U_SEIPEDIDOCOMPRAS,
-                        U_SEIPEDIDOCLIENTE
+                        U_SEIPEDIDOCLIENTE,
+                        false
                     )
                     callback(dataReturn)
                 } else {
@@ -107,7 +122,8 @@ object ActivityCRUD {
                         ClgCode,
                         Priority,
                         U_SEIPEDIDOCOMPRAS,
-                        U_SEIPEDIDOCLIENTE
+                        U_SEIPEDIDOCLIENTE,
+                        false
                     )
 
                     ActivityList.add(dataReturn)
