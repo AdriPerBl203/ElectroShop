@@ -28,13 +28,16 @@ object ActivityCRUD {
     }
 
     fun insertActivityForFireBase(activity : Activity) {
-
-        this.database
+        val docRef = this.database
             .collection(this.coleccion)
             .document()
-            .set(activity.toHashMap())
+
+        val newActivity = activity.copy(idFireBase = docRef.id) // Guardar el ID generado dentro de la actividad
+
+        docRef
+            .set(newActivity.toHashMap())
             .addOnSuccessListener {
-                Log.e("ActivityFireBase", "Creado Actividad: ${it.toString()}")
+                Log.e("ActivityFireBase", "Creado Actividad con ID: ${docRef.id}")
             }
             .addOnFailureListener { e ->
                 Log.w("ActivityFireBase", "Error añadiendo el documento $e")
@@ -52,6 +55,7 @@ object ActivityCRUD {
                     Log.e("Pruebas", "Datos: ${dataActivity.toString()}")
 
 
+                    val idFireBase = dataActivity?.get("idFireBase").toString()
                     val nota = dataActivity?.get("nota").toString()
                     val ActivityDate = dataActivity?.get("ActivityDate").toString()
                     val ActivityTime = dataActivity?.get("ActivityTime").toString()
@@ -63,8 +67,9 @@ object ActivityCRUD {
                     val Priority = dataActivity?.get("Priority").toString()
                     val U_SEIPEDIDOCOMPRAS = dataActivity?.get("U_SEIPEDIDOCOMPRAS").toString().toInt()
                     val U_SEIPEDIDOCLIENTE = dataActivity?.get("U_SEIPEDIDOCLIENTE").toString().toInt()
-
+                    val SAP = dataActivity?.get("SAP").toString().toBoolean()
                     val dataReturn = Activity(
+                        idFireBase,
                         nota,
                         ActivityDate,
                         ActivityTime,
@@ -76,7 +81,7 @@ object ActivityCRUD {
                         Priority,
                         U_SEIPEDIDOCOMPRAS,
                         U_SEIPEDIDOCLIENTE,
-                        false
+                        SAP
                     )
                     callback(dataReturn)
                 } else {
@@ -98,7 +103,7 @@ object ActivityCRUD {
 
                 for (document in lista.documents) {
                     val dataActivity = document.data
-
+                    val idFireBase = dataActivity?.get("idFireBase").toString()
                     val nota = dataActivity?.get("nota").toString()
                     val ActivityDate = dataActivity?.get("ActivityDate").toString()
                     val ActivityTime = dataActivity?.get("ActivityTime").toString()
@@ -110,8 +115,9 @@ object ActivityCRUD {
                     val Priority = dataActivity?.get("Priority").toString()
                     val U_SEIPEDIDOCOMPRAS = dataActivity?.get("U_SEIPEDIDOCOMPRAS").toString().toInt()
                     val U_SEIPEDIDOCLIENTE = dataActivity?.get("U_SEIPEDIDOCLIENTE").toString().toInt()
-
+                    val SAP = dataActivity?.get("SAP").toString().toBoolean()
                     val dataReturn: Activity = Activity(
+                        idFireBase,
                         nota,
                         ActivityDate,
                         ActivityTime,
@@ -123,7 +129,7 @@ object ActivityCRUD {
                         Priority,
                         U_SEIPEDIDOCOMPRAS,
                         U_SEIPEDIDOCLIENTE,
-                        false
+                        SAP
                     )
 
                     ActivityList.add(dataReturn)

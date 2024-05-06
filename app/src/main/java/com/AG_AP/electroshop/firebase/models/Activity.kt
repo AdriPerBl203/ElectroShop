@@ -4,6 +4,7 @@ import com.google.firebase.database.IgnoreExtraProperties
 
 @IgnoreExtraProperties
 data class Activity(
+    val idFireBase: String? = null,
     val nota:String,
     val ActivityDate:String,
     val ActivityTime:String,
@@ -19,6 +20,7 @@ data class Activity(
 ){
     fun toHashMap(): HashMap<String, Any> {
         val hashMap = HashMap<String, Any>()
+        idFireBase?.let { hashMap["idFireBase"] = it }
         hashMap["nota"] = nota
         hashMap["ActivityDate"] = ActivityDate
         hashMap["ActivityTime"] = ActivityTime
