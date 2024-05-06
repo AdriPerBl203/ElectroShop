@@ -92,6 +92,70 @@ object PurchaseOrderCRUD : ActionFirebase {
 
 
     }
+
+    override fun getObjectByIdToString(id: String, callback: (Any?) -> Unit) {
+        ItemCRUD.database
+            .collection(coleccion)
+            .document(id)
+            .get()
+            .addOnSuccessListener {
+                if (it.exists()) {
+                    val dato = it.data
+
+                    val DocNum = dato?.get("DocNum") as Long
+                    val CardCode = dato.get("CardCode") as String
+                    val CardName = dato.get("CardName") as String
+                    val DocDate = dato.get("DocDate") as String
+                    val DocDueDate = dato.get("DocDueDate") as String
+                    val TaxDate = dato.get("TaxDate") as String
+                    val DiscountPercent = dato.get("DiscountPercent") as Double
+
+                    var documentLine: MutableList<DocumentLineFireBase> = mutableListOf()
+                    try {
+                        val documentLineAux = dato["DocumentLines"] as List<HashMap<String, Any>>
+                        for (x in documentLineAux) {
+                            val ItemCode = x["ItemCode"].toString()
+                            val Quantity = x["Quantity"].toString().toDouble()
+                            val DiscountPercentLine = x["DiscountPercent"].toString().toDouble()
+                            val LineNum = x["LineNum"].toString().toInt()
+                            val Price = x["Price"].toString().toDouble()
+
+                            documentLine.add(
+                                DocumentLineFireBase(
+                                    ItemCode,
+                                    Quantity,
+                                    DiscountPercentLine,
+                                    LineNum,
+                                    Price
+                                )
+                            )
+                        }
+                    } catch (e: Exception) {
+                        println(e.message)
+                    }
+
+                    val Order: OrderFireBase = OrderFireBase(
+                        DocNum.toInt(),
+                        CardCode,
+                        CardName,
+                        DocDate,
+                        DocDueDate,
+                        TaxDate,
+                        DiscountPercent,
+                        documentLine.toList()
+                    )
+
+                    callback(Order)
+
+                } else {
+                    callback(null)
+                }
+            }
+            .addOnFailureListener {
+                Log.e("Errores", "Error en get item por id, posiblemente no exista $it")
+            }
+    }
+
     override fun getAllObject(callback: (MutableList<*>?) -> Unit) {
         database
             .collection(coleccion)
