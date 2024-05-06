@@ -57,7 +57,9 @@ fun SettingScreen(
     context: Context
 ) {
     val dataUiState by viewModel.uiState.collectAsState()
-    viewModel.initData(context)
+    if(dataUiState.init){
+        viewModel.initData(context)
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -273,7 +275,7 @@ fun SettingScreen(
             }
             Button(
                 modifier = Modifier.padding(10.dp),
-                onClick = { viewModel.sync() },
+                onClick = { viewModel.sync(context) },
                 enabled = dataUiState.btnSyncEnable
             ) {
                 Icon(

@@ -142,6 +142,7 @@ class SettingsViewModel : ViewModel() {
                     progress = false,
                     ButtomEnable = true
                 ) }
+                LoginObj.logout(urlInt)
             }else{
                 text ="Test NO realizado con éxito."
                 _uiState.update { currentState -> currentState.copy(
@@ -329,7 +330,19 @@ class SettingsViewModel : ViewModel() {
         }
     }
 
-    fun sync() {
+    fun sync(context: Context) {
+        val gson = Gson()
+        val sharedPref = context?.getSharedPreferences("configuration", Context.MODE_PRIVATE)
+        val json = sharedPref?.getString("configuration", null)
+        val dataConfig = gson.fromJson(json, ConfigurationApplication::class.java)
+
+        viewModelScope.launch() {
+            if (!json.isNullOrEmpty()) {
+                val dataLogin = Login(dataConfig.dataBase,dataConfig.password,dataConfig.login)
+                LoginObj.loginAcessTwoversion(dataLogin,dataConfig.urlInt)
+            }
+        }
+
         deleteAndInsertItem()//
         deleteAndInsertUserUdo() //
         deleteAndInsertBusinessPartner() //
@@ -346,7 +359,7 @@ class SettingsViewModel : ViewModel() {
             btnEnable=false,
             btnExitEnable=false
         ) }
-        enablebtn()
+        enablebtn(dataConfig.urlInt)
 
 
         /*
@@ -368,7 +381,7 @@ class SettingsViewModel : ViewModel() {
          }*/
     }
 
-    private fun enablebtn() {
+    private fun enablebtn(url:String) {
         viewModelScope.launch(Dispatchers.IO) {
             var aux: Boolean = true
             while (aux){
@@ -383,6 +396,7 @@ class SettingsViewModel : ViewModel() {
                 btnEnable=true,
                 btnExitEnable=true
             ) }
+            LoginObj.logout(url)
         }
     }
 
@@ -549,8 +563,8 @@ class SettingsViewModel : ViewModel() {
                 login = dataConfig.login,
                 password = dataConfig.password,
                 dataBase = dataConfig.dataBase,
+                init=false
             ) }
         }
-
     }
 }
