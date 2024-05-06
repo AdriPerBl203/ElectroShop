@@ -129,6 +129,9 @@ class MenuViewModel : ViewModel() {
                                 ActivityCRUD.insertActivity(activity)
                             }
                             LoginObj.logout(Config.rulUse)
+                            _uiState.update { currentState -> currentState.copy(
+                                checkProgresCircular = false
+                            ) }
                         }
                     }
                     //LoginObj.logout(Config.rulUse)
@@ -137,6 +140,12 @@ class MenuViewModel : ViewModel() {
             }
         }
 
+    }
+
+    fun changeCheckProgresCircular(){
+        _uiState.update { currentState -> currentState.copy(
+            checkProgresCircular = true
+        ) }
     }
 
     fun upTotal() {
