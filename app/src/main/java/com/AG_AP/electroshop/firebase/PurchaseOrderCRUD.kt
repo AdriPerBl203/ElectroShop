@@ -44,6 +44,7 @@ object PurchaseOrderCRUD : ActionFirebase {
                     val DocDueDate = dato.get("DocDueDate") as String
                     val TaxDate = dato.get("TaxDate") as String
                     val DiscountPercent = dato.get("DiscountPercent") as Double
+                    val SAP = dato.get("SAP").toString().toBoolean()
 
                     var documentLine: MutableList<DocumentLineFireBase> = mutableListOf()
                     try {
@@ -54,6 +55,7 @@ object PurchaseOrderCRUD : ActionFirebase {
                             val DiscountPercentLine = x["DiscountPercent"].toString().toDouble()
                             val LineNum = x["LineNum"].toString().toInt()
                             val Price = x["Price"].toString().toDouble()
+                            val SAP = x["SAP"].toString().toBoolean()
 
                             documentLine.add(
                                 DocumentLineFireBase(
@@ -61,7 +63,8 @@ object PurchaseOrderCRUD : ActionFirebase {
                                     Quantity,
                                     DiscountPercentLine,
                                     LineNum,
-                                    Price
+                                    Price,
+                                    SAP
                                 )
                             )
                         }
@@ -77,7 +80,8 @@ object PurchaseOrderCRUD : ActionFirebase {
                         DocDueDate,
                         TaxDate,
                         DiscountPercent,
-                        documentLine.toList()
+                        documentLine.toList(),
+                        SAP
                     )
 
                     callback(Order)
@@ -109,6 +113,7 @@ object PurchaseOrderCRUD : ActionFirebase {
                     val DocDueDate = dato.get("DocDueDate") as String
                     val TaxDate = dato.get("TaxDate") as String
                     val DiscountPercent = dato.get("DiscountPercent") as Double
+                    val SAP = dato.get("SAP").toString().toBoolean()
 
                     var documentLine: MutableList<DocumentLineFireBase> = mutableListOf()
                     try {
@@ -119,6 +124,7 @@ object PurchaseOrderCRUD : ActionFirebase {
                             val DiscountPercentLine = x["DiscountPercent"].toString().toDouble()
                             val LineNum = x["LineNum"].toString().toInt()
                             val Price = x["Price"].toString().toDouble()
+                            val SAP = x["SAP"].toString().toBoolean()
 
                             documentLine.add(
                                 DocumentLineFireBase(
@@ -126,7 +132,8 @@ object PurchaseOrderCRUD : ActionFirebase {
                                     Quantity,
                                     DiscountPercentLine,
                                     LineNum,
-                                    Price
+                                    Price,
+                                    SAP
                                 )
                             )
                         }
@@ -142,7 +149,8 @@ object PurchaseOrderCRUD : ActionFirebase {
                         DocDueDate,
                         TaxDate,
                         DiscountPercent,
-                        documentLine.toList()
+                        documentLine.toList(),
+                        SAP
                     )
 
                     callback(Order)
@@ -173,6 +181,7 @@ object PurchaseOrderCRUD : ActionFirebase {
                     val DocDueDate = dato.get("DocDueDate") as String
                     val TaxDate = dato.get("TaxDate") as String
                     val DiscountPercent = dato.get("DiscountPercent") as Double
+                    val SAP = dato.get("SAP").toString().toBoolean()
 
                     var documentLine: MutableList<DocumentLineFireBase> = mutableListOf()
                     try {
@@ -183,6 +192,7 @@ object PurchaseOrderCRUD : ActionFirebase {
                             val DiscountPercentLine = x["DiscountPercent"].toString().toDouble() ?: 0.0
                             val LineNum = x["LineNum"].toString().toInt() ?: 0
                             val Price = x["Price"].toString().toDouble()
+                            val SAP = x["SAP"].toString().toBoolean()
 
                             documentLine.add(
                                 DocumentLineFireBase(
@@ -190,7 +200,8 @@ object PurchaseOrderCRUD : ActionFirebase {
                                     Quantity,
                                     DiscountPercentLine,
                                     LineNum,
-                                    Price
+                                    Price,
+                                    SAP
                                 )
                             )
                         }
@@ -206,7 +217,8 @@ object PurchaseOrderCRUD : ActionFirebase {
                         DocDueDate,
                         TaxDate,
                         DiscountPercent.toDouble(),
-                        documentLine.toList()
+                        documentLine.toList(),
+                        SAP
                     )
 
 

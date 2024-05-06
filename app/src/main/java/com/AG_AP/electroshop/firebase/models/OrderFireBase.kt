@@ -10,7 +10,8 @@ data class OrderFireBase(
     val DocDueDate: String,
     val TaxDate: String,
     val DiscountPercent: Double,
-    val DocumentLines: List<DocumentLineFireBase>
+    val DocumentLines: List<DocumentLineFireBase>,
+    val SAP: Boolean
 ){
     fun toHashMap(): HashMap<String, Any> {
         val hashMap = HashMap<String, Any>()
@@ -32,6 +33,7 @@ data class OrderFireBase(
             documentLinesList.add(documentLineMap)
         }
         hashMap["DocumentLines"] = documentLinesList
+        hashMap["SAP"] = this.SAP
         return hashMap
     }
 }

@@ -10,7 +10,8 @@ data class Item(
     val mainSupplier: String,
     val itemPrice: List<Price>?,
     val manageSerialNumbers: String,
-    val autoCreateSerialNumbersOnRelease: String
+    val autoCreateSerialNumbersOnRelease: String,
+    val SAP: Boolean
 ) {
     fun toHashMap(): HashMap<String, Any> {
         val hashMap = HashMap<String, Any>()
@@ -32,6 +33,7 @@ data class Item(
         }
         hashMap["ManageSerialNumbers"] = manageSerialNumbers
         hashMap["AutoCreateSerialNumbersOnRelease"] = autoCreateSerialNumbersOnRelease
+        hashMap["SAP"] = SAP
         return hashMap
     }
 
@@ -46,7 +48,8 @@ data class Item(
                 Price(
                     precioMap["PriceList"] as Int,
                     precioMap["Price"] as Int,
-                    precioMap["Currency"] as String
+                    precioMap["Currency"] as String,
+                    precioMap["SAP"].toString().toBoolean()
                 )
             }
         } else {
@@ -54,6 +57,7 @@ data class Item(
         }
         val manageSerialNumbers = map["ManageSerialNumber"] as String
         val autoCreateSerialNumbersOnRelease = map["AutoCreateSerialNumbersOnRelease"] as String
-        return Item(ItemCode,itemName, itemType, mainSupplier, itemPrices, manageSerialNumbers, autoCreateSerialNumbersOnRelease)
+        val SAP = map["SAP"] as Boolean
+        return Item(ItemCode,itemName, itemType, mainSupplier, itemPrices, manageSerialNumbers, autoCreateSerialNumbersOnRelease, SAP)
     }
 }
