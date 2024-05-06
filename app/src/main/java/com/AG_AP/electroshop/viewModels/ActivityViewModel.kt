@@ -5,9 +5,11 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.AG_AP.electroshop.firebase.ActivityCRUD
+import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
 import com.AG_AP.electroshop.firebase.OrderCRUD
 import com.AG_AP.electroshop.firebase.PurchaseOrderCRUD
 import com.AG_AP.electroshop.firebase.models.Activity
+import com.AG_AP.electroshop.firebase.models.BusinessPartner
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
 import com.AG_AP.electroshop.uiState.ActivityUiState
 import kotlinx.coroutines.Dispatchers
@@ -45,6 +47,16 @@ class ActivityViewModel : ViewModel(),ActionViewModel {
             mutableList?.let {
                 _uiState.update { currentState -> currentState.copy(
                     ListPurchaseOrders = it.toList()
+                ) }
+            }
+        }
+
+        //BusinessPartner
+        BusinessPartnerCRUD.getAllObject { list ->
+            val mutableList = list as? MutableList<BusinessPartner>
+            mutableList?.let {
+                _uiState.update { currentState -> currentState.copy(
+                    ListBusinessPartner = it.toList()
                 ) }
             }
         }
@@ -133,7 +145,7 @@ class ActivityViewModel : ViewModel(),ActionViewModel {
         val Priority = _uiState.value.Priority
         val pedidoCliente = _uiState.value.U_SEIPEDIDOCLIENTE.toInt()
         val pedidoCompra = _uiState.value.U_SEIPEDIDOCOMPRAS.toInt()
-        val Activity = Activity(nota,ActivityDate,ActivityTime,CardCode,EndTime,Action,Tel,ClgCode,Priority,pedidoCompra,pedidoCliente)
+        val Activity = Activity(nota,ActivityDate,ActivityTime,CardCode,EndTime,Action,Tel,ClgCode,Priority,pedidoCompra,pedidoCliente,false)
         var text ="Actividad actualizada"
         viewModelScope.launch {
             try{
@@ -214,22 +226,37 @@ class ActivityViewModel : ViewModel(),ActionViewModel {
     }
 
     override fun guardar(persistencia:Boolean) {
-        var nota = _uiState.value.nota
-        var ActivityDate = _uiState.value.ActivityDate
-        var ActivityTime = _uiState.value.ActivityTime
-        var CardCode = _uiState.value.CardCode
-        val EndTime = _uiState.value.EndTime
-        val Action = _uiState.value.Action
-        val Tel = _uiState.value.Tel
-        val ClgCode = _uiState.value.ClgCode
-        val Priority = _uiState.value.Priority
-        val pedidoCliente = _uiState.value.U_SEIPEDIDOCLIENTE.toInt()
-        val pedidoCompra = _uiState.value.U_SEIPEDIDOCOMPRAS.toInt()
-        val newActivity = Activity(nota,ActivityDate,ActivityTime,CardCode,EndTime,Action,Tel,ClgCode,Priority,pedidoCompra,pedidoCliente)
+        var nota = _uiState.value.nota ?: ""
+        var ActivityDate = _uiState.value.ActivityDate ?: ""
+        var ActivityTime = _uiState.value.ActivityTime ?: ""
+        var CardCode = _uiState.value.CardCode ?: ""
+        val EndTime = _uiState.value.EndTime ?: ""
+        var Action = _uiState.value.Action ?: ""
+        when(Action){
+            "Llamada telefónica"-> Action= "Phone Call"
+            "Reunión"->Action= "Meeting"
+            "Tarea"->    Action= "Task"
+            "Nota"-> Action= "Note"
+            "Campaña"->Action= "Campaign"
+            "Otros"->    Action= "Other"
+        }
+        val Tel = _uiState.value.Tel ?: ""
+        val ClgCode = _uiState.value.ClgCode ?: ""
+        var Priority = _uiState.value.Priority ?: ""
+
+        when(Priority){
+            "Bajo"-> Priority= "Low"
+            "Normal"->Priority= "Normal"
+            "Alto"->    Priority= "High"
+        }
+        val pedidoCliente = _uiState.value.U_SEIPEDIDOCLIENTE.toInt() ?: 0
+        val pedidoCompra = _uiState.value.U_SEIPEDIDOCOMPRAS.toInt() ?: 0
+        val dataConcat = ActivityDate.plus("T00:00:00Z")
+        val newActivity = Activity(nota,dataConcat,ActivityTime,CardCode,EndTime,Action,Tel,ClgCode,Priority,pedidoCompra,pedidoCliente,false)
         var text ="Nueva Actividad añadida"
         viewModelScope.launch {
             try{
-                ActivityCRUD.insertActivity(newActivity)
+                ActivityCRUD.insertActivityForFireBase(newActivity)
             }catch (e:Exception){
                 println(e.message)
                 text= "Hubo un error con la creación de la actividad."
@@ -275,9 +302,21 @@ class ActivityViewModel : ViewModel(),ActionViewModel {
         ) }
     }
 
+    fun showDialogBusinessPartner(){
+        _uiState.update { currentState -> currentState.copy(
+            showDialogBussinesPartner = true
+        ) }
+    }
+
     fun closerDialogPurchaseOrder(){
         _uiState.update { currentState -> currentState.copy(
             showDialogPurchaseOrder = false
+        ) }
+    }
+
+    fun closerDialogBusinessPartner(){
+        _uiState.update { currentState -> currentState.copy(
+            showDialogBussinesPartner = false
         ) }
     }
 

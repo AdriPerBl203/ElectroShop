@@ -15,6 +15,7 @@ data class Activity(
     val Priority:String,
     val U_SEIPEDIDOCOMPRAS:Int?,
     val U_SEIPEDIDOCLIENTE:Int?,
+    val SAP:Boolean,
 ){
     fun toHashMap(): HashMap<String, Any> {
         val hashMap = HashMap<String, Any>()
@@ -29,6 +30,7 @@ data class Activity(
         hashMap["Action"] = Action
         U_SEIPEDIDOCOMPRAS?.let { hashMap["U_SEIPEDIDOCOMPRAS"] = it }
         U_SEIPEDIDOCLIENTE?.let { hashMap["U_SEIPEDIDOCLIENTE"] = it }
+        hashMap["SAP"] = SAP
         return hashMap
     }
 }
