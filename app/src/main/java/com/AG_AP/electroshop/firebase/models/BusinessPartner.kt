@@ -9,6 +9,8 @@ data class BusinessPartner(
     val CardName:String ="",
     val Cellular:String ="",
     val EmailAddress:String ="",
+
+    val SAP: Boolean
 ){
     fun toHashMap(): HashMap<String, Any> {
         val hashMap = HashMap<String, Any>()
@@ -17,6 +19,8 @@ data class BusinessPartner(
         hashMap["CardName"] = CardName
         hashMap["Cellular"] = Cellular
         hashMap["EmailAddress"] = EmailAddress
+
+        hashMap["SAP"] = SAP
         return hashMap
     }
 }

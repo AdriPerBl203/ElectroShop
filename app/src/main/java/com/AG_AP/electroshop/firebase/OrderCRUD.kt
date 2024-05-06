@@ -13,7 +13,7 @@ object OrderCRUD : ActionFirebase {
     val coleccion = "SEIorders"
     override fun insert(data: Any) {
         val dataAux: OrderFireBase
-        if(data is OrderFireBase){
+        if (data is OrderFireBase) {
             dataAux = data
             database
                 .collection(coleccion)
@@ -44,6 +44,7 @@ object OrderCRUD : ActionFirebase {
                     val DocDueDate = dato.get("DocDueDate") as String
                     val TaxDate = dato.get("TaxDate") as String
                     val DiscountPercent = dato.get("DiscountPercent") as Double
+                    val SAP = dato.get("SAP").toString().toBoolean()
 
                     var documentLine: MutableList<DocumentLineFireBase> = mutableListOf()
                     try {
@@ -77,7 +78,8 @@ object OrderCRUD : ActionFirebase {
                         DocDueDate,
                         TaxDate,
                         DiscountPercent,
-                        documentLine.toList()
+                        documentLine.toList(),
+                        SAP
                     )
 
                     callback(Order)
@@ -109,6 +111,7 @@ object OrderCRUD : ActionFirebase {
                     val DocDueDate = dato.get("DocDueDate") as String
                     val TaxDate = dato.get("TaxDate") as String
                     val DiscountPercent = dato.get("DiscountPercent") as Double
+                    val SAP = dato.get("SAP").toString().toBoolean()
 
                     var documentLine: MutableList<DocumentLineFireBase> = mutableListOf()
                     try {
@@ -142,7 +145,8 @@ object OrderCRUD : ActionFirebase {
                         DocDueDate,
                         TaxDate,
                         DiscountPercent,
-                        documentLine.toList()
+                        documentLine.toList(),
+                        SAP
                     )
 
                     callback(Order)
@@ -173,27 +177,29 @@ object OrderCRUD : ActionFirebase {
                     val DocDueDate = dato.get("DocDueDate") as String
                     val TaxDate = dato.get("TaxDate") as String
                     val DiscountPercent = dato.get("DiscountPercent") as Double
+                    val SAP = dato.get("Boolean").toString().toBoolean()
 
                     var documentLine: MutableList<DocumentLineFireBase> = mutableListOf()
                     try {
                         val documentLineAux = dato["DocumentLines"] as List<HashMap<String, Any>>
-                            for (x in documentLineAux) {
-                                val ItemCode = x["ItemCode"].toString()
-                                val Quantity = x["Quantity"].toString().toDouble()
-                                val DiscountPercentLine = x["DiscountPercent"].toString().toDouble() ?: 0.0
-                                val LineNum = x["LineNum"].toString().toInt() ?: 0
-                                val Price = x["Price"].toString().toDouble()
+                        for (x in documentLineAux) {
+                            val ItemCode = x["ItemCode"].toString()
+                            val Quantity = x["Quantity"].toString().toDouble()
+                            val DiscountPercentLine =
+                                x["DiscountPercent"].toString().toDouble() ?: 0.0
+                            val LineNum = x["LineNum"].toString().toInt() ?: 0
+                            val Price = x["Price"].toString().toDouble()
 
-                                documentLine.add(
-                                    DocumentLineFireBase(
-                                        ItemCode,
-                                        Quantity,
-                                        DiscountPercentLine,
-                                        LineNum,
-                                        Price
-                                    )
+                            documentLine.add(
+                                DocumentLineFireBase(
+                                    ItemCode,
+                                    Quantity,
+                                    DiscountPercentLine,
+                                    LineNum,
+                                    Price
                                 )
-                            }
+                            )
+                        }
                     } catch (e: Exception) {
                         println(e.message)
                     }
@@ -206,8 +212,9 @@ object OrderCRUD : ActionFirebase {
                         DocDueDate,
                         TaxDate,
                         DiscountPercent.toDouble(),
-                        documentLine.toList()
-                        )
+                        documentLine.toList(),
+                        SAP
+                    )
 
 
                     listObject.add(Order)
@@ -222,7 +229,7 @@ object OrderCRUD : ActionFirebase {
 
     override fun updateObjectById(data: Any) {
         val dataAux: OrderFireBase
-        if(data is OrderFireBase){
+        if (data is OrderFireBase) {
             dataAux = data
             database
                 .collection(coleccion)

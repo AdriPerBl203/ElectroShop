@@ -110,8 +110,9 @@ object ItemCRUD {
                                 val currency = precio["Currency"].toString()
                                 val price = precio["Price"].toString().toInt()
                                 val priceList = precio["PriceList"].toString().toInt()
+                                val SAP = precio["SAP"].toString().toBoolean()
 
-                                itemPrice?.add(Price(priceList, price, currency))
+                                itemPrice?.add(Price(priceList, price, currency, SAP))
                             }
                         } else {
                             itemPrice = null
@@ -122,6 +123,7 @@ object ItemCRUD {
 
                     val manageSerialNumbers = datosItem["ManageSerialNumbers"] as String
                     val autoCreateSerialNumbersOnRelease = datosItem["AutoCreateSerialNumbersOnRelease"] as String
+                    val SAP = datosItem["SAP"].toString().toBoolean()
 
                     val itemType: ItemType = when (itemTypeString) {
                         "I" -> ItemType.I
@@ -138,7 +140,8 @@ object ItemCRUD {
                         mainSupplier,
                         itemPrice,
                         manageSerialNumbers,
-                        autoCreateSerialNumbersOnRelease
+                        autoCreateSerialNumbersOnRelease,
+                        SAP
                     )
 
                     callback(item)
@@ -178,8 +181,9 @@ object ItemCRUD {
                                 val currency = precio["Currency"].toString()
                                 val price = precio["Price"].toString().toInt()
                                 val priceList = precio["PriceList"].toString().toInt()
+                                val SAP = precio["SAP"].toString().toBoolean()
 
-                                itemPrice?.add(Price(priceList, price, currency))
+                                itemPrice?.add(Price(priceList, price, currency, SAP))
                             }
                         } else {
                             itemPrice = null
@@ -190,6 +194,7 @@ object ItemCRUD {
 
                     val manageSerialNumbers = datosItem["ManageSerialNumbers"] as String
                     val autoCreateSerialNumbersOnRelease = datosItem["AutoCreateSerialNumbersOnRelease"] as String
+                    val SAP = datosItem["SAP"].toString().toBoolean()
 
                     val itemType: ItemType = when (itemTypeString) {
                         "I" -> ItemType.I
@@ -206,7 +211,8 @@ object ItemCRUD {
                         mainSupplier,
                         itemPrice,
                         manageSerialNumbers,
-                        autoCreateSerialNumbersOnRelease
+                        autoCreateSerialNumbersOnRelease,
+                        SAP
                     )
 
                     listaItems.add(item)
