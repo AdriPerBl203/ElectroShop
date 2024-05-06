@@ -145,7 +145,7 @@ class ActivityViewModel : ViewModel(),ActionViewModel {
         val Priority = _uiState.value.Priority
         val pedidoCliente = _uiState.value.U_SEIPEDIDOCLIENTE.toInt()
         val pedidoCompra = _uiState.value.U_SEIPEDIDOCOMPRAS.toInt()
-        val Activity = Activity(nota,ActivityDate,ActivityTime,CardCode,EndTime,Action,Tel,ClgCode,Priority,pedidoCompra,pedidoCliente,false)
+        val Activity = Activity("",nota,ActivityDate,ActivityTime,CardCode,EndTime,Action,Tel,ClgCode,Priority,pedidoCompra,pedidoCliente,false)
         var text ="Actividad actualizada"
         viewModelScope.launch {
             try{
@@ -232,27 +232,28 @@ class ActivityViewModel : ViewModel(),ActionViewModel {
         var CardCode = _uiState.value.CardCode ?: ""
         val EndTime = _uiState.value.EndTime ?: ""
         var Action = _uiState.value.Action ?: ""
+        //'cn_Conversation'-'C', 'cn_Meeting'-'M', 'cn_Task'-'T', 'cn_Other'-'N', 'cn_Note'-'E', 'cn_Campaign'-'P'
         when(Action){
-            "Llamada telefónica"-> Action= "Phone Call"
-            "Reunión"->Action= "Meeting"
-            "Tarea"->    Action= "Task"
-            "Nota"-> Action= "Note"
-            "Campaña"->Action= "Campaign"
-            "Otros"->    Action= "Other"
+            "Llamada telefónica"-> Action= "cn_Conversation"
+            "Reunión"->Action= "cn_Meeting"
+            "Tarea"->    Action= "cn_Task"
+            "Nota"-> Action= "cn_Note"
+            "Campaña"->Action= "cn_Campaign"
+            "Otros"->    Action= "cn_Other"
         }
         val Tel = _uiState.value.Tel ?: ""
         val ClgCode = _uiState.value.ClgCode ?: ""
         var Priority = _uiState.value.Priority ?: ""
-
+        //The valid names are: 'pr_Low'-'0', 'pr_Normal'-'1', 'pr_High'-'2'"
         when(Priority){
-            "Bajo"-> Priority= "Low"
-            "Normal"->Priority= "Normal"
-            "Alto"->    Priority= "High"
+            "Bajo"-> Priority= "pr_Low"
+            "Normal"->Priority= "pr_Normal"
+            "Alto"->    Priority= "pr_High"
         }
         val pedidoCliente = _uiState.value.U_SEIPEDIDOCLIENTE.toInt() ?: 0
         val pedidoCompra = _uiState.value.U_SEIPEDIDOCOMPRAS.toInt() ?: 0
         val dataConcat = ActivityDate.plus("T00:00:00Z")
-        val newActivity = Activity(nota,dataConcat,ActivityTime,CardCode,EndTime,Action,Tel,ClgCode,Priority,pedidoCompra,pedidoCliente,false)
+        val newActivity = Activity("",nota,dataConcat,ActivityTime,CardCode,EndTime,Action,Tel,ClgCode,Priority,pedidoCompra,pedidoCliente,false)
         var text ="Nueva Actividad añadida"
         viewModelScope.launch {
             try{

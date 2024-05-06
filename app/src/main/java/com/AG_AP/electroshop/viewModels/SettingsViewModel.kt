@@ -307,6 +307,7 @@ class SettingsViewModel : ViewModel() {
                 }
                 activities.value.forEach{element ->
                     val activity : com.AG_AP.electroshop.firebase.models.Activity = com.AG_AP.electroshop.firebase.models.Activity(
+                        "",
                         element.Notes ?: "",
                         element.ActivityDate ?: "",
                         element.ActivityTime ?: "",
@@ -332,13 +333,8 @@ class SettingsViewModel : ViewModel() {
     }
 
     fun sync(context: Context) {
-        val gson = Gson()
-        val sharedPref = context?.getSharedPreferences("configuration", Context.MODE_PRIVATE)
-        val json = sharedPref?.getString("configuration", null)
-        val dataConfig = gson.fromJson(json, ConfigurationApplication::class.java)
 
         viewModelScope.launch() {
-            if (!json.isNullOrEmpty()) {
                 _uiState.update { currentState -> currentState.copy(
                     message = true,
                     text = "Sincronización realizada",
@@ -349,16 +345,15 @@ class SettingsViewModel : ViewModel() {
                     btnEnable=false,
                     btnExitEnable=false
                 ) }
-                val dataLogin = Login(dataConfig.dataBase,dataConfig.password,dataConfig.login)
-                LoginObj.loginAcessTwoversion(dataLogin,dataConfig.urlInt)
+                val dataLogin = Login(Config.dataBase,Config.password,Config.login)
+                LoginObj.loginAcessTwoversion(dataLogin,Config.rulUse)
                 deleteAndInsertItem()//
                 deleteAndInsertUserUdo() //
                 deleteAndInsertBusinessPartner() //
                 deleteAndInsertActivity()//
                 deleteAndInsertOrders()
                 deleteAndInsertPurchaseOrders()
-                enablebtn(dataConfig.urlInt)
-            }
+                enablebtn(Config.rulUse)
         }
 
 
@@ -540,6 +535,7 @@ class SettingsViewModel : ViewModel() {
         val dataConfig = sharedPref?.edit()
         dataConfig?.putString("configuration", jsonData)
         dataConfig?.apply()
+        Config.initConfig(context)
 
         //val jsonStringRecuperada = sharedPref?.getString("configuration", null)
         //val miObjetoRecuperado = gson.fromJson(jsonStringRecuperada, ConfigurationApplication::class.java)
