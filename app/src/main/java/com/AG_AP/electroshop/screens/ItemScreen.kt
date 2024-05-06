@@ -1,4 +1,5 @@
 package com.AG_AP.electroshop.screens
+/*
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -7,9 +8,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
@@ -19,6 +20,7 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -26,7 +28,7 @@ import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -34,102 +36,173 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.AG_AP.electroshop.viewModels.BusinessPartnerViewModel
+import com.AG_AP.electroshop.viewModels.ItemViewModel
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BusinessPartnerView(
-    innerPadding: PaddingValues,
-    viewModel: BusinessPartnerViewModel,
-    id: String?
-) {
+fun ArticleView(innerPadding: PaddingValues, viewModel: ItemViewModel, id: String?) {
     val dataUiState by viewModel.uiState.collectAsState()
+
     Column(
         modifier = Modifier
             .padding(innerPadding)
             .verticalScroll(rememberScrollState())
     ) {
         Row(
+            /*modifier= Modifier
+                .padding(innerPadding)
+                .verticalScroll(rememberScrollState()),
+            horizontalArrangement= Arrangement.Center*/
         ) {
             Column {
+                OutlinedTextField(
+                    value = dataUiState.ItemCode,
+                    onValueChange = { viewModel.changeItemCode(it) },
+                    modifier = Modifier
+                        .width(300.dp)
+                        .padding(8.dp),
+                    label = { Text("Codigo de item") },
+                    readOnly = true
+                )
+                OutlinedTextField(
+                    value = dataUiState.ItemDescription,
+                    onValueChange = { viewModel.changeItemName(it) },
+                    modifier = Modifier
+                        .width(300.dp)
+                        .padding(8.dp),
+                    label = { Text("Descripción de item") }
+                )
+                OutlinedTextField(
+                    value = dataUiState.Quantity,
+                    onValueChange = { viewModel.changeQuantity(it) },
+                    modifier = Modifier
+                        .width(300.dp)
+                        .padding(8.dp),
+                    label = { Text("Cantidad") },
 
+                )
+
+                OutlinedTextField(
+                    value = dataUiState.U_SEIPEDIDOCLIENTE,
+                    onValueChange = { viewModel.changePedidoCliente(it) },
+                    modifier = Modifier
+                        .width(300.dp)
+                        .padding(8.dp),
+                    label = { Text("Asociar pedido de cliente") },
+                    readOnly = true,
+                    trailingIcon={
+                        IconButton(
+                            onClick = {
+                                viewModel.showDialogOrder()
+                            }
+                        ) {
+                            Icon(Icons.Filled.Add, contentDescription = "Shopping Cart Icon")
+                        }
+                    }
+                )
+            }
+
+            Column {
+                val priority = arrayOf("Bajo", "Normal", "Alto")
+                var expandedTwo by remember { mutableStateOf(false) }
+                OutlinedTextField(
+                    value = dataUiState.EndTime,
+                    onValueChange = { viewModel.changeEndTime(it) },
+                    modifier = Modifier
+                        .width(300.dp)
+                        .padding(8.dp),
+                    label = { Text("Hora fin") },
+                    readOnly = true,
+                    trailingIcon={
+                        IconButton(
+                            onClick = {
+                                DialogStartEnd.show()
+                            }
+                        ) {
+                            Icon(Icons.Filled.AccessTime, contentDescription = "Shopping Cart Icon")
+                        }
+                    }
+                )
                 OutlinedTextField(
                     value = dataUiState.CardCode,
                     onValueChange = { viewModel.changeCardCode(it) },
                     modifier = Modifier
                         .width(300.dp)
                         .padding(8.dp),
-                    label = { Text("Código cliente") },
-                    readOnly = true
+                    label = { Text("Código cliente") }
                 )
-
                 OutlinedTextField(
-                    value = dataUiState.CardName,
-                    onValueChange = { viewModel.changeCardName(it) },
+                    value = dataUiState.Tel,
+                    onValueChange = { viewModel.changeTel(it) },
                     modifier = Modifier
                         .width(300.dp)
                         .padding(8.dp),
-                    label = { Text("Nombre") }
+                    label = { Text("Teléfono") }
                 )
-                OutlinedTextField(
-                    value = dataUiState.Cellular,
-                    onValueChange = { viewModel.changeCellular(it) },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    label = { Text("Teléfono móvil") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-                )
-            }
-
-            Column {
-                val coffeeDrinks = arrayOf("Cliente", "Proveedor", "Lead")
-                var expanded by remember { mutableStateOf(false) }
                 ExposedDropdownMenuBox(
-                    expanded = expanded,
+                    expanded = expandedTwo,
                     onExpandedChange = {
-                        expanded = !expanded
+                        expandedTwo = !expandedTwo
                     }
                 ) {
                     TextField(
-                        value = dataUiState.CardType,
+                        value = dataUiState.Priority,
                         onValueChange = {},
                         readOnly = true,
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedTwo) },
                         modifier = Modifier.menuAnchor()
                     )
 
                     ExposedDropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false }
+                        expanded = expandedTwo,
+                        onDismissRequest = { expandedTwo = false }
                     ) {
-                        coffeeDrinks.forEach { item ->
+                        priority.forEach { item ->
                             DropdownMenuItem(
                                 text = { Text(text = item) },
                                 onClick = {
-                                    viewModel.changeCardType(item)
-                                    expanded = false
+                                    viewModel.changePriority(item)
+                                    expandedTwo = false
                                 }
                             )
                         }
                     }
                 }
+
                 OutlinedTextField(
-                    value = dataUiState.EmailAddress,
-                    onValueChange = { viewModel.changeEmailAddress(it) },
+                    value = dataUiState.U_SEIPEDIDOCOMPRAS,
+                    onValueChange = { viewModel.changePedidoCompra(it) },
                     modifier = Modifier
                         .width(300.dp)
                         .padding(8.dp),
-                    label = { Text("Email") }
+                    label = { Text("Asociar pedido de compra") },
+                    readOnly = true,
+                    trailingIcon={
+                        IconButton(
+                            onClick = {
+                                viewModel.showDialogPurchaseOrder()
+                            }
+                        ) {
+                            Icon(Icons.Filled.Add, contentDescription = "Shopping Cart Icon")
+                        }
+                    }
                 )
 
             }
-
+            Column {
+                OutlinedTextField(
+                    value = dataUiState.ClgCode,
+                    onValueChange = { viewModel.changeClgCode(it) },
+                    modifier = Modifier
+                        .width(300.dp)
+                        .padding(8.dp),
+                    label = { Text("Id") }
+                )
+            }
         }
         Column {
             if (dataUiState.message) {
@@ -157,24 +230,24 @@ fun BusinessPartnerView(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScaffoldBusinessPartner(
-    viewModel: BusinessPartnerViewModel = viewModel(),
+fun ScaffoldArticle(
+    viewModel: ItemViewModel = viewModel(),
     navController: NavHostController,
     id: String? = null
 ) {
     if (!id.isNullOrEmpty()) {
-        viewModel.changeCardCode(id)
-        viewModel.refresh()
+        viewModel.changeItemCode(id)
+        viewModel.refreshScreen()
     }
     Scaffold(
         topBar = {
             TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
+                colors = topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 title = {
-                    Text("Gestión de clientes")
+                    Text("Gestión de actividad")
                 }
             )
         },
@@ -209,7 +282,7 @@ fun ScaffoldBusinessPartner(
                 }
                 Button(
                     modifier = Modifier.padding(start = 15.dp, end = 15.dp),
-                    onClick = { navController.popBackStack() }
+                    onClick = { navController.navigateUp() }
                 ) {
                     Text(text = "Volver")
                 }
@@ -222,7 +295,9 @@ fun ScaffoldBusinessPartner(
         }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(start = 50.dp, top = 20.dp)) {
-            BusinessPartnerView(innerPadding, viewModel, id)
+            ArticleView(innerPadding, viewModel, id)
         }
     }
 }
+
+ */

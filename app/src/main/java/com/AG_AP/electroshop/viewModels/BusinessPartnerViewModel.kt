@@ -2,9 +2,7 @@ package com.AG_AP.electroshop.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.AG_AP.electroshop.firebase.ActivityCRUD
 import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
-import com.AG_AP.electroshop.firebase.models.Activity
 import com.AG_AP.electroshop.firebase.models.BusinessPartner
 import com.AG_AP.electroshop.uiState.BusinessPartnerUiState
 import kotlinx.coroutines.Dispatchers
@@ -81,9 +79,12 @@ class BusinessPartnerViewModel : ViewModel(), ActionViewModel {
         val Cellular = _uiState.value.Cellular
         val dataAux: BusinessPartner =
             BusinessPartner(CardCode, CardType, CardName, EmailAddress, Cellular)
-        var text = "Nuevo cliente añadida"
+        var text = "Nuevo cliente añadido"
         viewModelScope.launch {
             try {
+                if (!validateEmail(EmailAddress) && EmailAddress.isNotEmpty()) {
+                    throw RuntimeException()
+                }
                 BusinessPartnerCRUD.insert(dataAux)
             } catch (e: Exception) {
                 println(e.message)
@@ -123,10 +124,13 @@ class BusinessPartnerViewModel : ViewModel(), ActionViewModel {
         var text = "Actividad actualizada"
         viewModelScope.launch {
             try {
+                if (!validateEmail(EmailAddress) && EmailAddress.isNotEmpty()) {
+                    throw RuntimeException()
+                }
                 BusinessPartnerCRUD.updateObjectById(data)
             } catch (e: Exception) {
                 println(e.message)
-                text = "Hubo un error con la actuzalicacion del cliente."
+                text = "Hubo un error con la actualizacion del cliente."
             }
             println("aaa")
             _uiState.update { currentState ->
@@ -173,13 +177,19 @@ class BusinessPartnerViewModel : ViewModel(), ActionViewModel {
             return
         }
         viewModelScope.launch(Dispatchers.IO) {
-            BusinessPartnerCRUD.getObjectById(_uiState.value.CardCode.toInt()) { dataAux ->
-
+            BusinessPartnerCRUD.getObjectByIdToString(_uiState.value.CardCode) { dataAux ->
                 if (dataAux != null && dataAux is BusinessPartner) {
+                    var cardType: String = ""
+                    when (dataAux.CardType) {
+                        "cSupplier" -> cardType = "Proveedor"
+                        "cLead" -> cardType = "Lead"
+                        "cCustomer" -> cardType = "Cliente"
+
+                    }
                     _uiState.update { currentState ->
                         currentState.copy(
                             CardCode = dataAux.CardCode,
-                            CardType = dataAux.CardType,
+                            CardType = cardType,
                             CardName = dataAux.CardName,
                             Cellular = dataAux.Cellular,
                             EmailAddress = dataAux.EmailAddress
@@ -204,4 +214,10 @@ class BusinessPartnerViewModel : ViewModel(), ActionViewModel {
             )
         }
     }
+
+    fun validateEmail(email: String): Boolean {
+        val pattern = Regex("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\$")
+        return pattern.matches(email)
+    }
+
 }
