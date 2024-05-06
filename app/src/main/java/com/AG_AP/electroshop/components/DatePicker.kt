@@ -51,16 +51,18 @@ fun DatePicker(label: String, callback: (String) -> Unit) {
                 onValueChange = { fecha = it },
                 readOnly = true,
                 label = { Text(text = label) },
-                )
-            Icon(
-                imageVector = Icons.Filled.DateRange,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(30.dp)
-                    .padding(5.dp)
-                    .clickable {
-                        mDatePickerDialog.show()
-                    }
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Filled.DateRange,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(30.dp)
+                            .padding(5.dp)
+                            .clickable {
+                                mDatePickerDialog.show()
+                            }
+                    )
+                }
             )
         }
     }
