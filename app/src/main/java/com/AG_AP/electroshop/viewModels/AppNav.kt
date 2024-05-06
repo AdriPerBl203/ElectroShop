@@ -14,6 +14,7 @@ import com.AG_AP.electroshop.screens.ScaffoldActivity
 import com.AG_AP.electroshop.screens.ScaffoldBusinessPartner
 import com.AG_AP.electroshop.screens.ScaffoldListActivity
 import com.AG_AP.electroshop.screens.ScaffoldListBusinessPartner
+import com.AG_AP.electroshop.screens.ScaffoldListOrder
 import com.AG_AP.electroshop.screens.ScaffoldOrder
 import com.AG_AP.electroshop.screens.ScaffoldPurchaseOrder
 import com.AG_AP.electroshop.screens.SettingScreen
@@ -90,6 +91,12 @@ fun AppNav(navController: NavHostController = rememberNavController(),context: C
             route = Routes.ScreenOrder.route
         ) {
             ScaffoldOrder(navController = navController)
+        }
+        
+        composable(
+            route = Routes.ScreenOrderList.route
+        ) {
+            ScaffoldListOrder(navController = navController)
         }
 
         composable(
