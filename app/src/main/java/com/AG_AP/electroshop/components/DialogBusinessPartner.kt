@@ -39,9 +39,6 @@ fun DialogCustomBusinessPartner(
     callback: (BusinessPartnerUiState?) -> Unit
 ) {
     val dataUiState by dialogBPViewModel.uiState.collectAsState()
-
-    val numCols = 3
-    val headers = listOf("#", "Codigo interlocutor", "Nombre")
     Dialog(
         onDismissRequest = { onDismissRequest() }
     ) {
@@ -50,7 +47,6 @@ fun DialogCustomBusinessPartner(
                 .height(500.dp)
                 .width(900.dp)
         ) {
-
             Column {
                 Column {
                     LazyColumn(
@@ -82,12 +78,6 @@ fun DialogCustomBusinessPartner(
                             )
                         }
                     }
-                }
-
-                Spacer(modifier = Modifier.padding(5.dp))
-
-                Button(onClick = { onDismissRequest() }) {
-                    Text(text = "Cerrar")
                 }
             }
         }
