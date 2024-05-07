@@ -4,6 +4,7 @@ import com.google.firebase.database.IgnoreExtraProperties
 
 @IgnoreExtraProperties
 data class BusinessPartner(
+    val idFireBase: String? = null,
     val CardCode:String ="",
     val CardType:String ="",
     val CardName:String ="",
@@ -14,6 +15,7 @@ data class BusinessPartner(
 ){
     fun toHashMap(): HashMap<String, Any> {
         val hashMap = HashMap<String, Any>()
+        idFireBase?.let { hashMap["idFireBase"] = it }
         hashMap["CardCode"] = CardCode
         hashMap["CardType"] = CardType
         hashMap["CardName"] = CardName

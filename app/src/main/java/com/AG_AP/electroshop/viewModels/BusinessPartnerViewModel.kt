@@ -78,14 +78,14 @@ class BusinessPartnerViewModel : ViewModel(), ActionViewModel {
         var EmailAddress = _uiState.value.EmailAddress
         val Cellular = _uiState.value.Cellular
         val dataAux: BusinessPartner =
-            BusinessPartner(CardCode, CardType, CardName, EmailAddress, Cellular, false)
+            BusinessPartner("",CardCode, CardType, CardName, EmailAddress, Cellular, false)
         var text = "Nuevo cliente añadido"
         viewModelScope.launch {
             try {
                 if (!validateEmail(EmailAddress) && EmailAddress.isNotEmpty()) {
                     throw RuntimeException()
                 }
-                BusinessPartnerCRUD.insert(dataAux)
+                BusinessPartnerCRUD.insertForFireBase(dataAux)
             } catch (e: Exception) {
                 println(e.message)
                 text = "Hubo un error con la creación del cliente."
@@ -120,7 +120,7 @@ class BusinessPartnerViewModel : ViewModel(), ActionViewModel {
         var EmailAddress = _uiState.value.EmailAddress
         val Cellular = _uiState.value.Cellular
         val data: BusinessPartner =
-            BusinessPartner(CardCode, CardType, CardName, EmailAddress, Cellular, false)
+            BusinessPartner("",CardCode, CardType, CardName, EmailAddress, Cellular, false)
         var text = "Actividad actualizada"
         viewModelScope.launch {
             try {
