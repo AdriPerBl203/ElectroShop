@@ -4,6 +4,7 @@ import com.AG_AP.electroshop.endpoints.interfaces.ItemInterface
 import com.AG_AP.electroshop.endpoints.interfaces.OrdersInterface
 import com.AG_AP.electroshop.endpoints.models.item.getItems.GetItems
 import com.AG_AP.electroshop.endpoints.models.orders.Orders
+import com.AG_AP.electroshop.endpoints.models.orders.post.PostOrder
 import com.AG_AP.electroshop.endpoints.retrofit.RetrofitClient
 
 object OrdersObj {
@@ -16,6 +17,18 @@ object OrdersObj {
         } catch (e: Exception) {
             println(e.message)
             null
+        }
+    }
+
+    suspend fun postOrders(urlInt: String,data: PostOrder): Boolean {
+        RetrofitClient.baseUrl = urlInt
+        val apiService = RetrofitClient.retrofit.create(OrdersInterface::class.java)
+        return try {
+            apiService.postOrders(data)
+            true
+        } catch (e: Exception) {
+            println(e.message)
+            false
         }
     }
 }

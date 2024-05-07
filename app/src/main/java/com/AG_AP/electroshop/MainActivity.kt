@@ -10,23 +10,31 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.lifecycleScope
 import com.AG_AP.electroshop.functions.Config
 import com.AG_AP.electroshop.components.Pantalla
+import com.AG_AP.electroshop.endpoints.models.orders.post.DocumentLine
+import com.AG_AP.electroshop.endpoints.models.orders.post.PostOrder
 import com.AG_AP.electroshop.endpoints.objects.ActivityObj
+import com.AG_AP.electroshop.endpoints.objects.OrdersObj
 import com.AG_AP.electroshop.firebase.ActivityCRUD
 import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
 import com.AG_AP.electroshop.screens.ScaffoldActivity
 import com.AG_AP.electroshop.firebase.ItemCRUD
 import com.AG_AP.electroshop.firebase.OrderCRUD
 import com.AG_AP.electroshop.firebase.PriceListCRUD
+import com.AG_AP.electroshop.firebase.PurchaseOrderCRUD
 import com.AG_AP.electroshop.firebase.SEIConfigCRUD
+import com.AG_AP.electroshop.firebase.models.DocumentLineFireBase
 import com.AG_AP.electroshop.firebase.models.Item
 import com.AG_AP.electroshop.firebase.models.ItemType
+import com.AG_AP.electroshop.firebase.models.OrderFireBase
 import com.AG_AP.electroshop.firebase.models.Price
 import com.AG_AP.electroshop.firebase.models.SEIConfig
 import com.AG_AP.electroshop.screens.SettingScreen
 import com.AG_AP.electroshop.ui.theme.ElectroShopTheme
 import com.AG_AP.electroshop.viewModels.AppNav
+import kotlinx.coroutines.launch
 
 
 class MainActivity : ComponentActivity() {
@@ -39,6 +47,27 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    //
+                    /*val documentLines = listOf(
+                        DocumentLineFireBase("item1", 2.0, 0.1, 1, 50.0),
+                        DocumentLineFireBase("item2", 1.0, 0.05, 2, 30.0)
+                    )
+
+                    // Crear una instancia de OrderFireBase
+                    val order = OrderFireBase(
+                        DocNum = 123,
+                        CardCode = "C123",
+                        CardName = "Cliente Ejemplo",
+                        DocDate = "2024-05-07",
+                        DocDueDate = "2024-05-10",
+                        TaxDate = "2024-05-07",
+                        DiscountPercent = 0.15,
+                        DocumentLines = documentLines,
+                        SAP = false
+                    )
+                    PurchaseOrderCRUD.insertForFireBase(order)
+                    */
+
                     val context: Context = application.applicationContext
                     Config.initConfig(context)
                     AppNav(context=context)

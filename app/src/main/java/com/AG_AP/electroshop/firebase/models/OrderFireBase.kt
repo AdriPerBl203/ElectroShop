@@ -3,6 +3,7 @@ package com.AG_AP.electroshop.firebase.models
 import com.AG_AP.electroshop.endpoints.models.orders.DocumentLine
 
 data class OrderFireBase(
+    val idFireBase: String? = null,
     val DocNum: Int,
     val CardCode: String,
     val CardName: String,
@@ -15,6 +16,7 @@ data class OrderFireBase(
 ){
     fun toHashMap(): HashMap<String, Any> {
         val hashMap = HashMap<String, Any>()
+        idFireBase?.let { hashMap["idFireBase"] = it }
         hashMap["DocNum"] = this.DocNum
         hashMap["CardCode"] = this.CardCode
         hashMap["CardName"] = this.CardName
