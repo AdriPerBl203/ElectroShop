@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class OrderViewModel : ViewModel(),ActionViewModel {
+class OrderViewModel : ViewModel(), ActionViewModel {
 
     private val _uiState = MutableStateFlow(OrderUiState())
     val uiState: StateFlow<OrderUiState> = _uiState.asStateFlow()
@@ -57,6 +57,9 @@ class OrderViewModel : ViewModel(),ActionViewModel {
         viewModelScope.launch(Dispatchers.IO) {
             OrderCRUD.getObjectById(_uiState.value.DocNum) { dataAux ->
                 if (dataAux != null && dataAux is OrderFireBase) {
+                    val dataList = getDataFromList(dataAux.DocumentLines)
+                    val mutableDataList = DocumentLineForMutableList()
+
                     _uiState.update { currentState ->
                         currentState.copy(
                             CardCode = dataAux.CardCode,
@@ -66,8 +69,8 @@ class OrderViewModel : ViewModel(),ActionViewModel {
                             DocDueDate = dataAux.DocDueDate,
                             TaxDate = dataAux.TaxDate,
                             DiscountPercent = dataAux.DiscountPercent,
-                            DocumentLine = getDataFromList(dataAux.DocumentLines), //TODO controlar la cantidad de lineas
-                            DocumentLineList = DocumentLineForMutableListNoClear() //FIXME arreglar que no se ve
+                            DocumentLine = dataList, //TODO controlar la cantidad de lineas
+                            DocumentLineList = mutableDataList
                         )
                     }
                 } else {
@@ -84,7 +87,7 @@ class OrderViewModel : ViewModel(),ActionViewModel {
 
     private fun getDataFromList(list: List<DocumentLineFireBase>): MutableList<ArticleUiState?> {
         val returnList: MutableList<ArticleUiState?> = mutableListOf()
-
+        Log.e("Pruebas", list.toString())
         list.forEach { data ->
             val lineNum = data.LineNum
             val itemCode = data.ItemCode
@@ -93,9 +96,18 @@ class OrderViewModel : ViewModel(),ActionViewModel {
             val price = data.Price
             val discount = data.DiscountPercent
 
-            returnList.add(ArticleUiState(lineNum, itemCode, itemDescription, quantity.toFloat(), price.toFloat(), discount.toFloat()))
+            returnList.add(
+                ArticleUiState(
+                    lineNum,
+                    itemCode,
+                    itemDescription,
+                    quantity.toFloat(),
+                    price.toFloat(),
+                    discount.toFloat()
+                )
+            )
         }
-
+        Log.i("Pruebas", returnList.toString())
         return returnList
     }
 
@@ -103,77 +115,82 @@ class OrderViewModel : ViewModel(),ActionViewModel {
         TODO("Not yet implemented")
     }
 
-    private fun DocumentLineForMutableListNoClear(): MutableList<String> {
-        var index:Int =_uiState.value.DocumentLineList.size
-        _uiState.value.DocumentLine.forEach{ element ->
-            _uiState.value.DocumentLineList.add(index,element?.LineNum.toString())
-            index++
-            _uiState.value.DocumentLineList.add(index,element?.ItemCode.toString())
-            index++
-            _uiState.value.DocumentLineList.add(index,element?.ItemDescription.toString())
-            index++
-            _uiState.value.DocumentLineList.add(index,element?.Quantity.toString())
-            index++
-            _uiState.value.DocumentLineList.add(index,element?.Price.toString())
-            index++
-        }
-        return _uiState.value.DocumentLineList
-    }
-
-    private fun DocumentLineForMutableList(): MutableList<String>{
+    /*
+    private fun DocumentLineForMutableList(): MutableList<String> {
         _uiState.value.DocumentLineList.clear()
-        var index:Int =_uiState.value.DocumentLineList.size
-        _uiState.value.DocumentLine.forEach{ element ->
-            _uiState.value.DocumentLineList.add(index,element?.LineNum.toString())
+        var index: Int = _uiState.value.DocumentLineList.size
+        _uiState.value.DocumentLine.forEach { element ->
+            _uiState.value.DocumentLineList.add(index, element?.LineNum.toString())
             index++
-            _uiState.value.DocumentLineList.add(index,element?.ItemCode.toString())
+            _uiState.value.DocumentLineList.add(index, element?.ItemCode.toString())
             index++
-            _uiState.value.DocumentLineList.add(index,element?.ItemDescription.toString())
+            _uiState.value.DocumentLineList.add(index, element?.ItemDescription.toString())
             index++
-            _uiState.value.DocumentLineList.add(index,element?.Quantity.toString())
+            _uiState.value.DocumentLineList.add(index, element?.Quantity.toString())
             index++
-            _uiState.value.DocumentLineList.add(index,element?.Price.toString())
+            _uiState.value.DocumentLineList.add(index, element?.Price.toString())
             index++
         }
         return _uiState.value.DocumentLineList
     }
 
-    fun addLine(){
+     */
+
+    private fun DocumentLineForMutableList(): HashMap<Int, MutableList<String>> {
+        _uiState.value.DocumentLineList.clear()
+
+        _uiState.value.DocumentLine.forEachIndexed { index, element ->
+            if (element != null) {
+                val listToAdd = element.let {
+                    mutableListOf(it.LineNum.toString(), it.ItemCode.toString(), it.ItemDescription.toString(), it.Quantity.toString(), it.Price.toString(), it.DiscountPercent.toString())
+                }
+                _uiState.value.DocumentLineList[index] = listToAdd
+            }
+        }
+
+        return _uiState.value.DocumentLineList
+    }
+
+    //FIXME arreglar
+    fun addLine() {
         val size = _uiState.value.DocumentLine.size
-        var id:Int = _uiState.value.DocumentLine.lastOrNull()?.LineNum ?: 0
+        var id: Int = _uiState.value.DocumentLine.lastOrNull()?.LineNum ?: 0
         var listAux: MutableList<ArticleUiState?> = _uiState.value.DocumentLine
         id++
         listAux.add(
-            size
-            , ArticleUiState(
-                id,"","",0.0F,0.0F,0.0F
-        )
+            size, ArticleUiState(
+                id, "", "", 0.0F, 0.0F, 0.0F
+            )
         )
         var tastAux = _uiState.value.trash
         tastAux++
-        _uiState.update { currentState -> currentState.copy(
-            DocumentLine = listAux,
-            DocumentLineList = DocumentLineForMutableList(),
-            //TaxDate="asdasdfasdfasd"
-            trash= tastAux
-        ) }
+        _uiState.update { currentState ->
+            currentState.copy(
+                DocumentLine = listAux,
+                DocumentLineList = DocumentLineForMutableList(),
+                //TaxDate="asdasdfasdfasd"
+                trash = tastAux
+            )
+        }
 
     }
 
-    fun deleteLine(){
+    fun deleteLine() {
         val size = _uiState.value.DocumentLine.size
-        if(size-1 ==4){
+        if (size - 1 == 4) {
             return
         }
         var listAux: MutableList<ArticleUiState?> = _uiState.value.DocumentLine
-        listAux.removeAt(size -1)
+        listAux.removeAt(size - 1)
         var tastAux = _uiState.value.trash
         tastAux++
-        _uiState.update { currentState -> currentState.copy(
-            DocumentLine = listAux,
-            DocumentLineList = DocumentLineForMutableList(),
-            trash= tastAux
-        ) }
+        _uiState.update { currentState ->
+            currentState.copy(
+                DocumentLine = listAux,
+                DocumentLineList = DocumentLineForMutableList(),
+                trash = tastAux
+            )
+        }
     }
 
     fun changeTaxDate(fechaDocumento: String) {
