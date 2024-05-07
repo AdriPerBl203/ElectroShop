@@ -2,6 +2,7 @@ package com.AG_AP.electroshop.viewModels
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.AG_AP.electroshop.endpoints.models.activity.Activity
@@ -9,12 +10,22 @@ import com.AG_AP.electroshop.endpoints.models.activity.PostActivity
 import com.AG_AP.electroshop.endpoints.models.businessPartners.BusinessPartners
 import com.AG_AP.electroshop.endpoints.models.businessPartners.PostBusinesspartner
 import com.AG_AP.electroshop.endpoints.models.login.Login
+import com.AG_AP.electroshop.endpoints.models.orders.Orders
+import com.AG_AP.electroshop.endpoints.models.orders.post.DocumentLine
+import com.AG_AP.electroshop.endpoints.models.orders.post.PostOrder
+import com.AG_AP.electroshop.endpoints.models.purchaseOrders.PurchaseOrders
 import com.AG_AP.electroshop.endpoints.objects.ActivityObj
 import com.AG_AP.electroshop.endpoints.objects.BusinessPartnersObj
 import com.AG_AP.electroshop.endpoints.objects.LoginObj
+import com.AG_AP.electroshop.endpoints.objects.OrdersObj
+import com.AG_AP.electroshop.endpoints.objects.PurchaseOrdersObj
 import com.AG_AP.electroshop.firebase.ActivityCRUD
 import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
+import com.AG_AP.electroshop.firebase.OrderCRUD
+import com.AG_AP.electroshop.firebase.PurchaseOrderCRUD
 import com.AG_AP.electroshop.firebase.models.BusinessPartner
+import com.AG_AP.electroshop.firebase.models.DocumentLineFireBase
+import com.AG_AP.electroshop.firebase.models.OrderFireBase
 import com.AG_AP.electroshop.functions.Config
 import com.AG_AP.electroshop.functions.SessionObj
 import com.AG_AP.electroshop.uiState.MenuUiState
@@ -63,13 +74,175 @@ class MenuViewModel : ViewModel() {
     }
 
     fun upOrder() {
-        Log.e("MenuViewModel", "upOrder() method is not yet implemented")
-        // Aquí deberías implementar la lógica para actualizar los pedidos
+        OrderCRUD.getAllObject { list ->
+            viewModelScope.launch() {
+                val dataLogin = Login(Config.dataBase, Config.password, Config.login)
+                LoginObj.loginAcessTwoversion(dataLogin, Config.rulUse)
+                if (list != null) {
+                    val listAux = list as MutableList<OrderFireBase>
+                    for (x in listAux) {
+                        if (!x.SAP) {
+                            var documentLineAux:MutableList<DocumentLine> = mutableListOf<DocumentLine>()
+                            var auxNum:Int =0
+                            for(y in x.DocumentLines){
+                                documentLineAux.add(
+                                    auxNum,
+                                    DocumentLine(
+                                    y.DiscountPercent, y.ItemCode, y.LineNum,y.Price,y.Quantity.toInt()
+                                )
+                                )
+                                auxNum++
+                            }
+                            /*val documentLines = listOf(
+                                DocumentLine(0.1, "AR00001", 0, 50.0, 2),
+                                DocumentLine(0.05, "AR00002", 1, 30.0, 1)
+                            )*/
+                            // Crear una instancia de PostOrder
+                            val postOrder = PostOrder(
+                                CardCode = x.CardCode,
+                                CardName = x.CardName,
+                                DiscountPercent = x.DiscountPercent,
+                                DocDate = x.DocDate.plus("T00:00:00Z"),
+                                DocDueDate = x.DocDueDate.plus("T00:00:00Z"),
+                                DocNum = x.DocNum,
+                                DocumentLines = documentLineAux,
+                                TaxDate = x.TaxDate.plus("T00:00:00Z")
+                            )
+                            OrdersObj.postOrders(Config.rulUse,postOrder)
+                            if(x.idFireBase !=null){
+                                OrderCRUD.deleteObjectById(x.idFireBase)
+                            }
+                        }
+                    }
+                }
+                viewModelScope.launch(Dispatchers.IO) {
+                    val orders : Orders? = OrdersObj.getOrders(Config.rulUse)
+                    if(orders is Orders){
+                        orders.value.forEach{element ->
+                            OrderCRUD.deleteObjectById(element.DocNum.toString())
+                        }
+                        orders.value.forEach{element ->
+                            //lista de precios
+                            val documentList: MutableList<DocumentLineFireBase> = mutableListOf()
+                            element.DocumentLines.forEachIndexed { index, it ->
+                                documentList.add(
+                                    index,
+                                    DocumentLineFireBase(
+                                        it.ItemCode,
+                                        it.Quantity,
+                                        it.DiscountPercent,
+                                        it.LineNum,
+                                        it.Price,
+                                    )
+                                )
+                            }
+                            val orderInsert : OrderFireBase = OrderFireBase(
+                                "",
+                                element.DocNum,
+                                element.CardCode,
+                                element.CardName,
+                                element.DocDate,
+                                element.DocDueDate,
+                                element.TaxDate,
+                                element.DiscountPercent,
+                                documentList,
+                                true
+                            )
+                            OrderCRUD.insert(orderInsert)
+                        }
+                        LoginObj.logout(Config.rulUse)
+                        _uiState.update { currentState -> currentState.copy(
+                            checkProgresCircular = false
+                        ) }
+                    }
+
+                    Log.e("sync","order sync")
+                }
+            }
+        }
     }
 
     fun upPurchaseOrders() {
-        Log.e("MenuViewModel", "upPurchaseOrders() method is not yet implemented")
-        // Aquí deberías implementar la lógica para actualizar las órdenes de compra
+        PurchaseOrderCRUD.getAllObject { list ->
+            viewModelScope.launch() {
+                val dataLogin = Login(Config.dataBase, Config.password, Config.login)
+                LoginObj.loginAcessTwoversion(dataLogin, Config.rulUse)
+                if (list != null) {
+                    val listAux = list as MutableList<OrderFireBase>
+                    for (x in listAux) {
+                        if (!x.SAP) {
+                            var documentLineAux:MutableList<DocumentLine> = mutableListOf<DocumentLine>()
+                            var auxNum:Int =0
+                            for(y in x.DocumentLines){
+                                documentLineAux.add(
+                                    auxNum,
+                                    DocumentLine(
+                                        y.DiscountPercent, y.ItemCode, y.LineNum,y.Price,y.Quantity.toInt()
+                                    )
+                                )
+                                auxNum++
+                            }
+                            // Crear una instancia de PostOrder
+                            val postOrder = PostOrder(
+                                CardCode = x.CardCode,
+                                CardName = x.CardName,
+                                DiscountPercent = x.DiscountPercent,
+                                DocDate = x.DocDate.plus("T00:00:00Z"),
+                                DocDueDate = x.DocDueDate.plus("T00:00:00Z"),
+                                DocNum = x.DocNum,
+                                DocumentLines = documentLineAux,
+                                TaxDate = x.TaxDate.plus("T00:00:00Z")
+                            )
+                            PurchaseOrdersObj.postPurchaseOrders(Config.rulUse,postOrder)
+                            if(x.idFireBase !=null){
+                                PurchaseOrderCRUD.deleteObjectById(x.idFireBase)
+                            }
+                        }
+                    }
+                }
+                viewModelScope.launch(Dispatchers.IO) {
+                    val data : PurchaseOrders? = PurchaseOrdersObj.getPurchaseOrders(Config.rulUse)
+                    if(data is PurchaseOrders){
+                        data.value.forEach{element ->
+                            PurchaseOrderCRUD.deleteObjectById(element.DocNum.toString())
+                        }
+                        data.value.forEach{element ->
+                            //lista de precios
+                            val documentList: MutableList<DocumentLineFireBase> = mutableListOf()
+                            element.DocumentLines.forEachIndexed { index, it ->
+                                documentList.add(
+                                    index,
+                                    DocumentLineFireBase(
+                                        it.ItemCode,
+                                        it.Quantity,
+                                        it.DiscountPercent,
+                                        it.LineNum,
+                                        it.Price,
+                                    )
+                                )
+                            }
+                            val orderInsert : OrderFireBase = OrderFireBase(
+                                "",
+                                element.DocNum,
+                                element.CardCode,
+                                element.CardName,
+                                element.DocDate,
+                                element.DocDueDate,
+                                element.TaxDate,
+                                element.DiscountPercent,
+                                documentList,
+                                true
+                            )
+                            PurchaseOrderCRUD.insert(orderInsert)
+                        }
+                        LoginObj.logout(Config.rulUse)
+                        _uiState.update { currentState -> currentState.copy(
+                            checkProgresCircular = false
+                        ) }
+                    }
+                }
+            }
+        }
     }
 
     fun upBusinessPartners() {
@@ -105,7 +278,6 @@ class MenuViewModel : ViewModel() {
                                     SeriesAux
                                 )
                                 BusinessPartnersObj.postBusinessPartners(Config.rulUse, data)
-                                //TODO
                                 if(x.idFireBase !=null){
                                     BusinessPartnerCRUD.deleteObjectById(x.idFireBase)
                                 }

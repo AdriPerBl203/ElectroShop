@@ -28,6 +28,23 @@ object PurchaseOrderCRUD : ActionFirebase {
         }
     }
 
+    fun insertForFireBase(data: Any) {
+        val dataAux: OrderFireBase
+        if (data is OrderFireBase) {
+            dataAux = data
+            this.database
+                .collection(this.coleccion)
+                .document()
+                .set(dataAux.toHashMap())
+                .addOnSuccessListener {
+                    Log.e("DataFireBase", "Creado Business partner: ${it.toString()}")
+                }
+                .addOnFailureListener { e ->
+                    Log.w("DataFireBase", "Error añadiendo el documento $e")
+                }
+        }
+    }
+
     override fun getObjectById(id: Int, callback: (Any?) -> Unit) {
         ItemCRUD.database
             .collection(coleccion)
@@ -36,7 +53,7 @@ object PurchaseOrderCRUD : ActionFirebase {
             .addOnSuccessListener {
                 if (it.exists()) {
                     val dato = it.data
-
+                    val idFireBase = dato?.get("idFireBase").toString()
                     val DocNum = dato?.get("DocNum") as Long
                     val CardCode = dato.get("CardCode") as String
                     val CardName = dato.get("CardName") as String
@@ -71,6 +88,7 @@ object PurchaseOrderCRUD : ActionFirebase {
                     }
 
                     val Order: OrderFireBase = OrderFireBase(
+                        idFireBase,
                         DocNum.toInt(),
                         CardCode,
                         CardName,
@@ -103,7 +121,7 @@ object PurchaseOrderCRUD : ActionFirebase {
             .addOnSuccessListener {
                 if (it.exists()) {
                     val dato = it.data
-
+                    val idFireBase = dato?.get("idFireBase").toString()
                     val DocNum = dato?.get("DocNum") as Long
                     val CardCode = dato.get("CardCode") as String
                     val CardName = dato.get("CardName") as String
@@ -138,6 +156,7 @@ object PurchaseOrderCRUD : ActionFirebase {
                     }
 
                     val Order: OrderFireBase = OrderFireBase(
+                        idFireBase,
                         DocNum.toInt(),
                         CardCode,
                         CardName,
@@ -169,7 +188,7 @@ object PurchaseOrderCRUD : ActionFirebase {
 
                 for (document in lista) {
                     val dato = document.data
-
+                    val idFireBase = dato?.get("idFireBase").toString()
                     val DocNum = dato.get("DocNum") as Long
                     val CardCode = dato.get("CardCode") as String
                     val CardName = dato.get("CardName") as String
@@ -204,6 +223,7 @@ object PurchaseOrderCRUD : ActionFirebase {
                     }
 
                     val Order: OrderFireBase = OrderFireBase(
+                        idFireBase,
                         DocNum.toInt(),
                         CardCode,
                         CardName,

@@ -418,6 +418,7 @@ class SettingsViewModel : ViewModel() {
                         )
                     }
                     val PurchaseOrderInsert : OrderFireBase = OrderFireBase(
+                        "",
                         element.DocNum,
                         element.CardCode,
                         element.CardName,
@@ -463,6 +464,7 @@ class SettingsViewModel : ViewModel() {
                         )
                     }
                     val orderInsert : OrderFireBase = OrderFireBase(
+                        "",
                         element.DocNum,
                         element.CardCode,
                         element.CardName,
