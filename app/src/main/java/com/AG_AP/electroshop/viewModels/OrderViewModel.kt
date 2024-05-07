@@ -87,7 +87,6 @@ class OrderViewModel : ViewModel(), ActionViewModel {
 
     private fun getDataFromList(list: List<DocumentLineFireBase>): MutableList<ArticleUiState?> {
         val returnList: MutableList<ArticleUiState?> = mutableListOf()
-        Log.e("Pruebas", list.toString())
         list.forEach { data ->
             val lineNum = data.LineNum
             val itemCode = data.ItemCode
@@ -107,7 +106,6 @@ class OrderViewModel : ViewModel(), ActionViewModel {
                 )
             )
         }
-        Log.i("Pruebas", returnList.toString())
         return returnList
     }
 
@@ -115,34 +113,33 @@ class OrderViewModel : ViewModel(), ActionViewModel {
         TODO("Not yet implemented")
     }
 
-    /*
-    private fun DocumentLineForMutableList(): MutableList<String> {
-        _uiState.value.DocumentLineList.clear()
-        var index: Int = _uiState.value.DocumentLineList.size
-        _uiState.value.DocumentLine.forEach { element ->
-            _uiState.value.DocumentLineList.add(index, element?.LineNum.toString())
-            index++
-            _uiState.value.DocumentLineList.add(index, element?.ItemCode.toString())
-            index++
-            _uiState.value.DocumentLineList.add(index, element?.ItemDescription.toString())
-            index++
-            _uiState.value.DocumentLineList.add(index, element?.Quantity.toString())
-            index++
-            _uiState.value.DocumentLineList.add(index, element?.Price.toString())
-            index++
-        }
-        return _uiState.value.DocumentLineList
-    }
-
-     */
-
     private fun DocumentLineForMutableList(): HashMap<Int, MutableList<String>> {
         _uiState.value.DocumentLineList.clear()
 
         _uiState.value.DocumentLine.forEachIndexed { index, element ->
             if (element != null) {
                 val listToAdd = element.let {
-                    mutableListOf(it.LineNum.toString(), it.ItemCode.toString(), it.ItemDescription.toString(), it.Quantity.toString(), it.Price.toString(), it.DiscountPercent.toString())
+                    if (it.ItemDescription.toString() == "null") {
+                        val ItemDescription = ""
+                        mutableListOf(
+                            it.LineNum.toString(),
+                            it.ItemCode.toString(),
+                            ItemDescription,
+                            it.Quantity.toString(),
+                            it.Price.toString(),
+                            it.DiscountPercent.toString()
+                        )
+                    } else {
+                        mutableListOf(
+                            it.LineNum.toString(),
+                            it.ItemCode.toString(),
+                            it.ItemDescription.toString(),
+                            it.Quantity.toString(),
+                            it.Price.toString(),
+                            it.DiscountPercent.toString()
+                        )
+                    }
+
                 }
                 _uiState.value.DocumentLineList[index] = listToAdd
             }
@@ -194,7 +191,11 @@ class OrderViewModel : ViewModel(), ActionViewModel {
     }
 
     fun changeTaxDate(fechaDocumento: String) {
-        //TODO
+        _uiState.update { currentState ->
+            currentState.copy(
+                TaxDate = fechaDocumento
+            )
+        }
     }
 
     fun changeDiscount(it: String) {
@@ -206,11 +207,19 @@ class OrderViewModel : ViewModel(), ActionViewModel {
     }
 
     fun changeDocDueDate(fechaDocumento: String) {
-        //TODO
+        _uiState.update { currentState ->
+            currentState.copy(
+                DocDueDate = fechaDocumento
+            )
+        }
     }
 
     fun changeDocDate(fechaDocumento: String) {
-        //TODO
+        _uiState.update { currentState ->
+            currentState.copy(
+                DocDate = fechaDocumento
+            )
+        }
     }
 
     fun changeDocNum(docNum: Int) {

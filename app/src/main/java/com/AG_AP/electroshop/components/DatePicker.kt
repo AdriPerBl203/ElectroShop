@@ -1,6 +1,7 @@
 package com.AG_AP.electroshop.components
 
 import android.app.DatePickerDialog
+import android.util.Log
 import android.widget.DatePicker
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -23,10 +24,20 @@ import androidx.compose.ui.platform.LocalContext
 import java.util.*
 
 @Composable
-fun DatePicker(label: String, callback: (String) -> Unit) {
+fun DatePicker(label: String, value: String = "", callback: (String) -> Unit) {
     var fecha: String by remember {
-        mutableStateOf("")
+        mutableStateOf(value)
     }
+
+    var newValue: String = value
+    try {
+        if (value != "") {
+            newValue = convertirFormatoFecha(value)
+        }
+    } catch (e: Exception) {
+        Log.e("Errores", e.stackTraceToString())
+    }
+
 
     val anio: Int
     val mes: Int
@@ -47,7 +58,7 @@ fun DatePicker(label: String, callback: (String) -> Unit) {
     Box(modifier = Modifier.fillMaxWidth()) {
         Row {
             OutlinedTextField(
-                value = fecha,
+                value = newValue,
                 onValueChange = { fecha = it },
                 readOnly = true,
                 label = { Text(text = label) },
@@ -66,4 +77,13 @@ fun DatePicker(label: String, callback: (String) -> Unit) {
             )
         }
     }
+}
+
+fun convertirFormatoFecha(fecha: String): String {
+    val partes = fecha.split("T")[0].split("-")
+    val anio = partes[0]
+    val mes = partes[1]
+    val dia = partes[2]
+
+    return "$dia/$mes/$anio"
 }

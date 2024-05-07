@@ -1,5 +1,6 @@
 package com.AG_AP.electroshop.screens
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -125,14 +126,13 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
             }
 
             Column {
-                DatePicker("Fecha contabilizacion " /* TODO meter el value */) { fechaDocumento ->
+                DatePicker("Fecha contabilizacion ", dataUiState.TaxDate) { fechaDocumento ->
                     viewModel.changeTaxDate(fechaDocumento)
                 }
-
-                DatePicker("Fecha entrega ") { fechaDocumento ->
+                DatePicker("Fecha entrega ", dataUiState.DocDueDate) { fechaDocumento ->
                     viewModel.changeDocDueDate(fechaDocumento)
                 }
-                DatePicker("Fecha contabilizacion ") { fechaDocumento ->
+                DatePicker("Fecha documento ", dataUiState.DocDate) { fechaDocumento ->
                     viewModel.changeDocDate(fechaDocumento)
                 }
             }
@@ -149,6 +149,7 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
                     .padding(top = 30.dp, end = 30.dp)
                     .background(MaterialTheme.colorScheme.background)
             ) {
+                //TODO cuando sea inactivo el pedido no deja aumentar ni disminuir las lineas
                 if (id == null) {
                     Row {
                         IconButton(
@@ -354,138 +355,6 @@ fun TableDocumentLineOrder(dataUiState: OrderUiState, viewModel: OrderViewModel)
             }
         }
     }
-    /*
-    LazyVerticalGrid(columns = GridCells.Fixed(numCols)) {
-        dataUiState.DocumentLineList.forEach { (index, element) ->
-            item {
-                Box(
-                    modifier = Modifier
-                        .border(1.dp, MaterialTheme.colorScheme.primary)
-                        .background(MaterialTheme.colorScheme.secondaryContainer)
-                        .fillMaxWidth(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        index.toString(),
-                        Modifier
-                            .height(50.dp)
-                            .wrapContentSize()
-                    )
-                }
-            }
-
-            itemsIndexed(element) {index2, it ->
-                if (index2 == 1 || index2 == 3 || index2 == 4 || index2 == 5) {
-                    Box(
-                        modifier = Modifier
-                            .border(1.dp, MaterialTheme.colorScheme.primary)
-                            .background(MaterialTheme.colorScheme.secondaryContainer)
-                            .fillMaxWidth(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        when (index2) {
-                            1 -> OutlinedTextField(
-                                value = it.toString(),
-                                onValueChange = { it },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .background(MaterialTheme.colorScheme.secondaryContainer)
-                                    .height(50.dp)
-                            )
-                            3 -> OutlinedTextField(
-                                value = it.toString(),
-                                onValueChange = { it },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .background(MaterialTheme.colorScheme.secondaryContainer)
-                                    .height(50.dp)
-                            )
-                            4 -> OutlinedTextField(
-                                value = it.toString(),
-                                onValueChange = { it },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .background(MaterialTheme.colorScheme.secondaryContainer)
-                                    .height(50.dp)
-                            )
-                            5 -> OutlinedTextField(
-                                value = it.toString(),
-                                onValueChange = { it },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .background(MaterialTheme.colorScheme.secondaryContainer)
-                                    .height(50.dp)
-                            )
-                        }
-
-                    }
-                }
-            }*/
-
-
-    /*
-    items(element) {
-        Box(
-            modifier = Modifier
-                .border(1.dp, MaterialTheme.colorScheme.primary)
-                .background(MaterialTheme.colorScheme.secondaryContainer)
-                .fillMaxWidth(),
-            contentAlignment = Alignment.Center
-        ) {
-            if (index % 5 == 1) {
-                OutlinedTextField(
-                    value = it.toString(),
-                    onValueChange = { it },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.secondaryContainer)
-                        .height(50.dp)
-                )
-            } else if (index % 5 == 2) {
-                OutlinedTextField(
-                    value = it.toString(),
-                    onValueChange = { it },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.secondaryContainer)
-                        .height(50.dp)
-                )
-            } else if (index % 5 == 3) {
-                OutlinedTextField(
-                    value = it.toString(),
-                    onValueChange = { it },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.secondaryContainer)
-                        .height(50.dp)
-                )
-            } else if (index % 5 == 4) {
-                OutlinedTextField(
-                    value = it.toString(),
-                    onValueChange = { it },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    suffix = { Text(text = "%") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.secondaryContainer)
-                        .height(50.dp)
-                )
-            } else {
-
-            }
-        }
-    }
-}
-
-     */
-    /*
-    itemsIndexed(dataUiState.DocumentLineList) { index, it ->
-
-    }
-
-     */
-
 }
 
 

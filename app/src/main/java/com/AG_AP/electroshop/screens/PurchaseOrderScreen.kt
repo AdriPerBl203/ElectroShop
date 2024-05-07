@@ -130,14 +130,14 @@ fun PurchaseOrderView(
             }
 
             Column {
-                DatePicker("Fecha contabilizacion ") { fechaDocumento ->
+                DatePicker("Fecha contabilizacion ", dataUiState.TaxDate) { fechaDocumento ->
                     viewModel.changeTaxDate(fechaDocumento)
                 }
 
-                DatePicker("Fecha entrega ") { fechaDocumento ->
+                DatePicker("Fecha entrega ", dataUiState.DocDueDate) { fechaDocumento ->
                     viewModel.changeDocDueDate(fechaDocumento)
                 }
-                DatePicker("Fecha contabilizacion ") { fechaDocumento ->
+                DatePicker("Fecha documento ", dataUiState.DocDate) { fechaDocumento ->
                     viewModel.changeDocDate(fechaDocumento)
                 }
             }
