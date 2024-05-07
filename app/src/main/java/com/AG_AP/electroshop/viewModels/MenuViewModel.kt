@@ -6,10 +6,15 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.AG_AP.electroshop.endpoints.models.activity.Activity
 import com.AG_AP.electroshop.endpoints.models.activity.PostActivity
+import com.AG_AP.electroshop.endpoints.models.businessPartners.BusinessPartners
+import com.AG_AP.electroshop.endpoints.models.businessPartners.PostBusinesspartner
 import com.AG_AP.electroshop.endpoints.models.login.Login
 import com.AG_AP.electroshop.endpoints.objects.ActivityObj
+import com.AG_AP.electroshop.endpoints.objects.BusinessPartnersObj
 import com.AG_AP.electroshop.endpoints.objects.LoginObj
 import com.AG_AP.electroshop.firebase.ActivityCRUD
+import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
+import com.AG_AP.electroshop.firebase.models.BusinessPartner
 import com.AG_AP.electroshop.functions.Config
 import com.AG_AP.electroshop.functions.SessionObj
 import com.AG_AP.electroshop.uiState.MenuUiState
@@ -68,8 +73,81 @@ class MenuViewModel : ViewModel() {
     }
 
     fun upBusinessPartners() {
-        Log.e("MenuViewModel", "upBusinessPartners() method is not yet implemented")
-        // Aquí deberías implementar la lógica para actualizar los socios comerciales
+        viewModelScope.launch() {
+            BusinessPartnerCRUD.getAllObject { list ->
+                viewModelScope.launch() {
+                    val dataLogin = Login(Config.dataBase, Config.password, Config.login)
+                    LoginObj.loginAcessTwoversion(dataLogin, Config.rulUse)
+                    if (list != null) {
+                        val listAux = list as MutableList<BusinessPartner>
+                        for (x in listAux) {
+                            if (!x.SAP) {
+                                var CardTypeAux:String=""
+                                var SeriesAux:Int=0
+                                when(x.CardType){
+                                    // "value" : "Invalid item name '' in Enum 'BoCardTypes'. The valid names are: 'cCustomer'-'C', 'cSupplier'-'S', 'cLid'-'L'"
+                                    "Cliente"-> {
+                                        CardTypeAux= "cCustomer"
+                                        SeriesAux=71
+                                    }
+                                    "Proveedor"-> {
+                                        CardTypeAux= "cSupplier"
+                                        SeriesAux=72
+                                    }
+                                }
+
+
+                                val data: PostBusinesspartner = PostBusinesspartner(
+                                    x.CardName,
+                                    CardTypeAux,
+                                    x.Cellular,
+                                    x.EmailAddress,
+                                    SeriesAux
+                                )
+                                BusinessPartnersObj.postBusinessPartners(Config.rulUse, data)
+                                //TODO
+                                if(x.idFireBase !=null){
+                                    BusinessPartnerCRUD.deleteObjectById(x.idFireBase)
+                                }
+                            }
+                        }
+                    }
+                    viewModelScope.launch(Dispatchers.IO) {
+                        val BusinessPartners = BusinessPartnersObj.getBusinessPartners(Config.rulUse)
+                        if(BusinessPartners is BusinessPartners){
+                            BusinessPartners.value.forEach { element->
+                                BusinessPartnerCRUD.deleteObjectById(element.CardCode)
+                            }
+
+                            BusinessPartners.value.forEach { element ->
+                                var email:String =""
+                                var phone1:String =""
+                                if(!element.Phone1.isNullOrEmpty()){
+                                    phone1 = element.Phone1
+                                }
+                                if(!element.EmailAddress.isNullOrEmpty()){
+                                    email = element.EmailAddress
+                                }
+
+                                BusinessPartnerCRUD.insert(BusinessPartner(
+                                    "",
+                                    element.CardCode,
+                                    element.CardType,
+                                    element.CardName,
+                                    phone1,
+                                    email,
+                                    true
+                                ))
+                            }
+                            LoginObj.logout(Config.rulUse)
+                            _uiState.update { currentState -> currentState.copy(
+                                checkProgresCircular = false
+                            ) }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     fun upItems() {
@@ -134,8 +212,6 @@ class MenuViewModel : ViewModel() {
                             ) }
                         }
                     }
-                    //LoginObj.logout(Config.rulUse)
-
                 }
             }
         }

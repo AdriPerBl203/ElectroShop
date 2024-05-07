@@ -29,6 +29,21 @@ object BusinessPartnerCRUD : ActionFirebase {
         }
     }
 
+    fun insertForFireBase(data: BusinessPartner) {
+        val docRef = this.database
+            .collection(this.coleccion)
+            .document()
+        val newdata = data.copy(idFireBase = docRef.id) // Guardar el ID generado dentro de la actividad
+        docRef
+            .set(newdata.toHashMap())
+            .addOnSuccessListener {
+                Log.e("FireBase", "Creado Business Partner con ID: ${docRef.id}")
+            }
+            .addOnFailureListener { e ->
+                Log.w("FireBase", "Error añadiendo el documento $e")
+            }
+    }
+
     override fun getObjectById(id: Int, callback: (Any?) -> Unit) {
         this.database
             .collection(this.coleccion)
@@ -39,7 +54,7 @@ object BusinessPartnerCRUD : ActionFirebase {
                     val data = it.data
                     Log.e("Pruebas", "Datos: ${data.toString()}")
 
-
+                    val idFireBase = data?.get("idFireBase").toString()
                     val CardCode = data?.get("CardCode").toString() ?: ""
                     val CardType = data?.get("CardType").toString() ?: ""
                     val CardName = data?.get("CardName").toString() ?: ""
@@ -48,6 +63,7 @@ object BusinessPartnerCRUD : ActionFirebase {
                     val SAP = data?.get("SAP").toString().toBoolean()
 
                     val dataReturn: BusinessPartner = BusinessPartner(
+                        idFireBase,
                         CardCode,
                         CardType,
                         CardName,
@@ -75,7 +91,7 @@ object BusinessPartnerCRUD : ActionFirebase {
                     val data = it.data
                     Log.e("Pruebas", "Datos: ${data.toString()}")
 
-
+                    val idFireBase = data?.get("idFireBase").toString()
                     val CardCode = data?.get("CardCode").toString() ?: ""
                     val CardType = data?.get("CardType").toString() ?: ""
                     val CardName = data?.get("CardName").toString() ?: ""
@@ -84,6 +100,7 @@ object BusinessPartnerCRUD : ActionFirebase {
                     val SAP = data?.get("SAP").toString().toBoolean()
 
                     val dataReturn: BusinessPartner = BusinessPartner(
+                        idFireBase,
                         CardCode,
                         CardType,
                         CardName,
@@ -112,6 +129,7 @@ object BusinessPartnerCRUD : ActionFirebase {
                 for (document in lista.documents) {
                     val data = document.data
 
+                    val idFireBase = data?.get("idFireBase").toString()
                     val CardCode = data?.get("CardCode").toString()
                     val CardType = data?.get("CardType").toString()
                     val CardName = data?.get("CardName").toString()
@@ -120,6 +138,7 @@ object BusinessPartnerCRUD : ActionFirebase {
                     val SAP = data?.get("SAP").toString().toBoolean()
 
                     val dataReturn: BusinessPartner = BusinessPartner(
+                        idFireBase,
                         CardCode,
                         CardType,
                         CardName,

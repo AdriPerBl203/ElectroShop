@@ -73,7 +73,6 @@ fun MenuFrontView(
     val dataUiState by viewModel.uiState.collectAsState()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    /*TODO*/
     if(dataUiState.dialog){
         DialogListDraw(
             infoDialog= dataUiState.InfoDialog,

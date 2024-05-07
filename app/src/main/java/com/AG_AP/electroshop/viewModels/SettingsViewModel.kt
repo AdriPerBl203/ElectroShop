@@ -281,12 +281,13 @@ class SettingsViewModel : ViewModel() {
                     }
 
                     BusinessPartnerCRUD.insert(BusinessPartner(
+                        "",
                         element.CardCode,
                         element.CardType,
                         element.CardName,
                         phone1,
                         email,
-                        false
+                        true
                     ))
                 }
                 _uiState.update { currentState -> currentState.copy(
