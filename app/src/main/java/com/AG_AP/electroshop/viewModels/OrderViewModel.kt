@@ -69,7 +69,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
                             DocDueDate = dataAux.DocDueDate,
                             TaxDate = dataAux.TaxDate,
                             DiscountPercent = dataAux.DiscountPercent,
-                            DocumentLine = dataList, //TODO controlar la cantidad de lineas
+                            DocumentLine = dataList,
                             DocumentLineList = mutableDataList
                         )
                     }
