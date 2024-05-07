@@ -210,10 +210,17 @@ fun TableDocumentLinePurchase(
     viewModel: PurchaseOrderViewModel
 ) {
 
-    val numCols = 5
+    val numCols = 6
 
     // Datos de ejemplo para las cabeceras
-    val headers = listOf("#", "Nº", "Cantidad", "Precio", "% de descuento")
+    val headers = listOf(
+        "Nº",
+        "Código Articulo",
+        "Descripción articulo",
+        "Cantidad",
+        "Precio",
+        "% de descuento"
+    )
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(numCols)
@@ -233,63 +240,120 @@ fun TableDocumentLinePurchase(
                         .wrapContentSize()
                 )
             }
+
         }
     }
 
-    LazyVerticalGrid(columns = GridCells.Fixed(5)) {
-        itemsIndexed(dataUiState.DocumentLineList) { index, it ->
-            Box(
-                modifier = Modifier
-                    .border(1.dp, MaterialTheme.colorScheme.primary)
-                    .background(MaterialTheme.colorScheme.secondaryContainer)
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
-                if (index % 5 == 1) {
-                    OutlinedTextField(
-                        value = "",
-                        onValueChange = { it },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.secondaryContainer)
-                            .height(50.dp)
-                    )
-                } else if (index % 5 == 2) {
-                    OutlinedTextField(
-                        value = "",
-                        onValueChange = { it },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.secondaryContainer)
-                            .height(50.dp)
-                    )
-                } else if (index % 5 == 3) {
-                    OutlinedTextField(
-                        value = "0.0",
-                        onValueChange = { it },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.secondaryContainer)
-                            .height(50.dp)
-                    )
-                } else if (index % 5 == 4) {
-                    OutlinedTextField(
-                        value = "0.0",
-                        onValueChange = { it },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                        suffix = { Text(text = "%") },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.secondaryContainer)
-                            .height(50.dp)
-                    )
-                } else {
+
+    LazyVerticalGrid(columns = GridCells.Fixed(numCols)) {
+        dataUiState.DocumentLineList.forEach { index, value ->
+            item {
+                Box(
+                    modifier = Modifier
+                        .border(1.dp, MaterialTheme.colorScheme.primary)
+                        .background(MaterialTheme.colorScheme.secondaryContainer)
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
                     Text(
-                        it,
+                        index.toString(),
                         Modifier
                             .height(50.dp)
-                            .wrapContentSize(),
+                            .wrapContentSize()
+                    )
+                }
+            }
+            item {
+                Box(
+                    modifier = Modifier
+                        .border(1.dp, MaterialTheme.colorScheme.primary)
+                        .background(MaterialTheme.colorScheme.secondaryContainer)
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    OutlinedTextField(
+                        value = value[1].toString(),
+                        onValueChange = { it },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.secondaryContainer)
+                            .height(50.dp)
+                    )
+                }
+            }
+
+            item {
+                Box(
+                    modifier = Modifier
+                        .border(1.dp, MaterialTheme.colorScheme.primary)
+                        .background(MaterialTheme.colorScheme.secondaryContainer)
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    OutlinedTextField(
+                        value = value[2].toString(),
+                        onValueChange = { it },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.secondaryContainer)
+                            .height(50.dp)
+                    )
+                }
+            }
+
+            item {
+                Box(
+                    modifier = Modifier
+                        .border(1.dp, MaterialTheme.colorScheme.primary)
+                        .background(MaterialTheme.colorScheme.secondaryContainer)
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    OutlinedTextField(
+                        value = value[3].toString(),
+                        onValueChange = { it },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.secondaryContainer)
+                            .height(50.dp)
+                    )
+                }
+            }
+
+            item {
+                Box(
+                    modifier = Modifier
+                        .border(1.dp, MaterialTheme.colorScheme.primary)
+                        .background(MaterialTheme.colorScheme.secondaryContainer)
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    OutlinedTextField(
+                        value = value[4].toString(),
+                        onValueChange = { it },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.secondaryContainer)
+                            .height(50.dp)
+                    )
+                }
+            }
+
+            item {
+                Box(
+                    modifier = Modifier
+                        .border(1.dp, MaterialTheme.colorScheme.primary)
+                        .background(MaterialTheme.colorScheme.secondaryContainer)
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    OutlinedTextField(
+                        value = value[5].toString(),
+                        onValueChange = { it },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.secondaryContainer)
+                            .height(50.dp)
                     )
                 }
             }

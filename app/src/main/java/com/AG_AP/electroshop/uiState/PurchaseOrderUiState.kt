@@ -25,7 +25,7 @@ data class PurchaseOrderUiState(
             4, "", "", 0.0F, 0.0F, 0.0F
         )
     ).toMutableList(),
-    val DocumentLineList: MutableList<String> = mutableListOf(),
+    val DocumentLineList: HashMap<Int, MutableList<String>> = HashMap(),
     val trash: Int = 0,
     val message:Boolean = false,
     val progress:Boolean = false,

@@ -21,7 +21,7 @@ class PurchaseOrderViewModel : ViewModel(), ActionViewModel {
     val uiState: StateFlow<PurchaseOrderUiState> = _uiState.asStateFlow()
 
     init {
-        documentLineForMutableList()
+        DocumentLineForMutableList()
     }
 
     fun refresh() {
@@ -134,7 +134,7 @@ class PurchaseOrderViewModel : ViewModel(), ActionViewModel {
         _uiState.update { currentState ->
             currentState.copy(
                 DocumentLine = listAux,
-                DocumentLineList = documentLineForMutableList(),
+                DocumentLineList = DocumentLineForMutableList(),
                 //TaxDate="asdasdfasdfasd"
                 trash = tastAux
             )
@@ -142,21 +142,38 @@ class PurchaseOrderViewModel : ViewModel(), ActionViewModel {
 
     }
 
-    private fun documentLineForMutableList(): MutableList<String> {
+    private fun DocumentLineForMutableList(): HashMap<Int, MutableList<String>> {
         _uiState.value.DocumentLineList.clear()
-        var index: Int = _uiState.value.DocumentLineList.size
-        _uiState.value.DocumentLine.forEach { element ->
-            _uiState.value.DocumentLineList.add(index, element?.LineNum.toString())
-            index++
-            _uiState.value.DocumentLineList.add(index, element?.ItemCode.toString())
-            index++
-            _uiState.value.DocumentLineList.add(index, element?.ItemDescription.toString())
-            index++
-            _uiState.value.DocumentLineList.add(index, element?.Quantity.toString())
-            index++
-            _uiState.value.DocumentLineList.add(index, element?.Price.toString())
-            index++
+
+        _uiState.value.DocumentLine.forEachIndexed { index, element ->
+            if (element != null) {
+                val listToAdd = element.let {
+                    if (it.ItemDescription.toString() == "null") {
+                        val ItemDescription = ""
+                        mutableListOf(
+                            it.LineNum.toString(),
+                            it.ItemCode.toString(),
+                            ItemDescription,
+                            it.Quantity.toString(),
+                            it.Price.toString(),
+                            it.DiscountPercent.toString()
+                        )
+                    } else {
+                        mutableListOf(
+                            it.LineNum.toString(),
+                            it.ItemCode.toString(),
+                            it.ItemDescription.toString(),
+                            it.Quantity.toString(),
+                            it.Price.toString(),
+                            it.DiscountPercent.toString()
+                        )
+                    }
+
+                }
+                _uiState.value.DocumentLineList[index] = listToAdd
+            }
         }
+
         return _uiState.value.DocumentLineList
     }
 
@@ -172,7 +189,7 @@ class PurchaseOrderViewModel : ViewModel(), ActionViewModel {
         _uiState.update { currentState ->
             currentState.copy(
                 DocumentLine = listAux,
-                DocumentLineList = documentLineForMutableList(),
+                DocumentLineList = DocumentLineForMutableList(),
                 trash = tastAux
             )
         }

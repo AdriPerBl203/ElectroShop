@@ -15,6 +15,7 @@ import com.AG_AP.electroshop.screens.ScaffoldBusinessPartner
 import com.AG_AP.electroshop.screens.ScaffoldListActivity
 import com.AG_AP.electroshop.screens.ScaffoldListBusinessPartner
 import com.AG_AP.electroshop.screens.ScaffoldListOrder
+import com.AG_AP.electroshop.screens.ScaffoldListPurchaseOrder
 import com.AG_AP.electroshop.screens.ScaffoldOrder
 import com.AG_AP.electroshop.screens.ScaffoldPurchaseOrder
 import com.AG_AP.electroshop.screens.SettingScreen
@@ -115,10 +116,25 @@ fun AppNav(navController: NavHostController = rememberNavController(),context: C
             val id = backStackEntry.arguments?.getString("id")
             ScaffoldBusinessPartner(navController = navController, id = id)
         }
+
         composable(
             route = Routes.PurchaseOrderScreen.route
         ) {
             ScaffoldPurchaseOrder(navController = navController)
+        }
+
+        composable(
+            route = Routes.PurchaseOrderList.route
+        ) {
+            ScaffoldListPurchaseOrder(navController = navController)
+        }
+
+        composable(
+            route = Routes.PurchaseOrderAux.route + "/{id}",
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id")
+            ScaffoldOrder(navController = navController, id = id)
         }
     }
 }

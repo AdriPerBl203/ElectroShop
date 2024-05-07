@@ -18,4 +18,6 @@ enum class Routes(val route: String) {
     ScreenOrderAux(route = "Order"),
 
     PurchaseOrderScreen(route = "PurchaseOrderScreen"),
+    PurchaseOrderList(route = "PurchaseOrderList"),
+    PurchaseOrderAux(route = "PurchaseOrderScreen")
 }
