@@ -5,5 +5,7 @@ import com.google.gson.annotations.SerializedName
 data class Orders(
     @SerializedName("odata.metadata")
     val odataMetadata: String,
-    val value: List<Value>
+    val value: List<Value>,
+    @SerializedName("odata.nextLink")
+    val odataNextLink: String,
 )

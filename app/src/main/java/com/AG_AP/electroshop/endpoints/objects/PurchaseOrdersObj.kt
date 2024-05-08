@@ -29,4 +29,15 @@ object PurchaseOrdersObj {
             false
         }
     }
+
+    suspend fun getPurchaseOrdersExtenExten(rulUse: String, id: Int): PurchaseOrders? {
+        RetrofitClient.baseUrl = rulUse
+        val apiService = RetrofitClient.retrofit.create(PurchaseOrdersInteface::class.java)
+        return try {
+            apiService.getPurchaseOrdersExten(id)
+        } catch (e: Exception) {
+            println(e.message)
+            null
+        }
+    }
 }

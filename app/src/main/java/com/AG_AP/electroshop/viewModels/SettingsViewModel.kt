@@ -40,7 +40,7 @@ import com.AG_AP.electroshop.firebase.models.Price
 import com.AG_AP.electroshop.firebase.models.SEIConfig
 import com.AG_AP.electroshop.functions.Config
 import com.AG_AP.electroshop.functions.ConfigurationApplication
-import com.AG_AP.electroshop.functions.validarURL
+//import com.AG_AP.electroshop.functions.validarURL
 import com.AG_AP.electroshop.uiState.SettingUiState
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
@@ -115,14 +115,14 @@ class SettingsViewModel : ViewModel() {
             return;
         }
 
-        if(!validarURL(urlInt) || !validarURL(urlExt)){
+        /*if(!validarURL(urlInt) || !validarURL(urlExt)){
             textShow = "Campos de las URL no validos."
             _uiState.update { currentState -> currentState.copy(
                 message = true,
                 text = textShow
             ) }
             return;
-        }
+        }*/
 
         /*Hacer la conexió*/
         viewModelScope.launch {
@@ -264,13 +264,32 @@ class SettingsViewModel : ViewModel() {
 
     private fun deleteAndInsertBusinessPartner() {
         viewModelScope.launch(Dispatchers.IO) {
-            val BusinessPartners = BusinessPartnersObj.getBusinessPartners(Config.rulUse)
-            if(BusinessPartners is BusinessPartners){
-                BusinessPartners.value.forEach { element->
+            var listBusinessPartnerSAP: MutableList<com.AG_AP.electroshop.endpoints.models.businessPartners.Value> =
+                mutableListOf()
+            var checkSAP: Boolean = false
+            var BusinessPartners = BusinessPartnersObj.getBusinessPartners(Config.rulUse)
+            while (!checkSAP) {
+                if (BusinessPartners != null) {
+                    if (BusinessPartners.odataNextLink.isNullOrEmpty()) {
+                        BusinessPartners.value.forEach {
+                                listBusinessPartnerSAP += it
+                        }
+                        checkSAP=true
+                    }else{
+                        BusinessPartners.value.forEach {
+                                listBusinessPartnerSAP += it
+                        }
+                        val num :List<String> = BusinessPartners.odataNextLink.split("=")
+                        BusinessPartners =BusinessPartnersObj.getBusinessPartnersExten(Config.rulUse,num[1].toInt())
+                    }
+                }
+            }
+
+            listBusinessPartnerSAP.forEach { element->
                     BusinessPartnerCRUD.deleteObjectById(element.CardCode)
                 }
 
-                BusinessPartners.value.forEach { element ->
+            listBusinessPartnerSAP.forEach { element ->
                     var email:String =""
                     var phone1:String =""
                     if(!element.Phone1.isNullOrEmpty()){
@@ -293,7 +312,6 @@ class SettingsViewModel : ViewModel() {
                 _uiState.update { currentState -> currentState.copy(
                     checkBusinessPartner = true
                 ) }
-            }
 
             Log.e("sync","clientes sincronizados")
         }
@@ -301,13 +319,36 @@ class SettingsViewModel : ViewModel() {
 
     private fun deleteAndInsertActivity() {
         viewModelScope.launch(Dispatchers.IO) {
-            val activities : Activity? = ActivityObj.getActivities(Config.rulUse)
-            if(activities is Activity){
-                activities.value.forEach{element ->
-                    ActivityCRUD.deleteActivityById(element.ActivityCode.toString())
+            var listActivitySAP: MutableList<com.AG_AP.electroshop.endpoints.models.activity.Value> =
+                mutableListOf()
+            var checkSAP: Boolean = false
+            var activities: Activity? = ActivityObj.getActivities(Config.rulUse)
+            while (!checkSAP) {
+                if (activities != null) {
+                    if (activities.odataNextLink.isNullOrEmpty()) {
+                        activities.value.forEach {
+                            if (it is com.AG_AP.electroshop.endpoints.models.activity.Value) {
+                                listActivitySAP += it
+                            }
+                        }
+                        checkSAP=true
+                    }else{
+                        activities.value.forEach {
+                            listActivitySAP += it
+                        }
+                        val num :List<String> = activities.odataNextLink.split("=")
+                        activities =ActivityObj.getActivitiesExten(Config.rulUse,num[1].toInt())
+                    }
                 }
-                activities.value.forEach{element ->
-                    val activity : com.AG_AP.electroshop.firebase.models.Activity = com.AG_AP.electroshop.firebase.models.Activity(
+            }
+
+            //Aqui ya debe de entrar con todas las de SAP
+            listActivitySAP.forEach { element ->
+                ActivityCRUD.deleteActivityById(element.ActivityCode.toString())
+            }
+            listActivitySAP.forEach { element ->
+                val activity: com.AG_AP.electroshop.firebase.models.Activity =
+                    com.AG_AP.electroshop.firebase.models.Activity(
                         "",
                         element.Notes ?: "",
                         element.ActivityDate ?: "",
@@ -322,14 +363,15 @@ class SettingsViewModel : ViewModel() {
                         element.U_SEIPEDIDOCLIENTE ?: 0,
                         true
                     )
-                    ActivityCRUD.insertActivity(activity)
-                }
-                _uiState.update { currentState -> currentState.copy(
+                ActivityCRUD.insertActivity(activity)
+            }
+            _uiState.update { currentState ->
+                currentState.copy(
                     checkActivity = true
-                ) }
+                )
             }
 
-            Log.e("sync","actividades sincronizados")
+            Log.e("sync", "actividades sincronizados")
         }
     }
 
@@ -348,12 +390,13 @@ class SettingsViewModel : ViewModel() {
                 ) }
                 val dataLogin = Login(Config.dataBase,Config.password,Config.login)
                 LoginObj.loginAcessTwoversion(dataLogin,Config.rulUse)
-                deleteAndInsertItem()//
+            //TODO
+                deleteAndInsertItem()// Correcta
                 deleteAndInsertUserUdo() //
-                deleteAndInsertBusinessPartner() //
-                deleteAndInsertActivity()//
-                deleteAndInsertOrders()
-                deleteAndInsertPurchaseOrders()
+                deleteAndInsertBusinessPartner() // Correcta
+                deleteAndInsertActivity() // Correcto
+                deleteAndInsertOrders() //Corecta
+                deleteAndInsertPurchaseOrders() //Correcta
                 enablebtn(Config.rulUse)
         }
 
@@ -398,58 +441,92 @@ class SettingsViewModel : ViewModel() {
 
     private fun deleteAndInsertPurchaseOrders() {
         viewModelScope.launch(Dispatchers.IO) {
-            val purchaseOrders : PurchaseOrders? = PurchaseOrdersObj.getPurchaseOrders(Config.rulUse)
-            if(purchaseOrders is PurchaseOrders){
-                purchaseOrders.value.forEach{element ->
-                    PurchaseOrderCRUD.deleteObjectById(element.DocNum.toString())
-                }
-                purchaseOrders.value.forEach{element ->
-                    val documentList: MutableList<DocumentLineFireBase> = mutableListOf()
-                    element.DocumentLines.forEachIndexed { index, it ->
-                        documentList.add(
-                            index,
-                            DocumentLineFireBase(
-                                it.ItemCode,
-                                it.ItemDescription,
-                                it.Quantity,
-                                it.DiscountPercent,
-                                it.LineNum,
-                                it.Price
-                            )
-                        )
+            var listPurchaseOrderSAP: MutableList<com.AG_AP.electroshop.endpoints.models.purchaseOrders.Value> =
+                mutableListOf()
+            var checkSAP: Boolean = false
+            var purchaseOrders : PurchaseOrders? = PurchaseOrdersObj.getPurchaseOrders(Config.rulUse)
+            while (!checkSAP) {
+                if (purchaseOrders != null) {
+                    if (purchaseOrders.odataNextLink.isNullOrEmpty()) {
+                        purchaseOrders.value.forEach {
+                            listPurchaseOrderSAP += it
+                        }
+                        checkSAP=true
+                    }else{
+                        purchaseOrders.value.forEach {
+                            listPurchaseOrderSAP += it
+                        }
+                        val num :List<String> = purchaseOrders.odataNextLink.split("=")
+                        purchaseOrders =PurchaseOrdersObj.getPurchaseOrdersExtenExten(Config.rulUse,num[1].toInt())
                     }
-                    val PurchaseOrderInsert : OrderFireBase = OrderFireBase(
-                        "",
-                        element.DocNum,
-                        element.CardCode,
-                        element.CardName,
-                        element.DocDate,
-                        element.DocDueDate,
-                        element.TaxDate,
-                        element.DiscountPercent,
-                        documentList,
-                        true
-                    )
-                    PurchaseOrderCRUD.insert(PurchaseOrderInsert)
                 }
-
-                _uiState.update { currentState -> currentState.copy(
-                    checkPurchaseOrder = true
-                ) }
             }
-
-            Log.e("sync","PurchaseOrder sync")
+            listPurchaseOrderSAP.forEach{element ->
+                PurchaseOrderCRUD.deleteObjectById(element.DocNum.toString())
+            }
+            listPurchaseOrderSAP.forEach{element ->
+                //lista de precios
+                val documentList: MutableList<DocumentLineFireBase> = mutableListOf()
+                element.DocumentLines.forEachIndexed { index, it ->
+                    documentList.add(
+                        index,
+                        DocumentLineFireBase(
+                            it.ItemCode,
+                            it.ItemDescription ?: "",
+                            it.Quantity,
+                            it.DiscountPercent,
+                            it.LineNum,
+                            it.Price,
+                        )
+                    )
+                }
+                val orderInsert : OrderFireBase = OrderFireBase(
+                    "",
+                    element.DocNum,
+                    element.CardCode,
+                    element.CardName,
+                    element.DocDate,
+                    element.DocDueDate,
+                    element.TaxDate,
+                    element.DiscountPercent,
+                    documentList,
+                    true
+                )
+                PurchaseOrderCRUD.insert(orderInsert)
+            }
+            _uiState.update { currentState -> currentState.copy(
+                checkOrder = true
+            ) }
+            Log.e("sync","order sync")
         }
     }
 
     private fun deleteAndInsertOrders() {
         viewModelScope.launch(Dispatchers.IO) {
-            val orders : Orders? = OrdersObj.getOrders(Config.rulUse)
-            if(orders is Orders){
-                orders.value.forEach{element ->
+            var listOrderSAP: MutableList<com.AG_AP.electroshop.endpoints.models.orders.Value> =
+                mutableListOf()
+            var checkSAP: Boolean = false
+            var orders : Orders? = OrdersObj.getOrders(Config.rulUse)
+            while (!checkSAP) {
+                if (orders != null) {
+                    if (orders.odataNextLink.isNullOrEmpty()) {
+                        orders.value.forEach {
+                            listOrderSAP += it
+                        }
+                        checkSAP=true
+                    }else{
+                        orders.value.forEach {
+                            listOrderSAP += it
+                        }
+                        val num :List<String> = orders.odataNextLink.split("=")
+                        orders =OrdersObj.getOrdersExtenExten(Config.rulUse,num[1].toInt())
+                    }
+                }
+            }
+            listOrderSAP.forEach{element ->
                     OrderCRUD.deleteObjectById(element.DocNum.toString())
                 }
-                orders.value.forEach{element ->
+            listOrderSAP.forEach{element ->
                     //lista de precios
                     val documentList: MutableList<DocumentLineFireBase> = mutableListOf()
                     element.DocumentLines.forEachIndexed { index, it ->
@@ -457,7 +534,7 @@ class SettingsViewModel : ViewModel() {
                             index,
                             DocumentLineFireBase(
                                 it.ItemCode,
-                                it.ItemDescription,
+                                it.ItemDescription ?: "",
                                 it.Quantity,
                                 it.DiscountPercent,
                                 it.LineNum,
@@ -482,20 +559,36 @@ class SettingsViewModel : ViewModel() {
                 _uiState.update { currentState -> currentState.copy(
                     checkOrder = true
                 ) }
-            }
-
             Log.e("sync","order sync")
         }
     }
 
     private fun deleteAndInsertItem() {
         viewModelScope.launch(Dispatchers.IO) {
-            val items : GetItems? = ItemObj.getItems(Config.rulUse)
-            if(items is GetItems){
-                items.value.forEach{element ->
+            var listItemSAP: MutableList<com.AG_AP.electroshop.endpoints.models.item.getItems.Value> =
+                mutableListOf()
+            var checkSAP: Boolean = false
+            var items : GetItems? = ItemObj.getItems(Config.rulUse)
+            while (!checkSAP) {
+                if (items != null) {
+                    if (items.odataNextLink.isNullOrEmpty()) {
+                        items.value.forEach {
+                            listItemSAP += it
+                        }
+                        checkSAP=true
+                    }else{
+                        items.value.forEach {
+                            listItemSAP += it
+                        }
+                        val num :List<String> = items.odataNextLink.split("=")
+                        items =ItemObj.getItemsExten(Config.rulUse,num[1].toInt())
+                    }
+                }
+            }
+            listItemSAP.forEach{element ->
                     ItemCRUD.deleteItemById(element.ItemCode.toString())
                 }
-                items.value.forEach{element ->
+            listItemSAP.forEach{element ->
                     //lista de precios
                     val listPrice: MutableList<Price> = mutableListOf()
                     element.ItemPrices.forEachIndexed { index, itemPrice ->
@@ -524,7 +617,6 @@ class SettingsViewModel : ViewModel() {
                 _uiState.update { currentState -> currentState.copy(
                     checkItem = true
                 ) }
-            }
 
             Log.e("sync","actividades sincronizados")
         }

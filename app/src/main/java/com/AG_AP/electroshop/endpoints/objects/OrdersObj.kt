@@ -31,4 +31,15 @@ object OrdersObj {
             false
         }
     }
+
+    suspend fun getOrdersExtenExten(urlInt: String, num: Int): Orders? {
+        RetrofitClient.baseUrl = urlInt
+        val apiService = RetrofitClient.retrofit.create(OrdersInterface::class.java)
+        return try {
+            apiService.getOrdersExten(num)
+        } catch (e: Exception) {
+            println(e.message)
+            null
+        }
+    }
 }
