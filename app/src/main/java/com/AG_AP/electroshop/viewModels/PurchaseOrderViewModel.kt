@@ -3,7 +3,7 @@ package com.AG_AP.electroshop.viewModels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.AG_AP.electroshop.firebase.OrderCRUD
+import com.AG_AP.electroshop.firebase.PurchaseOrderCRUD
 import com.AG_AP.electroshop.firebase.models.DocumentLineFireBase
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
 import com.AG_AP.electroshop.uiState.ArticleUiState
@@ -35,6 +35,14 @@ class PurchaseOrderViewModel : ViewModel(), ActionViewModel {
         _uiState.update { currentState ->
             currentState.copy(
                 CardCode = cardCode
+            )
+        }
+    }
+
+    fun changeDocNum(docNum: Int) {
+        _uiState.update {
+            currentState -> currentState.copy(
+                DocNum = docNum
             )
         }
     }
@@ -111,7 +119,68 @@ class PurchaseOrderViewModel : ViewModel(), ActionViewModel {
     }
 
     override fun find() {
-        TODO()
+        if (_uiState.value.DocNum == -1) {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    message = true,
+                    text = "Formato no válido"
+                )
+            }
+            return
+        }
+        viewModelScope.launch(Dispatchers.IO) {
+            PurchaseOrderCRUD.getObjectById(_uiState.value.DocNum) { dataAux ->
+                if (dataAux != null && dataAux is OrderFireBase) {
+                    val dataList = getDataFromList(dataAux.DocumentLines)
+                    val mutableDataList = DocumentLineForMutableList()
+
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            CardCode = dataAux.CardCode,
+                            CardName = dataAux.CardName,
+                            DocNum = dataAux.DocNum,
+                            DocDate = dataAux.DocDate,
+                            DocDueDate = dataAux.DocDueDate,
+                            TaxDate = dataAux.TaxDate,
+                            DiscountPercent = dataAux.DiscountPercent,
+                            DocumentLine = dataList,
+                            DocumentLineList = mutableDataList
+                        )
+                    }
+                } else {
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            message = true,
+                            text = "Pedido de compra no encontrador con número: ${_uiState.value.DocNum}"
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getDataFromList(list: List<DocumentLineFireBase>): MutableList<ArticleUiState?> {
+        val returnList: MutableList<ArticleUiState?> = mutableListOf()
+        list.forEach { data ->
+            val lineNum = data.LineNum
+            val itemCode = data.ItemCode
+            val itemDescription = data.ItemDescription
+            val quantity = data.Quantity
+            val price = data.Price
+            val discount = data.DiscountPercent
+
+            returnList.add(
+                ArticleUiState(
+                    lineNum,
+                    itemCode,
+                    itemDescription,
+                    quantity.toFloat(),
+                    price.toFloat(),
+                    discount.toFloat()
+                )
+            )
+        }
+        return returnList
     }
 
     override fun menssageFunFalse() {

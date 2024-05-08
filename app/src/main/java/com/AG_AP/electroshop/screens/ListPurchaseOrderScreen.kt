@@ -96,7 +96,7 @@ fun ScaffoldListPurchaseOrder(
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 title = {
-                    Text("Listado de pedidos")
+                    Text("Listado de pedidos de compra")
                 }
             )
         },
@@ -145,7 +145,7 @@ fun ListPurchaseOrderColumn(
     Text(
         modifier = Modifier.fillMaxWidth(),
         textAlign = TextAlign.Center,
-        text = "Listado de pedidos"
+        text = "Listado de pedidos de compra"
     )
     Spacer(modifier = Modifier.height(40.dp))
     LazyColumnPurchaseOrder(dataUiState.ListPurchaseOrder, navController)

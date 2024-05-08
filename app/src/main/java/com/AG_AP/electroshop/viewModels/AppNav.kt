@@ -134,7 +134,7 @@ fun AppNav(navController: NavHostController = rememberNavController(),context: C
             arguments = listOf(navArgument("id") { type = NavType.StringType })
         ) { backStackEntry ->
             val id = backStackEntry.arguments?.getString("id")
-            ScaffoldOrder(navController = navController, id = id)
+            ScaffoldPurchaseOrder(navController = navController, id = id)
         }
     }
 }

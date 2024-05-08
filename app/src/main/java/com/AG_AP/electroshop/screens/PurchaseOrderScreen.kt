@@ -61,7 +61,8 @@ import com.AG_AP.electroshop.viewModels.PurchaseOrderViewModel
 @Composable
 fun PurchaseOrderView(
     innerPadding: PaddingValues,
-    viewModel: PurchaseOrderViewModel/*, id: String?*/
+    viewModel: PurchaseOrderViewModel,
+    id: String?
 ) {
     val dataUiState by viewModel.uiState.collectAsState()
 
@@ -154,55 +155,58 @@ fun PurchaseOrderView(
                     .padding(top = 30.dp, end = 30.dp)
                     .background(MaterialTheme.colorScheme.background)
             ) {
-                Row {
-                    IconButton(
-                        modifier = Modifier
-                            .background(MaterialTheme.colorScheme.primary)
-                            .border(
-                                BorderStroke(0.5.dp, Color.Black)
-                            )
-                            .padding(end = 0.5.dp),
-                        onClick = { viewModel.deleteLine() }
-                    ) {
-                        Text(text = "-")
-                    }
-                    IconButton(
-                        modifier = Modifier
-                            .background(MaterialTheme.colorScheme.primary)
-                            .border(
-                                BorderStroke(0.5.dp, Color.Black)
-                            )
-                            .padding(start = 0.5.dp),
-                        onClick = { viewModel.addLine() }
-                    ) {
-                        Text(text = "+")
+                if (id != null && id.toInt() != -1) {
+                    Row {
+                        IconButton(
+                            modifier = Modifier
+                                .background(MaterialTheme.colorScheme.primary)
+                                .border(
+                                    BorderStroke(0.5.dp, Color.Black)
+                                )
+                                .padding(end = 0.5.dp),
+                            onClick = { viewModel.deleteLine() }
+                        ) {
+                            Text(text = "-")
+                        }
+                        IconButton(
+                            modifier = Modifier
+                                .background(MaterialTheme.colorScheme.primary)
+                                .border(
+                                    BorderStroke(0.5.dp, Color.Black)
+                                )
+                                .padding(start = 0.5.dp),
+                            onClick = { viewModel.addLine() }
+                        ) {
+                            Text(text = "+")
+                        }
                     }
                 }
-                TableDocumentLinePurchase(dataUiState, viewModel)
+            }
+            TableDocumentLinePurchase(dataUiState, viewModel)
 
-            }
-            Column {
-                /*if (dataUiState.message) {
-                    Snackbar(
-                        modifier = Modifier.padding(16.dp),
-                        action = {
-                            Button(
-                                onClick = {
-                                    viewModel.menssageFunFalse()
-                                }
-                            ) {
-                                Text("Cerrar")
+        }
+        Column {
+            /*if (dataUiState.message) {
+                Snackbar(
+                    modifier = Modifier.padding(16.dp),
+                    action = {
+                        Button(
+                            onClick = {
+                                viewModel.menssageFunFalse()
                             }
-                        },
-                        content = {
-                            Text(dataUiState.text)
+                        ) {
+                            Text("Cerrar")
                         }
-                    )
-                }*/
-            }
+                    },
+                    content = {
+                        Text(dataUiState.text)
+                    }
+                )
+            }*/
         }
     }
 }
+
 
 @Composable
 fun TableDocumentLinePurchase(
@@ -370,7 +374,7 @@ fun ScaffoldPurchaseOrder(
     id: String? = null
 ) {
     if (id != null) {
-        viewModel.changeName(id)
+        viewModel.changeDocNum(id.toInt())
         viewModel.refresh()
     }
     Scaffold(
@@ -429,7 +433,7 @@ fun ScaffoldPurchaseOrder(
         }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(start = 50.dp, top = 20.dp)) {
-            PurchaseOrderView(innerPadding, viewModel)
+            PurchaseOrderView(innerPadding, viewModel, id)
         }
     }
 }
