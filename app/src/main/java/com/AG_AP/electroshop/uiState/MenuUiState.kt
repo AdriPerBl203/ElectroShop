@@ -10,5 +10,5 @@ data class MenuUiState (
     val InfoDialog:String = "",
     val checkProgresCircular:Boolean = true,
     val TextOrList:Boolean = true,
-    val numRandom:Int = 4364
+    val listShow: MutableList<String> = mutableListOf()
 )

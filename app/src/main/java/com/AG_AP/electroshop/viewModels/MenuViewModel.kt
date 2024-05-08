@@ -426,35 +426,15 @@ class MenuViewModel : ViewModel() {
 
             viewModelScope.launch(Dispatchers.IO) {
                 upPurchaseOrders(false)
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        numRandom = Random.nextInt(1, 1001)
-                    )
-                }
             }
             viewModelScope.launch(Dispatchers.IO) {
                 upOrder(false)
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        numRandom = Random.nextInt(1, 1001)
-                    )
-                }
             }
             viewModelScope.launch(Dispatchers.IO) {
                 upActivities(false)
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        numRandom = Random.nextInt(1, 1001)
-                    )
-                }
             }
             viewModelScope.launch(Dispatchers.IO) {
                 upActivities(false)
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        numRandom = Random.nextInt(1, 1001)
-                    )
-                }
             }
             viewModelScope.launch(Dispatchers.IO) {
                 var aux = true
