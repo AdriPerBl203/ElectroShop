@@ -42,6 +42,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.AG_AP.electroshop.components.DatePicker
 import com.AG_AP.electroshop.components.DialogActivity
 import com.AG_AP.electroshop.viewModels.ActivityViewModel
 import java.util.Calendar
@@ -157,14 +158,9 @@ fun ActivityView(innerPadding: PaddingValues, viewModel: ActivityViewModel, id: 
                         .padding(8.dp),
                     label = { Text("Nota") }
                 )
-                OutlinedTextField(
-                    value = dataUiState.ActivityDate,
-                    onValueChange = { viewModel.changeActivityDate(it) },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    label = { Text("Fecha") }
-                )
+                DatePicker(label = "Fecha", dataUiState.ActivityDate) {
+                    viewModel.changeActivityDate(it)
+                }
                 OutlinedTextField(
                     value = dataUiState.ActivityTime,
                     onValueChange = { viewModel.changeActivityTime(it) },

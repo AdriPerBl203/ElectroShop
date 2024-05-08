@@ -55,29 +55,27 @@ fun DatePicker(label: String, value: String = "", callback: (String) -> Unit) {
             callback(fecha)
         }, anio, mes, dia
     )
-    Box(modifier = Modifier.fillMaxWidth()) {
-        Row {
-            OutlinedTextField(
-                value = newValue,
-                onValueChange = { fecha = it },
-                readOnly = true,
-                label = { Text(text = label) },
-                trailingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.DateRange,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(30.dp)
-                            .padding(5.dp)
-                            .clickable {
-                                mDatePickerDialog.show()
-                            }
-                    )
-                }
+
+    OutlinedTextField(
+        value = newValue,
+        onValueChange = { fecha = it },
+        readOnly = true,
+        label = { Text(text = label) },
+        trailingIcon = {
+            Icon(
+                imageVector = Icons.Filled.DateRange,
+                contentDescription = null,
+                modifier = Modifier
+                    .size(30.dp)
+                    .padding(5.dp)
+                    .clickable {
+                        mDatePickerDialog.show()
+                    }
             )
         }
-    }
+    )
 }
+
 
 fun convertirFormatoFecha(fecha: String): String {
     val partes = fecha.split("T")[0].split("-")

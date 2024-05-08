@@ -128,10 +128,11 @@ class MenuViewModel : ViewModel() {
                                     index,
                                     DocumentLineFireBase(
                                         it.ItemCode,
+                                        it.ItemDescription,
                                         it.Quantity,
                                         it.DiscountPercent,
                                         it.LineNum,
-                                        it.Price,
+                                        it.Price
                                     )
                                 )
                             }
@@ -218,10 +219,11 @@ class MenuViewModel : ViewModel() {
                                     index,
                                     DocumentLineFireBase(
                                         it.ItemCode,
+                                        it.ItemDescription,
                                         it.Quantity,
                                         it.DiscountPercent,
                                         it.LineNum,
-                                        it.Price,
+                                        it.Price
                                     )
                                 )
                             }
