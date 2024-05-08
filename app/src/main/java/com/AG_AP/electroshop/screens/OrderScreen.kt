@@ -1,5 +1,6 @@
 package com.AG_AP.electroshop.screens
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -12,10 +13,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.BottomAppBar
@@ -54,7 +58,7 @@ import com.AG_AP.electroshop.uiState.OrderUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel/*, id: String?*/) {
+fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String?) {
     val dataUiState by viewModel.uiState.collectAsState()
 
     Column(
@@ -108,7 +112,7 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel/*, id: Stri
                 )
 
                 OutlinedTextField(
-                    value = dataUiState.DiscountPercent,
+                    value = dataUiState.DiscountPercent.toString(),
                     onValueChange = { viewModel.changeDiscount(it) },
                     modifier = Modifier
                         .width(300.dp)
@@ -122,14 +126,13 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel/*, id: Stri
             }
 
             Column {
-                DatePicker("Fecha contabilizacion ") { fechaDocumento ->
+                DatePicker("Fecha contabilizacion ", dataUiState.TaxDate) { fechaDocumento ->
                     viewModel.changeTaxDate(fechaDocumento)
                 }
-
-                DatePicker("Fecha entrega ") { fechaDocumento ->
+                DatePicker("Fecha entrega ", dataUiState.DocDueDate) { fechaDocumento ->
                     viewModel.changeDocDueDate(fechaDocumento)
                 }
-                DatePicker("Fecha contabilizacion ") { fechaDocumento ->
+                DatePicker("Fecha documento ", dataUiState.DocDate) { fechaDocumento ->
                     viewModel.changeDocDate(fechaDocumento)
                 }
             }
@@ -146,30 +149,34 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel/*, id: Stri
                     .padding(top = 30.dp, end = 30.dp)
                     .background(MaterialTheme.colorScheme.background)
             ) {
-                Row {
-                    IconButton(
-                        modifier = Modifier
-                            .background(MaterialTheme.colorScheme.primary)
-                            .border(
-                                BorderStroke(0.5.dp, Color.Black)
-                            )
-                            .padding(end = 0.5.dp),
-                        onClick = { viewModel.deleteLine() }
-                    ) {
-                        Text(text = "-")
-                    }
-                    IconButton(
-                        modifier = Modifier
-                            .background(MaterialTheme.colorScheme.primary)
-                            .border(
-                                BorderStroke(0.5.dp, Color.Black)
-                            )
-                            .padding(start = 0.5.dp),
-                        onClick = { viewModel.addLine() }
-                    ) {
-                        Text(text = "+")
+                //TODO cuando sea inactivo el pedido no deja aumentar ni disminuir las lineas
+                if (id == null) {
+                    Row {
+                        IconButton(
+                            modifier = Modifier
+                                .background(MaterialTheme.colorScheme.primary)
+                                .border(
+                                    BorderStroke(0.5.dp, Color.Black)
+                                )
+                                .padding(end = 0.5.dp),
+                            onClick = { viewModel.deleteLine() }
+                        ) {
+                            Text(text = "-")
+                        }
+                        IconButton(
+                            modifier = Modifier
+                                .background(MaterialTheme.colorScheme.primary)
+                                .border(
+                                    BorderStroke(0.5.dp, Color.Black)
+                                )
+                                .padding(start = 0.5.dp),
+                            onClick = { viewModel.addLine() }
+                        ) {
+                            Text(text = "+")
+                        }
                     }
                 }
+
                 TableDocumentLineOrder(dataUiState, viewModel)
 
             }
@@ -199,10 +206,17 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel/*, id: Stri
 @Composable
 fun TableDocumentLineOrder(dataUiState: OrderUiState, viewModel: OrderViewModel) {
 
-    val numCols = 5
+    val numCols = 6
 
     // Datos de ejemplo para las cabeceras
-    val headers = listOf("Nº", "Nombre", "Cantidad", "Precio", "% de descuento")
+    val headers = listOf(
+        "Nº",
+        "Código Articulo",
+        "Descripción articulo",
+        "Cantidad",
+        "Precio",
+        "% de descuento"
+    )
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(numCols)
@@ -226,60 +240,116 @@ fun TableDocumentLineOrder(dataUiState: OrderUiState, viewModel: OrderViewModel)
         }
     }
 
-    LazyVerticalGrid(columns = GridCells.Fixed(5)) {
-        itemsIndexed(dataUiState.DocumentLineList) { index, it ->
-            Box(
-                modifier = Modifier
-                    .border(1.dp, MaterialTheme.colorScheme.primary)
-                    .background(MaterialTheme.colorScheme.secondaryContainer)
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
-                if (index % 5 == 1) {
-                    OutlinedTextField(
-                        value = "",
-                        onValueChange = { it },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.secondaryContainer)
-                            .height(50.dp)
-                    )
-                } else if (index % 5 == 2) {
-                    OutlinedTextField(
-                        value = "",
-                        onValueChange = { it },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.secondaryContainer)
-                            .height(50.dp)
-                    )
-                } else if (index % 5 == 3) {
-                    OutlinedTextField(
-                        value = "0.0",
-                        onValueChange = { it },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.secondaryContainer)
-                            .height(50.dp)
-                    )
-                } else if (index % 5 == 4) {
-                    OutlinedTextField(
-                        value = "0.0",
-                        onValueChange = { it },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                        suffix = { Text(text = "%") },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.secondaryContainer)
-                            .height(50.dp)
-                    )
-                } else {
+
+    LazyVerticalGrid(columns = GridCells.Fixed(numCols)) {
+        dataUiState.DocumentLineList.forEach { index, value ->
+            item {
+                Box(
+                    modifier = Modifier
+                        .border(1.dp, MaterialTheme.colorScheme.primary)
+                        .background(MaterialTheme.colorScheme.secondaryContainer)
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
                     Text(
-                        it,
+                        index.toString(),
                         Modifier
                             .height(50.dp)
-                            .wrapContentSize(),
+                            .wrapContentSize()
+                    )
+                }
+            }
+            item {
+                Box(
+                    modifier = Modifier
+                        .border(1.dp, MaterialTheme.colorScheme.primary)
+                        .background(MaterialTheme.colorScheme.secondaryContainer)
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    OutlinedTextField(
+                        value = value[1].toString(),
+                        onValueChange = { it },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.secondaryContainer)
+                            .height(50.dp)
+                    )
+                }
+            }
+
+            item {
+                Box(
+                    modifier = Modifier
+                        .border(1.dp, MaterialTheme.colorScheme.primary)
+                        .background(MaterialTheme.colorScheme.secondaryContainer)
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    OutlinedTextField(
+                        value = value[2].toString(),
+                        onValueChange = { it },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.secondaryContainer)
+                            .height(50.dp)
+                    )
+                }
+            }
+
+            item {
+                Box(
+                    modifier = Modifier
+                        .border(1.dp, MaterialTheme.colorScheme.primary)
+                        .background(MaterialTheme.colorScheme.secondaryContainer)
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    OutlinedTextField(
+                        value = value[3].toString(),
+                        onValueChange = { it },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.secondaryContainer)
+                            .height(50.dp)
+                    )
+                }
+            }
+
+            item {
+                Box(
+                    modifier = Modifier
+                        .border(1.dp, MaterialTheme.colorScheme.primary)
+                        .background(MaterialTheme.colorScheme.secondaryContainer)
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    OutlinedTextField(
+                        value = value[4].toString(),
+                        onValueChange = { it },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.secondaryContainer)
+                            .height(50.dp)
+                    )
+                }
+            }
+
+            item {
+                Box(
+                    modifier = Modifier
+                        .border(1.dp, MaterialTheme.colorScheme.primary)
+                        .background(MaterialTheme.colorScheme.secondaryContainer)
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    OutlinedTextField(
+                        value = value[5].toString(),
+                        onValueChange = { it },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.secondaryContainer)
+                            .height(50.dp)
                     )
                 }
             }
@@ -292,9 +362,13 @@ fun TableDocumentLineOrder(dataUiState: OrderUiState, viewModel: OrderViewModel)
 @Composable
 fun ScaffoldOrder(
     viewModel: OrderViewModel = viewModel(),
-    navController: NavHostController/*, id:String? =null*/
+    navController: NavHostController,
+    id: String? = null
 ) {
-
+    if (id != null) {
+        viewModel.changeDocNum(id.toInt())
+        viewModel.refresh()
+    }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -346,7 +420,7 @@ fun ScaffoldOrder(
         }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(start = 50.dp, top = 20.dp)) {
-            OrderView(innerPadding, viewModel)
+            OrderView(innerPadding, viewModel, id)
         }
     }
 }

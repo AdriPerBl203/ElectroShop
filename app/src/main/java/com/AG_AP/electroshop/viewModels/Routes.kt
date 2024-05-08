@@ -4,12 +4,20 @@ enum class Routes(val route: String) {
     ScreenLogin(route = "LoginScreen"),
     ScreenConfig(route = "SettingScreen"),
     ScreenMenu(route = "MenuScreen"),
+
     ScreenActivity(route = "ActivityScreen"),
     ScreenActivityAux(route = "ActivityScreen"),
-    BusinessPartner(route = "BusinessPartner"),
-    BusinessPartnerAux(route = "BusinessPartner"),
     ListActivity(route = "ListActivity"),
+
+    BusinessPartner(route = "BusinessPartner"),
     ScreenBusinessPartnerList(route = "BusinessPartnerList"),
+    BusinessPartnerAux(route = "BusinessPartner"),
+
     ScreenOrder(route = "Order"),
-    PurchaseOrderScreen(route = "PurchaseOrderScreen")
+    ScreenOrderList(route = "OrderList"),
+    ScreenOrderAux(route = "Order"),
+
+    PurchaseOrderScreen(route = "PurchaseOrderScreen"),
+    PurchaseOrderList(route = "PurchaseOrderList"),
+    PurchaseOrderAux(route = "PurchaseOrderScreen")
 }

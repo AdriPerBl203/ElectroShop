@@ -410,6 +410,7 @@ class SettingsViewModel : ViewModel() {
                             index,
                             DocumentLineFireBase(
                                 it.ItemCode,
+                                it.ItemDescription,
                                 it.Quantity,
                                 it.DiscountPercent,
                                 it.LineNum,
@@ -456,6 +457,7 @@ class SettingsViewModel : ViewModel() {
                             index,
                             DocumentLineFireBase(
                                 it.ItemCode,
+                                it.ItemDescription,
                                 it.Quantity,
                                 it.DiscountPercent,
                                 it.LineNum,

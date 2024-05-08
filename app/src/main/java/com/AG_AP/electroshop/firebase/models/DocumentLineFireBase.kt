@@ -2,6 +2,7 @@ package com.AG_AP.electroshop.firebase.models
 
 data class DocumentLineFireBase(
     val ItemCode: String,
+    val ItemDescription: String,
     val Quantity: Double,
     val DiscountPercent: Double,
     val LineNum: Int,
@@ -10,6 +11,7 @@ data class DocumentLineFireBase(
     fun toHashMap(): HashMap<String, Any> {
         val hashMap = HashMap<String, Any>()
         hashMap["ItemCode"] = this.ItemCode
+        hashMap["ItemDescription"] = this.ItemDescription
         hashMap["Quantity"] = this.Quantity
         hashMap["DiscountPercent"] = this.DiscountPercent
         hashMap["LineNum"] = this.LineNum

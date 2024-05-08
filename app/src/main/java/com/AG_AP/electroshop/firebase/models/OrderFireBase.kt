@@ -12,6 +12,7 @@ data class OrderFireBase(
     val TaxDate: String,
     val DiscountPercent: Double,
     val DocumentLines: List<DocumentLineFireBase>,
+    //TODO slpcode
     val SAP: Boolean
 ){
     fun toHashMap(): HashMap<String, Any> {

@@ -308,7 +308,7 @@ fun MenuBody(
                             modifier= Modifier
                                 .padding(30.dp)
                                 .width(200.dp),
-                            onClick = { /* TODO*/ }
+                            onClick = { navController.navigate(route = Routes.ScreenOrderList.route) }
                         ) {
                             Text("Historial pedido cliente")
                         }
@@ -332,7 +332,7 @@ fun MenuBody(
                             modifier= Modifier
                                 .padding(30.dp)
                                 .width(200.dp),
-                            onClick = { /* TODO*/ }
+                            onClick = { navController.navigate(route = Routes.PurchaseOrderList.route) }
                         ) {
                             Text("Historial pedido compra")
                         }
