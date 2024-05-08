@@ -21,6 +21,17 @@ object BusinessPartnersObj {
         }
     }
 
+    suspend fun getBusinessPartnersExten(urlInt: String,num: Int): BusinessPartners? {
+        RetrofitClient.baseUrl = urlInt
+        val apiService = RetrofitClient.retrofit.create(BusinessPartnersInterface::class.java)
+        return try {
+            apiService.getBusinessPartnersExten(num)
+        } catch (e: Exception) {
+            println(e.message)
+            null
+        }
+    }
+
     suspend fun postBusinessPartners(urlInt: String, data:PostBusinesspartner): ReturnBusinessPartner? {
         RetrofitClient.baseUrl = urlInt
         val apiService = RetrofitClient.retrofit.create(BusinessPartnersInterface::class.java)

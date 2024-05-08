@@ -16,4 +16,16 @@ object ItemObj {
             null
         }
     }
+
+    suspend fun getItemsExten(urlInt: String,id:Int): GetItems? {
+        RetrofitClient.baseUrl = urlInt
+        val apiService = RetrofitClient.retrofit.create(ItemInterface::class.java)
+        var request: GetItems? = null
+        return try {
+            apiService.getItemsExten(id)
+        } catch (e: Exception) {
+            println(e.message)
+            null
+        }
+    }
 }

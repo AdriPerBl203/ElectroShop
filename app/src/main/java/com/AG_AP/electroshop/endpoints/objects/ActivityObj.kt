@@ -28,4 +28,15 @@ object ActivityObj {
             false
         }
     }
+
+    suspend fun getActivitiesExten(rulUse: String, num: Int): Activity? {
+        RetrofitClient.baseUrl = rulUse
+        val apiService = RetrofitClient.retrofit.create(ActivityInterface::class.java)
+        return try {
+            apiService.getActivitiesExten(num)
+        } catch (e: Exception) {
+            println(e.message)
+            null
+        }
+    }
 }
