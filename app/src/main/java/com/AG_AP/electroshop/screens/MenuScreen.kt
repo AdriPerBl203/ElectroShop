@@ -78,6 +78,7 @@ fun MenuFrontView(
             infoDialog= dataUiState.InfoDialog,
             actionItemList = {viewModel.closedDialog()},
             showIndicator = dataUiState.checkProgresCircular,
+            TextOrList= dataUiState.TextOrList,
             exit = {viewModel.changeCheckProgresCircular()}
         )
     }
