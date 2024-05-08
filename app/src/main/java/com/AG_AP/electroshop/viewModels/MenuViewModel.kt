@@ -36,6 +36,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.random.Random
 
 class MenuViewModel : ViewModel() {
 
@@ -411,11 +412,15 @@ class MenuViewModel : ViewModel() {
 
     fun changeCheckProgresCircular(){
         _uiState.update { currentState -> currentState.copy(
-            checkProgresCircular = true
+            checkProgresCircular = true,
+            TextOrList = true
         ) }
     }
 
     fun upTotal() {
+        _uiState.update { currentState -> currentState.copy(
+            TextOrList = false
+        ) }
         viewModelScope.launch() {
             ListCheckTotal.resetList()
             val dataLogin = Login(Config.dataBase, Config.password, Config.login)
