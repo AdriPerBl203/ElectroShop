@@ -1,5 +1,7 @@
 package com.AG_AP.electroshop.uiState
 
+import java.util.concurrent.ConcurrentHashMap
+
 data class OrderUiState(
     val CardCode: String = "",
     val CardName: String = "",
@@ -26,7 +28,7 @@ data class OrderUiState(
         )
     ).toMutableList(),
     //val DocumentLineList: MutableList<String> = mutableListOf(),
-    val DocumentLineList: HashMap<Int, MutableList<String>> = HashMap(),
+    val DocumentLineList: ConcurrentHashMap<Int, MutableList<String>> = ConcurrentHashMap(),
     val trash: Int = 0,
     val message: Boolean = false,
     val progress: Boolean = false,

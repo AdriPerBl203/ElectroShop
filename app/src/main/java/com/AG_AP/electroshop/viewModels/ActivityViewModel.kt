@@ -109,7 +109,6 @@ class ActivityViewModel : ViewModel(),ActionViewModel {
     }
 
     fun changeClgCode(it: String) {
-        Log.e("Pruebas", it)
         _uiState.update { currentState -> currentState.copy(
             ClgCode = it
         ) }
@@ -170,7 +169,7 @@ class ActivityViewModel : ViewModel(),ActionViewModel {
                 ActivityCRUD.deleteActivityById(ClgCode)
             }catch (e:Exception){
                 println(e.message)
-                text= "Hubo un error con la actuzalicacion de la actividad."
+                text= "Hubo un error con el borrado de la actividad."
             }
             _uiState.update { currentState -> currentState.copy(
                 message = true,
