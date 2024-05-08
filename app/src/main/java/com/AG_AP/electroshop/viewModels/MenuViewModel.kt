@@ -36,6 +36,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.random.Random
 
 class MenuViewModel : ViewModel() {
 
@@ -409,11 +410,15 @@ class MenuViewModel : ViewModel() {
 
     fun changeCheckProgresCircular(){
         _uiState.update { currentState -> currentState.copy(
-            checkProgresCircular = true
+            checkProgresCircular = true,
+            TextOrList = true
         ) }
     }
 
     fun upTotal() {
+        _uiState.update { currentState -> currentState.copy(
+            TextOrList = false
+        ) }
         viewModelScope.launch() {
             ListCheckTotal.resetList()
             val dataLogin = Login(Config.dataBase, Config.password, Config.login)
@@ -421,15 +426,35 @@ class MenuViewModel : ViewModel() {
 
             viewModelScope.launch(Dispatchers.IO) {
                 upPurchaseOrders(false)
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        numRandom = Random.nextInt(1, 1001)
+                    )
+                }
             }
             viewModelScope.launch(Dispatchers.IO) {
                 upOrder(false)
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        numRandom = Random.nextInt(1, 1001)
+                    )
+                }
             }
             viewModelScope.launch(Dispatchers.IO) {
                 upActivities(false)
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        numRandom = Random.nextInt(1, 1001)
+                    )
+                }
             }
             viewModelScope.launch(Dispatchers.IO) {
                 upActivities(false)
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        numRandom = Random.nextInt(1, 1001)
+                    )
+                }
             }
             viewModelScope.launch(Dispatchers.IO) {
                 var aux = true

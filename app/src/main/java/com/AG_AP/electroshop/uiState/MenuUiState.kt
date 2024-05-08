@@ -8,5 +8,7 @@ data class MenuUiState (
     val pedidoCO:String ="N",
     val dialog:Boolean =false,
     val InfoDialog:String = "",
-    val checkProgresCircular:Boolean = true
+    val checkProgresCircular:Boolean = true,
+    val TextOrList:Boolean = true,
+    val numRandom:Int = 4364
 )
