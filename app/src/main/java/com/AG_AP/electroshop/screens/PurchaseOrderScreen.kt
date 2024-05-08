@@ -396,25 +396,25 @@ fun ScaffoldPurchaseOrder(
             ) {
                 Button(
                     modifier = Modifier.padding(start = 15.dp, end = 15.dp),
-                    onClick = { /*viewModel.guardar(false)*/ }
+                    onClick = { viewModel.guardar(false) }
                 ) {
                     Text(text = "Añadir y nuevo")
                 }
                 Button(
                     modifier = Modifier.padding(start = 15.dp, end = 15.dp),
-                    onClick = { /*viewModel.guardar(true)*/ }
+                    onClick = { viewModel.guardar(true) }
                 ) {
                     Text(text = "Añadir y ver")
                 }
                 Button(
                     modifier = Modifier.padding(start = 15.dp, end = 15.dp),
-                    onClick = { /*viewModel.update()*/ }
+                    onClick = { viewModel.update() }
                 ) {
                     Text(text = "Actualizar")
                 }
                 Button(
                     modifier = Modifier.padding(start = 15.dp, end = 15.dp),
-                    onClick = { /*viewModel.borrar()*/ }
+                    onClick = { viewModel.borrar() }
                 ) {
                     Text(text = "Borrar")
                 }

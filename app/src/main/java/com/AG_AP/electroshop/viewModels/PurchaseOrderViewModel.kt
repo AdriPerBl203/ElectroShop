@@ -3,6 +3,7 @@ package com.AG_AP.electroshop.viewModels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.AG_AP.electroshop.firebase.OrderCRUD
 import com.AG_AP.electroshop.firebase.PurchaseOrderCRUD
 import com.AG_AP.electroshop.firebase.models.DocumentLineFireBase
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
@@ -14,6 +15,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.concurrent.ConcurrentHashMap
 
 class PurchaseOrderViewModel : ViewModel(), ActionViewModel {
 
@@ -111,11 +113,103 @@ class PurchaseOrderViewModel : ViewModel(), ActionViewModel {
     }
 
     override fun update() {
-        TODO("Not yet implemented")
+        val cardCode = _uiState.value.CardCode
+        val cardName = _uiState.value.CardName
+        val docNum = _uiState.value.DocNum
+        val docDate = _uiState.value.DocDate
+        val docDueDate = _uiState.value.DocDueDate
+        val taxDate = _uiState.value.TaxDate
+        val discountPercent = _uiState.value.DiscountPercent
+        _uiState.update { currentState ->
+            currentState.copy(
+                DocumentLineList = trimDocumentLineList()
+            )
+        }
+        val documentLine = hashMapToDocumentLine()
+        var text = "Pedido de compra actualizado"
+
+        val orderFireBase = OrderFireBase(
+            null,
+            docNum,
+            cardCode,
+            cardName,
+            docDate,
+            docDueDate,
+            taxDate,
+            discountPercent,
+            documentLine,
+            false
+        )
+
+        viewModelScope.launch {
+            try {
+                PurchaseOrderCRUD.updateObjectById(orderFireBase)
+            } catch (e: Exception) {
+                Log.e("Errores", e.stackTraceToString())
+                text = "Hubo un error actualizando el pedido de compra"
+            }
+
+            _uiState.update { currentState ->
+                currentState.copy(
+                    message = true,
+                    text = text
+                )
+            }
+            //TODO ACABAR mostrando las cosas
+        }
     }
 
     override fun borrar() {
-        TODO("Not yet implemented")
+        val DocNum = _uiState.value.DocNum
+        var text = "Pedido de compra eliminado"
+
+        viewModelScope.launch {
+            try {
+                PurchaseOrderCRUD.deleteObjectById(DocNum.toString())
+            } catch (e: Exception) {
+                Log.e("Errores", e.stackTraceToString())
+                text = "Hubo un error con el borrado del pedido de compra"
+            }
+            val emptyList: MutableList<ArticleUiState?> = listOf(
+                ArticleUiState(
+                    0, "", "", 0.0F, 0.0F, 0.0F
+                ),
+                ArticleUiState(
+                    1, "", "", 0.0F, 0.0F, 0.0F
+                ),
+                ArticleUiState(
+                    2, "", "", 0.0F, 0.0F, 0.0F
+                ),
+                ArticleUiState(
+                    3, "", "", 0.0F, 0.0F, 0.0F
+                ),
+                ArticleUiState(
+                    4, "", "", 0.0F, 0.0F, 0.0F
+                )
+            ).toMutableList()
+
+
+            val documentLineList = DocumentLineForMutableList(emptyList)
+
+            _uiState.update { currentState ->
+                currentState.copy(
+                    message = true,
+                    text = text,
+                    progress = false,
+
+                    CardCode = "",
+                    CardName = "",
+                    DocNum = -1,
+                    DocDate = "",
+                    DocDueDate = "",
+                    TaxDate = "",
+                    DiscountPercent = 0.0,
+                    DocumentLine = emptyList,
+                    DocumentLineList = documentLineList,
+                    trash = 0
+                )
+            }
+        }
     }
 
     override fun find() {
@@ -211,7 +305,7 @@ class PurchaseOrderViewModel : ViewModel(), ActionViewModel {
 
     }
 
-    private fun DocumentLineForMutableList(): HashMap<Int, MutableList<String>> {
+    private fun DocumentLineForMutableList(): ConcurrentHashMap<Int, MutableList<String>> {
         _uiState.value.DocumentLineList.clear()
 
         _uiState.value.DocumentLine.forEachIndexed { index, element ->
@@ -244,6 +338,112 @@ class PurchaseOrderViewModel : ViewModel(), ActionViewModel {
         }
 
         return _uiState.value.DocumentLineList
+    }
+
+    private fun DocumentLineForMutableList(list: MutableList<ArticleUiState?>): ConcurrentHashMap<Int, MutableList<String>> {
+        _uiState.value.DocumentLineList.clear()
+
+        list.forEachIndexed { index, element ->
+            if (element != null) {
+                val listToAdd = element.let {
+                    if (it.ItemDescription.toString() == "null") {
+                        val ItemDescription = ""
+                        mutableListOf(
+                            it.LineNum.toString(),
+                            it.ItemCode.toString(),
+                            ItemDescription,
+                            it.Quantity.toString(),
+                            it.Price.toString(),
+                            it.DiscountPercent.toString()
+                        )
+                    } else {
+                        mutableListOf(
+                            it.LineNum.toString(),
+                            it.ItemCode.toString(),
+                            it.ItemDescription.toString(),
+                            it.Quantity.toString(),
+                            it.Price.toString(),
+                            it.DiscountPercent.toString()
+                        )
+                    }
+
+                }
+                _uiState.value.DocumentLineList[index] = listToAdd
+            }
+        }
+
+        return _uiState.value.DocumentLineList
+    }
+
+    private fun trimDocumentLineList(): ConcurrentHashMap<Int, MutableList<String>> {
+        val lineToDelete = ArticleUiState(
+            0, "", "", 0.0F, 0.0F, 0.0F
+        )
+
+        val actualLineList = _uiState.value.DocumentLineList
+        val listAfterDelete = _uiState.value.DocumentLineList
+
+        Log.i("Pruebas", "Datos actuales: ${actualLineList.toString()}")
+        actualLineList.forEach { (index, value) ->
+            Log.i("Pruebas", "Datos dentro ${value.toString()}")
+
+            var quantityToCompare = 5
+            Log.i("Pruebas", "Datos de data: ${value.toString()}")
+
+            if (lineToDelete.ItemCode == value[1].toString()) {
+                quantityToCompare--
+            }
+
+            if (lineToDelete.ItemDescription == value[2].toString()) {
+                quantityToCompare--
+            }
+
+            if (lineToDelete.Quantity.toString() == value[3].toString()) {
+                quantityToCompare--
+            }
+
+            if (lineToDelete.Price.toString() == value[4].toString()) {
+                quantityToCompare--
+            }
+
+            if (lineToDelete.DiscountPercent.toString() == value[5].toString()) {
+                quantityToCompare--
+            }
+
+
+            if (quantityToCompare <= 0) {
+                listAfterDelete.remove(index)
+            }
+        }
+
+        return listAfterDelete
+    }
+
+    private fun hashMapToDocumentLine(): List<DocumentLineFireBase> {
+        val listDocumentLineFireBase: MutableList<DocumentLineFireBase> = mutableListOf()
+
+        val documentLineList = _uiState.value.DocumentLineList
+
+
+        documentLineList.forEach { (index, value) ->
+            val itemCode = value[1]
+            val itemDescription = value[2]
+            val quantity = value[3].toDouble()
+            val price = value[4].toDouble()
+            val discountPercent = value[5].toDouble()
+
+            val newDocumentLine = DocumentLineFireBase(
+                itemCode,
+                itemDescription,
+                quantity,
+                discountPercent,
+                index,
+                price
+            )
+            listDocumentLineFireBase.add(newDocumentLine)
+        }
+
+        return listDocumentLineFireBase.toList()
     }
 
     fun deleteLine() {

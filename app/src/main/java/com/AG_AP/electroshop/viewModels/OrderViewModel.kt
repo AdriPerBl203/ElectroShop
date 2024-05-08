@@ -93,7 +93,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
                 OrderCRUD.deleteObjectById(DocNum.toString())
             } catch (e: Exception) {
                 Log.e("Errores", e.stackTraceToString())
-                text = "Hubo un error con el borrado de la orden"
+                text = "Hubo un error con el borrado del pedido"
             }
             val emptyList: MutableList<ArticleUiState?> = listOf(
                 ArticleUiState(
