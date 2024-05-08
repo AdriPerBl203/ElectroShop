@@ -1,17 +1,16 @@
 package com.AG_AP.electroshop.screens
-/*
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
@@ -23,6 +22,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
@@ -36,9 +36,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.AG_AP.electroshop.components.DialogCustomBusinessPartner
+import com.AG_AP.electroshop.firebase.models.ItemType
 import com.AG_AP.electroshop.viewModels.ItemViewModel
 
 
@@ -50,7 +54,6 @@ fun ArticleView(innerPadding: PaddingValues, viewModel: ItemViewModel, id: Strin
     Column(
         modifier = Modifier
             .padding(innerPadding)
-            .verticalScroll(rememberScrollState())
     ) {
         Row(
             /*modifier= Modifier
@@ -69,43 +72,78 @@ fun ArticleView(innerPadding: PaddingValues, viewModel: ItemViewModel, id: Strin
                     readOnly = true
                 )
                 OutlinedTextField(
-                    value = dataUiState.ItemDescription,
+                    value = dataUiState.itemName,
                     onValueChange = { viewModel.changeItemName(it) },
                     modifier = Modifier
                         .width(300.dp)
                         .padding(8.dp),
                     label = { Text("Descripción de item") }
                 )
+
+                val coffeeDrinks = ItemType.entries //FIXME arreglar el porque no sale el nombre completo
+                var expanded by remember { mutableStateOf(false) }
+
+                ExposedDropdownMenuBox(
+                    expanded = expanded,
+                    onExpandedChange = {
+                        expanded = !expanded
+                    }
+                ) {
+                    TextField(
+                        value = dataUiState.itemType.name,
+                        onValueChange = {},
+                        readOnly = true,
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                        modifier = Modifier.menuAnchor()
+                    )
+
+                    ExposedDropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        coffeeDrinks.forEach { item ->
+                            DropdownMenuItem(
+                                text = { Text(text = item.name) },
+                                onClick = {
+                                    viewModel.changeItemType(item)
+                                    expanded = false
+                                }
+                            )
+                        }
+                    }
+                }
+
                 OutlinedTextField(
-                    value = dataUiState.Quantity,
-                    onValueChange = { viewModel.changeQuantity(it) },
+                    value = dataUiState.mainSupplier,
+                    onValueChange = { viewModel.changeMainSupplier(it) },
                     modifier = Modifier
                         .width(300.dp)
                         .padding(8.dp),
-                    label = { Text("Cantidad") },
-
-                )
-
-                OutlinedTextField(
-                    value = dataUiState.U_SEIPEDIDOCLIENTE,
-                    onValueChange = { viewModel.changePedidoCliente(it) },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    label = { Text("Asociar pedido de cliente") },
+                    label = { Text("Proveedor principal") },
                     readOnly = true,
-                    trailingIcon={
+                    trailingIcon = {
                         IconButton(
                             onClick = {
-                                viewModel.showDialogOrder()
+                                viewModel.changeShowDialog(true)
                             }
                         ) {
-                            Icon(Icons.Filled.Add, contentDescription = "Shopping Cart Icon")
+                            Icon(Icons.Filled.Add, contentDescription = "+ Icon")
                         }
                     }
                 )
+                if (dataUiState.showDialog) {
+                    DialogCustomBusinessPartner(onDismissRequest = {
+                        viewModel.changeShowDialog(
+                            false
+                        )
+                    }) {
+                        if (it != null) {
+                            viewModel.changeMainSupplier(it.CardCode)
+                        }
+                    }
+                }
             }
-
+            /* TODO lista de precipos
             Column {
                 val priority = arrayOf("Bajo", "Normal", "Alto")
                 var expandedTwo by remember { mutableStateOf(false) }
@@ -117,7 +155,7 @@ fun ArticleView(innerPadding: PaddingValues, viewModel: ItemViewModel, id: Strin
                         .padding(8.dp),
                     label = { Text("Hora fin") },
                     readOnly = true,
-                    trailingIcon={
+                    trailingIcon = {
                         IconButton(
                             onClick = {
                                 DialogStartEnd.show()
@@ -127,117 +165,111 @@ fun ArticleView(innerPadding: PaddingValues, viewModel: ItemViewModel, id: Strin
                         }
                     }
                 )
-                OutlinedTextField(
-                    value = dataUiState.CardCode,
-                    onValueChange = { viewModel.changeCardCode(it) },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    label = { Text("Código cliente") }
+
+             */
+
+            Column (
+                modifier = Modifier.padding(10.dp)
+            ) {
+                Text(
+                    text = "¿Controlar numeros de serie?"
                 )
-                OutlinedTextField(
-                    value = dataUiState.Tel,
-                    onValueChange = { viewModel.changeTel(it) },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    label = { Text("Teléfono") }
-                )
-                ExposedDropdownMenuBox(
-                    expanded = expandedTwo,
-                    onExpandedChange = {
-                        expandedTwo = !expandedTwo
-                    }
-                ) {
-                    TextField(
-                        value = dataUiState.Priority,
-                        onValueChange = {},
-                        readOnly = true,
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedTwo) },
-                        modifier = Modifier.menuAnchor()
+                Row(Modifier.selectableGroup()) {
+                    RadioButton(
+                        selected = dataUiState.manageSerialNumbers,
+                        onClick = { viewModel.changeManageSerialNumbers(true) }
+                    )
+                    Text(
+                        text = "Si",
+                        modifier = Modifier
+                            .padding(top = 13.dp)
                     )
 
-                    ExposedDropdownMenu(
-                        expanded = expandedTwo,
-                        onDismissRequest = { expandedTwo = false }
-                    ) {
-                        priority.forEach { item ->
-                            DropdownMenuItem(
-                                text = { Text(text = item) },
-                                onClick = {
-                                    viewModel.changePriority(item)
-                                    expandedTwo = false
-                                }
-                            )
-                        }
-                    }
+                    Spacer(
+                        modifier = Modifier
+                            .padding(start = 10.dp)
+                    )
+
+                    RadioButton(
+                        selected = !dataUiState.manageSerialNumbers,
+                        onClick = { viewModel.changeManageSerialNumbers(false) }
+                    )
+                    Text(
+                        text = "No",
+                        modifier = Modifier
+                            .padding(top = 13.dp)
+                    )
                 }
-
-                OutlinedTextField(
-                    value = dataUiState.U_SEIPEDIDOCOMPRAS,
-                    onValueChange = { viewModel.changePedidoCompra(it) },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    label = { Text("Asociar pedido de compra") },
-                    readOnly = true,
-                    trailingIcon={
-                        IconButton(
-                            onClick = {
-                                viewModel.showDialogPurchaseOrder()
-                            }
-                        ) {
-                            Icon(Icons.Filled.Add, contentDescription = "Shopping Cart Icon")
-                        }
-                    }
-                )
-
             }
-            Column {
-                OutlinedTextField(
-                    value = dataUiState.ClgCode,
-                    onValueChange = { viewModel.changeClgCode(it) },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    label = { Text("Id") }
+
+            Column (
+                modifier = Modifier.padding(10.dp)
+            ) {
+                Text(
+                    text = "¿Autocrear numeros de serie?"
                 )
-            }
-        }
-        Column {
-            if (dataUiState.message) {
-                Snackbar(
-                    modifier = Modifier.padding(16.dp),
-                    action = {
-                        Button(
-                            onClick = {
-                                viewModel.menssageFunFalse()
-                            }
-                        ) {
-                            Text("Cerrar")
-                        }
-                    },
-                    content = {
-                        Text(dataUiState.text)
-                    }
-                )
+                Row(Modifier.selectableGroup()) {
+                    RadioButton(
+                        selected = dataUiState.autoCreateSerialNumbersOnRelease,
+                        onClick = { viewModel.changeAutoCreateSerialNumbersOnRelease(true) }
+                    )
+                    Text(
+                        text = "Si",
+                        modifier = Modifier
+                            .padding(top = 13.dp)
+                    )
+
+                    Spacer(
+                        modifier = Modifier
+                            .padding(top = 13.dp)
+                    )
+
+                    RadioButton(
+                        selected = !dataUiState.autoCreateSerialNumbersOnRelease,
+                        onClick = { viewModel.changeAutoCreateSerialNumbersOnRelease(false) }
+                    )
+                    Text(
+                        text = "No",
+                        modifier = Modifier
+                            .padding(top = 13.dp)
+                    )
+                }
             }
         }
     }
 
+    Column {
+        if (dataUiState.message) {
+            Snackbar(
+                modifier = Modifier.padding(16.dp),
+                action = {
+                    Button(
+                        onClick = {
+                            viewModel.menssageFunFalse()
+                        }
+                    ) {
+                        Text("Cerrar")
+                    }
+                },
+                content = {
+                    Text(dataUiState.text)
+                }
+            )
+        }
+    }
 }
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScaffoldArticle(
+fun ScaffoldItem(
     viewModel: ItemViewModel = viewModel(),
     navController: NavHostController,
     id: String? = null
 ) {
     if (!id.isNullOrEmpty()) {
         viewModel.changeItemCode(id)
-        viewModel.refreshScreen()
+        viewModel.refresh()
     }
     Scaffold(
         topBar = {
@@ -247,7 +279,7 @@ fun ScaffoldArticle(
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 title = {
-                    Text("Gestión de actividad")
+                    Text("Gestión de articulos")
                 }
             )
         },
@@ -290,7 +322,7 @@ fun ScaffoldArticle(
         },
         floatingActionButton = {
             FloatingActionButton(onClick = { viewModel.find() }) {
-                Icon(Icons.Default.Add, contentDescription = "Buscar")
+                Icon(Icons.Default.Search, contentDescription = "Buscar")
             }
         }
     ) { innerPadding ->
@@ -299,5 +331,3 @@ fun ScaffoldArticle(
         }
     }
 }
-
- */

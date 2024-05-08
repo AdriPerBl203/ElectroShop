@@ -1,6 +1,8 @@
 package com.AG_AP.electroshop.viewModels
-/*
+
 import androidx.lifecycle.ViewModel
+import com.AG_AP.electroshop.firebase.models.ItemType
+import com.AG_AP.electroshop.firebase.models.Price
 import com.AG_AP.electroshop.uiState.ItemUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -11,6 +13,10 @@ class ItemViewModel : ViewModel(), ActionViewModel {
 
     private val _uiState = MutableStateFlow(ItemUiState())
     val uiState: StateFlow<ItemUiState> = _uiState.asStateFlow()
+
+    fun refresh() {
+        TODO()
+    }
 
     fun changeItemCode(itemCode: String) {
         _uiState.update { currentState ->
@@ -28,36 +34,60 @@ class ItemViewModel : ViewModel(), ActionViewModel {
         }
     }
 
-    fun changeQuantity(quantity: Float) {
+    fun changeItemType(itemType: ItemType) {
         _uiState.update { currentState ->
             currentState.copy(
-                Quantity = quantity
+                itemType = itemType
             )
         }
     }
 
-    fun changePrice(price: Float) {
+    fun changeMainSupplier(mainSupplier: String) {
         _uiState.update { currentState ->
             currentState.copy(
-                Price = price
+                mainSupplier = mainSupplier
             )
         }
     }
 
-    fun changeDiscountPercent(discountPercent: Float) {
+    fun changeItemPrice(priceLists: List<Price>?) {
         _uiState.update { currentState ->
             currentState.copy(
-                DiscountPercent = discountPercent
+                itemPrice = priceLists
+            )
+        }
+    }
+
+    fun changeManageSerialNumbers(manageSerialNumbers: Boolean) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                manageSerialNumbers = manageSerialNumbers
+            )
+        }
+    }
+
+    fun changeAutoCreateSerialNumbersOnRelease(autoCreateSerialNumbers: Boolean) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                autoCreateSerialNumbersOnRelease = autoCreateSerialNumbers
+            )
+        }
+    }
+
+    fun changeShowDialog(boolean: Boolean) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                showDialog = boolean
             )
         }
     }
 
     override fun guardar(data: Boolean) {
-        TODO("Not yet implemented")
+        TODO("Not yet implemented, controlar los booleanos")
     }
 
     override fun update() {
-        TODO("Not yet implemented")
+        TODO("Not yet implemented, controlar los booleanos")
     }
 
     override fun borrar() {
@@ -73,4 +103,3 @@ class ItemViewModel : ViewModel(), ActionViewModel {
     }
 }
 
- */

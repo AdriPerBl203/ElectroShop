@@ -339,50 +339,32 @@ fun MenuBody(
                         }
                     }
                 }
-            }
-        }
-    }
-}
 
+                Row {
+                    if(dataUiState.articulo == "S"){
+                        ElevatedButton(
+                            modifier= Modifier
+                                .padding(30.dp)
+                                .width(200.dp),
+                            onClick = { navController.navigate(route = Routes.ItemScreen.route) }
+                        ) {
+                            Text("Articulos")
+                        }
 
-/**
- * Method that contains drawer content
- */
-@Composable
-private fun DrawerContent(closeDrawer: () -> Unit) {
-    Column {
-        sections.forEach { section ->
-            TextButton(
-                onClick = closeDrawer,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    Text(
-                        text = section
-                    )
+                        ElevatedButton(
+                            modifier= Modifier
+                                .padding(30.dp)
+                                .width(200.dp),
+                            onClick = { navController.navigate(route = Routes.ItemScreenList.route) }
+                        ) {
+                            Text("Historial de articulos")
+                        }
+                    }
                 }
             }
         }
     }
 }
-
-//TODO Sacar a otra clase
-val sections = listOf(
-    "Interlocutores",
-    "Pedidos",
-    "Articulos",
-    "Pedidos",
-    "Compra",
-    "Actividades"
-)
-
-
-// TODO funcion que muestre la cantidad de acciones disponibles con un array
 
 @Preview(
     showBackground = true,
