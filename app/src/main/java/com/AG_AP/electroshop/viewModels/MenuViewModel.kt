@@ -27,6 +27,7 @@ import com.AG_AP.electroshop.firebase.models.BusinessPartner
 import com.AG_AP.electroshop.firebase.models.DocumentLineFireBase
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
 import com.AG_AP.electroshop.functions.Config
+import com.AG_AP.electroshop.functions.ListCheckTotal
 import com.AG_AP.electroshop.functions.SessionObj
 import com.AG_AP.electroshop.uiState.MenuUiState
 import kotlinx.coroutines.Dispatchers
@@ -73,11 +74,13 @@ class MenuViewModel : ViewModel() {
         ) }
     }
 
-    fun upOrder() {
+    fun upOrder(bol: Boolean) {
         OrderCRUD.getAllObject { list ->
             viewModelScope.launch() {
                 val dataLogin = Login(Config.dataBase, Config.password, Config.login)
-                LoginObj.loginAcessTwoversion(dataLogin, Config.rulUse)
+                if(bol){
+                    LoginObj.loginAcessTwoversion(dataLogin, Config.rulUse)
+                }
                 if (list != null) {
                     val listAux = list as MutableList<OrderFireBase>
                     for (x in listAux) {
@@ -93,10 +96,6 @@ class MenuViewModel : ViewModel() {
                                 )
                                 auxNum++
                             }
-                            /*val documentLines = listOf(
-                                DocumentLine(0.1, "AR00001", 0, 50.0, 2),
-                                DocumentLine(0.05, "AR00002", 1, 30.0, 1)
-                            )*/
                             // Crear una instancia de PostOrder
                             val postOrder = PostOrder(
                                 CardCode = x.CardCode,
@@ -150,10 +149,13 @@ class MenuViewModel : ViewModel() {
                             )
                             OrderCRUD.insert(orderInsert)
                         }
-                        LoginObj.logout(Config.rulUse)
-                        _uiState.update { currentState -> currentState.copy(
-                            checkProgresCircular = false
-                        ) }
+                        ListCheckTotal.addInfo("Pedido cliente actualizadas")
+                        if(bol){
+                            LoginObj.logout(Config.rulUse)
+                            _uiState.update { currentState -> currentState.copy(
+                                checkProgresCircular = false
+                            ) }
+                        }
                     }
 
                     Log.e("sync","order sync")
@@ -162,11 +164,13 @@ class MenuViewModel : ViewModel() {
         }
     }
 
-    fun upPurchaseOrders() {
+    fun upPurchaseOrders(bol: Boolean) {
         PurchaseOrderCRUD.getAllObject { list ->
             viewModelScope.launch() {
                 val dataLogin = Login(Config.dataBase, Config.password, Config.login)
-                LoginObj.loginAcessTwoversion(dataLogin, Config.rulUse)
+                if(bol){
+                    LoginObj.loginAcessTwoversion(dataLogin, Config.rulUse)
+                }
                 if (list != null) {
                     val listAux = list as MutableList<OrderFireBase>
                     for (x in listAux) {
@@ -235,22 +239,27 @@ class MenuViewModel : ViewModel() {
                             )
                             PurchaseOrderCRUD.insert(orderInsert)
                         }
-                        LoginObj.logout(Config.rulUse)
-                        _uiState.update { currentState -> currentState.copy(
-                            checkProgresCircular = false
-                        ) }
+                        ListCheckTotal.addInfo("Pedido compra actualizadas")
+                        if(bol){
+                            LoginObj.logout(Config.rulUse)
+                            _uiState.update { currentState -> currentState.copy(
+                                checkProgresCircular = false
+                            ) }
+                        }
                     }
                 }
             }
         }
     }
 
-    fun upBusinessPartners() {
+    fun upBusinessPartners(bol: Boolean) {
         viewModelScope.launch() {
             BusinessPartnerCRUD.getAllObject { list ->
                 viewModelScope.launch() {
                     val dataLogin = Login(Config.dataBase, Config.password, Config.login)
-                    LoginObj.loginAcessTwoversion(dataLogin, Config.rulUse)
+                    if(bol){
+                        LoginObj.loginAcessTwoversion(dataLogin, Config.rulUse)
+                    }
                     if (list != null) {
                         val listAux = list as MutableList<BusinessPartner>
                         for (x in listAux) {
@@ -311,10 +320,13 @@ class MenuViewModel : ViewModel() {
                                     true
                                 ))
                             }
-                            LoginObj.logout(Config.rulUse)
-                            _uiState.update { currentState -> currentState.copy(
-                                checkProgresCircular = false
-                            ) }
+                            ListCheckTotal.addInfo("Clientes actualizadas")
+                            if(bol){
+                                LoginObj.logout(Config.rulUse)
+                                _uiState.update { currentState -> currentState.copy(
+                                    checkProgresCircular = false
+                                ) }
+                            }
                         }
                     }
                 }
@@ -327,12 +339,14 @@ class MenuViewModel : ViewModel() {
         // Aquí deberías implementar la lógica para actualizar los ítems
     }
 
-    fun upActivities() {
+    fun upActivities(bol: Boolean) {
         viewModelScope.launch() {
             ActivityCRUD.getAllActivity { list ->
                 viewModelScope.launch() {
                     val dataLogin = Login(Config.dataBase, Config.password, Config.login)
-                    LoginObj.loginAcessTwoversion(dataLogin, Config.rulUse)
+                    if(bol){
+                        LoginObj.loginAcessTwoversion(dataLogin, Config.rulUse)
+                    }
                     for (x in list) {
                         if (!x.SAP) {
 
@@ -378,10 +392,13 @@ class MenuViewModel : ViewModel() {
                                 )
                                 ActivityCRUD.insertActivity(activity)
                             }
-                            LoginObj.logout(Config.rulUse)
-                            _uiState.update { currentState -> currentState.copy(
-                                checkProgresCircular = false
-                            ) }
+                            ListCheckTotal.addInfo("Actividades actualizadas")
+                            if(bol){
+                                LoginObj.logout(Config.rulUse)
+                                _uiState.update { currentState -> currentState.copy(
+                                    checkProgresCircular = false
+                                ) }
+                            }
                         }
                     }
                 }
@@ -397,8 +414,38 @@ class MenuViewModel : ViewModel() {
     }
 
     fun upTotal() {
-        Log.e("MenuViewModel", "upTotal() method is not yet implemented")
-        // Aquí deberías implementar la lógica para actualizar las actividades
+        viewModelScope.launch() {
+            ListCheckTotal.resetList()
+            val dataLogin = Login(Config.dataBase, Config.password, Config.login)
+            LoginObj.loginAcessTwoversion(dataLogin, Config.rulUse)
+
+            viewModelScope.launch(Dispatchers.IO) {
+                upPurchaseOrders(false)
+            }
+            viewModelScope.launch(Dispatchers.IO) {
+                upOrder(false)
+            }
+            viewModelScope.launch(Dispatchers.IO) {
+                upActivities(false)
+            }
+            viewModelScope.launch(Dispatchers.IO) {
+                upActivities(false)
+            }
+            viewModelScope.launch(Dispatchers.IO) {
+                var aux = true
+                while (aux) {
+                    if (ListCheckTotal.getList().size == 4) {
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                checkProgresCircular = false
+                            )
+                        }
+                        aux = false
+                    }
+                }
+                LoginObj.logout(Config.rulUse)
+            }
+        }
     }
 
 }
