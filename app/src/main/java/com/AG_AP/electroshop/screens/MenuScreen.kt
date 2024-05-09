@@ -154,7 +154,7 @@ fun ListDraw(viewModel: MenuViewModel, navController: NavHostController) {
             viewModel.upActivities(true)
         },
         ListActionDraw("Subir articulos",Icons.Filled.Article,"Sincronizando Articulos"){
-            viewModel.upItems()
+            viewModel.upItems(true)
         },
         ListActionDraw("Subir clientes",Icons.Filled.AccountCircle,"Sincronizando clientes"){
             viewModel.upBusinessPartners(true)

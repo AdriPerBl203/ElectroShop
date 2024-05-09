@@ -9,6 +9,7 @@ import com.AG_AP.electroshop.endpoints.models.activity.Activity
 import com.AG_AP.electroshop.endpoints.models.activity.PostActivity
 import com.AG_AP.electroshop.endpoints.models.businessPartners.BusinessPartners
 import com.AG_AP.electroshop.endpoints.models.businessPartners.PostBusinesspartner
+import com.AG_AP.electroshop.endpoints.models.item.getItems.GetItems
 import com.AG_AP.electroshop.endpoints.models.login.Login
 import com.AG_AP.electroshop.endpoints.models.orders.Orders
 import com.AG_AP.electroshop.endpoints.models.orders.post.DocumentLine
@@ -16,16 +17,21 @@ import com.AG_AP.electroshop.endpoints.models.orders.post.PostOrder
 import com.AG_AP.electroshop.endpoints.models.purchaseOrders.PurchaseOrders
 import com.AG_AP.electroshop.endpoints.objects.ActivityObj
 import com.AG_AP.electroshop.endpoints.objects.BusinessPartnersObj
+import com.AG_AP.electroshop.endpoints.objects.ItemObj
 import com.AG_AP.electroshop.endpoints.objects.LoginObj
 import com.AG_AP.electroshop.endpoints.objects.OrdersObj
 import com.AG_AP.electroshop.endpoints.objects.PurchaseOrdersObj
 import com.AG_AP.electroshop.firebase.ActivityCRUD
 import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
+import com.AG_AP.electroshop.firebase.ItemCRUD
 import com.AG_AP.electroshop.firebase.OrderCRUD
 import com.AG_AP.electroshop.firebase.PurchaseOrderCRUD
 import com.AG_AP.electroshop.firebase.models.BusinessPartner
 import com.AG_AP.electroshop.firebase.models.DocumentLineFireBase
+import com.AG_AP.electroshop.firebase.models.Item
+import com.AG_AP.electroshop.firebase.models.ItemType
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
+import com.AG_AP.electroshop.firebase.models.Price
 import com.AG_AP.electroshop.functions.Config
 import com.AG_AP.electroshop.functions.ListCheckTotal
 import com.AG_AP.electroshop.functions.SessionObj
@@ -116,12 +122,30 @@ class MenuViewModel : ViewModel() {
                     }
                 }
                 viewModelScope.launch(Dispatchers.IO) {
-                    val orders : Orders? = OrdersObj.getOrders(Config.rulUse)
-                    if(orders is Orders){
-                        orders.value.forEach{element ->
+                    var listOrderSAP: MutableList<com.AG_AP.electroshop.endpoints.models.orders.Value> =
+                        mutableListOf()
+                    var checkSAP: Boolean = false
+                    var orders : Orders? = OrdersObj.getOrders(Config.rulUse)
+                    while (!checkSAP) {
+                        if (orders != null) {
+                            if (orders.odataNextLink.isNullOrEmpty()) {
+                                orders.value.forEach {
+                                    listOrderSAP += it
+                                }
+                                checkSAP=true
+                            }else{
+                                orders.value.forEach {
+                                    listOrderSAP += it
+                                }
+                                val num :List<String> = orders.odataNextLink.split("=")
+                                orders =OrdersObj.getOrdersExtenExten(Config.rulUse,num[1].toInt())
+                            }
+                        }
+                    }
+                    listOrderSAP.forEach{element ->
                             OrderCRUD.deleteObjectById(element.DocNum.toString())
                         }
-                        orders.value.forEach{element ->
+                    listOrderSAP.forEach{element ->
                             //lista de precios
                             val documentList: MutableList<DocumentLineFireBase> = mutableListOf()
                             element.DocumentLines.forEachIndexed { index, it ->
@@ -158,9 +182,6 @@ class MenuViewModel : ViewModel() {
                                 checkProgresCircular = false
                             ) }
                         }
-                    }
-
-                    Log.e("sync","order sync")
                 }
             }
         }
@@ -207,12 +228,30 @@ class MenuViewModel : ViewModel() {
                     }
                 }
                 viewModelScope.launch(Dispatchers.IO) {
-                    val data : PurchaseOrders? = PurchaseOrdersObj.getPurchaseOrders(Config.rulUse)
-                    if(data is PurchaseOrders){
-                        data.value.forEach{element ->
+                    var listPurchaseOrderSAP: MutableList<com.AG_AP.electroshop.endpoints.models.purchaseOrders.Value> =
+                        mutableListOf()
+                    var checkSAP: Boolean = false
+                    var purchaseOrders : PurchaseOrders? = PurchaseOrdersObj.getPurchaseOrders(Config.rulUse)
+                    while (!checkSAP) {
+                        if (purchaseOrders != null) {
+                            if (purchaseOrders.odataNextLink.isNullOrEmpty()) {
+                                purchaseOrders.value.forEach {
+                                    listPurchaseOrderSAP += it
+                                }
+                                checkSAP=true
+                            }else{
+                                purchaseOrders.value.forEach {
+                                    listPurchaseOrderSAP += it
+                                }
+                                val num :List<String> = purchaseOrders.odataNextLink.split("=")
+                                purchaseOrders =PurchaseOrdersObj.getPurchaseOrdersExtenExten(Config.rulUse,num[1].toInt())
+                            }
+                        }
+                    }
+                    listPurchaseOrderSAP.forEach{element ->
                             PurchaseOrderCRUD.deleteObjectById(element.DocNum.toString())
                         }
-                        data.value.forEach{element ->
+                    listPurchaseOrderSAP.forEach{element ->
                             //lista de precios
                             val documentList: MutableList<DocumentLineFireBase> = mutableListOf()
                             element.DocumentLines.forEachIndexed { index, it ->
@@ -220,7 +259,7 @@ class MenuViewModel : ViewModel() {
                                     index,
                                     DocumentLineFireBase(
                                         it.ItemCode,
-                                        it.ItemDescription,
+                                        it.ItemDescription ?: "",
                                         it.Quantity,
                                         it.DiscountPercent,
                                         it.LineNum,
@@ -249,7 +288,6 @@ class MenuViewModel : ViewModel() {
                                 checkProgresCircular = false
                             ) }
                         }
-                    }
                 }
             }
         }
@@ -260,24 +298,25 @@ class MenuViewModel : ViewModel() {
             BusinessPartnerCRUD.getAllObject { list ->
                 viewModelScope.launch() {
                     val dataLogin = Login(Config.dataBase, Config.password, Config.login)
-                    if(bol){
+                    if (bol) {
                         LoginObj.loginAcessTwoversion(dataLogin, Config.rulUse)
                     }
                     if (list != null) {
                         val listAux = list as MutableList<BusinessPartner>
                         for (x in listAux) {
                             if (!x.SAP) {
-                                var CardTypeAux:String=""
-                                var SeriesAux:Int=0
-                                when(x.CardType){
+                                var CardTypeAux: String = ""
+                                var SeriesAux: Int = 0
+                                when (x.CardType) {
                                     // "value" : "Invalid item name '' in Enum 'BoCardTypes'. The valid names are: 'cCustomer'-'C', 'cSupplier'-'S', 'cLid'-'L'"
-                                    "Cliente"-> {
-                                        CardTypeAux= "cCustomer"
-                                        SeriesAux=71
+                                    "Cliente" -> {
+                                        CardTypeAux = "cCustomer"
+                                        SeriesAux = 71
                                     }
-                                    "Proveedor"-> {
-                                        CardTypeAux= "cSupplier"
-                                        SeriesAux=72
+
+                                    "Proveedor" -> {
+                                        CardTypeAux = "cSupplier"
+                                        SeriesAux = 72
                                     }
                                 }
 
@@ -290,30 +329,54 @@ class MenuViewModel : ViewModel() {
                                     SeriesAux
                                 )
                                 BusinessPartnersObj.postBusinessPartners(Config.rulUse, data)
-                                if(x.idFireBase !=null){
+                                if (x.idFireBase != null) {
                                     BusinessPartnerCRUD.deleteObjectById(x.idFireBase)
                                 }
                             }
                         }
                     }
                     viewModelScope.launch(Dispatchers.IO) {
-                        val BusinessPartners = BusinessPartnersObj.getBusinessPartners(Config.rulUse)
-                        if(BusinessPartners is BusinessPartners){
-                            BusinessPartners.value.forEach { element->
-                                BusinessPartnerCRUD.deleteObjectById(element.CardCode)
+                        var listBusinessPartnerSAP: MutableList<com.AG_AP.electroshop.endpoints.models.businessPartners.Value> =
+                            mutableListOf()
+                        var checkSAP: Boolean = false
+                        var BusinessPartners =
+                            BusinessPartnersObj.getBusinessPartners(Config.rulUse)
+                        while (!checkSAP) {
+                            if (BusinessPartners != null) {
+                                if (BusinessPartners.odataNextLink.isNullOrEmpty()) {
+                                    BusinessPartners.value.forEach {
+                                        listBusinessPartnerSAP += it
+                                    }
+                                    checkSAP = true
+                                } else {
+                                    BusinessPartners.value.forEach {
+                                        listBusinessPartnerSAP += it
+                                    }
+                                    val num: List<String> =
+                                        BusinessPartners.odataNextLink.split("=")
+                                    BusinessPartners = BusinessPartnersObj.getBusinessPartnersExten(
+                                        Config.rulUse,
+                                        num[1].toInt()
+                                    )
+                                }
+                            }
+                        }
+                        listBusinessPartnerSAP.forEach { element ->
+                            BusinessPartnerCRUD.deleteObjectById(element.CardCode)
+                        }
+
+                        listBusinessPartnerSAP.forEach { element ->
+                            var email: String = ""
+                            var phone1: String = ""
+                            if (!element.Phone1.isNullOrEmpty()) {
+                                phone1 = element.Phone1
+                            }
+                            if (!element.EmailAddress.isNullOrEmpty()) {
+                                email = element.EmailAddress
                             }
 
-                            BusinessPartners.value.forEach { element ->
-                                var email:String =""
-                                var phone1:String =""
-                                if(!element.Phone1.isNullOrEmpty()){
-                                    phone1 = element.Phone1
-                                }
-                                if(!element.EmailAddress.isNullOrEmpty()){
-                                    email = element.EmailAddress
-                                }
-
-                                BusinessPartnerCRUD.insert(BusinessPartner(
+                            BusinessPartnerCRUD.insert(
+                                BusinessPartner(
                                     "",
                                     element.CardCode,
                                     element.CardType,
@@ -321,14 +384,16 @@ class MenuViewModel : ViewModel() {
                                     phone1,
                                     email,
                                     true
-                                ))
-                            }
-                            ListCheckTotal.addInfo("Clientes actualizadas")
-                            if(bol){
-                                LoginObj.logout(Config.rulUse)
-                                _uiState.update { currentState -> currentState.copy(
+                                )
+                            )
+                        }
+                        ListCheckTotal.addInfo("Clientes actualizadas")
+                        if (bol) {
+                            LoginObj.logout(Config.rulUse)
+                            _uiState.update { currentState ->
+                                currentState.copy(
                                     checkProgresCircular = false
-                                ) }
+                                )
                             }
                         }
                     }
@@ -337,9 +402,113 @@ class MenuViewModel : ViewModel() {
         }
     }
 
-    fun upItems() {
-        Log.e("MenuViewModel", "upItems() method is not yet implemented")
-        // Aquí deberías implementar la lógica para actualizar los ítems
+    fun upItems(bol: Boolean) {
+        viewModelScope.launch() {
+            ItemCRUD.getAllItems { list ->
+                //TODO queda todo sobre las subidas de los item
+                //TODO
+                /*viewModelScope.launch() {
+                    val dataLogin = Login(Config.dataBase, Config.password, Config.login)
+                    if (bol) {
+                        LoginObj.loginAcessTwoversion(dataLogin, Config.rulUse)
+                    }
+                    if (list != null) {
+                        val listAux = list as MutableList<Item>
+                        for (x in listAux) {
+                            if (!x.SAP) {
+                                var CardTypeAux: String = ""
+                                var SeriesAux: Int = 0
+                                when (x.CardType) {
+                                    // "value" : "Invalid item name '' in Enum 'BoCardTypes'. The valid names are: 'cCustomer'-'C', 'cSupplier'-'S', 'cLid'-'L'"
+                                    "Cliente" -> {
+                                        CardTypeAux = "cCustomer"
+                                        SeriesAux = 71
+                                    }
+
+                                    "Proveedor" -> {
+                                        CardTypeAux = "cSupplier"
+                                        SeriesAux = 72
+                                    }
+                                }
+
+
+                                val data: PostBusinesspartner = PostBusinesspartner(
+                                    x.CardName,
+                                    CardTypeAux,
+                                    x.Cellular,
+                                    x.EmailAddress,
+                                    SeriesAux
+                                )
+                                ItemObj.postBusinessPartners(Config.rulUse, data)
+                                if (x.idFireBase != null) {
+                                    BusinessPartnerCRUD.deleteObjectById(x.idFireBase)
+                                }
+                            }
+                        }
+                    }
+                    viewModelScope.launch(Dispatchers.IO) {
+                        var listItemSAP: MutableList<com.AG_AP.electroshop.endpoints.models.item.getItems.Value> =
+                            mutableListOf()
+                        var checkSAP: Boolean = false
+                        var items : GetItems? = ItemObj.getItems(Config.rulUse)
+                        while (!checkSAP) {
+                            if (items != null) {
+                                if (items.odataNextLink.isNullOrEmpty()) {
+                                    items.value.forEach {
+                                        listItemSAP += it
+                                    }
+                                    checkSAP=true
+                                }else{
+                                    items.value.forEach {
+                                        listItemSAP += it
+                                    }
+                                    val num :List<String> = items.odataNextLink.split("=")
+                                    items =ItemObj.getItemsExten(Config.rulUse,num[1].toInt())
+                                }
+                            }
+                        }
+                        listItemSAP.forEach{element ->
+                            ItemCRUD.deleteItemById(element.ItemCode.toString())
+                        }
+                        listItemSAP.forEach{element ->
+                            //lista de precios
+                            val listPrice: MutableList<Price> = mutableListOf()
+                            element.ItemPrices.forEachIndexed { index, itemPrice ->
+                                listPrice.add(
+                                    index,
+                                    Price(
+                                        itemPrice.PriceList ?:0,
+                                        itemPrice.Price ?:0.0F,
+                                        itemPrice.Currency ?:"",
+                                        true
+                                    )
+                                )
+                            }
+                            val item : Item = Item(
+                                element.ItemCode ?: "",
+                                element.ItemName ?: "",
+                                ItemType.I,
+                                element.ItemName ?: "",
+                                listPrice.toList(),
+                                element.ItemName ?: "",
+                                element.ItemName ?: "",
+                                true
+                            )
+                            ItemCRUD.insertItem(item)
+                        }
+                        ListCheckTotal.addInfo("Artículos actualizados")
+                        if (bol) {
+                            LoginObj.logout(Config.rulUse)
+                            _uiState.update { currentState ->
+                                currentState.copy(
+                                    checkProgresCircular = false
+                                )
+                            }
+                        }
+                    }
+                }*/
+            }
+        }
     }
 
     fun upActivities(bol: Boolean) {
@@ -372,12 +541,32 @@ class MenuViewModel : ViewModel() {
                         }
                     }
                     viewModelScope.launch(Dispatchers.IO) {
-                        val activities : Activity? = ActivityObj.getActivities(Config.rulUse)
-                        if(activities is Activity){
-                            activities.value.forEach{element ->
+                        var listActivitySAP: MutableList<com.AG_AP.electroshop.endpoints.models.activity.Value> =
+                            mutableListOf()
+                        var checkSAP: Boolean = false
+                        var activities: Activity? = ActivityObj.getActivities(Config.rulUse)
+                        while (!checkSAP) {
+                            if (activities != null) {
+                                if (activities.odataNextLink.isNullOrEmpty()) {
+                                    activities.value.forEach {
+                                        if (it is com.AG_AP.electroshop.endpoints.models.activity.Value) {
+                                            listActivitySAP += it
+                                        }
+                                    }
+                                    checkSAP=true
+                                }else{
+                                    activities.value.forEach {
+                                        listActivitySAP += it
+                                    }
+                                    val num :List<String> = activities.odataNextLink.split("=")
+                                    activities =ActivityObj.getActivitiesExten(Config.rulUse,num[1].toInt())
+                                }
+                            }
+                        }
+                        listActivitySAP.forEach{element ->
                                 ActivityCRUD.deleteActivityById(element.ActivityCode.toString())
                             }
-                            activities.value.forEach{element ->
+                        listActivitySAP.forEach{element ->
                                 val activity : com.AG_AP.electroshop.firebase.models.Activity = com.AG_AP.electroshop.firebase.models.Activity(
                                     "",
                                     element.Notes ?: "",
@@ -402,7 +591,6 @@ class MenuViewModel : ViewModel() {
                                     checkProgresCircular = false
                                 ) }
                             }
-                        }
                     }
                 }
             }
