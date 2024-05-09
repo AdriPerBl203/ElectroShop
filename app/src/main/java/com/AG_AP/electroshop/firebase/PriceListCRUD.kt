@@ -38,10 +38,10 @@ object PriceListCRUD {
                     Log.e("Pruebas", "Datos: ${datosPrice.toString()}")
 
 
-                    val priceListDatos = datosPrice?.get("priceList")
-                    val priceDatos = datosPrice?.get("price")
-                    val currency = datosPrice?.get("currency")
-                    val SAP = datosPrice?.get("SAP").toString().toBoolean()
+                    val priceListDatos = datosPrice?.get("PriceList")
+                    val priceDatos = datosPrice?.get("Price")
+                    val currency = datosPrice?.get("Currency")
+                    val SAP = datosPrice?.get("SAP").toString().toBoolean() ?: false
 
                     Log.wtf("Pruebas", "PriceList: ${priceListDatos.toString().toInt()}, PriceDatos: ${priceDatos.toString().toBigDecimal()}, currency: ${currency.toString()}")
 
@@ -67,10 +67,10 @@ object PriceListCRUD {
                 for (document in lista.documents) {
                     val datosPrice = document.data
 
-                    val priceListDatos = datosPrice?.get("priceList")
-                    val priceDatos = datosPrice?.get("price")
-                    val currency = datosPrice?.get("currency")
-                    val SAP = datosPrice?.get("SAP").toString().toBoolean()
+                    val priceListDatos = datosPrice?.get("PriceList")
+                    val priceDatos = datosPrice?.get("Price")
+                    val currency = datosPrice?.get("Currency")
+                    val SAP = datosPrice?.get("SAP").toString().toBoolean() ?: false
 
                     val price = Price(
                         priceListDatos.toString().toInt(),

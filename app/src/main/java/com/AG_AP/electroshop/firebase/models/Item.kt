@@ -20,6 +20,12 @@ data class Item(
         hashMap["Series"] = 73
         hashMap["ItemName"] = itemName
         hashMap["ItemType"] = itemType
+        when (itemType) {
+            ItemType.Articulo -> hashMap["ItemType"] = "I"
+            ItemType.Servicio -> hashMap["ItemType"] = "L"
+            ItemType.ActivoFijo -> hashMap["ItemType"] = "F"
+            ItemType.Viaje -> hashMap["ItemType"] = "T"
+        }
         hashMap["ItemCode"] = ItemCode
         hashMap["Mainsupplier"] = mainSupplier
         if (!itemPrice.isNullOrEmpty()) {

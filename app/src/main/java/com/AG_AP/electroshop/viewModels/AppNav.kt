@@ -11,6 +11,7 @@ import androidx.navigation.navArgument
 import com.AG_AP.electroshop.screens.LoginFrontView
 import com.AG_AP.electroshop.screens.MenuFrontView
 import com.AG_AP.electroshop.screens.ScaffoldActivity
+import com.AG_AP.electroshop.screens.ScaffoldItem
 import com.AG_AP.electroshop.screens.ScaffoldBusinessPartner
 import com.AG_AP.electroshop.screens.ScaffoldListActivity
 import com.AG_AP.electroshop.screens.ScaffoldListBusinessPartner
@@ -135,6 +136,18 @@ fun AppNav(navController: NavHostController = rememberNavController(),context: C
         ) { backStackEntry ->
             val id = backStackEntry.arguments?.getString("id")
             ScaffoldPurchaseOrder(navController = navController, id = id)
+        }
+
+        composable(
+            route = Routes.ItemScreen.route
+        ) {
+            ScaffoldItem(navController = navController)
+        }
+
+        composable(
+            route = Routes.ItemScreenList.route
+        ) {
+            TODO("ITEMSCREENLISTA")
         }
     }
 }

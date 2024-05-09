@@ -142,11 +142,11 @@ object ItemCRUD {
                     val SAP = datosItem["SAP"].toString().toBoolean()
 
                     val itemType: ItemType = when (itemTypeString) {
-                        "I" -> ItemType.I
-                        "L" -> ItemType.L
-                        "T" -> ItemType.T
-                        "F" -> ItemType.F
-                        else -> ItemType.I
+                        "I" -> ItemType.Articulo
+                        "L" -> ItemType.Servicio
+                        "T" -> ItemType.Viaje
+                        "F" -> ItemType.ActivoFijo
+                        else -> ItemType.Articulo
                     }
 
                     val item = Item(
@@ -215,11 +215,11 @@ object ItemCRUD {
                     val SAP = datosItem["SAP"].toString().toBoolean()
 
                     val itemType: ItemType = when (itemTypeString) {
-                        "I" -> ItemType.I
-                        "L" -> ItemType.L
-                        "T" -> ItemType.T
-                        "F" -> ItemType.F
-                        else -> ItemType.I
+                        "I" -> ItemType.Articulo
+                        "L" -> ItemType.Servicio
+                        "T" -> ItemType.Viaje
+                        "F" -> ItemType.ActivoFijo
+                        else -> ItemType.Articulo
                     }
 
                     val item = Item(
@@ -245,16 +245,16 @@ object ItemCRUD {
     }
 
 
-    fun updateItemById(itemId: String, item: Item) {
+    fun updateItemById(item: Item) {
         database
             .collection(this.coleccion)
-            .document(itemId)
+            .document(item.ItemCode)
             .update(item.toHashMap())
             .addOnSuccessListener {
-                Log.e("Pruebas", "Updateado el item con id: $itemId")
+                Log.e("Pruebas", "Updateado el item con id: ${item.ItemCode}")
             }
             .addOnFailureListener {
-                Log.e("Errores", "Error en get update item por id $it")
+                Log.e("Errores", "Error en get update item por id ${item.ItemCode}")
             }
     }
 

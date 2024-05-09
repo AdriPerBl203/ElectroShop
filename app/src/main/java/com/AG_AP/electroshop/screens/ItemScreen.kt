@@ -1,17 +1,21 @@
 package com.AG_AP.electroshop.screens
-/*
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
@@ -21,8 +25,10 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
@@ -39,6 +45,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.AG_AP.electroshop.components.DialogCustomBusinessPartner
+import com.AG_AP.electroshop.components.DialogCustomPriceList
+import com.AG_AP.electroshop.firebase.models.ItemType
+import com.AG_AP.electroshop.uiState.ItemUiState
 import com.AG_AP.electroshop.viewModels.ItemViewModel
 
 
@@ -50,14 +60,8 @@ fun ArticleView(innerPadding: PaddingValues, viewModel: ItemViewModel, id: Strin
     Column(
         modifier = Modifier
             .padding(innerPadding)
-            .verticalScroll(rememberScrollState())
     ) {
-        Row(
-            /*modifier= Modifier
-                .padding(innerPadding)
-                .verticalScroll(rememberScrollState()),
-            horizontalArrangement= Arrangement.Center*/
-        ) {
+        Row {
             Column {
                 OutlinedTextField(
                     value = dataUiState.ItemCode,
@@ -69,104 +73,45 @@ fun ArticleView(innerPadding: PaddingValues, viewModel: ItemViewModel, id: Strin
                     readOnly = true
                 )
                 OutlinedTextField(
-                    value = dataUiState.ItemDescription,
+                    value = dataUiState.itemName,
                     onValueChange = { viewModel.changeItemName(it) },
                     modifier = Modifier
                         .width(300.dp)
                         .padding(8.dp),
                     label = { Text("Descripción de item") }
                 )
-                OutlinedTextField(
-                    value = dataUiState.Quantity,
-                    onValueChange = { viewModel.changeQuantity(it) },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    label = { Text("Cantidad") },
 
-                )
+                val coffeeDrinks =
+                    ItemType.entries.toTypedArray()
+                var expanded by remember { mutableStateOf(false) }
 
-                OutlinedTextField(
-                    value = dataUiState.U_SEIPEDIDOCLIENTE,
-                    onValueChange = { viewModel.changePedidoCliente(it) },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    label = { Text("Asociar pedido de cliente") },
-                    readOnly = true,
-                    trailingIcon={
-                        IconButton(
-                            onClick = {
-                                viewModel.showDialogOrder()
-                            }
-                        ) {
-                            Icon(Icons.Filled.Add, contentDescription = "Shopping Cart Icon")
-                        }
-                    }
-                )
-            }
-
-            Column {
-                val priority = arrayOf("Bajo", "Normal", "Alto")
-                var expandedTwo by remember { mutableStateOf(false) }
-                OutlinedTextField(
-                    value = dataUiState.EndTime,
-                    onValueChange = { viewModel.changeEndTime(it) },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    label = { Text("Hora fin") },
-                    readOnly = true,
-                    trailingIcon={
-                        IconButton(
-                            onClick = {
-                                DialogStartEnd.show()
-                            }
-                        ) {
-                            Icon(Icons.Filled.AccessTime, contentDescription = "Shopping Cart Icon")
-                        }
-                    }
-                )
-                OutlinedTextField(
-                    value = dataUiState.CardCode,
-                    onValueChange = { viewModel.changeCardCode(it) },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    label = { Text("Código cliente") }
-                )
-                OutlinedTextField(
-                    value = dataUiState.Tel,
-                    onValueChange = { viewModel.changeTel(it) },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    label = { Text("Teléfono") }
-                )
                 ExposedDropdownMenuBox(
-                    expanded = expandedTwo,
+                    expanded = expanded,
                     onExpandedChange = {
-                        expandedTwo = !expandedTwo
+                        expanded = !expanded
                     }
                 ) {
                     TextField(
-                        value = dataUiState.Priority,
+                        value = dataUiState.itemType.toString(),
                         onValueChange = {},
                         readOnly = true,
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedTwo) },
-                        modifier = Modifier.menuAnchor()
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                        modifier = Modifier
+                            .menuAnchor()
+                            .width(300.dp)
+                            .padding(8.dp),
                     )
 
                     ExposedDropdownMenu(
-                        expanded = expandedTwo,
-                        onDismissRequest = { expandedTwo = false }
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
                     ) {
-                        priority.forEach { item ->
+                        coffeeDrinks.forEach { item ->
                             DropdownMenuItem(
-                                text = { Text(text = item) },
+                                text = { Text(text = item.toString()) },
                                 onClick = {
-                                    viewModel.changePriority(item)
-                                    expandedTwo = false
+                                    viewModel.changeItemType(item)
+                                    expanded = false
                                 }
                             )
                         }
@@ -174,70 +119,200 @@ fun ArticleView(innerPadding: PaddingValues, viewModel: ItemViewModel, id: Strin
                 }
 
                 OutlinedTextField(
-                    value = dataUiState.U_SEIPEDIDOCOMPRAS,
-                    onValueChange = { viewModel.changePedidoCompra(it) },
+                    value = dataUiState.mainSupplier,
+                    onValueChange = { viewModel.changeMainSupplier(it) },
                     modifier = Modifier
                         .width(300.dp)
                         .padding(8.dp),
-                    label = { Text("Asociar pedido de compra") },
+                    label = { Text("Proveedor principal") },
                     readOnly = true,
-                    trailingIcon={
+                    trailingIcon = {
                         IconButton(
                             onClick = {
-                                viewModel.showDialogPurchaseOrder()
+                                viewModel.changeShowBusinessPartnerDialog(true)
                             }
                         ) {
-                            Icon(Icons.Filled.Add, contentDescription = "Shopping Cart Icon")
+                            Icon(Icons.Filled.Add, contentDescription = "+ Icon")
                         }
                     }
                 )
+                if (dataUiState.showBusinessPartnerDialog) {
+                    DialogCustomBusinessPartner(onDismissRequest = {
+                        viewModel.changeShowBusinessPartnerDialog(
+                            false
+                        )
+                    }) {
+                        if (it != null) {
+                            viewModel.changeMainSupplier(it.CardCode)
+                        }
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.padding(5.dp))
+
+            Column(
+                modifier = Modifier.padding(10.dp)
+            ) {
+                Text(
+                    text = "¿Controlar numeros de serie?"
+                )
+                Row(Modifier.selectableGroup()) {
+                    RadioButton(
+                        selected = dataUiState.manageSerialNumbers,
+                        onClick = { viewModel.changeManageSerialNumbers(true) }
+                    )
+                    Text(
+                        text = "Si",
+                        modifier = Modifier
+                            .padding(top = 13.dp)
+                    )
+
+                    Spacer(
+                        modifier = Modifier
+                            .padding(start = 10.dp)
+                    )
+
+                    RadioButton(
+                        selected = !dataUiState.manageSerialNumbers,
+                        onClick = { viewModel.changeManageSerialNumbers(false) }
+                    )
+                    Text(
+                        text = "No",
+                        modifier = Modifier
+                            .padding(top = 13.dp)
+                    )
+                }
+            }
+
+            Column(
+                modifier = Modifier.padding(10.dp)
+            ) {
+                Text(
+                    text = "¿Autocrear numeros de serie?"
+                )
+                Row(Modifier.selectableGroup()) {
+                    RadioButton(
+                        selected = dataUiState.autoCreateSerialNumbersOnRelease,
+                        onClick = { viewModel.changeAutoCreateSerialNumbersOnRelease(true) }
+                    )
+                    Text(
+                        text = "Si",
+                        modifier = Modifier
+                            .padding(top = 13.dp)
+                    )
+
+                    Spacer(
+                        modifier = Modifier
+                            .padding(top = 13.dp)
+                    )
+
+                    RadioButton(
+                        selected = !dataUiState.autoCreateSerialNumbersOnRelease,
+                        onClick = { viewModel.changeAutoCreateSerialNumbersOnRelease(false) }
+                    )
+                    Text(
+                        text = "No",
+                        modifier = Modifier
+                            .padding(top = 13.dp)
+                    )
+                }
+            }
+
+
+            Spacer(modifier = Modifier.padding(5.dp))
+
+            Button(onClick = { viewModel.changeShowListPricesDialog(true) }) {
+                Text(text = "Añadir precio")
+            }
+
+            if (dataUiState.showPriceListDialog) {
+                DialogCustomPriceList(
+                    onDismissRequest = {
+                        viewModel.changeShowListPricesDialog(false)
+                    },
+                    itemPricesAlreadyInserted = dataUiState.itemPrice
+                ) {
+                    it.let {
+                        if (it != null) {
+                            viewModel.addItemPriceList(it)
+                        }
+                    }
+                }
 
             }
-            Column {
-                OutlinedTextField(
-                    value = dataUiState.ClgCode,
-                    onValueChange = { viewModel.changeClgCode(it) },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    label = { Text("Id") }
-                )
-            }
+
         }
-        Column {
-            if (dataUiState.message) {
-                Snackbar(
-                    modifier = Modifier.padding(16.dp),
-                    action = {
-                        Button(
-                            onClick = {
-                                viewModel.menssageFunFalse()
-                            }
-                        ) {
-                            Text("Cerrar")
+        PriceListList(dataUiState = dataUiState, viewModel = viewModel)
+    }
+
+    Column {
+        if (dataUiState.message) {
+            Snackbar(
+                modifier = Modifier.padding(16.dp),
+                action = {
+                    Button(
+                        onClick = {
+                            viewModel.menssageFunFalse()
+                        }
+                    ) {
+                        Text("Cerrar")
+                    }
+                },
+                content = {
+                    Text(dataUiState.text)
+                }
+            )
+        }
+    }
+}
+
+@Composable
+fun PriceListList(dataUiState: ItemUiState, viewModel: ItemViewModel) {
+
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 10.dp, end = 20.dp)
+    ) {
+        dataUiState.itemPrice?.let { price ->
+            items(price) { individualPrice ->
+                ListItem(
+                    headlineContent = { Text(text = individualPrice.price.toString()) },
+                    supportingContent = { Text(text = individualPrice.currency) },
+                    trailingContent = {
+                        Button(onClick = {
+                            viewModel.eraseIndividualPriceList(individualPrice)
+                        }) {
+                            Text(
+                                text = "Borrar"
+                            )
                         }
                     },
-                    content = {
-                        Text(dataUiState.text)
-                    }
+                    modifier = Modifier
+                        .border(
+                            width = 1.dp,
+                            shape = RoundedCornerShape(8.dp),
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        .padding(top = 3.dp, bottom = 3.dp)
                 )
             }
         }
     }
-
 }
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScaffoldArticle(
+fun ScaffoldItem(
     viewModel: ItemViewModel = viewModel(),
     navController: NavHostController,
     id: String? = null
 ) {
     if (!id.isNullOrEmpty()) {
         viewModel.changeItemCode(id)
-        viewModel.refreshScreen()
+        viewModel.refresh()
     }
     Scaffold(
         topBar = {
@@ -247,7 +322,7 @@ fun ScaffoldArticle(
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 title = {
-                    Text("Gestión de actividad")
+                    Text("Gestión de articulos")
                 }
             )
         },
@@ -290,7 +365,7 @@ fun ScaffoldArticle(
         },
         floatingActionButton = {
             FloatingActionButton(onClick = { viewModel.find() }) {
-                Icon(Icons.Default.Add, contentDescription = "Buscar")
+                Icon(Icons.Default.Search, contentDescription = "Buscar")
             }
         }
     ) { innerPadding ->
@@ -299,5 +374,3 @@ fun ScaffoldArticle(
         }
     }
 }
-
- */

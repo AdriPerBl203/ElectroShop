@@ -2,13 +2,10 @@ package com.AG_AP.electroshop.viewModels
 
 import android.content.Context
 import android.util.Log
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.AG_AP.electroshop.endpoints.models.activity.Activity
-import com.AG_AP.electroshop.endpoints.models.businessPartners.BusinessPartners
 import com.AG_AP.electroshop.endpoints.models.item.getItems.GetItems
-import com.AG_AP.electroshop.endpoints.models.item.getItems.ItemPrice
 import com.AG_AP.electroshop.endpoints.models.login.Login
 import com.AG_AP.electroshop.endpoints.models.orders.Orders
 import com.AG_AP.electroshop.endpoints.models.purchaseOrders.PurchaseOrders
@@ -606,8 +603,8 @@ class SettingsViewModel : ViewModel() {
                         "",
                         element.ItemCode ?: "",
                         element.ItemName ?: "",
-                        ItemType.I,
-                        element.Mainsupplier ?: "",
+                        ItemType.Articulo,
+                        element.ItemName ?: "",
                         listPrice.toList(),
                                 element.ManageSerialNumbers ?: "",
                                 element.AutoCreateSerialNumbersOnRelease ?: "",
