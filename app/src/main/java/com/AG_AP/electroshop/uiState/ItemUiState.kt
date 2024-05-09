@@ -8,10 +8,7 @@ data class ItemUiState(
     val itemName: String = "",
     val itemType: ItemType = ItemType.I,
     val mainSupplier: String = "",
-    val itemPrice: MutableList<Price>? = // mutableListOf(),
-        mutableListOf(
-            Price(100, 100, "EUR", false)
-        ),
+    val itemPrice: MutableList<Price>? = mutableListOf(),
     val manageSerialNumbers: Boolean = false,
     val autoCreateSerialNumbersOnRelease: Boolean = false,
     val message: Boolean = false,

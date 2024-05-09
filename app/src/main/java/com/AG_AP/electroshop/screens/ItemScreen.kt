@@ -38,6 +38,7 @@ import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -46,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.AG_AP.electroshop.components.DialogCustomBusinessPartner
+import com.AG_AP.electroshop.components.DialogCustomPriceList
 import com.AG_AP.electroshop.firebase.models.ItemType
 import com.AG_AP.electroshop.uiState.ItemUiState
 import com.AG_AP.electroshop.viewModels.ItemViewModel
@@ -60,12 +62,7 @@ fun ArticleView(innerPadding: PaddingValues, viewModel: ItemViewModel, id: Strin
         modifier = Modifier
             .padding(innerPadding)
     ) {
-        Row(
-            /*modifier= Modifier
-                .padding(innerPadding)
-                .verticalScroll(rememberScrollState()),
-            horizontalArrangement= Arrangement.Center*/
-        ) {
+        Row {
             Column {
                 OutlinedTextField(
                     value = dataUiState.ItemCode,
@@ -149,30 +146,8 @@ fun ArticleView(innerPadding: PaddingValues, viewModel: ItemViewModel, id: Strin
                     }
                 }
             }
-            /* TODO lista de precios
-            Column {
-                val priority = arrayOf("Bajo", "Normal", "Alto")
-                var expandedTwo by remember { mutableStateOf(false) }
-                OutlinedTextField(
-                    value = dataUiState.EndTime,
-                    onValueChange = { viewModel.changeEndTime(it) },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    label = { Text("Hora fin") },
-                    readOnly = true,
-                    trailingIcon = {
-                        IconButton(
-                            onClick = {
-                                DialogStartEnd.show()
-                            }
-                        ) {
-                            Icon(Icons.Filled.AccessTime, contentDescription = "Shopping Cart Icon")
-                        }
-                    }
-                )
 
-             */
+            Spacer(modifier = Modifier.padding(5.dp))
 
             Column(
                 modifier = Modifier.padding(10.dp)
@@ -243,7 +218,27 @@ fun ArticleView(innerPadding: PaddingValues, viewModel: ItemViewModel, id: Strin
             }
 
 
-            //TODO ARTICULO
+            Spacer(modifier = Modifier.padding(5.dp))
+
+            Button(onClick = { viewModel.changeShowListPricesDialog(true) }) {
+                Text(text = "Añadir precio")
+            }
+
+            if (dataUiState.showPriceListDialog) {
+                DialogCustomPriceList(
+                    onDismissRequest = {
+                        viewModel.changeShowListPricesDialog(false)
+                    },
+                    itemPricesAlreadyInserted = dataUiState.itemPrice
+                ) {
+                    it.let {
+                        if (it != null) {
+                            viewModel.addItemPriceList(it)
+                        }
+                    }
+                }
+
+            }
 
         }
         PriceListList(dataUiState = dataUiState, viewModel = viewModel)
@@ -272,6 +267,9 @@ fun ArticleView(innerPadding: PaddingValues, viewModel: ItemViewModel, id: Strin
 
 @Composable
 fun PriceListList(dataUiState: ItemUiState, viewModel: ItemViewModel) {
+    val forceUpdateTrigger by remember {
+        mutableIntStateOf(0)
+    }
 
     LazyColumn(
         modifier = Modifier
@@ -284,7 +282,10 @@ fun PriceListList(dataUiState: ItemUiState, viewModel: ItemViewModel) {
                     headlineContent = { Text(text = individualPrice.price.toString()) },
                     supportingContent = { Text(text = individualPrice.currency) },
                     trailingContent = {
-                        Button(onClick = { viewModel.eraseIndividualPriceList(individualPrice) }) {
+                        Button(onClick = {
+                            viewModel.eraseIndividualPriceList(individualPrice)
+                            forceUpdateTrigger.plus(1)
+                        }) {
                             Text(
                                 text = "Borrar"
                             )

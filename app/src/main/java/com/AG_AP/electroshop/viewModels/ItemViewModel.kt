@@ -18,6 +18,17 @@ class ItemViewModel : ViewModel(), ActionViewModel {
         TODO()
     }
 
+    fun addItemPriceList(price: Price) {
+        val list = _uiState.value.itemPrice
+        list?.add(price)
+
+        _uiState.update { currentState ->
+            currentState.copy(
+                itemPrice = list
+            )
+        }
+    }
+
     fun changeItemCode(itemCode: String) {
         _uiState.update { currentState ->
             currentState.copy(
@@ -91,15 +102,15 @@ class ItemViewModel : ViewModel(), ActionViewModel {
     }
 
     fun eraseIndividualPriceList(price: Price) {
-            val listAfterDel = _uiState.value.itemPrice
+        val listAfterDel = _uiState.value.itemPrice
 
-            listAfterDel?.remove(price)
+        listAfterDel?.remove(price)
 
-            _uiState.update { currentState ->
-                currentState.copy(
-                    itemPrice = listAfterDel
-                )
-            }
+        _uiState.update { currentState ->
+            currentState.copy(
+                itemPrice = listAfterDel
+            )
+        }
         //FIXME  arreglar deque se actualize en tiempo reals mainito
 
     }

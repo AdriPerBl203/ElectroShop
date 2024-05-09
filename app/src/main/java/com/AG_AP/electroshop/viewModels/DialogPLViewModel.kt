@@ -1,5 +1,6 @@
 package com.AG_AP.electroshop.viewModels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.AG_AP.electroshop.firebase.PriceListCRUD
@@ -20,6 +21,12 @@ class DialogPLViewModel : ViewModel() {
     init {
         viewModelScope.launch(Dispatchers.IO) {
             updateCurrencyList()
+
+            _uiState.update { currentState ->
+                currentState.copy(
+                    ItemPrice = null
+                )
+            }
         }
     }
 
@@ -65,9 +72,7 @@ class DialogPLViewModel : ViewModel() {
         val choosenCurrency = _uiState.value.ChoosenCurrency
         val writtenPrice = _uiState.value.PriceWritten
 
-
-
-        if (priceList != null && choosenCurrency != null && writtenPrice != null) {
+        if (priceList != null && (choosenCurrency != null && choosenCurrency != "") && (writtenPrice != null && writtenPrice >= 0.0)) {
             val itemPrice = Price(priceList.toInt(), writtenPrice, choosenCurrency, true)
 
             _uiState.update { currentState ->
@@ -75,6 +80,17 @@ class DialogPLViewModel : ViewModel() {
                     ItemPrice = itemPrice
                 )
             }
+        }
+    }
+
+    fun clearData() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                PriceList = 0,
+                ChoosenCurrency = "",
+                PriceWritten = 0.0,
+                ItemPrice = null
+            )
         }
     }
 

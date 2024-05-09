@@ -37,6 +37,7 @@ import com.AG_AP.electroshop.viewModels.DialogPLViewModel
 fun DialogCustomPriceList(
     onDismissRequest: () -> Unit,
     viewModel: DialogPLViewModel = viewModel(),
+    itemPricesAlreadyInserted: MutableList<Price>?,
     callback: (Price?) -> Unit
 ) {
     val dataUiState by viewModel.uiState.collectAsState()
@@ -81,20 +82,44 @@ fun DialogCustomPriceList(
                         onDismissRequest = { expanded = false }
                     ) {
                         coffeeDrinks.forEach { price ->
-                            DropdownMenuItem(
-                                text = {
-                                    if (price != null) {
-                                        Text(text = price.currency)
+                            if (itemPricesAlreadyInserted != null) {
+                                if (itemPricesAlreadyInserted.isNotEmpty()) {
+                                    itemPricesAlreadyInserted.forEach { insertedItem ->
+                                        if (price != null) {
+                                            if (insertedItem.currency != price.currency) {
+                                                DropdownMenuItem(
+                                                    text = {
+                                                        Text(text = price.currency)
+                                                    },
+                                                    onClick = {
+                                                        viewModel.changeChoosenCurrency(price.currency)
+                                                        viewModel.changePriceList(price.priceList)
+                                                        viewModel.changePrice()
+                                                        expanded = false
+                                                    }
+                                                )
+                                            }
+
+                                        }
                                     }
-                                },
-                                onClick = {
-                                    if (price != null) {
-                                        viewModel.changeChoosenCurrency(price.currency)
-                                        viewModel.changePriceList(price.priceList)
-                                    }
-                                    expanded = false
+                                } else {
+                                    DropdownMenuItem(
+                                        text = {
+                                            if (price != null) {
+                                                Text(text = price.currency)
+                                            }
+                                        },
+                                        onClick = {
+                                            if (price != null) {
+                                                viewModel.changeChoosenCurrency(price.currency)
+                                                viewModel.changePriceList(price.priceList)
+                                                viewModel.changePrice()
+                                            }
+                                            expanded = false
+                                        }
+                                    )
                                 }
-                            )
+                            }
                         }
                     }
                 }
@@ -115,8 +140,10 @@ fun DialogCustomPriceList(
                                 Log.e("Errores", e.stackTraceToString())
                             }
                             viewModel.changeWrittenPrice(newValue)
+                            viewModel.changePrice()
                         } else {
                             viewModel.changeWrittenPrice(0.0)
+                            viewModel.changePrice()
                         }
                     },
                     keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
@@ -131,8 +158,8 @@ fun DialogCustomPriceList(
                 )
 
                 Button(onClick = {
-                    viewModel.changePrice()
                     callback(dataUiState.ItemPrice)
+                    viewModel.clearData()
                     onDismissRequest()
                 }) {
                     Text(text = "Aceptar")
@@ -141,34 +168,4 @@ fun DialogCustomPriceList(
             }
         }
     }
-}
-
-@Composable
-fun PantallaPriceList() {
-    var showDialog by remember { mutableStateOf(false) }
-
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(5.dp)
-
-    ) {
-        Button(
-            onClick = { showDialog = true }
-        ) {
-            Text(text = "Mostrar diálogo")
-        }
-        if (showDialog) {
-            DialogCustomPriceList(
-                onDismissRequest = { showDialog = false }
-            ) { it ->
-                Log.e("Pruebas", it.toString())
-            }
-        }
-
-    }
-
-
 }
