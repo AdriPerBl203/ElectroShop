@@ -603,13 +603,14 @@ class SettingsViewModel : ViewModel() {
                         )
                     }
                     val item : Item = Item(
+                        "",
                         element.ItemCode ?: "",
                         element.ItemName ?: "",
                         ItemType.I,
-                        element.ItemName ?: "",
+                        element.Mainsupplier ?: "",
                         listPrice.toList(),
-                                element.ItemName ?: "",
-                                element.ItemName ?: "",
+                                element.ManageSerialNumbers ?: "",
+                                element.AutoCreateSerialNumbersOnRelease ?: "",
                         true
                     )
                     ItemCRUD.insertItem(item)

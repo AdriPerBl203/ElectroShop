@@ -27,6 +27,21 @@ object ItemCRUD {
             }
     }
 
+    fun insertItemForFireBase(item: Item) {
+        val docRef = this.database
+            .collection(this.coleccion)
+            .document()
+        val newdata = item.copy(idFireBase = docRef.id) // Guardar el ID generado dentro de la actividad
+        docRef
+            .set(newdata.toHashMap())
+            .addOnSuccessListener {
+                Log.e("FireBase", "Creado item con ID: ${docRef.id}")
+            }
+            .addOnFailureListener { e ->
+                Log.w("FireBase", "Error añadiendo el documento $e")
+            }
+    }
+
     /*
     fun getItemById(itemId: String, callback: (Item?) -> Unit) {
         var item: Item?
@@ -96,6 +111,7 @@ object ItemCRUD {
                 if (it.exists()) {
                     val datosItem = it.data
 
+                    val idFireBase = datosItem?.get("idFireBase").toString()
                     val itemName = datosItem?.get("ItemName") as String
                     val itemCode = datosItem?.get("itemCode") as String
                     val itemTypeString = datosItem["ItemType"] as String
@@ -134,6 +150,7 @@ object ItemCRUD {
                     }
 
                     val item = Item(
+                        idFireBase,
                         itemCode,
                         itemName,
                         itemType,
@@ -167,8 +184,9 @@ object ItemCRUD {
                 for (document in lista) {
                     val datosItem = document.data
 
+                    val idFireBase = datosItem?.get("idFireBase").toString()
                     val itemName = datosItem.get("ItemName") as String
-                    val itemCode = datosItem.get("itemCode") as String
+                    val itemCode = datosItem.get("ItemCode") as String
                     val itemTypeString = datosItem["ItemType"] as String
                     val mainSupplier = datosItem["Mainsupplier"] as String
                     var itemPrice: MutableList<Price>? = mutableListOf()
@@ -205,6 +223,7 @@ object ItemCRUD {
                     }
 
                     val item = Item(
+                        idFireBase,
                         itemCode,
                         itemName,
                         itemType,
