@@ -431,4 +431,12 @@ class OrderViewModel : ViewModel(), ActionViewModel {
             )
         }
     }
+
+    fun showDialogaddArticle(){
+        _uiState.update { currentState ->
+            currentState.copy(
+                showDialogAddArticle=true
+            )
+        }
+    }
 }
