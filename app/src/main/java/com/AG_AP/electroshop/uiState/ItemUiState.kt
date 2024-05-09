@@ -15,5 +15,6 @@ data class ItemUiState(
     val progress: Boolean = false,
     val text: String = "",
     val showBusinessPartnerDialog: Boolean = false,
-    val showPriceListDialog: Boolean = false
+    val showPriceListDialog: Boolean = false,
+    val trash: Int = 0
 )

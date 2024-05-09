@@ -103,15 +103,17 @@ class ItemViewModel : ViewModel(), ActionViewModel {
 
     fun eraseIndividualPriceList(price: Price) {
         val listAfterDel = _uiState.value.itemPrice
+        var trash = _uiState.value.trash
 
+        trash += 1
         listAfterDel?.remove(price)
 
         _uiState.update { currentState ->
             currentState.copy(
-                itemPrice = listAfterDel
+                itemPrice = listAfterDel,
+                trash = trash
             )
         }
-        //FIXME  arreglar deque se actualize en tiempo reals mainito
 
     }
 

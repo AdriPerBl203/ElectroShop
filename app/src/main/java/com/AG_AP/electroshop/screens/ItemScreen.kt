@@ -83,7 +83,7 @@ fun ArticleView(innerPadding: PaddingValues, viewModel: ItemViewModel, id: Strin
                 )
 
                 val coffeeDrinks =
-                    ItemType.entries //FIXME arreglar el porque no sale el nombre completo
+                    ItemType.entries.toTypedArray() //FIXME arreglar el porque no sale el nombre completo
                 var expanded by remember { mutableStateOf(false) }
 
                 ExposedDropdownMenuBox(
@@ -93,7 +93,7 @@ fun ArticleView(innerPadding: PaddingValues, viewModel: ItemViewModel, id: Strin
                     }
                 ) {
                     TextField(
-                        value = dataUiState.itemType.name,
+                        value = dataUiState.itemType.toString(),
                         onValueChange = {},
                         readOnly = true,
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
@@ -105,13 +105,37 @@ fun ArticleView(innerPadding: PaddingValues, viewModel: ItemViewModel, id: Strin
                         onDismissRequest = { expanded = false }
                     ) {
                         coffeeDrinks.forEach { item ->
-                            DropdownMenuItem(
-                                text = { Text(text = item.name) },
-                                onClick = {
-                                    viewModel.changeItemType(item)
-                                    expanded = false
-                                }
-                            )
+                            when (item) {
+                                ItemType.I -> DropdownMenuItem(
+                                    text = { Text(text = "Articulo") },
+                                    onClick = {
+                                        viewModel.changeItemType(item)
+                                        expanded = false
+                                    }
+                                )
+                                ItemType.F -> DropdownMenuItem(
+                                    text = { Text(text = "Fixed Assets") },
+                                    onClick = {
+                                        viewModel.changeItemType(item)
+                                        expanded = false
+                                    }
+                                )
+                                ItemType.T -> DropdownMenuItem(
+                                    text = { Text(text = "Viajes") },
+                                    onClick = {
+                                        viewModel.changeItemType(item)
+                                        expanded = false
+                                    }
+                                )
+                                ItemType.L -> DropdownMenuItem(
+                                    text = { Text(text = "Servicios") },
+                                    onClick = {
+                                        viewModel.changeItemType(item)
+                                        expanded = false
+                                    }
+                                )
+                            }
+
                         }
                     }
                 }
@@ -267,9 +291,6 @@ fun ArticleView(innerPadding: PaddingValues, viewModel: ItemViewModel, id: Strin
 
 @Composable
 fun PriceListList(dataUiState: ItemUiState, viewModel: ItemViewModel) {
-    val forceUpdateTrigger by remember {
-        mutableIntStateOf(0)
-    }
 
     LazyColumn(
         modifier = Modifier
@@ -284,7 +305,6 @@ fun PriceListList(dataUiState: ItemUiState, viewModel: ItemViewModel) {
                     trailingContent = {
                         Button(onClick = {
                             viewModel.eraseIndividualPriceList(individualPrice)
-                            forceUpdateTrigger.plus(1)
                         }) {
                             Text(
                                 text = "Borrar"
@@ -297,12 +317,11 @@ fun PriceListList(dataUiState: ItemUiState, viewModel: ItemViewModel) {
                             shape = RoundedCornerShape(8.dp),
                             color = MaterialTheme.colorScheme.primary
                         )
+                        .padding(top = 3.dp, bottom = 3.dp)
                 )
             }
         }
     }
-
-
 }
 
 
