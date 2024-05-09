@@ -10,6 +10,7 @@ import com.AG_AP.electroshop.endpoints.models.activity.PostActivity
 import com.AG_AP.electroshop.endpoints.models.businessPartners.BusinessPartners
 import com.AG_AP.electroshop.endpoints.models.businessPartners.PostBusinesspartner
 import com.AG_AP.electroshop.endpoints.models.item.getItems.GetItems
+import com.AG_AP.electroshop.endpoints.models.item.postItems.PostItem
 import com.AG_AP.electroshop.endpoints.models.login.Login
 import com.AG_AP.electroshop.endpoints.models.orders.Orders
 import com.AG_AP.electroshop.endpoints.models.orders.post.DocumentLine
@@ -407,7 +408,7 @@ class MenuViewModel : ViewModel() {
             ItemCRUD.getAllItems { list ->
                 //TODO queda todo sobre las subidas de los item
                 //TODO
-                /*viewModelScope.launch() {
+                viewModelScope.launch() {
                     val dataLogin = Login(Config.dataBase, Config.password, Config.login)
                     if (bol) {
                         LoginObj.loginAcessTwoversion(dataLogin, Config.rulUse)
@@ -416,32 +417,31 @@ class MenuViewModel : ViewModel() {
                         val listAux = list as MutableList<Item>
                         for (x in listAux) {
                             if (!x.SAP) {
-                                var CardTypeAux: String = ""
-                                var SeriesAux: Int = 0
-                                when (x.CardType) {
-                                    // "value" : "Invalid item name '' in Enum 'BoCardTypes'. The valid names are: 'cCustomer'-'C', 'cSupplier'-'S', 'cLid'-'L'"
-                                    "Cliente" -> {
-                                        CardTypeAux = "cCustomer"
-                                        SeriesAux = 71
-                                    }
-
-                                    "Proveedor" -> {
-                                        CardTypeAux = "cSupplier"
-                                        SeriesAux = 72
-                                    }
+                                //rellenar item
+                                val listPrice: MutableList<com.AG_AP.electroshop.endpoints.models.item.postItems.ItemPrice> = mutableListOf()
+                                x.itemPrice?.forEachIndexed { index, itemPrice ->
+                                    listPrice.add(
+                                        index,
+                                        com.AG_AP.electroshop.endpoints.models.item.postItems.ItemPrice(
+                                            itemPrice.currency ?: "",
+                                            itemPrice.price ?: 0,
+                                            itemPrice.priceList ?: 0,
+                                        )
+                                    )
                                 }
-
-
-                                val data: PostBusinesspartner = PostBusinesspartner(
-                                    x.CardName,
-                                    CardTypeAux,
-                                    x.Cellular,
-                                    x.EmailAddress,
-                                    SeriesAux
+                                //TODO
+                                val item : PostItem = PostItem(
+                                    73,
+                                    x.autoCreateSerialNumbersOnRelease ?: "N",
+                                    x.itemName,
+                                    listPrice.toList(),
+                                    x.itemType.toString(),
+                                    x.manageSerialNumbers ?: "N"
                                 )
-                                ItemObj.postBusinessPartners(Config.rulUse, data)
+
+                                ItemObj.postItems(Config.rulUse, item)
                                 if (x.idFireBase != null) {
-                                    BusinessPartnerCRUD.deleteObjectById(x.idFireBase)
+                                    ItemCRUD.deleteItemById(x.idFireBase)
                                 }
                             }
                         }
@@ -485,13 +485,14 @@ class MenuViewModel : ViewModel() {
                                 )
                             }
                             val item : Item = Item(
+                                "",
                                 element.ItemCode ?: "",
                                 element.ItemName ?: "",
                                 ItemType.I,
-                                element.ItemName ?: "",
+                                element.Mainsupplier ?: "",
                                 listPrice.toList(),
-                                element.ItemName ?: "",
-                                element.ItemName ?: "",
+                                element.ManageSerialNumbers ?: "",
+                                element.AutoCreateSerialNumbersOnRelease ?: "",
                                 true
                             )
                             ItemCRUD.insertItem(item)
@@ -506,7 +507,7 @@ class MenuViewModel : ViewModel() {
                             }
                         }
                     }
-                }*/
+                }
             }
         }
     }

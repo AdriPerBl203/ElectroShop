@@ -68,6 +68,24 @@ class MainActivity : ComponentActivity() {
                     PurchaseOrderCRUD.insertForFireBase(order)
                     */
 
+                    //Crear item de ejemplo:
+                    /*val priceList = listOf(
+                        Price(1, 10, "USD",true),
+                        Price(2, 15, "EUR",true)
+                    )
+                    val item = Item(
+                        idFireBase = "",
+                        ItemCode = "",
+                        itemName = "Example Item",
+                        itemType = ItemType.I,
+                        mainSupplier = "P00001",
+                        itemPrice = priceList,
+                        manageSerialNumbers = "Yes",
+                        autoCreateSerialNumbersOnRelease = "No",
+                        SAP = false
+                    )
+                    ItemCRUD.insertItemForFireBase(item)*/
+
                     val context: Context = application.applicationContext
                     Config.initConfig(context)
                     AppNav(context=context)
