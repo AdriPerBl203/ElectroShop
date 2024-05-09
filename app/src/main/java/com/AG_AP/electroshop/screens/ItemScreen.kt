@@ -38,7 +38,6 @@ import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -83,7 +82,7 @@ fun ArticleView(innerPadding: PaddingValues, viewModel: ItemViewModel, id: Strin
                 )
 
                 val coffeeDrinks =
-                    ItemType.entries.toTypedArray() //FIXME arreglar el porque no sale el nombre completo
+                    ItemType.entries.toTypedArray()
                 var expanded by remember { mutableStateOf(false) }
 
                 ExposedDropdownMenuBox(
@@ -97,7 +96,10 @@ fun ArticleView(innerPadding: PaddingValues, viewModel: ItemViewModel, id: Strin
                         onValueChange = {},
                         readOnly = true,
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                        modifier = Modifier.menuAnchor()
+                        modifier = Modifier
+                            .menuAnchor()
+                            .width(300.dp)
+                            .padding(8.dp),
                     )
 
                     ExposedDropdownMenu(
@@ -105,37 +107,13 @@ fun ArticleView(innerPadding: PaddingValues, viewModel: ItemViewModel, id: Strin
                         onDismissRequest = { expanded = false }
                     ) {
                         coffeeDrinks.forEach { item ->
-                            when (item) {
-                                ItemType.I -> DropdownMenuItem(
-                                    text = { Text(text = "Articulo") },
-                                    onClick = {
-                                        viewModel.changeItemType(item)
-                                        expanded = false
-                                    }
-                                )
-                                ItemType.F -> DropdownMenuItem(
-                                    text = { Text(text = "Fixed Assets") },
-                                    onClick = {
-                                        viewModel.changeItemType(item)
-                                        expanded = false
-                                    }
-                                )
-                                ItemType.T -> DropdownMenuItem(
-                                    text = { Text(text = "Viajes") },
-                                    onClick = {
-                                        viewModel.changeItemType(item)
-                                        expanded = false
-                                    }
-                                )
-                                ItemType.L -> DropdownMenuItem(
-                                    text = { Text(text = "Servicios") },
-                                    onClick = {
-                                        viewModel.changeItemType(item)
-                                        expanded = false
-                                    }
-                                )
-                            }
-
+                            DropdownMenuItem(
+                                text = { Text(text = item.toString()) },
+                                onClick = {
+                                    viewModel.changeItemType(item)
+                                    expanded = false
+                                }
+                            )
                         }
                     }
                 }

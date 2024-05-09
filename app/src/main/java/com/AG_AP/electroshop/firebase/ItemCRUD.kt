@@ -126,11 +126,11 @@ object ItemCRUD {
                     val SAP = datosItem["SAP"].toString().toBoolean()
 
                     val itemType: ItemType = when (itemTypeString) {
-                        "I" -> ItemType.I
-                        "L" -> ItemType.L
-                        "T" -> ItemType.T
-                        "F" -> ItemType.F
-                        else -> ItemType.I
+                        "I" -> ItemType.Articulo
+                        "L" -> ItemType.Servicio
+                        "T" -> ItemType.Viaje
+                        "F" -> ItemType.ActivoFijo
+                        else -> ItemType.Articulo
                     }
 
                     val item = Item(
@@ -197,11 +197,11 @@ object ItemCRUD {
                     val SAP = datosItem["SAP"].toString().toBoolean()
 
                     val itemType: ItemType = when (itemTypeString) {
-                        "I" -> ItemType.I
-                        "L" -> ItemType.L
-                        "T" -> ItemType.T
-                        "F" -> ItemType.F
-                        else -> ItemType.I
+                        "I" -> ItemType.Articulo
+                        "L" -> ItemType.Servicio
+                        "T" -> ItemType.Viaje
+                        "F" -> ItemType.ActivoFijo
+                        else -> ItemType.Articulo
                     }
 
                     val item = Item(
