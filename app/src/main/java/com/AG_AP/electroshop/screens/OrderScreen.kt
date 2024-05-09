@@ -22,9 +22,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddBox
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
@@ -54,13 +57,32 @@ import androidx.navigation.NavHostController
 import com.AG_AP.electroshop.viewModels.OrderViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.AG_AP.electroshop.components.DatePicker
+import com.AG_AP.electroshop.components.DialogActivity
+import com.AG_AP.electroshop.components.DialogOandPO
 import com.AG_AP.electroshop.uiState.OrderUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String?) {
     val dataUiState by viewModel.uiState.collectAsState()
-
+    //TODO
+    if(dataUiState.showDialogAddArticle){
+        DialogOandPO(
+            closeDialog = {viewModel.closeDialogaddArticle()},
+            retunrData={ list ->
+                Log.e("LisDataArticle", list.toString())
+                viewModel.addArticle(list)
+            }
+        )
+    }
+    /*if(dataUiState.showDialogSelectCodeArticle){
+        DialogActivity(
+            data ={ dataUiState.ListItems },
+            "Seleccione Código articulo",
+            { viewModel.closeDialogSelectCodeArticleTwo() },
+            {data -> /*viewModel.change*/ }
+        )
+    }*/
     Column(
         modifier = Modifier
             .padding(innerPadding)
@@ -134,6 +156,17 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
                 }
                 DatePicker("Fecha documento ", dataUiState.DocDate) { fechaDocumento ->
                     viewModel.changeDocDate(fechaDocumento)
+                }
+            }
+            
+            Column{
+                ElevatedButton(
+                    onClick = {
+                        viewModel.showDialogaddArticle()
+                    }
+                ) {
+                    Text(text = "Añadir articulo")
+                    Icon(imageVector = Icons.Filled.AddBox, contentDescription = "Añadir articulo")
                 }
             }
         }
