@@ -57,6 +57,7 @@ import androidx.navigation.NavHostController
 import com.AG_AP.electroshop.viewModels.OrderViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.AG_AP.electroshop.components.DatePicker
+import com.AG_AP.electroshop.components.DialogActivity
 import com.AG_AP.electroshop.components.DialogOandPO
 import com.AG_AP.electroshop.uiState.OrderUiState
 
@@ -66,8 +67,22 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
     val dataUiState by viewModel.uiState.collectAsState()
     //TODO
     if(dataUiState.showDialogAddArticle){
-        DialogOandPO()
+        DialogOandPO(
+            closeDialog = {viewModel.closeDialogaddArticle()},
+            retunrData={ list ->
+                Log.e("LisDataArticle", list.toString())
+                viewModel.addArticle(list)
+            }
+        )
     }
+    /*if(dataUiState.showDialogSelectCodeArticle){
+        DialogActivity(
+            data ={ dataUiState.ListItems },
+            "Seleccione Código articulo",
+            { viewModel.closeDialogSelectCodeArticleTwo() },
+            {data -> /*viewModel.change*/ }
+        )
+    }*/
     Column(
         modifier = Modifier
             .padding(innerPadding)

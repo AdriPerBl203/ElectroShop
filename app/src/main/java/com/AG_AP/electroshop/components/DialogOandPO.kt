@@ -8,10 +8,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddBox
 import androidx.compose.material3.Card
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,9 +28,17 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.AG_AP.electroshop.viewModels.DialogArticleViewModel
 
 @Composable
-fun DialogOandPO(viewModel: DialogArticleViewModel = viewModel()){
+fun DialogOandPO(viewModel: DialogArticleViewModel = viewModel(),closeDialog:()->Unit,retunrData: (List<String>) -> Unit){
     val dataUiState by viewModel.uiState.collectAsState()
-    Dialog(onDismissRequest = {  }){
+    Dialog(onDismissRequest = { closeDialog() }){
+        if(dataUiState.showDialogSelectCodeArticle){
+            DialogActivity(
+                data ={ dataUiState.ListItems },
+                "Seleccione Código articulo",
+                { viewModel.closeDialogSelectCodeArticle() },
+                {data -> viewModel.changeCodeArticle(data) }
+            )
+        }
         Card (
             shape = RoundedCornerShape(16.dp)
         ){
@@ -38,9 +48,19 @@ fun DialogOandPO(viewModel: DialogArticleViewModel = viewModel()){
                         value = dataUiState.codeArticle,
                         onValueChange = { viewModel.changeCodeArticle(it) },
                         modifier = Modifier
-                            .width(100.dp)
+                            .width(300.dp)
                             .padding(8.dp),
-                        label = { Text("Código articulo") }
+                        label = { Text("Código cliente") },
+                        readOnly = true,
+                        trailingIcon={
+                            IconButton(
+                                onClick = {
+                                    viewModel.showDialogSelectCode()
+                                }
+                            ) {
+                                Icon(Icons.Filled.Add, contentDescription = "")
+                            }
+                        }
                     )
 
                     OutlinedTextField(
@@ -94,7 +114,15 @@ fun DialogOandPO(viewModel: DialogArticleViewModel = viewModel()){
             ) {
                 ElevatedButton(
                     onClick = {
-                        //TODO
+                        val listData = listOf(
+                            dataUiState.codeArticle,
+                            dataUiState.description,
+                            dataUiState.count,
+                            dataUiState.price,
+                            dataUiState.discount
+                        )
+                        retunrData(listData)
+                        closeDialog()
                     }
                 ) {
                     Text(text = "Añadir")

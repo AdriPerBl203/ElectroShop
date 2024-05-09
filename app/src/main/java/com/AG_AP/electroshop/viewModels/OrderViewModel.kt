@@ -3,8 +3,10 @@ package com.AG_AP.electroshop.viewModels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.AG_AP.electroshop.firebase.ItemCRUD
 import com.AG_AP.electroshop.firebase.OrderCRUD
 import com.AG_AP.electroshop.firebase.models.DocumentLineFireBase
+import com.AG_AP.electroshop.firebase.models.Item
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
 import com.AG_AP.electroshop.uiState.ArticleUiState
 import com.AG_AP.electroshop.uiState.OrderUiState
@@ -23,6 +25,15 @@ class OrderViewModel : ViewModel(), ActionViewModel {
 
     init {
         DocumentLineForMutableList()
+
+        OrderCRUD.getAllObject { list ->
+            val mutableList = list as? MutableList<OrderFireBase>
+            mutableList?.let {
+                _uiState.update { currentState -> currentState.copy(
+                    ListItems = it.toList()
+                ) }
+            }
+        }
     }
 
     fun refresh() {
@@ -438,5 +449,34 @@ class OrderViewModel : ViewModel(), ActionViewModel {
                 showDialogAddArticle=true
             )
         }
+    }
+
+    fun closeDialogaddArticle(){
+        _uiState.update { currentState ->
+            currentState.copy(
+                showDialogAddArticle=false
+            )
+        }
+    }
+    fun addArticle(list:List<String>){
+        var index = _uiState.value.DocumentLine.size
+        index++
+        _uiState.value.DocumentLine+= ArticleUiState(
+            index,
+            list[0],
+            list[1],
+            list[2].toFloat(),
+            list[3].toFloat(),
+            list[4].toFloat()
+        )
+        var tastAux = _uiState.value.trash
+        tastAux++
+        _uiState.update { currentState ->
+            currentState.copy(
+                DocumentLineList = DocumentLineForMutableList(),
+                trash = tastAux
+            )
+        }
+
     }
 }
