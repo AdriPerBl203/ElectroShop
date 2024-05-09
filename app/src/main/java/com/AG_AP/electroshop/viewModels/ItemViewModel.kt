@@ -50,7 +50,7 @@ class ItemViewModel : ViewModel(), ActionViewModel {
         }
     }
 
-    fun changeItemPrice(priceLists: List<Price>?) {
+    fun changeItemPrice(priceLists: MutableList<Price>?) {
         _uiState.update { currentState ->
             currentState.copy(
                 itemPrice = priceLists
@@ -74,12 +74,34 @@ class ItemViewModel : ViewModel(), ActionViewModel {
         }
     }
 
-    fun changeShowDialog(boolean: Boolean) {
+    fun changeShowBusinessPartnerDialog(boolean: Boolean) {
         _uiState.update { currentState ->
             currentState.copy(
-                showDialog = boolean
+                showBusinessPartnerDialog = boolean
             )
         }
+    }
+
+    fun changeShowListPricesDialog(boolean: Boolean) {
+        _uiState.update { currentSate ->
+            currentSate.copy(
+                showPriceListDialog = boolean
+            )
+        }
+    }
+
+    fun eraseIndividualPriceList(price: Price) {
+            val listAfterDel = _uiState.value.itemPrice
+
+            listAfterDel?.remove(price)
+
+            _uiState.update { currentState ->
+                currentState.copy(
+                    itemPrice = listAfterDel
+                )
+            }
+        //FIXME  arreglar deque se actualize en tiempo reals mainito
+
     }
 
     override fun guardar(data: Boolean) {

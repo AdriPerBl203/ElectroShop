@@ -8,11 +8,15 @@ data class ItemUiState(
     val itemName: String = "",
     val itemType: ItemType = ItemType.I,
     val mainSupplier: String = "",
-    val itemPrice: List<Price>? = mutableListOf(),
+    val itemPrice: MutableList<Price>? = // mutableListOf(),
+        mutableListOf(
+            Price(100, 100, "EUR", false)
+        ),
     val manageSerialNumbers: Boolean = false,
     val autoCreateSerialNumbersOnRelease: Boolean = false,
     val message: Boolean = false,
     val progress: Boolean = false,
     val text: String = "",
-    val showDialog: Boolean = false
+    val showBusinessPartnerDialog: Boolean = false,
+    val showPriceListDialog: Boolean = false
 )

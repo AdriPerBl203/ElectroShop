@@ -1,13 +1,18 @@
 package com.AG_AP.electroshop.screens
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
@@ -20,6 +25,7 @@ import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
@@ -36,13 +42,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.AG_AP.electroshop.components.DialogCustomBusinessPartner
 import com.AG_AP.electroshop.firebase.models.ItemType
+import com.AG_AP.electroshop.uiState.ItemUiState
 import com.AG_AP.electroshop.viewModels.ItemViewModel
 
 
@@ -80,7 +85,8 @@ fun ArticleView(innerPadding: PaddingValues, viewModel: ItemViewModel, id: Strin
                     label = { Text("Descripción de item") }
                 )
 
-                val coffeeDrinks = ItemType.entries //FIXME arreglar el porque no sale el nombre completo
+                val coffeeDrinks =
+                    ItemType.entries //FIXME arreglar el porque no sale el nombre completo
                 var expanded by remember { mutableStateOf(false) }
 
                 ExposedDropdownMenuBox(
@@ -124,16 +130,16 @@ fun ArticleView(innerPadding: PaddingValues, viewModel: ItemViewModel, id: Strin
                     trailingIcon = {
                         IconButton(
                             onClick = {
-                                viewModel.changeShowDialog(true)
+                                viewModel.changeShowBusinessPartnerDialog(true)
                             }
                         ) {
                             Icon(Icons.Filled.Add, contentDescription = "+ Icon")
                         }
                     }
                 )
-                if (dataUiState.showDialog) {
+                if (dataUiState.showBusinessPartnerDialog) {
                     DialogCustomBusinessPartner(onDismissRequest = {
-                        viewModel.changeShowDialog(
+                        viewModel.changeShowBusinessPartnerDialog(
                             false
                         )
                     }) {
@@ -143,7 +149,7 @@ fun ArticleView(innerPadding: PaddingValues, viewModel: ItemViewModel, id: Strin
                     }
                 }
             }
-            /* TODO lista de precipos
+            /* TODO lista de precios
             Column {
                 val priority = arrayOf("Bajo", "Normal", "Alto")
                 var expandedTwo by remember { mutableStateOf(false) }
@@ -168,7 +174,7 @@ fun ArticleView(innerPadding: PaddingValues, viewModel: ItemViewModel, id: Strin
 
              */
 
-            Column (
+            Column(
                 modifier = Modifier.padding(10.dp)
             ) {
                 Text(
@@ -202,7 +208,7 @@ fun ArticleView(innerPadding: PaddingValues, viewModel: ItemViewModel, id: Strin
                 }
             }
 
-            Column (
+            Column(
                 modifier = Modifier.padding(10.dp)
             ) {
                 Text(
@@ -235,7 +241,12 @@ fun ArticleView(innerPadding: PaddingValues, viewModel: ItemViewModel, id: Strin
                     )
                 }
             }
+
+
+            //TODO ARTICULO
+
         }
+        PriceListList(dataUiState = dataUiState, viewModel = viewModel)
     }
 
     Column {
@@ -257,6 +268,40 @@ fun ArticleView(innerPadding: PaddingValues, viewModel: ItemViewModel, id: Strin
             )
         }
     }
+}
+
+@Composable
+fun PriceListList(dataUiState: ItemUiState, viewModel: ItemViewModel) {
+
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 10.dp, end = 20.dp)
+    ) {
+        dataUiState.itemPrice?.let { price ->
+            items(price) { individualPrice ->
+                ListItem(
+                    headlineContent = { Text(text = individualPrice.price.toString()) },
+                    supportingContent = { Text(text = individualPrice.currency) },
+                    trailingContent = {
+                        Button(onClick = { viewModel.eraseIndividualPriceList(individualPrice) }) {
+                            Text(
+                                text = "Borrar"
+                            )
+                        }
+                    },
+                    modifier = Modifier
+                        .border(
+                            width = 1.dp,
+                            shape = RoundedCornerShape(8.dp),
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                )
+            }
+        }
+    }
+
+
 }
 
 
