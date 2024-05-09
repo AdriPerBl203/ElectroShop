@@ -245,16 +245,16 @@ object ItemCRUD {
     }
 
 
-    fun updateItemById(itemId: String, item: Item) {
+    fun updateItemById(item: Item) {
         database
             .collection(this.coleccion)
-            .document(itemId)
+            .document(item.ItemCode)
             .update(item.toHashMap())
             .addOnSuccessListener {
-                Log.e("Pruebas", "Updateado el item con id: $itemId")
+                Log.e("Pruebas", "Updateado el item con id: ${item.ItemCode}")
             }
             .addOnFailureListener {
-                Log.e("Errores", "Error en get update item por id $it")
+                Log.e("Errores", "Error en get update item por id ${item.ItemCode}")
             }
     }
 

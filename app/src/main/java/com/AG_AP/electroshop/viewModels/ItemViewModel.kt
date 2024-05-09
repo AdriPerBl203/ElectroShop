@@ -1,6 +1,10 @@
 package com.AG_AP.electroshop.viewModels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.AG_AP.electroshop.firebase.ItemCRUD
+import com.AG_AP.electroshop.firebase.models.Item
 import com.AG_AP.electroshop.firebase.models.ItemType
 import com.AG_AP.electroshop.firebase.models.Price
 import com.AG_AP.electroshop.uiState.ItemUiState
@@ -8,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class ItemViewModel : ViewModel(), ActionViewModel {
 
@@ -118,15 +123,149 @@ class ItemViewModel : ViewModel(), ActionViewModel {
     }
 
     override fun guardar(data: Boolean) {
-        TODO("Not yet implemented, controlar los booleanos")
+        val itemCode = _uiState.value.ItemCode
+        val itemName = _uiState.value.itemName
+        val itemType = _uiState.value.itemType
+        val mainSupplier = _uiState.value.mainSupplier
+        val itemPrice = _uiState.value.itemPrice
+        val manageSerialNumbers = if (_uiState.value.manageSerialNumbers) {
+            "tYES"
+        } else {
+            "tNO"
+        }
+        var autoCreateSerialNumbers = if (_uiState.value.autoCreateSerialNumbersOnRelease) {
+            "tYES"
+        } else {
+            "tNO"
+        }
+        var text = "Nuevo articulo añadido"
+
+        val item = Item(
+            null,
+            itemCode,
+            itemName,
+            itemType,
+            mainSupplier,
+            itemPrice,
+            manageSerialNumbers,
+            autoCreateSerialNumbers,
+            false
+        )
+
+        viewModelScope.launch {
+            try {
+                ItemCRUD.insertItemForFireBase(item)
+            } catch (e: Exception) {
+                Log.e("Errores", e.stackTraceToString())
+                text = "Hubo un error con la creación del artículo"
+            }
+
+            if (!data) {
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        message = true,
+                        text = text,
+
+                        ItemCode = "",
+                        itemName = "",
+                        itemType = ItemType.Articulo,
+                        mainSupplier = "",
+                        itemPrice = mutableListOf(),
+                        manageSerialNumbers = false,
+                        autoCreateSerialNumbersOnRelease = false,
+                        showPriceListDialog = false,
+                        showBusinessPartnerDialog = false,
+                        trash = 0
+                    )
+                }
+            }
+        }
+
     }
 
     override fun update() {
-        TODO("Not yet implemented, controlar los booleanos")
+        val itemCode = _uiState.value.ItemCode
+        val itemName = _uiState.value.itemName
+        val itemType = _uiState.value.itemType
+        val mainSupplier = _uiState.value.mainSupplier
+        val itemPrice = _uiState.value.itemPrice
+        val manageSerialNumbers = if (_uiState.value.manageSerialNumbers) {
+            "tYES"
+        } else {
+            "tNO"
+        }
+        val autoCreateSerialNumbers = if (_uiState.value.autoCreateSerialNumbersOnRelease) {
+            "tYES"
+        } else {
+            "tNO"
+        }
+        var text = "Articulo actualizado"
+
+        val item = Item(
+            null,
+            itemCode,
+            itemName,
+            itemType,
+            mainSupplier,
+            itemPrice,
+            manageSerialNumbers,
+            autoCreateSerialNumbers,
+            false
+        )
+
+        viewModelScope.launch {
+            try {
+                ItemCRUD.updateItemById(item)
+            } catch (e: Exception) {
+                Log.e("Errores", e.stackTraceToString())
+                text = "Hubo un error con la actualización del artículo"
+            }
+
+            _uiState.update { currentState ->
+                currentState.copy(
+                    message = true,
+                    text = text
+                )
+            }
+        }
+
+
     }
 
     override fun borrar() {
-        TODO("Not yet implemented")
+        val itemCode = _uiState.value.ItemCode
+        var text = "Articulo eliminado"
+
+        viewModelScope.launch {
+            try {
+                ItemCRUD.deleteItemById(itemCode)
+            } catch (e: Exception) {
+                Log.e("Errores", e.stackTraceToString())
+                text = "Hubo un error con el borrado del articulo"
+            }
+
+            _uiState.update { currentState ->
+                currentState.copy(
+                    message = true,
+                    text = text,
+
+                    ItemCode = "",
+                    itemName = "",
+                    itemType = ItemType.Articulo,
+                    mainSupplier = "",
+                    itemPrice = mutableListOf(),
+                    manageSerialNumbers = false,
+                    autoCreateSerialNumbersOnRelease = false,
+                    showPriceListDialog = false,
+                    showBusinessPartnerDialog = false,
+                    trash = 0
+                )
+            }
+
+
+        }
+
+
     }
 
     override fun find() {
@@ -134,7 +273,11 @@ class ItemViewModel : ViewModel(), ActionViewModel {
     }
 
     override fun menssageFunFalse() {
-        TODO("Not yet implemented")
+        _uiState.update { currentState ->
+            currentState.copy(
+                message = false
+            )
+        }
     }
 }
 
