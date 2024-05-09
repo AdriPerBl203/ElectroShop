@@ -115,7 +115,7 @@ object ItemCRUD {
                     val itemName = datosItem?.get("ItemName") as String
                     val itemCode = datosItem?.get("itemCode") as String
                     val itemTypeString = datosItem["ItemType"] as String
-                    val mainSupplier = datosItem["Mainsupplier"] as String
+                    val mainSupplier = datosItem["Mainsupplier"] as String?
                     var itemPrice: MutableList<Price>? = mutableListOf()
                     try {
                         //Busca por "ItemPrices", si salta una excepcion es que no existe
@@ -188,7 +188,7 @@ object ItemCRUD {
                     val itemName = datosItem.get("ItemName") as String
                     val itemCode = datosItem.get("ItemCode") as String
                     val itemTypeString = datosItem["ItemType"] as String
-                    val mainSupplier = datosItem["Mainsupplier"] as String
+                    val mainSupplier = datosItem["Mainsupplier"] as String?
                     var itemPrice: MutableList<Price>? = mutableListOf()
                     try {
                         //Busca por "ItemPrices", si salta una excepcion es que no existe

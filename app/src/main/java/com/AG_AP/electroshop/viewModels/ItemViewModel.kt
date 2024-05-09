@@ -126,14 +126,19 @@ class ItemViewModel : ViewModel(), ActionViewModel {
         val itemCode = _uiState.value.ItemCode
         val itemName = _uiState.value.itemName
         val itemType = _uiState.value.itemType
-        val mainSupplier = _uiState.value.mainSupplier
+        val mainSupplier = if (_uiState.value.mainSupplier != "") {
+            _uiState.value.mainSupplier
+        } else {
+            null
+        }
+
         val itemPrice = _uiState.value.itemPrice
         val manageSerialNumbers = if (_uiState.value.manageSerialNumbers) {
             "tYES"
         } else {
             "tNO"
         }
-        var autoCreateSerialNumbers = if (_uiState.value.autoCreateSerialNumbersOnRelease) {
+        val autoCreateSerialNumbers = if (_uiState.value.autoCreateSerialNumbersOnRelease) {
             "tYES"
         } else {
             "tNO"
@@ -187,7 +192,11 @@ class ItemViewModel : ViewModel(), ActionViewModel {
         val itemCode = _uiState.value.ItemCode
         val itemName = _uiState.value.itemName
         val itemType = _uiState.value.itemType
-        val mainSupplier = _uiState.value.mainSupplier
+        val mainSupplier = if (_uiState.value.mainSupplier != "") {
+            _uiState.value.mainSupplier
+        } else {
+            null
+        }
         val itemPrice = _uiState.value.itemPrice
         val manageSerialNumbers = if (_uiState.value.manageSerialNumbers) {
             "tYES"

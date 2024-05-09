@@ -37,6 +37,7 @@ import com.AG_AP.electroshop.firebase.models.Price
 import com.AG_AP.electroshop.firebase.models.SEIConfig
 import com.AG_AP.electroshop.functions.Config
 import com.AG_AP.electroshop.functions.ConfigurationApplication
+import com.AG_AP.electroshop.functions.validarURL
 //import com.AG_AP.electroshop.functions.validarURL
 import com.AG_AP.electroshop.uiState.SettingUiState
 import com.google.gson.Gson
@@ -112,14 +113,14 @@ class SettingsViewModel : ViewModel() {
             return;
         }
 
-        /*if(!validarURL(urlInt) || !validarURL(urlExt)){
+        if(!validarURL(urlInt) || !validarURL(urlExt)){
             textShow = "Campos de las URL no validos."
             _uiState.update { currentState -> currentState.copy(
                 message = true,
                 text = textShow
             ) }
             return;
-        }*/
+        }
 
         /*Hacer la conexió*/
         viewModelScope.launch {

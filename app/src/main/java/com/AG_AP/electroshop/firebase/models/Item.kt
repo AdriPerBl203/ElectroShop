@@ -8,14 +8,14 @@ data class Item(
     val ItemCode:String,
     val itemName: String,
     val itemType: ItemType,
-    val mainSupplier: String,
+    val mainSupplier: String?,
     val itemPrice: List<Price>?,
     val manageSerialNumbers: String,
     val autoCreateSerialNumbersOnRelease: String,
     val SAP: Boolean
 ) {
-    fun toHashMap(): HashMap<String, Any> {
-        val hashMap = HashMap<String, Any>()
+    fun toHashMap(): HashMap<String, Any?> {
+        val hashMap = HashMap<String, Any?>()
         idFireBase?.let { hashMap["idFireBase"] = it }
         hashMap["Series"] = 73
         hashMap["ItemName"] = itemName

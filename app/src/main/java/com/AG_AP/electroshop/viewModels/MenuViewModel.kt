@@ -488,7 +488,7 @@ class MenuViewModel : ViewModel() {
                                 "",
                                 element.ItemCode ?: "",
                                 element.ItemName ?: "",
-                                ItemType.I,
+                                ItemType.Articulo,
                                 element.Mainsupplier ?: "",
                                 listPrice.toList(),
                                 element.ManageSerialNumbers ?: "",

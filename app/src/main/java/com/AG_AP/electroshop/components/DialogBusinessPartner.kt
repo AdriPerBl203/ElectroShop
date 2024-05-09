@@ -70,7 +70,7 @@ fun DialogCustomBusinessPartner(
                                         onDismissRequest()
 
                                     }) {
-                                        Text(text = "Prueba boton")
+                                        Text(text = "Seleccionar")
                                     }
                                 },
                                 modifier = Modifier
