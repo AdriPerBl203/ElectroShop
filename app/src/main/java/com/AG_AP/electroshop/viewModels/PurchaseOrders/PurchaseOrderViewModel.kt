@@ -10,6 +10,7 @@ import com.AG_AP.electroshop.uiState.Items.ArticleUiState
 import com.AG_AP.electroshop.uiState.PurchaseOrders.PurchaseOrderUiState
 import com.AG_AP.electroshop.viewModels.ActionViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -42,8 +43,8 @@ class PurchaseOrderViewModel : ViewModel(), ActionViewModel {
     }
 
     fun changeDocNum(docNum: Int) {
-        _uiState.update {
-            currentState -> currentState.copy(
+        _uiState.update { currentState ->
+            currentState.copy(
                 DocNum = docNum
             )
         }
@@ -287,9 +288,9 @@ class PurchaseOrderViewModel : ViewModel(), ActionViewModel {
             0, "", "", 0.0F, 0.0F, 0.0F
         )
         val size = _uiState.value.DocumentLine.size
-        if(size !=0){
-            val endArticleList : ArticleUiState? = _uiState.value.DocumentLine.get(size -1)
-            if(objectReflex.equals(endArticleList)){
+        if (size != 0) {
+            val endArticleList: ArticleUiState? = _uiState.value.DocumentLine.get(size - 1)
+            if (objectReflex.equals(endArticleList)) {
                 return
             }
         }
@@ -473,7 +474,7 @@ class PurchaseOrderViewModel : ViewModel(), ActionViewModel {
         }
     }
 
-    fun closeDialogaddArticle(){
+    fun closeDialogaddArticle() {
         _uiState.update { currentState ->
             currentState.copy(
                 showDialogAddArticle = false
@@ -481,7 +482,7 @@ class PurchaseOrderViewModel : ViewModel(), ActionViewModel {
         }
     }
 
-    fun showDialogaddArticle(){
+    fun showDialogaddArticle() {
         _uiState.update { currentState ->
             currentState.copy(
                 showDialogAddArticle = true
@@ -489,37 +490,49 @@ class PurchaseOrderViewModel : ViewModel(), ActionViewModel {
         }
     }
 
-    fun addArticle(list:List<String>){
+    fun addArticle(list: List<String>) {
 
-        //Toast.makeText(this, "Campos vacios", Toast.LENGTH_SHORT).show()
         //pruebas
-        if(list[0].isNullOrEmpty() || list[1].isNullOrEmpty() || list[2].isNullOrEmpty() || list[3].isNullOrEmpty() || list[4].isNullOrEmpty()){
-            //TODO
-        }
-        //fin pruebas
-        if(_uiState.value.DocumentLine.size !=0 ){
-            _uiState.value.DocumentLine.removeAt(_uiState.value.DocumentLine.size -1)
-        }
+        if (list[0].isEmpty() || list[1].isEmpty() || list[2].isEmpty() || list[3].isEmpty() || list[4].isEmpty()) {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    showToast = true
+                )
+            }
+            viewModelScope.launch {
+                delay(3000)
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        showToast = false
+                    )
+                }
+            }
+            return
+        } else {
+            //fin pruebas
+            if (_uiState.value.DocumentLine.size != 0) {
+                _uiState.value.DocumentLine.removeAt(_uiState.value.DocumentLine.size - 1)
+            }
 
-        var index = _uiState.value.DocumentLine.size
-        index++
-        _uiState.value.DocumentLine+= ArticleUiState(
-            index,
-            list[0] ?: "",
-            list[1] ?: "",
-            list[2].toFloat() ?:0.0F,
-            list[3].toFloat() ?:0.0F,
-            list[4].toFloat() ?:0.0F
-        )
-        var tastAux = _uiState.value.trash
-        tastAux++
-        _uiState.update { currentState ->
-            currentState.copy(
-                DocumentLineList = DocumentLineForMutableList(),
-                trash = tastAux
+            var index = _uiState.value.DocumentLine.size
+            index++
+            _uiState.value.DocumentLine += ArticleUiState(
+                index,
+                list[0] ?: "",
+                list[1] ?: "",
+                list[2].toFloat() ?: 0.0F,
+                list[3].toFloat() ?: 0.0F,
+                list[4].toFloat() ?: 0.0F
             )
+            var tastAux = _uiState.value.trash
+            tastAux++
+            _uiState.update { currentState ->
+                currentState.copy(
+                    DocumentLineList = DocumentLineForMutableList(),
+                    trash = tastAux
+                )
+            }
         }
-
     }
 
 }

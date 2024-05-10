@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.lifecycleScope
 import com.AG_AP.electroshop.endpoints.objects.PriceListObj
 import com.AG_AP.electroshop.functions.Config
+import com.AG_AP.electroshop.functions.ObjectContext
 import com.AG_AP.electroshop.viewModels.AppNav
 import kotlinx.coroutines.launch
 
@@ -28,6 +29,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val context: Context = application.applicationContext
+                    ObjectContext.context = context
                     Config.initConfig(context)
                     AppNav(context=context)
                 }

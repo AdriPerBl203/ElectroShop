@@ -113,7 +113,7 @@ object ItemCRUD {
 
                     val idFireBase = datosItem?.get("idFireBase").toString()
                     val itemName = datosItem?.get("ItemName") as String
-                    val itemCode = datosItem?.get("itemCode") as String
+                    val itemCode = datosItem["ItemCode"] as String ?: ""
                     val itemTypeString = datosItem["ItemType"] as String
                     val mainSupplier = datosItem["Mainsupplier"] as String?
                     var itemPrice: MutableList<Price>? = mutableListOf()
@@ -124,7 +124,7 @@ object ItemCRUD {
                         if (listaPrecios.isNotEmpty()) {
                             for (precio in listaPrecios) {
                                 val currency = precio["Currency"].toString()
-                                val price = precio["Price"].toString().toInt()
+                                val price = precio["Price"].toString().toDouble()
                                 val priceList = precio["PriceList"].toString().toInt()
                                 val SAP = precio["SAP"].toString().toBoolean()
 
@@ -134,6 +134,7 @@ object ItemCRUD {
                             itemPrice = null
                         }
                     } catch (e: Exception) {
+                        Log.e("Errores", e.stackTraceToString())
                         itemPrice = null
                     }
 

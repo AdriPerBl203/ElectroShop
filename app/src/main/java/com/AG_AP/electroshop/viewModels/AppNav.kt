@@ -15,6 +15,7 @@ import com.AG_AP.electroshop.screens.LoginFrontView
 import com.AG_AP.electroshop.screens.MenuFrontView
 import com.AG_AP.electroshop.screens.BusinessPartners.ScaffoldListBusinessPartner
 import com.AG_AP.electroshop.screens.Items.ScaffoldItem
+import com.AG_AP.electroshop.screens.Items.ScaffoldListItems
 import com.AG_AP.electroshop.screens.Orders.ScaffoldListOrder
 import com.AG_AP.electroshop.screens.Orders.ScaffoldOrder
 import com.AG_AP.electroshop.screens.PurchaseOrders.ScaffoldListPurchaseOrder
@@ -25,7 +26,7 @@ import com.AG_AP.electroshop.screens.SettingScreen
  * Method called at the beginning of the initialization
  */
 @Composable
-fun AppNav(navController: NavHostController = rememberNavController(),context: Context) {
+fun AppNav(navController: NavHostController = rememberNavController(), context: Context) {
     /* Starts with Login Screen */
     NavHost(
         navController = navController,
@@ -35,13 +36,13 @@ fun AppNav(navController: NavHostController = rememberNavController(),context: C
         composable(
             route = Routes.ScreenLogin.route
         ) {
-           LoginFrontView(navController = navController)
+            LoginFrontView(navController = navController)
         }
 
         composable(
             route = Routes.ScreenConfig.route
         ) {
-            SettingScreen(navController = navController,context=context)
+            SettingScreen(navController = navController, context = context)
         }
 
         composable(
@@ -94,7 +95,7 @@ fun AppNav(navController: NavHostController = rememberNavController(),context: C
         ) {
             ScaffoldOrder(navController = navController)
         }
-        
+
         composable(
             route = Routes.ScreenOrderList.route
         ) {
@@ -147,7 +148,15 @@ fun AppNav(navController: NavHostController = rememberNavController(),context: C
         composable(
             route = Routes.ItemScreenList.route
         ) {
-            TODO("ITEMSCREENLISTA")
+            ScaffoldListItems(navController = navController)
+        }
+
+        composable(
+            route = Routes.ItemScreenAux.route + "/{id}",
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id")
+            ScaffoldItem(navController = navController, id = id)
         }
     }
 }

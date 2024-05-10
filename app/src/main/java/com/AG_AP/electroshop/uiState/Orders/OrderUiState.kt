@@ -21,6 +21,7 @@ data class OrderUiState(
     val text: String = "",
     val showDialogAddArticle:Boolean = false,
     val showDialogSelectCodeArticle:Boolean = false,
+    val showToast: Boolean = false,
     val ListItems:List<OrderFireBase> = listOf()
 )
 

@@ -17,5 +17,6 @@ data class PurchaseOrderUiState(
     val message:Boolean = false,
     val progress:Boolean = false,
     val text:String = "",
-    val showDialogAddArticle: Boolean = false
+    val showDialogAddArticle: Boolean = false,
+    val showToast: Boolean = false
 )
