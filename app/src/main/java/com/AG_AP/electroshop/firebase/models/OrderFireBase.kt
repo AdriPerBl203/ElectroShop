@@ -30,6 +30,7 @@ data class OrderFireBase(
             val documentLineMap = HashMap<String, Any>()
             documentLineMap["ItemCode"] = documentLine.ItemCode
             documentLineMap["Quantity"] = documentLine.Quantity
+            documentLineMap["ItemDescription"] = documentLine.ItemDescription
             documentLineMap["DiscountPercent"] = documentLine.DiscountPercent
             documentLineMap["LineNum"] = documentLine.LineNum
             documentLineMap["Price"] = documentLine.Price

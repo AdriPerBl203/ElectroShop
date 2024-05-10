@@ -1,13 +1,10 @@
 package com.AG_AP.electroshop.viewModels.Orders
 
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.AG_AP.electroshop.firebase.ItemCRUD
 import com.AG_AP.electroshop.firebase.OrderCRUD
 import com.AG_AP.electroshop.firebase.models.DocumentLineFireBase
-import com.AG_AP.electroshop.firebase.models.Item
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
 import com.AG_AP.electroshop.uiState.Items.ArticleUiState
 import com.AG_AP.electroshop.uiState.Orders.OrderUiState
@@ -49,7 +46,92 @@ class OrderViewModel : ViewModel(), ActionViewModel {
     }
 
     override fun guardar(data: Boolean) {
-        TODO("hacer cuando se agregen los insert")
+        val cardCode = _uiState.value.CardCode
+        val cardName = _uiState.value.CardName
+        val docNum = _uiState.value.DocNum
+        val docDate = _uiState.value.DocDate
+        val docDueDate = _uiState.value.DocDueDate
+        val taxDate = _uiState.value.TaxDate
+        val discountPercent = _uiState.value.DiscountPercent
+        _uiState.update { currentState ->
+            currentState.copy(
+                DocumentLineList = trimDocumentLineList()
+            )
+        }
+        val documentLine = hashMapToDocumentLine()
+        var text = "Pedido de venta actualizado"
+
+
+        val orderFireBase = OrderFireBase(
+            "",
+            docNum,
+            cardCode,
+            cardName,
+            docDate,
+            docDueDate,
+            taxDate,
+            discountPercent,
+            documentLine,
+            false
+        )
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                OrderCRUD.insertForFireBase(orderFireBase)
+            } catch (e: Exception) {
+                Log.e("Errores", e.stackTraceToString())
+                text = "Hubo un error con la creación del pedido de venta"
+            }
+
+            if (!data) {
+                val emptyList: MutableList<ArticleUiState?> = mutableListOf()
+                val documentLineList = DocumentLineForMutableList(emptyList)
+
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        message = true,
+                        text = text,
+                        progress = false,
+
+                        CardCode = "",
+                        CardName = "",
+                        DocNum = -1,
+                        DocDate = "",
+                        DocDueDate = "",
+                        TaxDate = "",
+                        DiscountPercent = 0.0,
+                        DocumentLine = emptyList,
+                        DocumentLineList = documentLineList,
+                        trash = 0
+                    )
+                }
+            } else {
+                val lineToDelete = ArticleUiState(
+                    0, "", "", 0.0F, 0.0F, 0.0F
+                )
+
+                val lineList = _uiState.value.DocumentLine
+                val trimmedLine: MutableList<ArticleUiState?> = mutableListOf()
+                lineList.forEach { line ->
+                    if (line != null) {
+                        if (!(line.ItemCode == lineToDelete.ItemCode && line.ItemDescription == lineToDelete.ItemDescription && line.Quantity == lineToDelete.Quantity && line.DiscountPercent == lineToDelete.DiscountPercent)) {
+                            trimmedLine.add(line)
+                        }
+                    }
+                }
+
+                val documentLineList = DocumentLineForMutableList(trimmedLine)
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        DocumentLine = trimmedLine,
+                        DocumentLineList = documentLineList,
+
+                        message = true,
+                        text = text
+                    )
+                }
+            }
+        }
     }
 
     override fun update() {
@@ -111,24 +193,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
                 Log.e("Errores", e.stackTraceToString())
                 text = "Hubo un error con el borrado del pedido"
             }
-            val emptyList: MutableList<ArticleUiState?> = listOf(
-                ArticleUiState(
-                    0, "", "", 0.0F, 0.0F, 0.0F
-                ),
-                ArticleUiState(
-                    1, "", "", 0.0F, 0.0F, 0.0F
-                ),
-                ArticleUiState(
-                    2, "", "", 0.0F, 0.0F, 0.0F
-                ),
-                ArticleUiState(
-                    3, "", "", 0.0F, 0.0F, 0.0F
-                ),
-                ArticleUiState(
-                    4, "", "", 0.0F, 0.0F, 0.0F
-                )
-            ).toMutableList()
-
+            val emptyList: MutableList<ArticleUiState?> = mutableListOf()
 
             val documentLineList = DocumentLineForMutableList(emptyList)
 
@@ -366,7 +431,6 @@ class OrderViewModel : ViewModel(), ActionViewModel {
         return _uiState.value.DocumentLineList
     }
 
-    //FIXME arreglar
     fun addLine() {
         val objectReflex = ArticleUiState(
             0, "", "", 0.0F, 0.0F, 0.0F
@@ -431,7 +495,11 @@ class OrderViewModel : ViewModel(), ActionViewModel {
     }
 
     fun changeName(it: String) {
-        //TODO
+        _uiState.update { currentState ->
+            currentState.copy(
+                CardName = it
+            )
+        }
     }
 
     fun changeDocDueDate(fechaDocumento: String) {

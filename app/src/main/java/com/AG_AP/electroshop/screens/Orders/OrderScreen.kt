@@ -62,10 +62,10 @@ import com.AG_AP.electroshop.functions.ObjectContext
 fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String?) {
     val dataUiState by viewModel.uiState.collectAsState()
 
-    if(dataUiState.showDialogAddArticle){
+    if (dataUiState.showDialogAddArticle) {
         DialogOandPO(
-            closeDialog = {viewModel.closeDialogaddArticle()},
-            returnData={ list ->
+            closeDialog = { viewModel.closeDialogaddArticle() },
+            returnData = { list ->
                 Log.e("LisDataArticle", list.toString())
                 viewModel.addArticle(list)
             }
@@ -155,7 +155,10 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
                 }
             }
 
-            Column{
+            Column(
+                modifier = Modifier
+                    .padding(start = 10.dp)
+            ) {
                 ElevatedButton(
                     onClick = {
                         viewModel.showDialogaddArticle()
@@ -180,36 +183,40 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
             ) {
                 //TODO cuando sea inactivo el pedido no deja aumentar ni disminuir las lineas
                 //if (id == null) {
-                    Row {
-                        IconButton(
-                            modifier = Modifier
-                                .background(MaterialTheme.colorScheme.primary)
-                                .border(
-                                    BorderStroke(0.5.dp, Color.Black)
-                                )
-                                .padding(end = 0.5.dp),
-                            onClick = { viewModel.deleteLine() }
-                        ) {
-                            Text(text = "-")
-                        }
-                        IconButton(
-                            modifier = Modifier
-                                .background(MaterialTheme.colorScheme.primary)
-                                .border(
-                                    BorderStroke(0.5.dp, Color.Black)
-                                )
-                                .padding(start = 0.5.dp),
-                            onClick = { viewModel.addLine() }
-                        ) {
-                            Text(text = "+")
-                        }
+                Row {
+                    IconButton(
+                        modifier = Modifier
+                            .background(MaterialTheme.colorScheme.primary)
+                            .border(
+                                BorderStroke(0.5.dp, Color.Black)
+                            )
+                            .padding(end = 0.5.dp),
+                        onClick = { viewModel.deleteLine() }
+                    ) {
+                        Text(text = "-")
                     }
+                    IconButton(
+                        modifier = Modifier
+                            .background(MaterialTheme.colorScheme.primary)
+                            .border(
+                                BorderStroke(0.5.dp, Color.Black)
+                            )
+                            .padding(start = 0.5.dp),
+                        onClick = { viewModel.addLine() }
+                    ) {
+                        Text(text = "+")
+                    }
+                }
                 //}
 
                 TableDocumentLineOrder(dataUiState, viewModel)
 
                 if (dataUiState.showToast) {
-                    Toast.makeText(ObjectContext.context, "Existen algunos campos vacios", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        ObjectContext.context,
+                        "Existen algunos campos vacios",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
             Column {

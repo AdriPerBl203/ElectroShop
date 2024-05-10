@@ -81,7 +81,6 @@ fun DialogOandPO(
                         modifier = Modifier
                             .width(300.dp)
                             .padding(8.dp),
-                        suffix = { Text(text = "%") },
                         label = { Text("Descripción") }
                     )
 
