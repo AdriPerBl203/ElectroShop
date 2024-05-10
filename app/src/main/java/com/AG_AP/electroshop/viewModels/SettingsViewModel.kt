@@ -8,12 +8,14 @@ import com.AG_AP.electroshop.endpoints.models.activity.Activity
 import com.AG_AP.electroshop.endpoints.models.item.getItems.GetItems
 import com.AG_AP.electroshop.endpoints.models.login.Login
 import com.AG_AP.electroshop.endpoints.models.orders.Orders
+import com.AG_AP.electroshop.endpoints.models.priceList.PriceList
 import com.AG_AP.electroshop.endpoints.models.purchaseOrders.PurchaseOrders
 import com.AG_AP.electroshop.endpoints.objects.ActivityObj
 import com.AG_AP.electroshop.endpoints.objects.BusinessPartnersObj
 import com.AG_AP.electroshop.endpoints.objects.ItemObj
 import com.AG_AP.electroshop.endpoints.objects.LoginObj
 import com.AG_AP.electroshop.endpoints.objects.OrdersObj
+import com.AG_AP.electroshop.endpoints.objects.PriceListObj
 import com.AG_AP.electroshop.endpoints.objects.PurchaseOrdersObj
 import com.AG_AP.electroshop.endpoints.udo.models.CreateField
 import com.AG_AP.electroshop.endpoints.udo.models.createUdo.CreateUdo
@@ -26,6 +28,7 @@ import com.AG_AP.electroshop.firebase.ActivityCRUD
 import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
 import com.AG_AP.electroshop.firebase.ItemCRUD
 import com.AG_AP.electroshop.firebase.OrderCRUD
+import com.AG_AP.electroshop.firebase.PriceListCRUD
 import com.AG_AP.electroshop.firebase.PurchaseOrderCRUD
 import com.AG_AP.electroshop.firebase.SEIConfigCRUD
 import com.AG_AP.electroshop.firebase.models.BusinessPartner
@@ -389,6 +392,7 @@ class SettingsViewModel : ViewModel() {
                 val dataLogin = Login(Config.dataBase,Config.password,Config.login)
                 LoginObj.loginAcessTwoversion(dataLogin,Config.rulUse)
             //TODO
+                deleteAndInsertPriceList()
                 deleteAndInsertItem()// Correcta
                 deleteAndInsertUserUdo() //
                 deleteAndInsertBusinessPartner() // Correcta
@@ -661,6 +665,26 @@ class SettingsViewModel : ViewModel() {
                 dataBase = dataConfig.dataBase,
                 init=false
             ) }
+        }
+    }
+
+    private fun deleteAndInsertPriceList() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val priceList = PriceListObj.getPriceLists(Config.rulUse)
+            if(priceList is PriceList){
+                priceList.value.forEach { element->
+                    Log.e("JOSELITOO",element.toString())
+                    PriceListCRUD.deletePrecioById(element.BasePriceList.toString())
+                }
+                priceList.value.forEach { element->
+                    PriceListCRUD.insertPrecio(
+                        element.BasePriceList,
+                        element.FixedAmount.toDouble(),
+                        element.DefaultPrimeCurrency,
+                        true
+                    )
+                }
+            }
         }
     }
 }

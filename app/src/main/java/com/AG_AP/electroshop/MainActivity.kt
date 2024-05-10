@@ -10,8 +10,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.lifecycleScope
+import com.AG_AP.electroshop.endpoints.objects.PriceListObj
 import com.AG_AP.electroshop.functions.Config
 import com.AG_AP.electroshop.viewModels.AppNav
+import kotlinx.coroutines.launch
 
 
 class MainActivity : ComponentActivity() {
@@ -24,45 +27,6 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    //
-                    /*val documentLines = listOf(
-                        DocumentLineFireBase("item1", 2.0, 0.1, 1, 50.0),
-                        DocumentLineFireBase("item2", 1.0, 0.05, 2, 30.0)
-                    )
-
-                    // Crear una instancia de OrderFireBase
-                    val order = OrderFireBase(
-                        DocNum = 123,
-                        CardCode = "C123",
-                        CardName = "Cliente Ejemplo",
-                        DocDate = "2024-05-07",
-                        DocDueDate = "2024-05-10",
-                        TaxDate = "2024-05-07",
-                        DiscountPercent = 0.15,
-                        DocumentLines = documentLines,
-                        SAP = false
-                    )
-                    PurchaseOrderCRUD.insertForFireBase(order)
-                    */
-
-                    //Crear item de ejemplo:
-                    /*val priceList = listOf(
-                        Price(1, 10, "USD",true),
-                        Price(2, 15, "EUR",true)
-                    )
-                    val item = Item(
-                        idFireBase = "",
-                        ItemCode = "",
-                        itemName = "Example Item",
-                        itemType = ItemType.I,
-                        mainSupplier = "P00001",
-                        itemPrice = priceList,
-                        manageSerialNumbers = "Yes",
-                        autoCreateSerialNumbersOnRelease = "No",
-                        SAP = false
-                    )
-                    ItemCRUD.insertItemForFireBase(item)*/
-
                     val context: Context = application.applicationContext
                     Config.initConfig(context)
                     AppNav(context=context)
