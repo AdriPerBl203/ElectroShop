@@ -1,6 +1,7 @@
 package com.AG_AP.electroshop.viewModels
 
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.AG_AP.electroshop.firebase.ItemCRUD
@@ -459,15 +460,23 @@ class OrderViewModel : ViewModel(), ActionViewModel {
         }
     }
     fun addArticle(list:List<String>){
+
+        //Toast.makeText(this, "Campos vacios", Toast.LENGTH_SHORT).show()
+        //pruebas
+        if(list[0].isNullOrEmpty() || list[1].isNullOrEmpty() || list[2].isNullOrEmpty() || list[3].isNullOrEmpty() || list[4].isNullOrEmpty()){
+
+        }
+        //fin pruebas
+
         var index = _uiState.value.DocumentLine.size
         index++
         _uiState.value.DocumentLine+= ArticleUiState(
             index,
-            list[0],
-            list[1],
-            list[2].toFloat(),
-            list[3].toFloat(),
-            list[4].toFloat()
+            list[0] ?: "",
+            list[1] ?: "",
+            list[2].toFloat() ?:0.0F,
+            list[3].toFloat() ?:0.0F,
+            list[4].toFloat() ?:0.0F
         )
         var tastAux = _uiState.value.trash
         tastAux++

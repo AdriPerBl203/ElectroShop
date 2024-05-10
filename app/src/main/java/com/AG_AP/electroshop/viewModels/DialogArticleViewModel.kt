@@ -19,7 +19,12 @@ class DialogArticleViewModel : ViewModel() {
             val mutableList = list as? MutableList<OrderFireBase>
             mutableList?.let {
                 _uiState.update { currentState -> currentState.copy(
-                    ListItems = it.toList()
+                    ListItems = it.toList(),
+                    discount ="",
+                    price ="",
+                    count ="",
+                    description ="",
+                    codeArticle ="",
                 ) }
             }
         }
