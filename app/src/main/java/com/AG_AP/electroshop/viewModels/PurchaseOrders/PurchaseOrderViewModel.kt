@@ -463,4 +463,51 @@ class PurchaseOrderViewModel : ViewModel(), ActionViewModel {
             )
         }
     }
+
+    fun closeDialogaddArticle(){
+        _uiState.update { currentState ->
+            currentState.copy(
+                showDialogAddArticle = false
+            )
+        }
+    }
+
+    fun showDialogaddArticle(){
+        _uiState.update { currentState ->
+            currentState.copy(
+                showDialogAddArticle = true
+            )
+        }
+    }
+
+    fun addArticle(list:List<String>){
+
+        //Toast.makeText(this, "Campos vacios", Toast.LENGTH_SHORT).show()
+        //pruebas
+        if(list[0].isNullOrEmpty() || list[1].isNullOrEmpty() || list[2].isNullOrEmpty() || list[3].isNullOrEmpty() || list[4].isNullOrEmpty()){
+
+        }
+        //fin pruebas
+
+        var index = _uiState.value.DocumentLine.size
+        index++
+        _uiState.value.DocumentLine+= ArticleUiState(
+            index,
+            list[0] ?: "",
+            list[1] ?: "",
+            list[2].toFloat() ?:0.0F,
+            list[3].toFloat() ?:0.0F,
+            list[4].toFloat() ?:0.0F
+        )
+        var tastAux = _uiState.value.trash
+        tastAux++
+        _uiState.update { currentState ->
+            currentState.copy(
+                DocumentLineList = DocumentLineForMutableList(),
+                trash = tastAux
+            )
+        }
+
+    }
+
 }

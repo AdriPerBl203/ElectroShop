@@ -1,5 +1,6 @@
 package com.AG_AP.electroshop.screens.PurchaseOrders
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -18,9 +19,11 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AddBox
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
@@ -48,6 +51,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.AG_AP.electroshop.components.DatePicker
+import com.AG_AP.electroshop.components.DialogOandPO
 import com.AG_AP.electroshop.uiState.PurchaseOrders.PurchaseOrderUiState
 import com.AG_AP.electroshop.viewModels.PurchaseOrders.PurchaseOrderViewModel
 
@@ -59,6 +63,16 @@ fun PurchaseOrderView(
     id: String?
 ) {
     val dataUiState by viewModel.uiState.collectAsState()
+
+    if(dataUiState.showDialogAddArticle){
+        DialogOandPO(
+            closeDialog = {viewModel.closeDialogaddArticle()},
+            retunrData={ list ->
+                Log.e("LisDataArticle", list.toString())
+                viewModel.addArticle(list)
+            }
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -134,6 +148,17 @@ fun PurchaseOrderView(
                 }
                 DatePicker("Fecha documento ", dataUiState.DocDate) { fechaDocumento ->
                     viewModel.changeDocDate(fechaDocumento)
+                }
+            }
+
+            Column{
+                ElevatedButton(
+                    onClick = {
+                        viewModel.showDialogaddArticle()
+                    }
+                ) {
+                    Text(text = "Añadir articulo")
+                    Icon(imageVector = Icons.Filled.AddBox, contentDescription = "Añadir articulo")
                 }
             }
         }
