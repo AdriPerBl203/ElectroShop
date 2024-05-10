@@ -1,7 +1,9 @@
 package com.AG_AP.electroshop.viewModels.Items
 
 import androidx.lifecycle.ViewModel
+import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
 import com.AG_AP.electroshop.firebase.OrderCRUD
+import com.AG_AP.electroshop.firebase.models.BusinessPartner
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
 import com.AG_AP.electroshop.uiState.Items.DialogArticleUiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,8 +17,22 @@ class DialogArticleViewModel : ViewModel() {
     val uiState: StateFlow<DialogArticleUiState> = _uiState.asStateFlow()
 
     init {
-        OrderCRUD.getAllObject { list ->
+        /*OrderCRUD.getAllObject { list ->
             val mutableList = list as? MutableList<OrderFireBase>
+            mutableList?.let {
+                _uiState.update { currentState -> currentState.copy(
+                    ListItems = it.toList(),
+                    discount ="",
+                    price ="",
+                    count ="",
+                    description ="",
+                    codeArticle ="",
+                ) }
+            }
+        }*/
+
+        BusinessPartnerCRUD.getAllObject { list ->
+            val mutableList = list as? MutableList<BusinessPartner>
             mutableList?.let {
                 _uiState.update { currentState -> currentState.copy(
                     ListItems = it.toList(),

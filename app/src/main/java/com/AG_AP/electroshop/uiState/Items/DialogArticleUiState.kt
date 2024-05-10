@@ -9,6 +9,7 @@ data class DialogArticleUiState(
     val count:String ="0",
     val price:String ="0",
     val discount:String ="0",
-    val ListItems:List<OrderFireBase> = listOf(),
+    //val ListItems:List<OrderFireBase> = listOf(),
+    val ListItems:List<BusinessPartner> = listOf(),
     val showDialogSelectCodeArticle:Boolean =false
 )
