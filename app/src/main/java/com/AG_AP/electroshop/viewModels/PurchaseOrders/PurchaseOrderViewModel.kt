@@ -3,7 +3,9 @@ package com.AG_AP.electroshop.viewModels.PurchaseOrders
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
 import com.AG_AP.electroshop.firebase.PurchaseOrderCRUD
+import com.AG_AP.electroshop.firebase.models.BusinessPartner
 import com.AG_AP.electroshop.firebase.models.DocumentLineFireBase
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
 import com.AG_AP.electroshop.uiState.Items.ArticleUiState
@@ -25,6 +27,14 @@ class PurchaseOrderViewModel : ViewModel(), ActionViewModel {
 
     init {
         DocumentLineForMutableList()
+        BusinessPartnerCRUD.getAllObject { list ->
+            val mutableList = list as? MutableList<BusinessPartner>
+            mutableList?.let {
+                _uiState.update { currentState -> currentState.copy(
+                    ListBusinessPartner = it.toList()
+                ) }
+            }
+        }
     }
 
     fun refresh() {
@@ -106,6 +116,22 @@ class PurchaseOrderViewModel : ViewModel(), ActionViewModel {
     fun changeTaxDate(taxDate: String) {
         _uiState.update { currentState ->
             currentState
+        }
+    }
+
+    fun showDialogBusinessPartner(){
+        _uiState.update { currentState ->
+            currentState.copy(
+                showDialogBusinessPartner = true
+            )
+        }
+    }
+
+    fun closeDialogBusinessPartner(){
+        _uiState.update { currentState ->
+            currentState.copy(
+                showDialogBusinessPartner = false
+            )
         }
     }
 
