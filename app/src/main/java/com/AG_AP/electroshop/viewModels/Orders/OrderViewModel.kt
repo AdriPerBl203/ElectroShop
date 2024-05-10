@@ -365,7 +365,17 @@ class OrderViewModel : ViewModel(), ActionViewModel {
 
     //FIXME arreglar
     fun addLine() {
+        val objectReflex = ArticleUiState(
+            0, "", "", 0.0F, 0.0F, 0.0F
+        )
         val size = _uiState.value.DocumentLine.size
+        if(size !=0){
+            val endArticleList : ArticleUiState? = _uiState.value.DocumentLine.get(size -1)
+            if(objectReflex.equals(endArticleList)){
+                return
+            }
+        }
+
         var id: Int = _uiState.value.DocumentLine.lastOrNull()?.LineNum ?: 0
         var listAux: MutableList<ArticleUiState?> = _uiState.value.DocumentLine
         id++
@@ -389,7 +399,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
 
     fun deleteLine() {
         val size = _uiState.value.DocumentLine.size
-        if (size - 1 == 4) {
+        if (size == 0) {
             return
         }
         var listAux: MutableList<ArticleUiState?> = _uiState.value.DocumentLine
@@ -465,9 +475,12 @@ class OrderViewModel : ViewModel(), ActionViewModel {
         //Toast.makeText(this, "Campos vacios", Toast.LENGTH_SHORT).show()
         //pruebas
         if(list[0].isNullOrEmpty() || list[1].isNullOrEmpty() || list[2].isNullOrEmpty() || list[3].isNullOrEmpty() || list[4].isNullOrEmpty()){
-
+            //TODO
         }
         //fin pruebas
+        if(_uiState.value.DocumentLine.size !=0 ){
+            _uiState.value.DocumentLine.removeAt(_uiState.value.DocumentLine.size -1)
+        }
 
         var index = _uiState.value.DocumentLine.size
         index++

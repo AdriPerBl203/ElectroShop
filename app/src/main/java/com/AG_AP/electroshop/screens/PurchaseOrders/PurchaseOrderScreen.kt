@@ -174,7 +174,7 @@ fun PurchaseOrderView(
                     .padding(top = 30.dp, end = 30.dp)
                     .background(MaterialTheme.colorScheme.background)
             ) {
-                if (id != null && id.toInt() != -1) {
+                //if (id != null && id.toInt() != -1) {
                     Row {
                         IconButton(
                             modifier = Modifier
@@ -199,7 +199,7 @@ fun PurchaseOrderView(
                             Text(text = "+")
                         }
                     }
-                }
+                //}
             }
             TableDocumentLinePurchase(dataUiState, viewModel)
 

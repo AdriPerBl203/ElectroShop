@@ -11,23 +11,7 @@ data class PurchaseOrderUiState(
     val DocDueDate: String = "",
     val TaxDate: String = "",
     val DiscountPercent: Double = 0.0, //Descuento
-    val DocumentLine: MutableList<ArticleUiState?> = listOf(
-        ArticleUiState(
-            0, "", "", 0.0F, 0.0F, 0.0F
-        ),
-        ArticleUiState(
-            1, "", "", 0.0F, 0.0F, 0.0F
-        ),
-        ArticleUiState(
-            2, "", "", 0.0F, 0.0F, 0.0F
-        ),
-        ArticleUiState(
-            3, "", "", 0.0F, 0.0F, 0.0F
-        ),
-        ArticleUiState(
-            4, "", "", 0.0F, 0.0F, 0.0F
-        )
-    ).toMutableList(),
+    val DocumentLine: MutableList<ArticleUiState?> = listOf(null).toMutableList(),
     val DocumentLineList: ConcurrentHashMap<Int, MutableList<String>> = ConcurrentHashMap(),
     val trash: Int = 0,
     val message:Boolean = false,
