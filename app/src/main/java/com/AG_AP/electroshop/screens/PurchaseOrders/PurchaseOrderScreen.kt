@@ -52,6 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.AG_AP.electroshop.components.DatePicker
+import com.AG_AP.electroshop.components.DialogActivity
 import com.AG_AP.electroshop.components.DialogOandPO
 import com.AG_AP.electroshop.functions.ObjectContext
 import com.AG_AP.electroshop.uiState.PurchaseOrders.PurchaseOrderUiState
@@ -66,13 +67,12 @@ fun PurchaseOrderView(
 ) {
     val dataUiState by viewModel.uiState.collectAsState()
 
-    if (dataUiState.showDialogAddArticle) {
-        DialogOandPO(
-            closeDialog = { viewModel.closeDialogaddArticle() },
-            returnData = { list ->
-                Log.e("LisDataArticle", list.toString())
-                viewModel.addArticle(list)
-            }
+    if(dataUiState.showDialogBusinessPartner){
+        DialogActivity(
+            data ={dataUiState.ListBusinessPartner},
+            "Seleccione cliente" ,
+            {viewModel.closeDialogBusinessPartner()},
+            {data -> viewModel.changeCardCode(data) }
         )
     }
 
@@ -87,35 +87,24 @@ fun PurchaseOrderView(
                     arrayOf("Llamada telefónica", "Reunión", "Tarea", "Nota", "Campaña", "Otros")
                 var expanded by remember { mutableStateOf(false) }
 
-                ExposedDropdownMenuBox(
-                    expanded = expanded,
-                    onExpandedChange = {
-                        expanded = !expanded
-                    }
-                ) {
-                    TextField(
-                        value = "",
-                        onValueChange = {},
-                        readOnly = true,
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                        modifier = Modifier.menuAnchor()
-                    )
-
-                    ExposedDropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false }
-                    ) {
-                        coffeeDrinks.forEach { item ->
-                            DropdownMenuItem(
-                                text = { Text(text = item) },
-                                onClick = {
-                                    //viewModel.changeAction(item)
-                                    expanded = false
-                                }
-                            )
+                OutlinedTextField(
+                    value = dataUiState.CardCode,
+                    onValueChange = { viewModel.changeCardCode(it) },
+                    modifier = Modifier
+                        .width(300.dp)
+                        .padding(8.dp),
+                    label = { Text("Código cliente") },
+                    readOnly = true,
+                    trailingIcon={
+                        IconButton(
+                            onClick = {
+                                viewModel.showDialogBusinessPartner()
+                            }
+                        ) {
+                            Icon(Icons.Filled.Add, contentDescription = "Shopping Cart Icon")
                         }
                     }
-                }
+                )
 
                 OutlinedTextField(
                     value = dataUiState.CardName,

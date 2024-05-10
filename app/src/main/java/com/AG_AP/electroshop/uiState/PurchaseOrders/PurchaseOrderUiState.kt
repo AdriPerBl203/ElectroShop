@@ -1,5 +1,6 @@
 package com.AG_AP.electroshop.uiState.PurchaseOrders
 
+import com.AG_AP.electroshop.firebase.models.BusinessPartner
 import com.AG_AP.electroshop.uiState.Items.ArticleUiState
 import java.util.concurrent.ConcurrentHashMap
 
@@ -18,5 +19,7 @@ data class PurchaseOrderUiState(
     val progress:Boolean = false,
     val text:String = "",
     val showDialogAddArticle: Boolean = false,
-    val showToast: Boolean = false
+    val showToast: Boolean = false,
+    val ListBusinessPartner:List<BusinessPartner> = listOf(),
+    val showDialogBusinessPartner:Boolean =false
 )

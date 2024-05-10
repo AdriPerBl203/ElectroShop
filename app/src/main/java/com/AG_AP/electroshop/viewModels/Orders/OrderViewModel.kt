@@ -3,7 +3,10 @@ package com.AG_AP.electroshop.viewModels.Orders
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
+import com.AG_AP.electroshop.firebase.ItemCRUD
 import com.AG_AP.electroshop.firebase.OrderCRUD
+import com.AG_AP.electroshop.firebase.models.BusinessPartner
 import com.AG_AP.electroshop.firebase.models.DocumentLineFireBase
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
 import com.AG_AP.electroshop.uiState.Items.ArticleUiState
@@ -34,6 +37,15 @@ class OrderViewModel : ViewModel(), ActionViewModel {
                         ListItems = it.toList()
                     )
                 }
+            }
+        }
+
+        BusinessPartnerCRUD.getAllObject { list ->
+            val mutableList = list as? MutableList<BusinessPartner>
+            mutableList?.let {
+                _uiState.update { currentState -> currentState.copy(
+                    ListBusinessPartner = it.toList()
+                ) }
             }
         }
     }
@@ -526,10 +538,34 @@ class OrderViewModel : ViewModel(), ActionViewModel {
         }
     }
 
+    fun changeCardCode(data: String) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                CardCode = data
+            )
+        }
+    }
+
     fun showDialogaddArticle() {
         _uiState.update { currentState ->
             currentState.copy(
                 showDialogAddArticle = true
+            )
+        }
+    }
+
+    fun showDialogBusinessPartner() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                showDialogBusinessPartner = true
+            )
+        }
+    }
+
+    fun closeDialogBusinessPartner() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                showDialogBusinessPartner = false
             )
         }
     }

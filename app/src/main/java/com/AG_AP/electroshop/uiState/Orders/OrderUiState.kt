@@ -1,5 +1,6 @@
 package com.AG_AP.electroshop.uiState.Orders
 
+import com.AG_AP.electroshop.firebase.models.BusinessPartner
 import com.AG_AP.electroshop.uiState.Items.ArticleUiState
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
 import java.util.concurrent.ConcurrentHashMap
@@ -22,7 +23,9 @@ data class OrderUiState(
     val showDialogAddArticle:Boolean = false,
     val showDialogSelectCodeArticle:Boolean = false,
     val showToast: Boolean = false,
-    val ListItems:List<OrderFireBase> = listOf()
+    val ListItems:List<OrderFireBase> = listOf(),
+    val showDialogBusinessPartner:Boolean = false,
+    val ListBusinessPartner:List<BusinessPartner> = listOf()
 )
 
 /*
