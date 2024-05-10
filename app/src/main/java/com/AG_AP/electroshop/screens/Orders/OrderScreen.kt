@@ -1,6 +1,7 @@
 package com.AG_AP.electroshop.screens.Orders
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -19,7 +20,6 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddBox
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
@@ -54,8 +54,8 @@ import com.AG_AP.electroshop.viewModels.Orders.OrderViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.AG_AP.electroshop.components.DatePicker
 import com.AG_AP.electroshop.uiState.Orders.OrderUiState
-import com.AG_AP.electroshop.components.DialogActivity
 import com.AG_AP.electroshop.components.DialogOandPO
+import com.AG_AP.electroshop.functions.ObjectContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -65,7 +65,7 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
     if(dataUiState.showDialogAddArticle){
         DialogOandPO(
             closeDialog = {viewModel.closeDialogaddArticle()},
-            retunrData={ list ->
+            returnData={ list ->
                 Log.e("LisDataArticle", list.toString())
                 viewModel.addArticle(list)
             }
@@ -208,6 +208,9 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
 
                 TableDocumentLineOrder(dataUiState, viewModel)
 
+                if (dataUiState.showToast) {
+                    Toast.makeText(ObjectContext.context, "Existen algunos campos vacios", Toast.LENGTH_SHORT).show()
+                }
             }
             Column {
                 /*if (dataUiState.message) {

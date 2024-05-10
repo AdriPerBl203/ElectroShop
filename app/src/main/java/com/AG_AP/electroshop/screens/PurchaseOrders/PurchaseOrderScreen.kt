@@ -1,6 +1,7 @@
 package com.AG_AP.electroshop.screens.PurchaseOrders
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -52,6 +53,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.AG_AP.electroshop.components.DatePicker
 import com.AG_AP.electroshop.components.DialogOandPO
+import com.AG_AP.electroshop.functions.ObjectContext
 import com.AG_AP.electroshop.uiState.PurchaseOrders.PurchaseOrderUiState
 import com.AG_AP.electroshop.viewModels.PurchaseOrders.PurchaseOrderViewModel
 
@@ -67,7 +69,7 @@ fun PurchaseOrderView(
     if(dataUiState.showDialogAddArticle){
         DialogOandPO(
             closeDialog = {viewModel.closeDialogaddArticle()},
-            retunrData={ list ->
+            returnData={ list ->
                 Log.e("LisDataArticle", list.toString())
                 viewModel.addArticle(list)
             }
@@ -202,6 +204,10 @@ fun PurchaseOrderView(
                 //}
             }
             TableDocumentLinePurchase(dataUiState, viewModel)
+
+            if (dataUiState.showToast) {
+                Toast.makeText(ObjectContext.context, "Existen algunos campos vacios", Toast.LENGTH_SHORT).show()
+            }
 
         }
         Column {

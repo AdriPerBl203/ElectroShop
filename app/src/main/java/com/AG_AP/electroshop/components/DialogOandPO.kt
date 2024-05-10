@@ -1,5 +1,6 @@
 package com.AG_AP.electroshop.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,21 +29,32 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.AG_AP.electroshop.viewModels.Items.DialogArticleViewModel
 
 @Composable
-fun DialogOandPO(viewModel: DialogArticleViewModel = viewModel(), closeDialog:()->Unit, retunrData: (List<String>) -> Unit){
+fun DialogOandPO(
+    viewModel: DialogArticleViewModel = viewModel(),
+    closeDialog: () -> Unit,
+    returnData: (List<String>) -> Unit
+) {
     val dataUiState by viewModel.uiState.collectAsState()
-    Dialog(onDismissRequest = { closeDialog() }){
-        if(dataUiState.showDialogSelectCodeArticle){
+    Dialog(onDismissRequest = { closeDialog() }) {
+        if (dataUiState.showDialogSelectCodeArticle) {
             DialogActivity(
-                data ={ dataUiState.ListItems },
+                data = { dataUiState.ListItems },
                 "Seleccione Código articulo",
                 { viewModel.closeDialogSelectCodeArticle() },
-                {data -> viewModel.changeCodeArticle(data) }
+                { data -> viewModel.changeCodeArticle(data) }
             )
         }
-        Card (
-            shape = RoundedCornerShape(16.dp)
-        ){
-            Row{
+        Card(
+            shape = RoundedCornerShape(16.dp),
+            modifier = Modifier
+                .padding(10.dp)
+        ) {
+            Row (
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .padding(10.dp)
+            ) {
                 Column {
                     OutlinedTextField(
                         value = dataUiState.codeArticle,
@@ -52,7 +64,7 @@ fun DialogOandPO(viewModel: DialogArticleViewModel = viewModel(), closeDialog:()
                             .padding(8.dp),
                         label = { Text("Código cliente") },
                         readOnly = true,
-                        trailingIcon={
+                        trailingIcon = {
                             IconButton(
                                 onClick = {
                                     viewModel.showDialogSelectCode()
@@ -67,7 +79,7 @@ fun DialogOandPO(viewModel: DialogArticleViewModel = viewModel(), closeDialog:()
                         value = dataUiState.description,
                         onValueChange = { viewModel.changeDescription(it) },
                         modifier = Modifier
-                            .width(100.dp)
+                            .width(300.dp)
                             .padding(8.dp),
                         suffix = { Text(text = "%") },
                         label = { Text("Descripción") }
@@ -77,7 +89,7 @@ fun DialogOandPO(viewModel: DialogArticleViewModel = viewModel(), closeDialog:()
                         value = dataUiState.count,
                         onValueChange = { viewModel.changeCount(it) },
                         modifier = Modifier
-                            .width(100.dp)
+                            .width(300.dp)
                             .padding(8.dp),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         label = { Text("Cantidad") }
@@ -89,7 +101,7 @@ fun DialogOandPO(viewModel: DialogArticleViewModel = viewModel(), closeDialog:()
                         value = dataUiState.price,
                         onValueChange = { viewModel.changePrice(it) },
                         modifier = Modifier
-                            .width(100.dp)
+                            .width(300.dp)
                             .padding(8.dp),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         suffix = { Text(text = "€") },
@@ -100,7 +112,7 @@ fun DialogOandPO(viewModel: DialogArticleViewModel = viewModel(), closeDialog:()
                         value = dataUiState.discount,
                         onValueChange = { viewModel.changeDiscount(it) },
                         modifier = Modifier
-                            .width(100.dp)
+                            .width(300.dp)
                             .padding(8.dp),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         suffix = { Text(text = "%") },
@@ -109,8 +121,11 @@ fun DialogOandPO(viewModel: DialogArticleViewModel = viewModel(), closeDialog:()
                 }
             }
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment= Alignment.CenterVertically
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 10.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
             ) {
                 ElevatedButton(
                     onClick = {
@@ -121,7 +136,7 @@ fun DialogOandPO(viewModel: DialogArticleViewModel = viewModel(), closeDialog:()
                             dataUiState.price,
                             dataUiState.discount
                         )
-                        retunrData(listData)
+                        returnData(listData)
                         closeDialog()
                     }
                 ) {

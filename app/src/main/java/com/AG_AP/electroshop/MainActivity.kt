@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.AG_AP.electroshop.functions.Config
+import com.AG_AP.electroshop.functions.ObjectContext
 import com.AG_AP.electroshop.viewModels.AppNav
 
 
@@ -62,8 +63,8 @@ class MainActivity : ComponentActivity() {
                         SAP = false
                     )
                     ItemCRUD.insertItemForFireBase(item)*/
-
                     val context: Context = application.applicationContext
+                    ObjectContext.context = context
                     Config.initConfig(context)
                     AppNav(context=context)
                 }
