@@ -305,7 +305,6 @@ class ItemViewModel : ViewModel(), ActionViewModel {
                     val manageSerialNumbers = dataAux.manageSerialNumbers == "tYes"
                     val autoCreateSerialNumbers = dataAux.autoCreateSerialNumbersOnRelease == "tYes"
 
-
                     _uiState.update { currentState ->
                         currentState.copy(
                             ItemCode = dataAux.ItemCode,

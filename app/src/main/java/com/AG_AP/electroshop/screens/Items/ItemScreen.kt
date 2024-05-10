@@ -217,6 +217,26 @@ fun ItemView(innerPadding: PaddingValues, viewModel: ItemViewModel, id: String?)
                             .padding(top = 13.dp)
                     )
                 }
+
+                Column {
+                    if (dataUiState.message) {
+                        Snackbar(
+                            modifier = Modifier.padding(16.dp),
+                            action = {
+                                Button(
+                                    onClick = {
+                                        viewModel.menssageFunFalse()
+                                    }
+                                ) {
+                                    Text("Cerrar")
+                                }
+                            },
+                            content = {
+                                Text(dataUiState.text)
+                            }
+                        )
+                    }
+                }
             }
 
 
@@ -244,26 +264,6 @@ fun ItemView(innerPadding: PaddingValues, viewModel: ItemViewModel, id: String?)
 
         }
         PriceListList(dataUiState = dataUiState, viewModel = viewModel)
-    }
-
-    Column {
-        if (dataUiState.message) {
-            Snackbar(
-                modifier = Modifier.padding(16.dp),
-                action = {
-                    Button(
-                        onClick = {
-                            viewModel.menssageFunFalse()
-                        }
-                    ) {
-                        Text("Cerrar")
-                    }
-                },
-                content = {
-                    Text(dataUiState.text)
-                }
-            )
-        }
     }
 }
 

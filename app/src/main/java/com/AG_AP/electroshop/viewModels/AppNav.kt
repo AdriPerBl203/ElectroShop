@@ -150,5 +150,13 @@ fun AppNav(navController: NavHostController = rememberNavController(), context: 
         ) {
             ScaffoldListItems(navController = navController)
         }
+
+        composable(
+            route = Routes.ItemScreenAux.route + "/{id}",
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id")
+            ScaffoldItem(navController = navController, id = id)
+        }
     }
 }
