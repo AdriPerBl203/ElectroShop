@@ -1,8 +1,6 @@
-package com.AG_AP.electroshop.uiState
+package com.AG_AP.electroshop.uiState.Orders
 
 import com.AG_AP.electroshop.uiState.Items.ArticleUiState
-import com.AG_AP.electroshop.firebase.models.BusinessPartner
-import com.AG_AP.electroshop.firebase.models.Item
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
 import java.util.concurrent.ConcurrentHashMap
 

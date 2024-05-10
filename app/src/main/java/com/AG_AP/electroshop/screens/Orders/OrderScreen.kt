@@ -1,5 +1,6 @@
 package com.AG_AP.electroshop.screens.Orders
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -26,6 +27,7 @@ import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -59,7 +61,7 @@ import com.AG_AP.electroshop.components.DialogOandPO
 @Composable
 fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String?) {
     val dataUiState by viewModel.uiState.collectAsState()
-    //TODO
+
     if(dataUiState.showDialogAddArticle){
         DialogOandPO(
             closeDialog = {viewModel.closeDialogaddArticle()},
