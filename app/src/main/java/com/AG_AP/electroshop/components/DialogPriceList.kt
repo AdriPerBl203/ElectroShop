@@ -55,8 +55,33 @@ fun DialogCustomPriceList(
                 modifier = Modifier
                     .fillMaxSize()
             ) {
+                val availablePrices = dataUiState.AvailablePriceList
+                var newList: MutableList<Price?> = mutableListOf()
+
+                if (!itemPricesAlreadyInserted.isNullOrEmpty()) {
+                    availablePrices.forEach { price ->
+                        if (price != null) {
+                            var priceToInsert: Price? = null
+                            itemPricesAlreadyInserted.forEach { priceInserted ->
+                                if (price.currency == priceInserted.currency) {
+                                    priceToInsert = null
+                                    return@forEach
+                                } else {
+                                    priceToInsert = price
+                                }
+                            }
+                            if (priceToInsert != null) {
+                                newList.add(price)
+                            }
+                        }
+                    }
+                } else {
+                    newList = dataUiState.AvailablePriceList.toMutableList()
+                }
+
+
                 //Hacer un dropview
-                val coffeeDrinks = dataUiState.AvailablePriceList
+                val coffeeDrinks = newList
 
                 var expanded by remember { mutableStateOf(false) }
 
@@ -82,45 +107,21 @@ fun DialogCustomPriceList(
                         onDismissRequest = { expanded = false }
                     ) {
                         coffeeDrinks.forEach { price ->
-                            if (itemPricesAlreadyInserted != null) {
-                                if (itemPricesAlreadyInserted.isNotEmpty()) {
-                                    itemPricesAlreadyInserted.forEach { insertedItem ->
-                                        if (price != null) {
-                                            if (insertedItem.currency != price.currency) {
-                                                DropdownMenuItem(
-                                                    text = {
-                                                        Text(text = price.currency)
-                                                    },
-                                                    onClick = {
-                                                        viewModel.changeChoosenCurrency(price.currency)
-                                                        viewModel.changePriceList(price.priceList)
-                                                        viewModel.changePrice()
-                                                        expanded = false
-                                                    }
-                                                )
-                                            }
-
-                                        }
+                            if (price != null) {
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(text = price.currency)
+                                    },
+                                    onClick = {
+                                        viewModel.changeChoosenCurrency(price.currency)
+                                        viewModel.changePriceList(price.priceList)
+                                        viewModel.changePrice()
+                                        expanded = false
                                     }
-                                } else {
-                                    DropdownMenuItem(
-                                        text = {
-                                            if (price != null) {
-                                                Text(text = price.currency)
-                                            }
-                                        },
-                                        onClick = {
-                                            if (price != null) {
-                                                viewModel.changeChoosenCurrency(price.currency)
-                                                viewModel.changePriceList(price.priceList)
-                                                viewModel.changePrice()
-                                            }
-                                            expanded = false
-                                        }
-                                    )
-                                }
+                                )
                             }
                         }
+
                     }
                 }
 

@@ -9,6 +9,7 @@ import com.AG_AP.electroshop.firebase.models.ItemType
 import com.AG_AP.electroshop.firebase.models.Price
 import com.AG_AP.electroshop.uiState.Items.ItemUiState
 import com.AG_AP.electroshop.viewModels.ActionViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,8 +21,18 @@ class ItemViewModel : ViewModel(), ActionViewModel {
     private val _uiState = MutableStateFlow(ItemUiState())
     val uiState: StateFlow<ItemUiState> = _uiState.asStateFlow()
 
+    init {
+        val id: String = _uiState.value.ItemCode
+        if (id.isNotEmpty()) {
+            find()
+        }
+    }
+
     fun refresh() {
-        TODO()
+        val id: String = _uiState.value.ItemCode
+        if (id.isNotEmpty()) {
+            find()
+        }
     }
 
     fun addItemPriceList(price: Price) {
@@ -279,7 +290,46 @@ class ItemViewModel : ViewModel(), ActionViewModel {
     }
 
     override fun find() {
-        TODO("Not yet implemented")
+        if (_uiState.value.ItemCode.isEmpty()) {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    message = true,
+                    text = "Formato no válido"
+                )
+            }
+            return
+        }
+        viewModelScope.launch(Dispatchers.IO) {
+            ItemCRUD.getItemById(_uiState.value.ItemCode) { dataAux ->
+                if (dataAux != null) {
+                    val manageSerialNumbers = dataAux.manageSerialNumbers == "tYes"
+                    val autoCreateSerialNumbers = dataAux.autoCreateSerialNumbersOnRelease == "tYes"
+
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            ItemCode = dataAux.ItemCode,
+                            itemName = dataAux.itemName,
+                            itemType = dataAux.itemType,
+                            mainSupplier = dataAux.mainSupplier ?: "",
+                            itemPrice = dataAux.itemPrice as MutableList<Price>?,
+                            manageSerialNumbers = manageSerialNumbers,
+                            autoCreateSerialNumbersOnRelease = autoCreateSerialNumbers,
+
+                            showBusinessPartnerDialog = false,
+                            showPriceListDialog = false,
+                            trash = 0
+                        )
+                    }
+                } else {
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            message = true,
+                            text = "Item no encontrado con número: ${_uiState.value.ItemCode}"
+                        )
+                    }
+                }
+            }
+        }
     }
 
     override fun menssageFunFalse() {
