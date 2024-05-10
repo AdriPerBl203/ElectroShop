@@ -1,9 +1,9 @@
-package com.AG_AP.electroshop.viewModels
+package com.AG_AP.electroshop.viewModels.Items
 
 import androidx.lifecycle.ViewModel
 import com.AG_AP.electroshop.firebase.OrderCRUD
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
-import com.AG_AP.electroshop.uiState.DialogArticleUiState
+import com.AG_AP.electroshop.uiState.Items.DialogArticleUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

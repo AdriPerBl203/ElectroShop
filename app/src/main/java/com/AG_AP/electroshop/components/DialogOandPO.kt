@@ -25,10 +25,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.AG_AP.electroshop.viewModels.DialogArticleViewModel
+import com.AG_AP.electroshop.viewModels.Items.DialogArticleViewModel
 
 @Composable
-fun DialogOandPO(viewModel: DialogArticleViewModel = viewModel(),closeDialog:()->Unit,retunrData: (List<String>) -> Unit){
+fun DialogOandPO(viewModel: DialogArticleViewModel = viewModel(), closeDialog:()->Unit, retunrData: (List<String>) -> Unit){
     val dataUiState by viewModel.uiState.collectAsState()
     Dialog(onDismissRequest = { closeDialog() }){
         if(dataUiState.showDialogSelectCodeArticle){

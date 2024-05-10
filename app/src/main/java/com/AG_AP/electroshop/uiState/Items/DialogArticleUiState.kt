@@ -1,4 +1,4 @@
-package com.AG_AP.electroshop.uiState
+package com.AG_AP.electroshop.uiState.Items
 
 import com.AG_AP.electroshop.firebase.models.BusinessPartner
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
