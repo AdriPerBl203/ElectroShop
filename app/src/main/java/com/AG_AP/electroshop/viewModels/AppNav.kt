@@ -8,17 +8,17 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.AG_AP.electroshop.screens.Activities.ScaffoldActivity
+import com.AG_AP.electroshop.screens.Activities.ScaffoldListActivity
+import com.AG_AP.electroshop.screens.BusinessPartners.ScaffoldBusinessPartner
 import com.AG_AP.electroshop.screens.LoginFrontView
 import com.AG_AP.electroshop.screens.MenuFrontView
-import com.AG_AP.electroshop.screens.ScaffoldActivity
-import com.AG_AP.electroshop.screens.ScaffoldItem
-import com.AG_AP.electroshop.screens.ScaffoldBusinessPartner
-import com.AG_AP.electroshop.screens.ScaffoldListActivity
-import com.AG_AP.electroshop.screens.ScaffoldListBusinessPartner
-import com.AG_AP.electroshop.screens.ScaffoldListOrder
-import com.AG_AP.electroshop.screens.ScaffoldListPurchaseOrder
-import com.AG_AP.electroshop.screens.ScaffoldOrder
-import com.AG_AP.electroshop.screens.ScaffoldPurchaseOrder
+import com.AG_AP.electroshop.screens.BusinessPartners.ScaffoldListBusinessPartner
+import com.AG_AP.electroshop.screens.Items.ScaffoldItem
+import com.AG_AP.electroshop.screens.Orders.ScaffoldListOrder
+import com.AG_AP.electroshop.screens.Orders.ScaffoldOrder
+import com.AG_AP.electroshop.screens.PurchaseOrders.ScaffoldListPurchaseOrder
+import com.AG_AP.electroshop.screens.PurchaseOrders.ScaffoldPurchaseOrder
 import com.AG_AP.electroshop.screens.SettingScreen
 
 /**
