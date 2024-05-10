@@ -32,5 +32,6 @@ data class PurchaseOrderUiState(
     val trash: Int = 0,
     val message:Boolean = false,
     val progress:Boolean = false,
-    val text:String = ""
+    val text:String = "",
+    val showDialogAddArticle: Boolean = false
 )
