@@ -12,7 +12,21 @@ data class OrderUiState(
     val DocDueDate: String = "",
     val TaxDate: String = "",
     val DiscountPercent: Double = 0.0, //Descuento
-    val DocumentLine: MutableList<ArticleUiState?> = listOf(
+    val DocumentLine: MutableList<ArticleUiState?> = listOf(null).toMutableList(),
+    //val DocumentLineList: MutableList<String> = mutableListOf(),
+    val DocumentLineList: ConcurrentHashMap<Int, MutableList<String>> = ConcurrentHashMap(),
+    val trash: Int = 0,
+    val message: Boolean = false,
+    val progress: Boolean = false,
+    val text: String = "",
+    val showDialogAddArticle:Boolean = false,
+    val showDialogSelectCodeArticle:Boolean = false,
+    val ListItems:List<OrderFireBase> = listOf()
+)
+
+/*
+*
+* val DocumentLine: MutableList<ArticleUiState?> = listOf(
         ArticleUiState(
             0, "", "", 0.0F, 0.0F, 0.0F
         ),
@@ -28,15 +42,5 @@ data class OrderUiState(
         ArticleUiState(
             4, "", "", 0.0F, 0.0F, 0.0F
         )
-    ).toMutableList(),
-    //val DocumentLineList: MutableList<String> = mutableListOf(),
-    val DocumentLineList: ConcurrentHashMap<Int, MutableList<String>> = ConcurrentHashMap(),
-    val trash: Int = 0,
-    val message: Boolean = false,
-    val progress: Boolean = false,
-    val text: String = "",
-    val showDialogAddArticle:Boolean = false,
-    val showDialogSelectCodeArticle:Boolean = false,
-    val ListItems:List<OrderFireBase> = listOf()
-)
-
+    ).toMutableList()
+* */
