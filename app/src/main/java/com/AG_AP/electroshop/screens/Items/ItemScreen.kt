@@ -54,7 +54,7 @@ import com.AG_AP.electroshop.viewModels.Items.ItemViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ArticleView(innerPadding: PaddingValues, viewModel: ItemViewModel, id: String?) {
+fun ItemView(innerPadding: PaddingValues, viewModel: ItemViewModel, id: String?) {
     val dataUiState by viewModel.uiState.collectAsState()
 
     Column(
@@ -370,7 +370,7 @@ fun ScaffoldItem(
         }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(start = 50.dp, top = 20.dp)) {
-            ArticleView(innerPadding, viewModel, id)
+            ItemView(innerPadding, viewModel, id)
         }
     }
 }
