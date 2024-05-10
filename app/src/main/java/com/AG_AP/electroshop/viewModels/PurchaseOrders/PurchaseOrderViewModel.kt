@@ -115,7 +115,9 @@ class PurchaseOrderViewModel : ViewModel(), ActionViewModel {
 
     fun changeTaxDate(taxDate: String) {
         _uiState.update { currentState ->
-            currentState
+            currentState.copy(
+                TaxDate = taxDate
+            )
         }
     }
 
@@ -136,7 +138,92 @@ class PurchaseOrderViewModel : ViewModel(), ActionViewModel {
     }
 
     override fun guardar(data: Boolean) {
-        TODO("Not yet implemented")
+        val cardCode = _uiState.value.CardCode
+        val cardName = _uiState.value.CardName
+        val docNum = _uiState.value.DocNum
+        val docDate = _uiState.value.DocDate
+        val docDueDate = _uiState.value.DocDueDate
+        val taxDate = _uiState.value.TaxDate
+        val discountPercent = _uiState.value.DiscountPercent
+        _uiState.update { currentState ->
+            currentState.copy(
+                DocumentLineList = trimDocumentLineList()
+            )
+        }
+        val documentLine = hashMapToDocumentLine()
+        var text = "Pedido de compra actualizado"
+
+        val orderFireBase = OrderFireBase(
+            "",
+            docNum,
+            cardCode,
+            cardName,
+            docDate,
+            docDueDate,
+            taxDate,
+            discountPercent,
+            documentLine,
+            false
+        )
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                PurchaseOrderCRUD.insertForFireBase(orderFireBase)
+            } catch (e: Exception) {
+                Log.e("Errores", e.stackTraceToString())
+                text = "Hubo un error con la creación del pedido de compra"
+            }
+            
+            if (!data) {
+                val emptyList: MutableList<ArticleUiState?> = mutableListOf()
+                val documentLineList = DocumentLineForMutableList(emptyList)
+
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        message = true,
+                        text = text,
+                        progress = false,
+
+                        CardCode = "",
+                        CardName = "",
+                        DocNum = -1,
+                        DocDate = "",
+                        DocDueDate = "",
+                        TaxDate = "",
+                        DiscountPercent = 0.0,
+                        DocumentLine = emptyList,
+                        DocumentLineList = documentLineList,
+                        trash = 0
+                    )
+                }
+            } else {
+                val lineToDelete = ArticleUiState(
+                    0, "", "", 0.0F, 0.0F, 0.0F
+                )
+
+                val lineList = _uiState.value.DocumentLine
+                val trimmedLine: MutableList<ArticleUiState?> = mutableListOf()
+                lineList.forEach { line ->
+                    if (line != null) {
+                        if (!(line.ItemCode == lineToDelete.ItemCode && line.ItemDescription == lineToDelete.ItemDescription && line.Quantity == lineToDelete.Quantity && line.DiscountPercent == lineToDelete.DiscountPercent)) {
+                            trimmedLine.add(line)
+                        }
+                    }
+                }
+
+                val documentLineList = DocumentLineForMutableList(trimmedLine)
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        DocumentLine = trimmedLine,
+                        DocumentLineList = documentLineList,
+
+                        message = true,
+                        text = text
+                    )
+                }
+            }
+        }
+
     }
 
     override fun update() {
@@ -182,7 +269,7 @@ class PurchaseOrderViewModel : ViewModel(), ActionViewModel {
                     text = text
                 )
             }
-            //TODO ACABAR mostrando las cosas
+            //TODO ACABAR mostrando las messages
         }
     }
 
@@ -197,24 +284,7 @@ class PurchaseOrderViewModel : ViewModel(), ActionViewModel {
                 Log.e("Errores", e.stackTraceToString())
                 text = "Hubo un error con el borrado del pedido de compra"
             }
-            val emptyList: MutableList<ArticleUiState?> = listOf(
-                ArticleUiState(
-                    0, "", "", 0.0F, 0.0F, 0.0F
-                ),
-                ArticleUiState(
-                    1, "", "", 0.0F, 0.0F, 0.0F
-                ),
-                ArticleUiState(
-                    2, "", "", 0.0F, 0.0F, 0.0F
-                ),
-                ArticleUiState(
-                    3, "", "", 0.0F, 0.0F, 0.0F
-                ),
-                ArticleUiState(
-                    4, "", "", 0.0F, 0.0F, 0.0F
-                )
-            ).toMutableList()
-
+            val emptyList: MutableList<ArticleUiState?> = mutableListOf()
 
             val documentLineList = DocumentLineForMutableList(emptyList)
 

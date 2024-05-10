@@ -142,7 +142,11 @@ fun PurchaseOrderView(
                 }
             }
 
-            Column{
+            Column(
+                modifier = Modifier
+                    .padding(start = 10.dp)
+            )
+            {
                 ElevatedButton(
                     onClick = {
                         viewModel.showDialogaddArticle()
@@ -166,36 +170,40 @@ fun PurchaseOrderView(
                     .background(MaterialTheme.colorScheme.background)
             ) {
                 //if (id != null && id.toInt() != -1) {
-                    Row {
-                        IconButton(
-                            modifier = Modifier
-                                .background(MaterialTheme.colorScheme.primary)
-                                .border(
-                                    BorderStroke(0.5.dp, Color.Black)
-                                )
-                                .padding(end = 0.5.dp),
-                            onClick = { viewModel.deleteLine() }
-                        ) {
-                            Text(text = "-")
-                        }
-                        IconButton(
-                            modifier = Modifier
-                                .background(MaterialTheme.colorScheme.primary)
-                                .border(
-                                    BorderStroke(0.5.dp, Color.Black)
-                                )
-                                .padding(start = 0.5.dp),
-                            onClick = { viewModel.addLine() }
-                        ) {
-                            Text(text = "+")
-                        }
+                Row {
+                    IconButton(
+                        modifier = Modifier
+                            .background(MaterialTheme.colorScheme.primary)
+                            .border(
+                                BorderStroke(0.5.dp, Color.Black)
+                            )
+                            .padding(end = 0.5.dp),
+                        onClick = { viewModel.deleteLine() }
+                    ) {
+                        Text(text = "-")
                     }
+                    IconButton(
+                        modifier = Modifier
+                            .background(MaterialTheme.colorScheme.primary)
+                            .border(
+                                BorderStroke(0.5.dp, Color.Black)
+                            )
+                            .padding(start = 0.5.dp),
+                        onClick = { viewModel.addLine() }
+                    ) {
+                        Text(text = "+")
+                    }
+                }
                 //}
             }
             TableDocumentLinePurchase(dataUiState, viewModel)
 
             if (dataUiState.showToast) {
-                Toast.makeText(ObjectContext.context, "Existen algunos campos vacios", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    ObjectContext.context,
+                    "Existen algunos campos vacios",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
 
         }
