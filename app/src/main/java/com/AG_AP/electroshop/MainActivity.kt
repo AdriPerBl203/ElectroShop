@@ -10,12 +10,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.lifecycle.lifecycleScope
-import com.AG_AP.electroshop.endpoints.objects.PriceListObj
 import com.AG_AP.electroshop.functions.Config
 import com.AG_AP.electroshop.functions.ObjectContext
-import com.AG_AP.electroshop.viewModels.AppNav
-import kotlinx.coroutines.launch
+import com.AG_AP.electroshop.nav.AppNav
 
 
 class MainActivity : ComponentActivity() {

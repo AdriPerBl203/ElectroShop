@@ -1,4 +1,4 @@
-package com.AG_AP.electroshop.viewModels
+package com.AG_AP.electroshop.nav
 
 enum class Routes(val route: String) {
     ScreenLogin(route = "LoginScreen"),

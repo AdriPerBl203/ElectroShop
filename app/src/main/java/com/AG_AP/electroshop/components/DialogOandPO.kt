@@ -136,6 +136,7 @@ fun DialogOandPO(
                             dataUiState.discount
                         )
                         returnData(listData)
+                        viewModel.resetData()
                         closeDialog()
                     }
                 ) {

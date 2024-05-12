@@ -1,4 +1,4 @@
-package com.AG_AP.electroshop.viewModels
+package com.AG_AP.electroshop.nav
 
 import android.content.Context
 import androidx.compose.runtime.Composable
@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.AG_AP.electroshop.nav.Routes
 import com.AG_AP.electroshop.screens.Activities.ScaffoldActivity
 import com.AG_AP.electroshop.screens.Activities.ScaffoldListActivity
 import com.AG_AP.electroshop.screens.BusinessPartners.ScaffoldBusinessPartner

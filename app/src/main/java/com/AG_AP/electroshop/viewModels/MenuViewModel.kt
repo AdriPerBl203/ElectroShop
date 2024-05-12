@@ -1,13 +1,10 @@
 package com.AG_AP.electroshop.viewModels
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.AG_AP.electroshop.endpoints.models.activity.Activity
 import com.AG_AP.electroshop.endpoints.models.activity.PostActivity
-import com.AG_AP.electroshop.endpoints.models.businessPartners.BusinessPartners
 import com.AG_AP.electroshop.endpoints.models.businessPartners.PostBusinesspartner
 import com.AG_AP.electroshop.endpoints.models.item.getItems.GetItems
 import com.AG_AP.electroshop.endpoints.models.item.postItems.PostItem
@@ -36,6 +33,7 @@ import com.AG_AP.electroshop.firebase.models.Price
 import com.AG_AP.electroshop.functions.Config
 import com.AG_AP.electroshop.functions.ListCheckTotal
 import com.AG_AP.electroshop.functions.SessionObj
+import com.AG_AP.electroshop.nav.Routes
 import com.AG_AP.electroshop.uiState.MenuUiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,7 +41,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 
 class MenuViewModel : ViewModel() {
 

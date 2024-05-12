@@ -35,15 +35,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.AG_AP.electroshop.firebase.models.Item
 import com.AG_AP.electroshop.uiState.Items.ListItemsUiState
 import com.AG_AP.electroshop.viewModels.Items.ListItemsViewModel
-import com.AG_AP.electroshop.viewModels.Routes
+import com.AG_AP.electroshop.nav.Routes
 
 @Composable
 fun ListItemsView(

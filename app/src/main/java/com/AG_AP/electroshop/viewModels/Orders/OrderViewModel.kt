@@ -580,6 +580,10 @@ class OrderViewModel : ViewModel(), ActionViewModel {
 
     fun addArticle(list: List<String>) {
 
+        val objectReflex = ArticleUiState(
+            0, "", "", 0.0F, 0.0F, 0.0F
+        )
+
         //pruebas
         if (list[0].isEmpty() || list[1].isEmpty() || list[2].isEmpty() || list[3].isEmpty() || list[4].isEmpty()) {
             _uiState.update { currentState ->
@@ -598,8 +602,11 @@ class OrderViewModel : ViewModel(), ActionViewModel {
             return
         } else {
             //fin pruebas
-            if (_uiState.value.DocumentLine.size != 0) {
-                _uiState.value.DocumentLine.removeAt(_uiState.value.DocumentLine.size - 1)
+            if (_uiState.value.DocumentLine.size != 0 ) {
+                val ultData = _uiState.value.DocumentLine[_uiState.value.DocumentLine.size - 1]
+                if(objectReflex.equals(ultData)){
+                    _uiState.value.DocumentLine.removeAt(_uiState.value.DocumentLine.size - 1)
+                }
             }
 
             var index = _uiState.value.DocumentLine.size

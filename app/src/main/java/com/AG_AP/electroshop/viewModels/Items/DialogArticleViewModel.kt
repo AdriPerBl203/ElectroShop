@@ -92,4 +92,14 @@ class DialogArticleViewModel : ViewModel() {
             codeArticle ="",
         ) }
     }
+
+    fun resetData() {
+        _uiState.update { currentState -> currentState.copy(
+            discount ="0",
+            price ="0",
+            count ="0",
+            description ="",
+            codeArticle ="",
+        ) }
+    }
 }

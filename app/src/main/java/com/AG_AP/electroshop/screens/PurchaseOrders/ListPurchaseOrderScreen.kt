@@ -43,7 +43,7 @@ import androidx.navigation.NavHostController
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
 import com.AG_AP.electroshop.uiState.PurchaseOrders.ListPurchaseOrderUiState
 import com.AG_AP.electroshop.viewModels.PurchaseOrders.ListPurchaseOrderViewModel
-import com.AG_AP.electroshop.viewModels.Routes
+import com.AG_AP.electroshop.nav.Routes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

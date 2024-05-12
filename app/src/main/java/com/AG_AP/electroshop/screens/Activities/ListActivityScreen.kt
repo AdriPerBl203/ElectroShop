@@ -51,7 +51,7 @@ import androidx.navigation.NavHostController
 import com.AG_AP.electroshop.firebase.models.Activity
 import com.AG_AP.electroshop.uiState.Activities.ListActivityUiState
 import com.AG_AP.electroshop.viewModels.Activities.ListActivityViewModel
-import com.AG_AP.electroshop.viewModels.Routes
+import com.AG_AP.electroshop.nav.Routes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
