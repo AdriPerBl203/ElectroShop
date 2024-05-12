@@ -67,6 +67,16 @@ fun PurchaseOrderView(
 ) {
     val dataUiState by viewModel.uiState.collectAsState()
 
+    if (dataUiState.showDialogAddArticle) {
+        DialogOandPO(
+            closeDialog = { viewModel.closeDialogaddArticle() },
+            returnData = { list ->
+                Log.e("LisDataArticle", list.toString())
+                viewModel.addArticle(list)
+            }
+        )
+    }
+
     if(dataUiState.showDialogBusinessPartner){
         DialogActivity(
             data ={dataUiState.ListBusinessPartner},
