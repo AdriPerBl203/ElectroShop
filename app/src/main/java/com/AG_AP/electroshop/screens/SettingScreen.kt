@@ -220,7 +220,7 @@ fun SettingScreen(
                                             }
                                         }
                                         Row(){
-                                            Text("Sincronizando pedido de compra")
+                                            Text("Sincronizando pedido de cliente")
                                             if(dataUiState.checkOrder){
                                                 Icon(imageVector = Icons.Filled.CheckCircle, contentDescription = "", tint= MaterialTheme.colorScheme.surface)
                                             }else{
@@ -228,7 +228,7 @@ fun SettingScreen(
                                             }
                                         }
                                         Row(){
-                                            Text("Sincronizando pedido de cliente")
+                                            Text("Sincronizando pedido de compra")
                                             if(dataUiState.checkPurchaseOrder){
                                                 Icon(imageVector = Icons.Filled.CheckCircle, contentDescription = "", tint= MaterialTheme.colorScheme.surface)
                                             }else{

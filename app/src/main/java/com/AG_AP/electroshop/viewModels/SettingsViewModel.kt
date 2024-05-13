@@ -498,7 +498,7 @@ class SettingsViewModel : ViewModel() {
                 PurchaseOrderCRUD.insert(orderInsert)
             }
             _uiState.update { currentState -> currentState.copy(
-                checkOrder = true
+                checkPurchaseOrder = true
             ) }
             Log.e("sync","order sync")
         }
