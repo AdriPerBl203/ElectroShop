@@ -84,7 +84,7 @@ fun ActivityView(innerPadding: PaddingValues, viewModel: ActivityViewModel, id: 
             data = { dataUiState.ListPurchaseOrders },
             "Seleccione pedido de compra",
             { viewModel.closerDialogPurchaseOrder() },
-            { data -> viewModel.changePedidoCompra(data) }
+            { data -> viewModel.changePedidoCompra(data.toString()) }
         )
     }
     if (dataUiState.showDialogOrder) {
@@ -92,7 +92,7 @@ fun ActivityView(innerPadding: PaddingValues, viewModel: ActivityViewModel, id: 
             data = { dataUiState.ListOrders },
             "Seleccione pedido de cliente",
             { viewModel.closerDialogOrder() },
-            { data -> viewModel.changePedidoCliente(data) }
+            { data -> viewModel.changePedidoCliente(data.toString()) }
         )
     }
     if (dataUiState.showDialogBussinesPartner) {
@@ -100,7 +100,7 @@ fun ActivityView(innerPadding: PaddingValues, viewModel: ActivityViewModel, id: 
             data = { dataUiState.ListBusinessPartner },
             "Seleccione cliente",
             { viewModel.closerDialogBusinessPartner() },
-            { data -> viewModel.changeCardCode(data) }
+            { data -> viewModel.changeCardCode(data.toString()) }
         )
     }
     Column(

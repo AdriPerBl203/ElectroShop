@@ -26,6 +26,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.AG_AP.electroshop.firebase.models.Item
 import com.AG_AP.electroshop.viewModels.Items.DialogArticleViewModel
 
 @Composable
@@ -41,7 +42,19 @@ fun DialogOandPO(
                 data = { dataUiState.ListItems },
                 "Seleccione Código articulo",
                 { viewModel.closeDialogSelectCodeArticle() },
-                { data -> viewModel.changeCodeArticle(data) }
+                { data ->
+                    if (data is Item) {
+                        viewModel.changeCodeArticle(data.ItemCode)
+                        viewModel.changeDescription(data.itemName)
+                        //TODO controlar si es un pedido de compra y venta
+                        viewModel.changeCount("1")
+                        viewModel.changePrice("1")
+                        viewModel.changeDiscount("0")
+                    } else {
+                        viewModel.changeCodeArticle(data.toString())
+                    }
+
+                }
             )
         }
         Card(
@@ -62,7 +75,7 @@ fun DialogOandPO(
                         modifier = Modifier
                             .width(300.dp)
                             .padding(8.dp),
-                        label = { Text("Código cliente") },
+                        label = { Text("Código articulo") },
                         readOnly = true,
                         trailingIcon = {
                             IconButton(

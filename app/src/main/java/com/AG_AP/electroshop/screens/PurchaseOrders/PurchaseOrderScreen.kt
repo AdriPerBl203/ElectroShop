@@ -54,6 +54,7 @@ import androidx.navigation.NavHostController
 import com.AG_AP.electroshop.components.DatePicker
 import com.AG_AP.electroshop.components.DialogActivity
 import com.AG_AP.electroshop.components.DialogOandPO
+import com.AG_AP.electroshop.firebase.models.BusinessPartner
 import com.AG_AP.electroshop.functions.ObjectContext
 import com.AG_AP.electroshop.uiState.PurchaseOrders.PurchaseOrderUiState
 import com.AG_AP.electroshop.viewModels.PurchaseOrders.PurchaseOrderViewModel
@@ -82,7 +83,14 @@ fun PurchaseOrderView(
             data ={dataUiState.ListBusinessPartner},
             "Seleccione cliente" ,
             {viewModel.closeDialogBusinessPartner()},
-            {data -> viewModel.changeCardCode(data) }
+            {data ->
+                if (data is BusinessPartner) {
+                    viewModel.changeCardCode(data.CardCode)
+                    viewModel.changeName(data.CardName)
+                } else {
+                    viewModel.changeCardCode(data.toString())
+                }
+            }
         )
     }
 

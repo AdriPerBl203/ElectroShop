@@ -23,13 +23,12 @@ import com.AG_AP.electroshop.firebase.models.BusinessPartner
 import com.AG_AP.electroshop.firebase.models.Item
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
 
-
 @Composable
 fun DialogActivity(
     data: () -> List<Any>,
     infoDialog: String,
     clasedDialog: () -> Unit,
-    returnData: (String) -> Unit
+    returnData: (Any) -> Unit
 ) {
 
     Dialog(onDismissRequest = { clasedDialog() }) {
@@ -70,7 +69,25 @@ fun DialogActivity(
                                 headlineContent = { Text("${x.CardCode} -- ${x.CardName}") },
                                 trailingContent = {
                                     IconButton(onClick = {
-                                        returnData(x.CardCode)
+                                        returnData(x)
+                                        clasedDialog()
+                                    }) {
+                                        Icon(
+                                            imageVector = Icons.Filled.AddCircle,
+                                            contentDescription = "Settings",
+                                            tint = MaterialTheme.colorScheme.primaryContainer
+                                        )
+                                    }
+                                }
+                            )
+                        }
+
+                        if (x is Item) {
+                            ListItem(
+                                headlineContent = { Text("${x.ItemCode} -- ${x.itemName}") },
+                                trailingContent = {
+                                    IconButton(onClick = {
+                                        returnData(x)
                                         clasedDialog()
                                     }) {
                                         Icon(
@@ -85,6 +102,7 @@ fun DialogActivity(
                     }
                 }
             }
+
         }
     }
 }
