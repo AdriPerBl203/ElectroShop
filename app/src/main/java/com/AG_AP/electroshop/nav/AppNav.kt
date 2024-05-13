@@ -8,7 +8,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.AG_AP.electroshop.nav.Routes
 import com.AG_AP.electroshop.screens.Activities.MixedScaffoldActivityScreen
 import com.AG_AP.electroshop.screens.Activities.MixedScaffoldBusinessPartnerScreen
 import com.AG_AP.electroshop.screens.Activities.MixedScaffoldItemScreen
@@ -17,6 +16,7 @@ import com.AG_AP.electroshop.screens.Activities.MixedScaffoldPurchaseOrderScreen
 import com.AG_AP.electroshop.screens.Activities.ScaffoldActivity
 import com.AG_AP.electroshop.screens.Activities.ScaffoldListActivity
 import com.AG_AP.electroshop.screens.BusinessPartners.ScaffoldBusinessPartner
+import com.AG_AP.electroshop.screens.BusinessPartners.ScaffoldBusinessPartnerUltimate
 import com.AG_AP.electroshop.screens.LoginFrontView
 import com.AG_AP.electroshop.screens.MenuFrontView
 import com.AG_AP.electroshop.screens.BusinessPartners.ScaffoldListBusinessPartner
@@ -195,6 +195,12 @@ fun AppNav(navController: NavHostController = rememberNavController(), context: 
         ) { backStackEntry ->
             val id = backStackEntry.arguments?.getString("id")
             ScaffoldItem(navController = navController, id = id)
+        }
+
+        composable(
+            route = Routes.BusinessPartnerUltimate.route
+        ) {
+            ScaffoldBusinessPartnerUltimate(navController)
         }
     }
 }

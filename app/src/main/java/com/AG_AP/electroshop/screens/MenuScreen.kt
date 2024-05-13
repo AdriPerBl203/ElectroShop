@@ -266,9 +266,9 @@ fun MenuBody(
                         modifier= Modifier
                             .padding(30.dp)
                             .width(200.dp),
-                        onClick = { navController.navigate(route = Routes.MixedBusinessPartnerScreen.route) }
+                        onClick = { navController.navigate(route = Routes.BusinessPartnerUltimate.route) }
                     ) {
-                        Text("Interlocutores")
+                        Text("Clientes")
                     }
                 }
 
