@@ -14,6 +14,7 @@ enum class Routes(val route: String) {
     ScreenActivity(route = "ActivityScreen"),
     ScreenActivityAux(route = "ActivityScreen"),
     ListActivity(route = "ListActivity"),
+    ActivityUltimate(route = "ActivityUltimate"),
 
     BusinessPartner(route = "BusinessPartner"),
     ScreenBusinessPartnerList(route = "BusinessPartnerList"),

@@ -253,7 +253,7 @@ fun MenuBody(
                             modifier= Modifier
                                 .padding(30.dp)
                                 .width(200.dp),
-                            onClick = { navController.navigate(route = Routes.MixedActivityScreen.route) }
+                            onClick = { navController.navigate(route = Routes.ActivityUltimate.route) }
                         ) {
                             Text("Actividades")
                         }
