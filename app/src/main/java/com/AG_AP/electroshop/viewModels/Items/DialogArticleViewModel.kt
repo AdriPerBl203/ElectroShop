@@ -2,8 +2,10 @@ package com.AG_AP.electroshop.viewModels.Items
 
 import androidx.lifecycle.ViewModel
 import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
+import com.AG_AP.electroshop.firebase.ItemCRUD
 import com.AG_AP.electroshop.firebase.OrderCRUD
 import com.AG_AP.electroshop.firebase.models.BusinessPartner
+import com.AG_AP.electroshop.firebase.models.Item
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
 import com.AG_AP.electroshop.uiState.Items.DialogArticleUiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,6 +33,7 @@ class DialogArticleViewModel : ViewModel() {
             }
         }*/
 
+        /*
         BusinessPartnerCRUD.getAllObject { list ->
             val mutableList = list as? MutableList<BusinessPartner>
             mutableList?.let {
@@ -41,6 +44,24 @@ class DialogArticleViewModel : ViewModel() {
                     count ="",
                     description ="",
                     codeArticle ="",
+                ) }
+            }
+        }
+
+         */
+
+        ItemCRUD.getAllItems {
+            list ->
+            val mutableList = list as? MutableList<Item>
+
+            mutableList?.let {
+                _uiState.update { currentState -> currentState.copy(
+                    ListItems = it.toList(),
+                    discount = "",
+                    price = "",
+                    count = "",
+                    description = "",
+                    codeArticle = "",
                 ) }
             }
         }

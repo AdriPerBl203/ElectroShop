@@ -57,6 +57,7 @@ import com.AG_AP.electroshop.components.DatePicker
 import com.AG_AP.electroshop.components.DialogActivity
 import com.AG_AP.electroshop.uiState.Orders.OrderUiState
 import com.AG_AP.electroshop.components.DialogOandPO
+import com.AG_AP.electroshop.firebase.models.BusinessPartner
 import com.AG_AP.electroshop.functions.ObjectContext
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -73,12 +74,18 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
             }
         )
     }
-    if(dataUiState.showDialogBusinessPartner){
+    if (dataUiState.showDialogBusinessPartner) {
         DialogActivity(
-            data ={dataUiState.ListBusinessPartner},
-            "Seleccione cliente" ,
-            {viewModel.closeDialogBusinessPartner()},
-            {data -> viewModel.changeCardCode(data) }
+            data = { dataUiState.ListBusinessPartner },
+            "Seleccione cliente",
+            { viewModel.closeDialogBusinessPartner() },
+            { data ->
+                if (data is BusinessPartner) {
+                    viewModel.changeCardCode(data.CardCode)
+                    viewModel.changeName(data.CardName)
+                }
+
+            }
         )
     }
     /*if(dataUiState.showDialogSelectCodeArticle){
@@ -113,7 +120,7 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
                         .padding(8.dp),
                     label = { Text("Código cliente") },
                     readOnly = true,
-                    trailingIcon={
+                    trailingIcon = {
                         IconButton(
                             onClick = {
                                 viewModel.showDialogBusinessPartner()
