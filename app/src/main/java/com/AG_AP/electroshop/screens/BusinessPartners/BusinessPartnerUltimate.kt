@@ -228,10 +228,6 @@ fun LazyRowWithCards(data: List<String>) {
                             )
                         }
                     }
-
-                    Row() {
-
-                    }
                 }
             }
         }
@@ -277,7 +273,10 @@ fun ScaffoldBusinessPartnerUltimate(navController: NavHostController) {
                         onValueChange = {},
                         readOnly = true,
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                        modifier = Modifier.menuAnchor()
+                        modifier = Modifier
+                            .menuAnchor()
+                            .width(300.dp)
+                            .padding(8.dp)
                     )
 
                     ExposedDropdownMenu(
@@ -303,15 +302,10 @@ fun ScaffoldBusinessPartnerUltimate(navController: NavHostController) {
                 }
                 Button(
                     modifier = Modifier.padding(start = 15.dp, end = 15.dp),
-                    onClick = { /*TODO*/ }
+                    onClick = { navController.popBackStack() }
                 ) {
                     Text(text = "Volver")
                 }
-            }
-        },
-        floatingActionButton = {
-            FloatingActionButton(onClick = { /*TODO*/ }) {
-                Icon(Icons.Default.Add, contentDescription = "Buscar")
             }
         }
     ) { innerPadding ->
