@@ -113,7 +113,8 @@ class MenuViewModel : ViewModel() {
                                 DocDueDate = x.DocDueDate.plus("T00:00:00Z"),
                                 DocNum = x.DocNum,
                                 DocumentLines = documentLineAux,
-                                TaxDate = x.TaxDate.plus("T00:00:00Z")
+                                TaxDate = x.TaxDate.plus("T00:00:00Z"),
+                                SalesPersonCode = x.SalesPersonCode
                             )
                             OrdersObj.postOrders(Config.rulUse,postOrder)
                             if(x.idFireBase !=null){
@@ -172,7 +173,8 @@ class MenuViewModel : ViewModel() {
                                 element.TaxDate,
                                 element.DiscountPercent,
                                 documentList,
-                                true
+                                true,
+                                element.SalesPersonCode
                             )
                             OrderCRUD.insert(orderInsert)
                         }
@@ -219,7 +221,8 @@ class MenuViewModel : ViewModel() {
                                 DocDueDate = x.DocDueDate.plus("T00:00:00Z"),
                                 DocNum = x.DocNum,
                                 DocumentLines = documentLineAux,
-                                TaxDate = x.TaxDate.plus("T00:00:00Z")
+                                TaxDate = x.TaxDate.plus("T00:00:00Z"),
+                                SalesPersonCode = x.SalesPersonCode
                             )
                             PurchaseOrdersObj.postPurchaseOrders(Config.rulUse,postOrder)
                             if(x.idFireBase !=null){
@@ -278,7 +281,8 @@ class MenuViewModel : ViewModel() {
                                 element.TaxDate,
                                 element.DiscountPercent,
                                 documentList,
-                                true
+                                true,
+                                element.SalesPersonCode
                             )
                             PurchaseOrderCRUD.insert(orderInsert)
                         }

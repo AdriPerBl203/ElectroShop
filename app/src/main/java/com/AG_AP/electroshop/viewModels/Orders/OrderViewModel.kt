@@ -1,5 +1,6 @@
 package com.AG_AP.electroshop.viewModels.Orders
 
+import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
@@ -7,10 +8,13 @@ import androidx.lifecycle.viewModelScope
 import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
 import com.AG_AP.electroshop.firebase.ItemCRUD
 import com.AG_AP.electroshop.firebase.OrderCRUD
+import com.AG_AP.electroshop.firebase.SEIConfigCRUD
 import com.AG_AP.electroshop.firebase.models.BusinessPartner
 import com.AG_AP.electroshop.firebase.models.DocumentLineFireBase
 import com.AG_AP.electroshop.firebase.models.Item
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
+import com.AG_AP.electroshop.firebase.models.SEIConfig
+import com.AG_AP.electroshop.functions.ObjectContext
 import com.AG_AP.electroshop.uiState.Items.ArticleUiState
 import com.AG_AP.electroshop.uiState.Orders.OrderUiState
 import com.AG_AP.electroshop.viewModels.ActionViewModel
@@ -31,6 +35,21 @@ class OrderViewModel : ViewModel(), ActionViewModel {
     init {
         DocumentLineForMutableList()
 
+        val sharedPref = ObjectContext.context.getSharedPreferences("userConected", Context.MODE_PRIVATE)
+        val savedUserName = sharedPref.getString("userConected", null)
+
+        if (savedUserName != null) {
+            SEIConfigCRUD.getSEIConfigById(savedUserName){it->
+                if(it is SEIConfig){
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            SalesPersonCode = it.U_Empleado.toString()
+                        )
+                    }
+                }
+            }
+        }
+
         OrderCRUD.getAllObject { list ->
             val mutableList = list as? MutableList<OrderFireBase>
             mutableList?.let {
@@ -50,6 +69,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
                 ) }
             }
         }
+
     }
 
     fun refresh() {
@@ -70,6 +90,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
         val docDate = _uiState.value.DocDate
         val docDueDate = _uiState.value.DocDueDate
         val taxDate = _uiState.value.TaxDate
+        val SalesPersonCode = _uiState.value.SalesPersonCode.toInt()
         val discountPercent = _uiState.value.DiscountPercent
         _uiState.update { currentState ->
             currentState.copy(
@@ -89,7 +110,8 @@ class OrderViewModel : ViewModel(), ActionViewModel {
             taxDate,
             discountPercent,
             documentLine,
-            false
+            false,
+            SalesPersonCode
         )
 
         viewModelScope.launch {
@@ -433,6 +455,14 @@ class OrderViewModel : ViewModel(), ActionViewModel {
         _uiState.update { currentState ->
             currentState.copy(
                 TaxDate = fechaDocumento
+            )
+        }
+    }
+
+    fun changeSalesPersonCode(name: String){
+        _uiState.update { currentState ->
+            currentState.copy(
+                SalesPersonCode = name
             )
         }
     }

@@ -5,6 +5,7 @@ data class Value(
     val CardCode: String,
     val CardName: String,
     val DocNum: Int,
+    val SalesPersonCode:Int,
     val DocDate: String,
     val DocDueDate: String,
     val TaxDate: String,

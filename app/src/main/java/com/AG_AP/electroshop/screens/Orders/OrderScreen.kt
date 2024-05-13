@@ -96,9 +96,14 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
     ) {
         Row {
             Column {
-                val coffeeDrinks =
-                    arrayOf("Llamada telefónica", "Reunión", "Tarea", "Nota", "Campaña", "Otros")
-                var expanded by remember { mutableStateOf(false) }
+                OutlinedTextField(
+                    value = dataUiState.SalesPersonCode,
+                    onValueChange = { viewModel.changeSalesPersonCode(it) },
+                    modifier = Modifier
+                        .width(300.dp)
+                        .padding(8.dp),
+                    label = { Text("SLPCODE") }
+                )
 
                 OutlinedTextField(
                     value = dataUiState.CardCode,

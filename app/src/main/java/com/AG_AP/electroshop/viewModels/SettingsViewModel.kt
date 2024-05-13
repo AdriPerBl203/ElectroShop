@@ -492,7 +492,8 @@ class SettingsViewModel : ViewModel() {
                     element.TaxDate,
                     element.DiscountPercent,
                     documentList,
-                    true
+                    true,
+                    element.SalesPersonCode
                 )
                 PurchaseOrderCRUD.insert(orderInsert)
             }
@@ -554,7 +555,8 @@ class SettingsViewModel : ViewModel() {
                         element.TaxDate,
                         element.DiscountPercent,
                         documentList,
-                        true
+                        true,
+                        element.SalesPersonCode
                     )
                     OrderCRUD.insert(orderInsert)
                 }

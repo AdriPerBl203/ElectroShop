@@ -8,5 +8,6 @@ data class PostOrder(
     val DocDueDate: String,
     val DocNum: Int,
     val DocumentLines: List<DocumentLine>,
-    val TaxDate: String
+    val TaxDate: String,
+    val SalesPersonCode:Int
 )

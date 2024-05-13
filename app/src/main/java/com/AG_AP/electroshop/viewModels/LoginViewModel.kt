@@ -1,5 +1,6 @@
 package com.AG_AP.electroshop.viewModels
 
+import android.content.Context
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -11,6 +12,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import at.favre.lib.crypto.bcrypt.BCrypt
 import com.AG_AP.electroshop.firebase.SEIConfigCRUD
+import com.AG_AP.electroshop.functions.Config
+import com.AG_AP.electroshop.functions.ObjectContext
 import com.AG_AP.electroshop.functions.SessionObj
 
 
@@ -69,6 +72,12 @@ class LoginViewModel : ViewModel() {
                                 data.U_PedidoCI,
                                 data.U_PedidoCO
                             )
+                            //Guardamos el usuario
+                            val sharedPref = ObjectContext.context.getSharedPreferences("userConected", Context.MODE_PRIVATE)
+                            val dataConfig = sharedPref?.edit()
+                            dataConfig?.putString("userConected", userName)
+                            dataConfig?.apply()
+                            //Fin pruebas
                             navController.navigate(route = Routes.ScreenMenu.route)
                         }else{
                             _uiState.update { currentState -> currentState.copy(
