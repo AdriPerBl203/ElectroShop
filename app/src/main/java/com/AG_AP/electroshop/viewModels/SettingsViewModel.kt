@@ -456,14 +456,14 @@ class SettingsViewModel : ViewModel() {
             val dataLogin = Login(Config.dataBase, Config.password, Config.login)
             LoginObj.loginAcessTwoversion(dataLogin, Config.rulUse)
             //TODO
-            deleteAndInsertPriceList()
-            deleteAndInsertItem()// Correcta
-            deleteAndInsertUserUdo() //
-            deleteAndInsertBusinessPartner() // Correcta
-            deleteAndInsertActivity() // Correcto
-            deleteAndInsertOrders() //Corecta
-            deleteAndInsertPurchaseOrders() //Correcta
-            enablebtn(Config.rulUse)
+                deleteAndInsertPriceList()
+                deleteAndInsertItem()// Correcta
+                deleteAndInsertUserUdo() //
+                deleteAndInsertBusinessPartner() // Correcta
+                deleteAndInsertActivity() // Correcto
+                //deleteAndInsertOrders() //Corecta
+                //deleteAndInsertPurchaseOrders() //Correcta
+                enablebtn(Config.rulUse)
         }
 
 
@@ -489,8 +489,9 @@ class SettingsViewModel : ViewModel() {
     private fun enablebtn(url: String) {
         viewModelScope.launch(Dispatchers.IO) {
             var aux: Boolean = true
-            while (aux) {
-                if (_uiState.value.checkUserUdo && _uiState.value.checkBusinessPartner && _uiState.value.checkActivity && _uiState.value.checkItem && _uiState.value.checkOrder && _uiState.value.checkPurchaseOrder) {
+            while (aux){
+                if(_uiState.value.checkUserUdo && _uiState.value.checkBusinessPartner && _uiState.value.checkActivity && _uiState.value.checkItem){
+
                     aux = false
                     LoginObj.logout(url)
                 } else {
@@ -566,12 +567,10 @@ class SettingsViewModel : ViewModel() {
                 )
                 PurchaseOrderCRUD.insert(orderInsert)
             }
-            _uiState.update { currentState ->
-                currentState.copy(
-                    checkOrder = true
-                )
-            }
-            Log.e("sync", "order sync")
+            _uiState.update { currentState -> currentState.copy(
+                checkPurchaseOrder = true
+            ) }
+            Log.e("sync","order sync")
         }
     }
 

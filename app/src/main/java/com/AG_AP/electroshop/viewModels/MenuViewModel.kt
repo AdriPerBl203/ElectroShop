@@ -615,13 +615,6 @@ class MenuViewModel : ViewModel() {
             ListCheckTotal.resetList()
             val dataLogin = Login(Config.dataBase, Config.password, Config.login)
             LoginObj.loginAcessTwoversion(dataLogin, Config.rulUse)
-
-            viewModelScope.launch(Dispatchers.IO) {
-                upPurchaseOrders(false)
-            }
-            viewModelScope.launch(Dispatchers.IO) {
-                upOrder(false)
-            }
             viewModelScope.launch(Dispatchers.IO) {
                 upActivities(false)
             }
