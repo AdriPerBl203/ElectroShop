@@ -85,6 +85,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
         val docDueDate = _uiState.value.DocDueDate
         val taxDate = _uiState.value.TaxDate
         val discountPercent = _uiState.value.DiscountPercent
+        val SalesPersonCode = _uiState.value.SalesPersonCode.toInt()
         _uiState.update { currentState ->
             currentState.copy(
                 DocumentLineList = trimDocumentLineList()
@@ -104,7 +105,8 @@ class OrderViewModel : ViewModel(), ActionViewModel {
             taxDate,
             discountPercent,
             documentLine,
-            false
+            false,
+            SalesPersonCode
         )
 
         viewModelScope.launch(Dispatchers.IO) {
