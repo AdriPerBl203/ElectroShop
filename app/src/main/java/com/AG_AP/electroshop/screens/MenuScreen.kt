@@ -247,26 +247,16 @@ fun MenuBody(
                     .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally
             ){
-                Row (
-
-                ){
-                    if(dataUiState.articulo == "S"){
+                Row {
+                    if(dataUiState.actividad == "S"){
                         ElevatedButton(
                             modifier= Modifier
                                 .padding(30.dp)
                                 .width(200.dp),
-                            onClick = { navController.navigate(route = Routes.ScreenActivity.route) }
+                            onClick = { navController.navigate(route = Routes.MixedActivityScreen.route) }
                         ) {
                             Text("Actividades")
                         }
-                        ElevatedButton(
-                            modifier= Modifier
-                                .padding(30.dp)
-                                .width(200.dp),
-                            onClick = { navController.navigate(route = Routes.ListActivity.route) }
-                        ) {
-                            Text("Historial de actividades")
-                        }
                     }
                 }
                 Row (
@@ -276,18 +266,9 @@ fun MenuBody(
                         modifier= Modifier
                             .padding(30.dp)
                             .width(200.dp),
-                        onClick = { navController.navigate(route = Routes.BusinessPartner.route) }
+                        onClick = { navController.navigate(route = Routes.MixedBusinessPartnerScreen.route) }
                     ) {
-                        Text("Clientes")
-                    }
-
-                    ElevatedButton(
-                        modifier= Modifier
-                            .padding(30.dp)
-                            .width(200.dp),
-                        onClick = { navController.navigate(route = Routes.ScreenBusinessPartnerList.route) }
-                    ) {
-                        Text("Historial de clientes")
+                        Text("Interlocutores")
                     }
                 }
 
@@ -299,19 +280,10 @@ fun MenuBody(
                             modifier= Modifier
                                 .padding(30.dp)
                                 .width(200.dp),
-                            onClick = { navController.navigate(route = Routes.ScreenOrder.route) }
+                            onClick = { navController.navigate(route = Routes.MixedOrderScreen.route) }
                         ) {
                             Text("Pedido de cliente")
                         }
-
-                        ElevatedButton(
-                            modifier= Modifier
-                                .padding(30.dp)
-                                .width(200.dp),
-                            onClick = { navController.navigate(route = Routes.ScreenOrderList.route) }
-                        ) {
-                            Text("Historial pedido cliente")
-                        }
                     }
                 }
 
@@ -323,18 +295,9 @@ fun MenuBody(
                             modifier= Modifier
                                 .padding(30.dp)
                                 .width(200.dp),
-                            onClick = { navController.navigate(route = Routes.PurchaseOrderScreen.route) }
+                            onClick = { navController.navigate(route = Routes.MixedPurchaseOrderScreen.route) }
                         ) {
                             Text("Pedido de compra")
-                        }
-
-                        ElevatedButton(
-                            modifier= Modifier
-                                .padding(30.dp)
-                                .width(200.dp),
-                            onClick = { navController.navigate(route = Routes.PurchaseOrderList.route) }
-                        ) {
-                            Text("Historial pedido compra")
                         }
                     }
                 }
@@ -345,18 +308,9 @@ fun MenuBody(
                             modifier= Modifier
                                 .padding(30.dp)
                                 .width(200.dp),
-                            onClick = { navController.navigate(route = Routes.ItemScreen.route) }
+                            onClick = { navController.navigate(route = Routes.MixedItemScreen.route) }
                         ) {
                             Text("Articulos")
-                        }
-
-                        ElevatedButton(
-                            modifier= Modifier
-                                .padding(30.dp)
-                                .width(200.dp),
-                            onClick = { navController.navigate(route = Routes.ItemScreenList.route) }
-                        ) {
-                            Text("Historial de articulos")
                         }
                     }
                 }
