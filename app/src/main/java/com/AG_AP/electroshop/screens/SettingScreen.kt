@@ -90,6 +90,7 @@ fun SettingScreen(
                     label = { Text("URL externa") },
                     modifier = Modifier
                         .fillMaxWidth()
+                        .padding(bottom = 16.dp)
                 )
                 OutlinedTextField(
                     value = dataUiState.urlInt,
@@ -97,6 +98,7 @@ fun SettingScreen(
                     label = { Text("URL interna") },
                     modifier = Modifier
                         .fillMaxWidth()
+                        .padding(bottom = 16.dp)
                 )
 
             }
@@ -131,7 +133,7 @@ fun SettingScreen(
                     label = { Text("Usuario") },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 8.dp)
+                        .padding(bottom = 16.dp)
                 )
                 OutlinedTextField(
                     value = dataUiState.password,
