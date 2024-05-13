@@ -73,7 +73,10 @@ fun BusinessPartnerUltimate(innerPadding: PaddingValues) {
                         onValueChange = {},
                         readOnly = true,
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                        modifier = Modifier.menuAnchor()
+                        modifier = Modifier
+                            .menuAnchor()
+                            .width(300.dp)
+                            .padding(8.dp)
                     )
 
                     ExposedDropdownMenu(
@@ -120,8 +123,8 @@ fun BusinessPartnerUltimate(innerPadding: PaddingValues) {
                 )
             }
             Row(
-                modifier= Modifier.width(500.dp)
-            ){
+                modifier = Modifier.width(500.dp)
+            ) {
                 OutlinedTextField(
                     value = "",
                     onValueChange = { /*TODO*/ },
@@ -132,8 +135,8 @@ fun BusinessPartnerUltimate(innerPadding: PaddingValues) {
                 )
 
                 Column(
-                    horizontalAlignment= Alignment.CenterHorizontally
-                ){
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
 
                     ElevatedButton(onClick = { /*TODO*/ }) {
                         Text("Buscar")
@@ -146,12 +149,26 @@ fun BusinessPartnerUltimate(innerPadding: PaddingValues) {
             }
 
             Column(
-                modifier= Modifier.fillMaxHeight(),
-                horizontalAlignment= Alignment.CenterHorizontally,
-                verticalArrangement= Arrangement.Center
-            ){
-                val listaUno = listOf("ejemplo 1","ejemplo 2","ejemplo 3","ejemplo 4","ejemplo 5","ejemplo 6")
-                val listaDos = listOf("ejemplo 7","ejemplo 8","ejemplo 9","ejemplo 10","ejemplo 11","ejemplo 12")
+                modifier = Modifier.fillMaxHeight(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                val listaUno = listOf(
+                    "ejemplo 1",
+                    "ejemplo 2",
+                    "ejemplo 3",
+                    "ejemplo 4",
+                    "ejemplo 5",
+                    "ejemplo 6"
+                )
+                val listaDos = listOf(
+                    "ejemplo 7",
+                    "ejemplo 8",
+                    "ejemplo 9",
+                    "ejemplo 10",
+                    "ejemplo 11",
+                    "ejemplo 12"
+                )
                 Text("Clientes en SAP")
                 LazyRowWithCards(listaUno)
                 Text("Clientes en la tablet")
@@ -182,18 +199,21 @@ fun BusinessPartnerUltimate(innerPadding: PaddingValues) {
 
 @Composable
 fun LazyRowWithCards(data: List<String>) {
-    LazyRow (
-        modifier=Modifier.padding(horizontal=10.dp,vertical=15.dp)
-    ){
+    LazyRow(
+        modifier = Modifier.padding(horizontal = 10.dp, vertical = 15.dp)
+    ) {
         items(data) { item ->
             Card(
-                modifier = Modifier.padding(4.dp).width(200.dp).height(150.dp)
+                modifier = Modifier
+                    .padding(4.dp)
+                    .width(200.dp)
+                    .height(150.dp)
             ) {
                 Column(
-                    horizontalAlignment= Alignment.Start,
-                    verticalArrangement= Arrangement.SpaceBetween
-                ){
-                    Column(){
+                    horizontalAlignment = Alignment.Start,
+                    verticalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Column() {
                         Text(
                             text = item,
                             modifier = Modifier.padding(16.dp)
@@ -201,11 +221,15 @@ fun LazyRowWithCards(data: List<String>) {
                         IconButton(onClick = {
                             //TODO
                         }) {
-                            Icon(imageVector = Icons.Filled.Add, contentDescription = "Settings", tint = MaterialTheme.colorScheme.primaryContainer)
+                            Icon(
+                                imageVector = Icons.Filled.Add,
+                                contentDescription = "Settings",
+                                tint = MaterialTheme.colorScheme.primaryContainer
+                            )
                         }
                     }
 
-                    Row(){
+                    Row() {
 
                     }
                 }
