@@ -11,6 +11,7 @@ data class PurchaseOrderUiState(
     val DocDate: String = "",
     val DocDueDate: String = "",
     val TaxDate: String = "",
+    val SalesPersonCode: String = "",
     val DiscountPercent: Double = 0.0, //Descuento
     val DocumentLine: MutableList<ArticleUiState?> = listOf(null).toMutableList(),
     val DocumentLineList: ConcurrentHashMap<Int, MutableList<String>> = ConcurrentHashMap(),

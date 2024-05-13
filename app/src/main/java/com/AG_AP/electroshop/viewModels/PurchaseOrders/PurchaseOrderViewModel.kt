@@ -68,6 +68,14 @@ class PurchaseOrderViewModel : ViewModel(), ActionViewModel {
         }
     }
 
+    fun changeSalesPersonCode(name: String){
+        _uiState.update { currentState ->
+            currentState.copy(
+                SalesPersonCode = name
+            )
+        }
+    }
+
     fun changeDiscount(discount: String) {
         try {
             val disc = discount.toFloat()
@@ -234,6 +242,7 @@ class PurchaseOrderViewModel : ViewModel(), ActionViewModel {
         val docDueDate = _uiState.value.DocDueDate
         val taxDate = _uiState.value.TaxDate
         val discountPercent = _uiState.value.DiscountPercent
+        val SalesPersonCode = _uiState.value.SalesPersonCode.toInt()
         _uiState.update { currentState ->
             currentState.copy(
                 DocumentLineList = trimDocumentLineList()
@@ -252,7 +261,8 @@ class PurchaseOrderViewModel : ViewModel(), ActionViewModel {
             taxDate,
             discountPercent,
             documentLine,
-            false
+            false,
+            SalesPersonCode
         )
 
         viewModelScope.launch {
