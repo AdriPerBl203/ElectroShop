@@ -79,28 +79,28 @@ fun ActivityView(innerPadding: PaddingValues, viewModel: ActivityViewModel, id: 
         false
     )
 
-    if(dataUiState.showDialogPurchaseOrder){
+    if (dataUiState.showDialogPurchaseOrder) {
         DialogActivity(
-            data ={dataUiState.ListPurchaseOrders},
+            data = { dataUiState.ListPurchaseOrders },
             "Seleccione pedido de compra",
             { viewModel.closerDialogPurchaseOrder() },
-            {data -> viewModel.changePedidoCompra(data) }
+            { data -> viewModel.changePedidoCompra(data) }
         )
     }
-    if(dataUiState.showDialogOrder){
+    if (dataUiState.showDialogOrder) {
         DialogActivity(
-            data ={dataUiState.ListOrders},
-            "Seleccione pedido de cliente" ,
-            {viewModel.closerDialogOrder()},
-            {data -> viewModel.changePedidoCliente(data) }
+            data = { dataUiState.ListOrders },
+            "Seleccione pedido de cliente",
+            { viewModel.closerDialogOrder() },
+            { data -> viewModel.changePedidoCliente(data) }
         )
     }
-    if(dataUiState.showDialogBussinesPartner){
+    if (dataUiState.showDialogBussinesPartner) {
         DialogActivity(
-            data ={dataUiState.ListBusinessPartner},
-            "Seleccione cliente" ,
-            {viewModel.closerDialogBusinessPartner()},
-            {data -> viewModel.changeCardCode(data) }
+            data = { dataUiState.ListBusinessPartner },
+            "Seleccione cliente",
+            { viewModel.closerDialogBusinessPartner() },
+            { data -> viewModel.changeCardCode(data) }
         )
     }
     Column(
@@ -130,7 +130,10 @@ fun ActivityView(innerPadding: PaddingValues, viewModel: ActivityViewModel, id: 
                         onValueChange = {},
                         readOnly = true,
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                        modifier = Modifier.menuAnchor()
+                        modifier = Modifier
+                            .menuAnchor()
+                            .width(300.dp)
+                            .padding(8.dp)
                     )
 
                     ExposedDropdownMenu(
@@ -157,7 +160,11 @@ fun ActivityView(innerPadding: PaddingValues, viewModel: ActivityViewModel, id: 
                         .padding(8.dp),
                     label = { Text("Nota") }
                 )
-                DatePicker(label = "Fecha", dataUiState.ActivityDate) {
+                DatePicker(
+                    label = "Fecha", dataUiState.ActivityDate, modifier = Modifier
+                        .width(300.dp)
+                        .padding(8.dp)
+                ) {
                     viewModel.changeActivityDate(it)
                 }
                 OutlinedTextField(
@@ -168,7 +175,7 @@ fun ActivityView(innerPadding: PaddingValues, viewModel: ActivityViewModel, id: 
                         .padding(8.dp),
                     label = { Text("Hora inicio") },
                     readOnly = true,
-                    trailingIcon={
+                    trailingIcon = {
                         IconButton(
                             onClick = {
                                 DialogStartTime.show()
@@ -187,7 +194,7 @@ fun ActivityView(innerPadding: PaddingValues, viewModel: ActivityViewModel, id: 
                         .padding(8.dp),
                     label = { Text("Asociar pedido de cliente") },
                     readOnly = true,
-                    trailingIcon={
+                    trailingIcon = {
                         IconButton(
                             onClick = {
                                 viewModel.showDialogOrder()
@@ -210,7 +217,7 @@ fun ActivityView(innerPadding: PaddingValues, viewModel: ActivityViewModel, id: 
                         .padding(8.dp),
                     label = { Text("Hora fin") },
                     readOnly = true,
-                    trailingIcon={
+                    trailingIcon = {
                         IconButton(
                             onClick = {
                                 DialogStartEnd.show()
@@ -228,7 +235,7 @@ fun ActivityView(innerPadding: PaddingValues, viewModel: ActivityViewModel, id: 
                         .padding(8.dp),
                     label = { Text("Código cliente") },
                     readOnly = true,
-                    trailingIcon={
+                    trailingIcon = {
                         IconButton(
                             onClick = {
                                 viewModel.showDialogBusinessPartner()
@@ -257,7 +264,10 @@ fun ActivityView(innerPadding: PaddingValues, viewModel: ActivityViewModel, id: 
                         onValueChange = {},
                         readOnly = true,
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedTwo) },
-                        modifier = Modifier.menuAnchor()
+                        modifier = Modifier
+                            .menuAnchor()
+                            .width(300.dp)
+                            .padding(8.dp)
                     )
 
                     ExposedDropdownMenu(
@@ -284,7 +294,7 @@ fun ActivityView(innerPadding: PaddingValues, viewModel: ActivityViewModel, id: 
                         .padding(8.dp),
                     label = { Text("Asociar pedido de compra") },
                     readOnly = true,
-                    trailingIcon={
+                    trailingIcon = {
                         IconButton(
                             onClick = {
                                 viewModel.showDialogPurchaseOrder()
@@ -304,7 +314,7 @@ fun ActivityView(innerPadding: PaddingValues, viewModel: ActivityViewModel, id: 
                         .width(300.dp)
                         .padding(8.dp),
                     label = { Text("Id") },
-                    enabled= false
+                    enabled = false
                 )
             }
         }
@@ -386,7 +396,7 @@ fun ScaffoldActivity(
                 }
                 Button(
                     modifier = Modifier.padding(start = 15.dp, end = 15.dp),
-                    onClick = { navController.navigateUp() }
+                    onClick = { navController.popBackStack() }
                 ) {
                     Text(text = "Volver")
                 }

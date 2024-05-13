@@ -24,7 +24,7 @@ import androidx.compose.ui.platform.LocalContext
 import java.util.*
 
 @Composable
-fun DatePicker(label: String, value: String = "", callback: (String) -> Unit) {
+fun DatePicker(label: String, value: String = "", modifier: Modifier = Modifier, callback: (String) -> Unit) {
     var fecha: String by remember {
         mutableStateOf(value)
     }
@@ -72,7 +72,8 @@ fun DatePicker(label: String, value: String = "", callback: (String) -> Unit) {
                         mDatePickerDialog.show()
                     }
             )
-        }
+        },
+        modifier = modifier
     )
 }
 

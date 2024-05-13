@@ -9,6 +9,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.AG_AP.electroshop.nav.Routes
+import com.AG_AP.electroshop.screens.Activities.MixedScaffoldActivityScreen
+import com.AG_AP.electroshop.screens.Activities.MixedScaffoldBusinessPartnerScreen
+import com.AG_AP.electroshop.screens.Activities.MixedScaffoldItemScreen
+import com.AG_AP.electroshop.screens.Activities.MixedScaffoldOrderScreen
+import com.AG_AP.electroshop.screens.Activities.MixedScaffoldPurchaseOrderScreen
 import com.AG_AP.electroshop.screens.Activities.ScaffoldActivity
 import com.AG_AP.electroshop.screens.Activities.ScaffoldListActivity
 import com.AG_AP.electroshop.screens.BusinessPartners.ScaffoldBusinessPartner
@@ -51,6 +56,38 @@ fun AppNav(navController: NavHostController = rememberNavController(), context: 
         ) {
             MenuFrontView(navController = navController)
         }
+
+        /* Mixed Screens */
+        composable(
+            route = Routes.MixedActivityScreen.route
+        ) {
+            MixedScaffoldActivityScreen(navController = navController)
+        }
+
+        composable(
+            route = Routes.MixedBusinessPartnerScreen.route
+        ) {
+            MixedScaffoldBusinessPartnerScreen(navController = navController)
+        }
+
+        composable(
+            route = Routes.MixedOrderScreen.route
+        ) {
+            MixedScaffoldOrderScreen(navController = navController)
+        }
+
+        composable(
+            route = Routes.MixedPurchaseOrderScreen.route
+        ) {
+            MixedScaffoldPurchaseOrderScreen(navController = navController)
+        }
+
+        composable(
+            route = Routes.MixedItemScreen.route
+        ) {
+            MixedScaffoldItemScreen(navController = navController)
+        }
+
 
         composable(
             route = Routes.ScreenActivity.route,
