@@ -397,8 +397,8 @@ class SettingsViewModel : ViewModel() {
                 deleteAndInsertUserUdo() //
                 deleteAndInsertBusinessPartner() // Correcta
                 deleteAndInsertActivity() // Correcto
-                deleteAndInsertOrders() //Corecta
-                deleteAndInsertPurchaseOrders() //Correcta
+                //deleteAndInsertOrders() //Corecta
+                //deleteAndInsertPurchaseOrders() //Correcta
                 enablebtn(Config.rulUse)
         }
 
@@ -426,7 +426,7 @@ class SettingsViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             var aux: Boolean = true
             while (aux){
-                if(_uiState.value.checkUserUdo && _uiState.value.checkBusinessPartner && _uiState.value.checkActivity && _uiState.value.checkItem && _uiState.value.checkOrder && _uiState.value.checkPurchaseOrder){
+                if(_uiState.value.checkUserUdo && _uiState.value.checkBusinessPartner && _uiState.value.checkActivity && _uiState.value.checkItem){
                     aux = false
                     LoginObj.logout(url)
                 } else {
