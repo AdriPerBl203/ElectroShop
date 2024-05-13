@@ -158,6 +158,12 @@ fun ListDraw(viewModel: MenuViewModel, navController: NavHostController) {
         ListActionDraw("Subir clientes",Icons.Filled.AccountCircle,"Sincronizando clientes"){
             viewModel.upBusinessPartners(true)
         },
+        ListActionDraw("Subir pedido de compra",Icons.Filled.Reorder,"Sincronizando pedido de compra"){
+            viewModel.upPurchaseOrders(true)
+        },
+        ListActionDraw("Subir pedido de cliente",Icons.Filled.AddBusiness,"Sincronizando pedido de cliente"){
+            viewModel.upOrder(true)
+        },
         ListActionDraw("Subir todo",Icons.Filled.AccountTree,"Sincronizando todo"){
             viewModel.upTotal()
         },

@@ -119,9 +119,16 @@ class MenuViewModel : ViewModel() {
                             }
                         }
                     }
+                    ListCheckTotal.addInfo("Pedido cliente actualizadas")
+                    if(bol){
+                        LoginObj.logout(Config.rulUse)
+                        _uiState.update { currentState -> currentState.copy(
+                            checkProgresCircular = false
+                        ) }
+                    }
                 }
                 viewModelScope.launch(Dispatchers.IO) {
-                    var listOrderSAP: MutableList<com.AG_AP.electroshop.endpoints.models.orders.Value> =
+                    /*var listOrderSAP: MutableList<com.AG_AP.electroshop.endpoints.models.orders.Value> =
                         mutableListOf()
                     var checkSAP: Boolean = false
                     var orders : Orders? = OrdersObj.getOrders(Config.rulUse)
@@ -141,6 +148,7 @@ class MenuViewModel : ViewModel() {
                             }
                         }
                     }
+
                     listOrderSAP.forEach{element ->
                             OrderCRUD.deleteObjectById(element.DocNum.toString())
                         }
@@ -174,14 +182,7 @@ class MenuViewModel : ViewModel() {
                                 element.SalesPersonCode
                             )
                             OrderCRUD.insert(orderInsert)
-                        }
-                        ListCheckTotal.addInfo("Pedido cliente actualizadas")
-                        if(bol){
-                            LoginObj.logout(Config.rulUse)
-                            _uiState.update { currentState -> currentState.copy(
-                                checkProgresCircular = false
-                            ) }
-                        }
+                        }*/
                 }
             }
         }
@@ -227,8 +228,15 @@ class MenuViewModel : ViewModel() {
                             }
                         }
                     }
+                    ListCheckTotal.addInfo("Pedido compra actualizadas")
+                    if(bol){
+                        LoginObj.logout(Config.rulUse)
+                        _uiState.update { currentState -> currentState.copy(
+                            checkProgresCircular = false
+                        ) }
+                    }
                 }
-                viewModelScope.launch(Dispatchers.IO) {
+                /*viewModelScope.launch(Dispatchers.IO) {
                     var listPurchaseOrderSAP: MutableList<com.AG_AP.electroshop.endpoints.models.purchaseOrders.Value> =
                         mutableListOf()
                     var checkSAP: Boolean = false
@@ -283,14 +291,7 @@ class MenuViewModel : ViewModel() {
                             )
                             PurchaseOrderCRUD.insert(orderInsert)
                         }
-                        ListCheckTotal.addInfo("Pedido compra actualizadas")
-                        if(bol){
-                            LoginObj.logout(Config.rulUse)
-                            _uiState.update { currentState -> currentState.copy(
-                                checkProgresCircular = false
-                            ) }
-                        }
-                }
+                }*/
             }
         }
     }
