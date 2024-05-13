@@ -14,6 +14,7 @@ import com.AG_AP.electroshop.screens.Activities.MixedScaffoldItemScreen
 import com.AG_AP.electroshop.screens.Activities.MixedScaffoldOrderScreen
 import com.AG_AP.electroshop.screens.Activities.MixedScaffoldPurchaseOrderScreen
 import com.AG_AP.electroshop.screens.Activities.ScaffoldActivity
+import com.AG_AP.electroshop.screens.Activities.ScaffoldActivityUltimate
 import com.AG_AP.electroshop.screens.Activities.ScaffoldListActivity
 import com.AG_AP.electroshop.screens.BusinessPartners.ScaffoldBusinessPartner
 import com.AG_AP.electroshop.screens.BusinessPartners.ScaffoldBusinessPartnerUltimate
@@ -201,6 +202,12 @@ fun AppNav(navController: NavHostController = rememberNavController(), context: 
             route = Routes.BusinessPartnerUltimate.route
         ) {
             ScaffoldBusinessPartnerUltimate(navController)
+        }
+
+        composable(
+            route = Routes.ActivityUltimate.route
+        ) {
+            ScaffoldActivityUltimate(navController)
         }
     }
 }
