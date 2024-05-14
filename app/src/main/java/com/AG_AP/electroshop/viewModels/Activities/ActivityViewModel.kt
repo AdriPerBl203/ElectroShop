@@ -457,7 +457,8 @@ class ActivityViewModel : ViewModel(), ActionViewModel {
             mutableList?.let {
                 _uiState.update { currentState -> currentState.copy(
                     ListActivityTheSAP = listShow.toList(),
-                    ListActivityTheTablet = listShowTable.toList()
+                    ListActivityTheTablet = listShowTable.toList(),
+                    totalSearch = (listShow.size + listShowTable.size).toString()
                 ) }
             }
         }

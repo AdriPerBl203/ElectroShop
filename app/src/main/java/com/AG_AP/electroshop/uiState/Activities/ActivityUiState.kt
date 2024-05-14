@@ -29,7 +29,8 @@ data class ActivityUiState(
     val ListActivityTheSAP:List<Activity> = listOf(),
     val ListActivityTheTablet:List<Activity> = listOf(),
     val ActionButton:String = "Añadir y ver",
-    val dataFilter:String = "C00003"
+    val dataFilter:String = "C00003",
+    val totalSearch:String = "0"
 )
 /*val nota:String = "Esto es una nota",
 val ActivityDate:String = "2016-08-30",

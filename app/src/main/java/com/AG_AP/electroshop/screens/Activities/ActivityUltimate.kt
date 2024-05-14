@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -121,11 +122,11 @@ fun ActivityUltimate(
     Column(
         modifier = Modifier
             .padding(innerPadding)
-            .verticalScroll(rememberScrollState())
+            //.verticalScroll(rememberScrollState())
     ) {
         Row(
         ) {
-            /*Column { //
+            Column { //
                 val coffeeDrinks =
                     arrayOf("Llamada telefónica", "Reunión", "Tarea", "Nota", "Campaña", "Otros")
                 var expanded by remember { mutableStateOf(false) }
@@ -325,7 +326,7 @@ fun ActivityUltimate(
                     }
                 )
 
-            } */ //
+            }  //
             Column(
                 modifier= Modifier.width(250.dp)
             ){
@@ -347,15 +348,34 @@ fun ActivityUltimate(
                     }
             }
 
-            Column(
+            /*Column(
                 modifier= Modifier.fillMaxHeight(),
                 horizontalAlignment= Alignment.CenterHorizontally,
                 verticalArrangement= Arrangement.Center
-            ){
-                Text("Clientes en SAP")
-                LazyRowWithCards(dataUiState.ListActivityTheSAP,viewModel)
-                Text("Clientes en la tablet")
-                LazyRowWithCards(dataUiState.ListActivityTheTablet,viewModel)
+            ){*/
+            
+            Column(){
+                Row(
+                    modifier=Modifier.padding(5.dp)
+                ){
+                    Text(text = "Total de resultados: ${dataUiState.totalSearch}")
+                }
+                
+                Row(){
+                    Column(
+                        horizontalAlignment= Alignment.CenterHorizontally
+                    ){
+                        Text("Clientes en SAP")
+                        LazyColumnWithCards(dataUiState.ListActivityTheSAP,viewModel)
+
+                    }
+                    Column(
+                        horizontalAlignment= Alignment.CenterHorizontally
+                    ){
+                        Text("Clientes en la tablet")
+                        LazyColumnWithCards(dataUiState.ListActivityTheTablet,viewModel)
+                    }
+                }
             }
         }
 
@@ -382,10 +402,10 @@ fun ActivityUltimate(
 }
 
 @Composable
-fun LazyRowWithCards(data: List<Activity>, viewModel: ActivityViewModel) {
-    LazyRow (
-        modifier= Modifier.padding(horizontal=10.dp,vertical=15.dp)
-    ){
+fun LazyColumnWithCards(data: List<Activity>, viewModel: ActivityViewModel) {
+    LazyColumn(
+        modifier = Modifier.padding(horizontal = 10.dp, vertical = 15.dp)
+    ) {
         items(data) { item ->
             Card(
                 modifier = Modifier
@@ -394,9 +414,9 @@ fun LazyRowWithCards(data: List<Activity>, viewModel: ActivityViewModel) {
                     .height(190.dp)
             ) {
                 Column(
-                    horizontalAlignment= Alignment.Start
-                ){
-                    Column(){
+                    horizontalAlignment = Alignment.Start
+                ) {
+                    Column() {
                         Row {
                             Text(
                                 text = item.ActivityDate.split("T")[0],
@@ -405,11 +425,15 @@ fun LazyRowWithCards(data: List<Activity>, viewModel: ActivityViewModel) {
                             IconButton(onClick = {
                                 viewModel.showDataPlus(item)
                             }) {
-                                Icon(imageVector = Icons.Filled.Add, contentDescription = "Settings", tint = MaterialTheme.colorScheme.primaryContainer)
+                                Icon(
+                                    imageVector = Icons.Filled.Add,
+                                    contentDescription = "Settings",
+                                    tint = MaterialTheme.colorScheme.primaryContainer
+                                )
                             }
                         }
 
-                        Row(){
+                        Row() {
                             Text(
                                 text = item.ActivityTime,
                                 modifier = Modifier.padding(16.dp)
@@ -420,7 +444,7 @@ fun LazyRowWithCards(data: List<Activity>, viewModel: ActivityViewModel) {
                             )
                         }
 
-                        Row(){
+                        Row() {
                             Text(
                                 text = item.CardCode,
                                 modifier = Modifier.padding(16.dp)
@@ -442,6 +466,7 @@ fun LazyRowWithCards(data: List<Activity>, viewModel: ActivityViewModel) {
                 }
             }
         }
+
     }
 }
 
