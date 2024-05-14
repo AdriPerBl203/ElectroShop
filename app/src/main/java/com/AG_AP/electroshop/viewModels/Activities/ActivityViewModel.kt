@@ -329,14 +329,15 @@ class ActivityViewModel : ViewModel(), ActionViewModel {
     fun ejecutarAction(navController: NavHostController) {
 
         when(_uiState.value.ActionButton){
-            "Añadir y ver" -> guardar(true)
-            "Añadir y nuevo" -> guardar(false)
+            "Añadir y ver" -> save(true)
+            "Añadir y nuevo" -> save(false)
             "Añadir y salir" -> {
-                guardar(false)
+                save(false)
                 navController.popBackStack()
             }
             "Actualizar" -> update()
-            "Borrar" -> borrar()
+            "Borrar" -> delete()
+            else -> ""
         }
     }
 

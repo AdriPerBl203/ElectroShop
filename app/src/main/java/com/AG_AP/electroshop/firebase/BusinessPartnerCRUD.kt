@@ -167,9 +167,9 @@ object BusinessPartnerCRUD : ActionFirebase {
             .addOnSuccessListener {
                     lista ->
                 val dataList = mutableListOf<BusinessPartner>()
-
                 for (document in lista.documents) {
                     val data = document.data
+                    Log.e("Pruebas", document.data.toString())
 
                     val idFireBase = data?.get("idFireBase").toString()
                     val CardCode = data?.get("CardCode").toString()

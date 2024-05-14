@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -58,14 +59,13 @@ fun BusinessPartnerUltimate(innerPadding: PaddingValues, viewModel: BusinessPart
     Column(
         modifier = Modifier
             .padding(innerPadding)
-            .verticalScroll(rememberScrollState())
     ) {
         val dataUiState by viewModel.uiState.collectAsState()
 
-        if (dataUiState.FilterByName != "") {
+
+        if (dataUiState.FilterByName == "") {
             viewModel.refresh()
         }
-
 
         Row(
         ) {
@@ -149,7 +149,7 @@ fun BusinessPartnerUltimate(innerPadding: PaddingValues, viewModel: BusinessPart
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
-                    ElevatedButton(onClick = { /*TODO*/ }) {
+                    ElevatedButton(onClick = { viewModel.refresh() }) {
                         Text("Buscar")
                     }
 
@@ -159,17 +159,33 @@ fun BusinessPartnerUltimate(innerPadding: PaddingValues, viewModel: BusinessPart
                 }
             }
 
-            Column(
+            Row(
                 modifier = Modifier.fillMaxHeight(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 val listaUno = dataUiState.BPSapList
                 val listaDos = dataUiState.BPDeviceList
-                Text("Clientes en SAP")
-                LazyRowWithCards(listaUno, viewModel)
-                Text("Clientes en la tablet")
-                LazyRowWithCards(listaDos, viewModel)
+                Box(
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text("Clientes en SAP")
+                        LazyColumnWithCards(listaUno, viewModel)
+                    }
+                }
+                Box(
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text("Clientes en la tablet")
+                        LazyColumnWithCards(listaDos, viewModel)
+                    }
+                }
             }
         }
         /*Column {
@@ -195,8 +211,8 @@ fun BusinessPartnerUltimate(innerPadding: PaddingValues, viewModel: BusinessPart
 }
 
 @Composable
-fun LazyRowWithCards(data: List<BusinessPartner?>, viewModel: BusinessPartnerViewModel) {
-    LazyRow(
+fun LazyColumnWithCards(data: List<BusinessPartner?>, viewModel: BusinessPartnerViewModel) {
+    LazyColumn(
         modifier = Modifier.padding(horizontal = 10.dp, vertical = 15.dp)
     ) {
         items(data) { item ->
@@ -210,11 +226,24 @@ fun LazyRowWithCards(data: List<BusinessPartner?>, viewModel: BusinessPartnerVie
                     horizontalAlignment = Alignment.Start,
                     verticalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Column() {
+                    Column {
                         if (item != null) {
                             Text(
+                                text = item.CardCode,
+                                modifier = Modifier.padding(start = 16.dp, 5.dp)
+                            )
+                            Text(
                                 text = item.CardName,
-                                modifier = Modifier.padding(16.dp)
+                                modifier = Modifier.padding(start = 16.dp, 5.dp)
+                            )
+                            Text(
+                                text = item.Cellular,
+                                modifier = Modifier.padding(start = 16.dp, 5.dp)
+                            )
+                        } else {
+                            Text(
+                                text = "",
+                                modifier = Modifier.padding(start = 16.dp, 5.dp)
                             )
                         }
                         IconButton(onClick = {
@@ -235,7 +264,10 @@ fun LazyRowWithCards(data: List<BusinessPartner?>, viewModel: BusinessPartnerVie
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScaffoldBusinessPartnerUltimate(navController: NavHostController, viewModel: BusinessPartnerViewModel = viewModel()) {
+fun ScaffoldBusinessPartnerUltimate(
+    navController: NavHostController,
+    viewModel: BusinessPartnerViewModel = viewModel()
+) {
     val dataUiState = viewModel.uiState.collectAsState()
     Scaffold(
         topBar = {

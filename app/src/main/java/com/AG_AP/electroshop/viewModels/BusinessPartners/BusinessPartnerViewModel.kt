@@ -1,5 +1,6 @@
 package com.AG_AP.electroshop.viewModels.BusinessPartners
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
@@ -25,8 +26,20 @@ class BusinessPartnerViewModel : ViewModel(), ActionViewModel {
             find()
         }
 
-        changeSAPList(search(true, true))
-        changeDeviceList(search(false, true))
+        search(true, true) { it ->
+            _uiState.update { currentState ->
+                currentState.copy(
+                    BPSapList = it
+                )
+            }
+        }
+        search(false, true) { it ->
+            _uiState.update { currentState ->
+                currentState.copy(
+                    BPDeviceList = it
+                )
+            }
+        }
 
     }
 
@@ -36,12 +49,38 @@ class BusinessPartnerViewModel : ViewModel(), ActionViewModel {
             find()
         }
 
-
         if (_uiState.value.FilterByName != "") {
-            changeSAPList(search(true, false))
-            changeDeviceList(search(false, false))
-
+            search(true, false) {
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        BPSapList = it
+                    )
+                }
+            }
+            search(false, false) {
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        BPDeviceList = it
+                    )
+                }
+            }
+        } else if (_uiState.value.FilterByName == "") {
+            search(true, true) {
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        BPSapList = it
+                    )
+                }
+            }
+            search(false, true) {
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        BPDeviceList = it
+                    )
+                }
+            }
         }
+
 
     }
 
@@ -117,31 +156,35 @@ class BusinessPartnerViewModel : ViewModel(), ActionViewModel {
         }
     }
 
-    fun search(sap: Boolean, deviceOrSap: Boolean): List<BusinessPartner?> {
-        var list: List<BusinessPartner?> = listOf()
-        viewModelScope.launch {
-            if (deviceOrSap) {
-                BusinessPartnerCRUD.getBPBySAP(sap) {
-                    list = it
-                }
-            } else {
-                BusinessPartnerCRUD.getBPByName(_uiState.value.CardName, sap) {
-                    list = it
-                }
+    fun search(sap: Boolean, deviceOrSap: Boolean, callback: (List<BusinessPartner?>) -> Unit) {
+        if (deviceOrSap) {
+            BusinessPartnerCRUD.getBPBySAP(sap) {
+                callback(it)
+            }
+        } else {
+            BusinessPartnerCRUD.getBPByName(_uiState.value.FilterByName, sap) {
+                callback(it)
             }
         }
-        return list
+
     }
 
     fun replaceData(it: BusinessPartner?) {
         if (it != null) {
+            var cardType: String = "Cliente"
+            when (it.CardType) {
+                "cSupplier" -> cardType = "Proveedor"
+                "cLead" -> cardType = "Lead"
+                "cCustomer" -> cardType = "Cliente"
+
+            }
             _uiState.update { currentState ->
                 currentState.copy(
                     CardCode = it.CardCode,
                     CardName = it.CardName,
                     Cellular = it.Cellular,
                     EmailAddress = it.EmailAddress,
-                    CardType = it.CardType
+                    CardType = cardType
                 )
             }
         }
