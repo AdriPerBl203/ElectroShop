@@ -1,7 +1,9 @@
 package com.AG_AP.electroshop.viewModels.BusinessPartners
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
 import com.AG_AP.electroshop.firebase.models.BusinessPartner
 import com.AG_AP.electroshop.uiState.BusinessPartners.BusinessPartnerUiState
@@ -23,6 +25,22 @@ class BusinessPartnerViewModel : ViewModel(), ActionViewModel {
         if (id.isNotEmpty()) {
             find()
         }
+
+        search(true, true) { it ->
+            _uiState.update { currentState ->
+                currentState.copy(
+                    BPSapList = it
+                )
+            }
+        }
+        search(false, true) { it ->
+            _uiState.update { currentState ->
+                currentState.copy(
+                    BPDeviceList = it
+                )
+            }
+        }
+
     }
 
     fun refresh() {
@@ -30,6 +48,40 @@ class BusinessPartnerViewModel : ViewModel(), ActionViewModel {
         if (id.isNotEmpty()) {
             find()
         }
+
+        if (_uiState.value.FilterByName != "") {
+            search(true, false) {
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        BPSapList = it
+                    )
+                }
+            }
+            search(false, false) {
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        BPDeviceList = it
+                    )
+                }
+            }
+        } else if (_uiState.value.FilterByName == "") {
+            search(true, true) {
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        BPSapList = it
+                    )
+                }
+            }
+            search(false, true) {
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        BPDeviceList = it
+                    )
+                }
+            }
+        }
+
+
     }
 
     fun changeCardCode(it: String) {
@@ -64,6 +116,14 @@ class BusinessPartnerViewModel : ViewModel(), ActionViewModel {
         }
     }
 
+    fun changeFilter(it: String) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                FilterByName = it
+            )
+        }
+    }
+
     fun changeEmailAddress(it: String) {
         _uiState.update { currentState ->
             currentState.copy(
@@ -72,14 +132,72 @@ class BusinessPartnerViewModel : ViewModel(), ActionViewModel {
         }
     }
 
-    override fun guardar(data: Boolean) {
+    fun changeOption(it: String) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                Option = it
+            )
+        }
+    }
+
+    fun changeDeviceList(list: List<BusinessPartner?>) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                BPDeviceList = list
+            )
+        }
+    }
+
+    fun changeSAPList(list: List<BusinessPartner?>) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                BPSapList = list
+            )
+        }
+    }
+
+    fun search(sap: Boolean, deviceOrSap: Boolean, callback: (List<BusinessPartner?>) -> Unit) {
+        if (deviceOrSap) {
+            BusinessPartnerCRUD.getBPBySAP(sap) {
+                callback(it)
+            }
+        } else {
+            BusinessPartnerCRUD.getBPByName(_uiState.value.FilterByName, sap) {
+                callback(it)
+            }
+        }
+
+    }
+
+    fun replaceData(it: BusinessPartner?) {
+        if (it != null) {
+            var cardType: String = "Cliente"
+            when (it.CardType) {
+                "cSupplier" -> cardType = "Proveedor"
+                "cLead" -> cardType = "Lead"
+                "cCustomer" -> cardType = "Cliente"
+
+            }
+            _uiState.update { currentState ->
+                currentState.copy(
+                    CardCode = it.CardCode,
+                    CardName = it.CardName,
+                    Cellular = it.Cellular,
+                    EmailAddress = it.EmailAddress,
+                    CardType = cardType
+                )
+            }
+        }
+    }
+
+    override fun save(data: Boolean) {
         var CardCode = _uiState.value.CardCode
         var CardType = _uiState.value.CardType
         var CardName = _uiState.value.CardName
         var EmailAddress = _uiState.value.EmailAddress
         val Cellular = _uiState.value.Cellular
         val dataAux: BusinessPartner =
-            BusinessPartner("",CardCode, CardType, CardName, EmailAddress, Cellular, false)
+            BusinessPartner("", CardCode, CardType, CardName, EmailAddress, Cellular, false)
         var text = "Nuevo cliente añadido"
         viewModelScope.launch {
             try {
@@ -121,7 +239,7 @@ class BusinessPartnerViewModel : ViewModel(), ActionViewModel {
         var EmailAddress = _uiState.value.EmailAddress
         val Cellular = _uiState.value.Cellular
         val data: BusinessPartner =
-            BusinessPartner("",CardCode, CardType, CardName, EmailAddress, Cellular, false)
+            BusinessPartner("", CardCode, CardType, CardName, EmailAddress, Cellular, false)
         var text = "Actividad actualizada"
         viewModelScope.launch {
             try {
@@ -143,7 +261,7 @@ class BusinessPartnerViewModel : ViewModel(), ActionViewModel {
         }
     }
 
-    override fun borrar() {
+    override fun delete() {
         val id = _uiState.value.CardCode
         var text = "Cliente eliminado"
         viewModelScope.launch {
@@ -205,6 +323,23 @@ class BusinessPartnerViewModel : ViewModel(), ActionViewModel {
                     }
                 }
             }
+        }
+    }
+
+    fun checkOption(navController: NavController) {
+        val it = _uiState.value.Option
+
+        when (it) {
+            "Añadir y ver" -> save(true)
+            "Añadir y nuevo" -> save(false)
+            "Añadir y salir" -> {
+                save(false)
+                navController.popBackStack()
+            }
+
+            "Actualizar" -> update()
+            "Borrar" -> delete()
+            else -> ""
         }
     }
 

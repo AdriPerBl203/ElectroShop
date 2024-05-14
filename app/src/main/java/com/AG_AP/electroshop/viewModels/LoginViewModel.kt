@@ -60,12 +60,14 @@ class LoginViewModel : ViewModel() {
             //val hashedPass = encryptPass(pass)
             //TODO sacar la contraseña de la base de datos y compararla con la que se pasa
             if (validateUsername(userName) /*&& validatePass(pass, hashedPass)*/) {
-                _uiState.update { currentState -> currentState.copy(
-                    circularProgress = true
-                ) }
-                SEIConfigCRUD.getSEIConfigById(userName){ data ->
-                    if(data != null){
-                        if(data.U_password == pass){
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        circularProgress = true
+                    )
+                }
+                SEIConfigCRUD.getSEIConfigById(userName) { data ->
+                    if (data != null) {
+                        if (data.U_password == pass) {
                             SessionObj.inserData(
                                 data.U_name,
                                 data.U_articulo,
@@ -74,41 +76,57 @@ class LoginViewModel : ViewModel() {
                                 data.U_PedidoCO
                             )
                             //Guardamos el usuario
-                            val sharedPref = ObjectContext.context.getSharedPreferences("userConected", Context.MODE_PRIVATE)
+                            val sharedPref = ObjectContext.context.getSharedPreferences(
+                                "userConected",
+                                Context.MODE_PRIVATE
+                            )
                             val dataConfig = sharedPref?.edit()
                             dataConfig?.putString("userConected", userName)
                             dataConfig?.apply()
                             //Fin pruebas
                             navController.navigate(route = Routes.ScreenMenu.route)
-                        }else{
-                            _uiState.update { currentState -> currentState.copy(
+                            _uiState.update { currentState ->
+                                currentState.copy(
+                                    circularProgress = false
+                                )
+                            }
+                        } else {
+                            _uiState.update { currentState ->
+                                currentState.copy(
+                                    message = true,
+                                    circularProgress = false,
+                                    text = "Usuario o contraseña incorrecta."
+                                )
+                            }
+                        }
+                    } else {
+                        _uiState.update { currentState ->
+                            currentState.copy(
                                 message = true,
                                 circularProgress = false,
                                 text = "Usuario o contraseña incorrecta."
-                            ) }
+                            )
                         }
-                    }else{
-                        _uiState.update { currentState -> currentState.copy(
-                            message = true,
-                            circularProgress = false,
-                            text = "Usuario o contraseña incorrecta."
-                        ) }
                     }
                 }
 
             }
-        }else{
-            _uiState.update { currentState -> currentState.copy(
-                text = "Usuario o contraseña vacía.",
-                message = true
-            ) }
+        } else {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    text = "Usuario o contraseña vacía.",
+                    message = true
+                )
+            }
         }
     }
 
-    fun menssageFunFalse(){
-        _uiState.update { currentState -> currentState.copy(
-            message = false
-        ) }
+    fun menssageFunFalse() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                message = false
+            )
+        }
     }
 
 
@@ -145,16 +163,20 @@ class LoginViewModel : ViewModel() {
     }
 
     fun showPass() {
-        if(_uiState.value.iconPass == Icons.Filled.VisibilityOff){
-            _uiState.update { currentState -> currentState.copy(
-                iconPass = Icons.Filled.Visibility,
-                seePass = true
-            ) }
-        }else{
-            _uiState.update { currentState -> currentState.copy(
-                iconPass = Icons.Filled.VisibilityOff,
-                seePass = false
-            ) }
+        if (_uiState.value.iconPass == Icons.Filled.VisibilityOff) {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    iconPass = Icons.Filled.Visibility,
+                    seePass = true
+                )
+            }
+        } else {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    iconPass = Icons.Filled.VisibilityOff,
+                    seePass = false
+                )
+            }
         }
     }
 

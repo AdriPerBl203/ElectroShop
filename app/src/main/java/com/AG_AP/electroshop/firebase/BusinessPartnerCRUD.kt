@@ -118,6 +118,87 @@ object BusinessPartnerCRUD : ActionFirebase {
             }
     }
 
+    fun getBPByName(name: String, sap: Boolean, callback: (List<BusinessPartner?>) -> Unit) {
+        this.database
+            .collection(this.coleccion)
+            .whereEqualTo("CardName", name)
+            .whereEqualTo("SAP", sap)
+            .get()
+            .addOnSuccessListener {
+                    lista ->
+                val dataList = mutableListOf<BusinessPartner>()
+
+                for (document in lista.documents) {
+                    val data = document.data
+
+                    val idFireBase = data?.get("idFireBase").toString()
+                    val CardCode = data?.get("CardCode").toString()
+                    val CardType = data?.get("CardType").toString()
+                    val CardName = data?.get("CardName").toString()
+                    val Cellular = data?.get("Cellular").toString()
+                    val EmailAddress = data?.get("EmailAddress").toString()
+                    val SAP = data?.get("SAP").toString().toBoolean()
+
+                    val dataReturn = BusinessPartner(
+                        idFireBase,
+                        CardCode,
+                        CardType,
+                        CardName,
+                        Cellular,
+                        EmailAddress,
+                        SAP
+                    )
+
+                    dataList.add(dataReturn)
+                }
+
+                callback(dataList)
+            }
+            .addOnFailureListener {
+                Log.e("Errores", "Error en get business partner por name $it")
+            }
+    }
+
+    fun getBPBySAP(sap: Boolean, callback: (List<BusinessPartner?>) -> Unit) {
+        this.database
+            .collection(this.coleccion)
+            .whereEqualTo("SAP", sap)
+            .get()
+            .addOnSuccessListener {
+                    lista ->
+                val dataList = mutableListOf<BusinessPartner>()
+                for (document in lista.documents) {
+                    val data = document.data
+                    Log.e("Pruebas", document.data.toString())
+
+                    val idFireBase = data?.get("idFireBase").toString()
+                    val CardCode = data?.get("CardCode").toString()
+                    val CardType = data?.get("CardType").toString()
+                    val CardName = data?.get("CardName").toString()
+                    val Cellular = data?.get("Cellular").toString()
+                    val EmailAddress = data?.get("EmailAddress").toString()
+                    val SAP = data?.get("SAP").toString().toBoolean()
+
+                    val dataReturn = BusinessPartner(
+                        idFireBase,
+                        CardCode,
+                        CardType,
+                        CardName,
+                        Cellular,
+                        EmailAddress,
+                        SAP
+                    )
+
+                    dataList.add(dataReturn)
+                }
+
+                callback(dataList)
+            }
+            .addOnFailureListener {
+                Log.e("Errores", "Error en get business partner por name $it")
+            }
+    }
+
     override fun getAllObject(callback: (MutableList<*>?) -> Unit) {
         this.database
             .collection(this.coleccion)

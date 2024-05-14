@@ -145,7 +145,7 @@ class PurchaseOrderViewModel : ViewModel(), ActionViewModel {
         }
     }
 
-    override fun guardar(data: Boolean) {
+    override fun save(data: Boolean) {
         val cardCode = _uiState.value.CardCode
         val cardName = _uiState.value.CardName
         val docNum = _uiState.value.DocNum
@@ -285,7 +285,7 @@ class PurchaseOrderViewModel : ViewModel(), ActionViewModel {
         }
     }
 
-    override fun borrar() {
+    override fun delete() {
         val DocNum = _uiState.value.DocNum
         var text = "Pedido de compra eliminado"
 

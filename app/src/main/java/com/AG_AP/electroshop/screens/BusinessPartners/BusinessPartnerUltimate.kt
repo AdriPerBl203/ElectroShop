@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -45,17 +46,27 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.IconButton
+import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.AG_AP.electroshop.firebase.models.BusinessPartner
+import com.AG_AP.electroshop.viewModels.BusinessPartners.BusinessPartnerViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BusinessPartnerUltimate(innerPadding: PaddingValues) {
+fun BusinessPartnerUltimate(innerPadding: PaddingValues, viewModel: BusinessPartnerViewModel) {
     Column(
         modifier = Modifier
             .padding(innerPadding)
-            .verticalScroll(rememberScrollState())
     ) {
+        val dataUiState by viewModel.uiState.collectAsState()
+
+
+        if (dataUiState.FilterByName == "") {
+            viewModel.refresh()
+        }
+
         Row(
         ) {
             Column {
@@ -69,7 +80,7 @@ fun BusinessPartnerUltimate(innerPadding: PaddingValues) {
                     }
                 ) {
                     TextField(
-                        value = "",
+                        value = dataUiState.CardType,
                         onValueChange = {},
                         readOnly = true,
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
@@ -87,7 +98,7 @@ fun BusinessPartnerUltimate(innerPadding: PaddingValues) {
                             DropdownMenuItem(
                                 text = { Text(text = item) },
                                 onClick = {
-                                    /*TODO*/
+                                    viewModel.changeCardType(item)
                                     expanded = false
                                 }
                             )
@@ -96,16 +107,16 @@ fun BusinessPartnerUltimate(innerPadding: PaddingValues) {
                 }
 
                 OutlinedTextField(
-                    value = "",
-                    onValueChange = { /*TODO*/ },
+                    value = dataUiState.CardName,
+                    onValueChange = { viewModel.changeCardName(it) },
                     modifier = Modifier
                         .width(300.dp)
                         .padding(8.dp),
                     label = { Text("Nombre") }
                 )
                 OutlinedTextField(
-                    value = "",
-                    onValueChange = { /*TODO*/ },
+                    value = dataUiState.Cellular,
+                    onValueChange = { viewModel.changeCellular(it) },
                     modifier = Modifier
                         .width(300.dp)
                         .padding(8.dp),
@@ -114,8 +125,8 @@ fun BusinessPartnerUltimate(innerPadding: PaddingValues) {
                 )
 
                 OutlinedTextField(
-                    value = "",
-                    onValueChange = { /*TODO*/ },
+                    value = dataUiState.EmailAddress,
+                    onValueChange = { viewModel.changeEmailAddress(it) },
                     modifier = Modifier
                         .width(300.dp)
                         .padding(8.dp),
@@ -126,19 +137,19 @@ fun BusinessPartnerUltimate(innerPadding: PaddingValues) {
                 modifier = Modifier.width(500.dp)
             ) {
                 OutlinedTextField(
-                    value = "",
-                    onValueChange = { /*TODO*/ },
+                    value = dataUiState.FilterByName,
+                    onValueChange = { viewModel.changeFilter(it) },
                     modifier = Modifier
                         .width(300.dp)
                         .padding(8.dp),
-                    label = { Text("Buscar") }
+                    label = { Text("Buscar por nombre") }
                 )
 
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
-                    ElevatedButton(onClick = { /*TODO*/ }) {
+                    ElevatedButton(onClick = { viewModel.refresh() }) {
                         Text("Buscar")
                     }
 
@@ -148,31 +159,33 @@ fun BusinessPartnerUltimate(innerPadding: PaddingValues) {
                 }
             }
 
-            Column(
+            Row(
                 modifier = Modifier.fillMaxHeight(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                val listaUno = listOf(
-                    "ejemplo 1",
-                    "ejemplo 2",
-                    "ejemplo 3",
-                    "ejemplo 4",
-                    "ejemplo 5",
-                    "ejemplo 6"
-                )
-                val listaDos = listOf(
-                    "ejemplo 7",
-                    "ejemplo 8",
-                    "ejemplo 9",
-                    "ejemplo 10",
-                    "ejemplo 11",
-                    "ejemplo 12"
-                )
-                Text("Clientes en SAP")
-                LazyRowWithCards(listaUno)
-                Text("Clientes en la tablet")
-                LazyRowWithCards(listaDos)
+                val listaUno = dataUiState.BPSapList
+                val listaDos = dataUiState.BPDeviceList
+                Box(
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text("Clientes en SAP")
+                        LazyColumnWithCards(listaUno, viewModel)
+                    }
+                }
+                Box(
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text("Clientes en la tablet")
+                        LazyColumnWithCards(listaDos, viewModel)
+                    }
+                }
             }
         }
         /*Column {
@@ -198,8 +211,8 @@ fun BusinessPartnerUltimate(innerPadding: PaddingValues) {
 }
 
 @Composable
-fun LazyRowWithCards(data: List<String>) {
-    LazyRow(
+fun LazyColumnWithCards(data: List<BusinessPartner?>, viewModel: BusinessPartnerViewModel) {
+    LazyColumn(
         modifier = Modifier.padding(horizontal = 10.dp, vertical = 15.dp)
     ) {
         items(data) { item ->
@@ -213,13 +226,28 @@ fun LazyRowWithCards(data: List<String>) {
                     horizontalAlignment = Alignment.Start,
                     verticalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Column() {
-                        Text(
-                            text = item,
-                            modifier = Modifier.padding(16.dp)
-                        )
+                    Column {
+                        if (item != null) {
+                            Text(
+                                text = item.CardCode,
+                                modifier = Modifier.padding(start = 16.dp, 5.dp)
+                            )
+                            Text(
+                                text = item.CardName,
+                                modifier = Modifier.padding(start = 16.dp, 5.dp)
+                            )
+                            Text(
+                                text = item.Cellular,
+                                modifier = Modifier.padding(start = 16.dp, 5.dp)
+                            )
+                        } else {
+                            Text(
+                                text = "",
+                                modifier = Modifier.padding(start = 16.dp, 5.dp)
+                            )
+                        }
                         IconButton(onClick = {
-                            //TODO
+                            viewModel.replaceData(item)
                         }) {
                             Icon(
                                 imageVector = Icons.Filled.Add,
@@ -227,10 +255,6 @@ fun LazyRowWithCards(data: List<String>) {
                                 tint = MaterialTheme.colorScheme.primaryContainer
                             )
                         }
-                    }
-
-                    Row() {
-
                     }
                 }
             }
@@ -240,7 +264,11 @@ fun LazyRowWithCards(data: List<String>) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScaffoldBusinessPartnerUltimate(navController: NavHostController) {
+fun ScaffoldBusinessPartnerUltimate(
+    navController: NavHostController,
+    viewModel: BusinessPartnerViewModel = viewModel()
+) {
+    val dataUiState = viewModel.uiState.collectAsState()
     Scaffold(
         topBar = {
             TopAppBar(
@@ -273,11 +301,14 @@ fun ScaffoldBusinessPartnerUltimate(navController: NavHostController) {
                     }
                 ) {
                     TextField(
-                        value = "",
+                        value = dataUiState.value.Option,
                         onValueChange = {},
                         readOnly = true,
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                        modifier = Modifier.menuAnchor()
+                        modifier = Modifier
+                            .menuAnchor()
+                            .width(300.dp)
+                            .padding(8.dp)
                     )
 
                     ExposedDropdownMenu(
@@ -288,7 +319,7 @@ fun ScaffoldBusinessPartnerUltimate(navController: NavHostController) {
                             DropdownMenuItem(
                                 text = { Text(text = item) },
                                 onClick = {
-                                    /*TODO*/
+                                    viewModel.changeOption(item)
                                     expanded = false
                                 }
                             )
@@ -297,26 +328,21 @@ fun ScaffoldBusinessPartnerUltimate(navController: NavHostController) {
                 }
                 Button(
                     modifier = Modifier.padding(start = 15.dp, end = 15.dp),
-                    onClick = { /*TODO*/ }
+                    onClick = { viewModel.checkOption(navController) }
                 ) {
                     Text(text = "Acción")
                 }
                 Button(
                     modifier = Modifier.padding(start = 15.dp, end = 15.dp),
-                    onClick = { /*TODO*/ }
+                    onClick = { navController.popBackStack() }
                 ) {
                     Text(text = "Volver")
                 }
             }
-        },
-        floatingActionButton = {
-            FloatingActionButton(onClick = { /*TODO*/ }) {
-                Icon(Icons.Default.Add, contentDescription = "Buscar")
-            }
         }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(start = 50.dp, top = 20.dp)) {
-            BusinessPartnerUltimate(innerPadding)
+            BusinessPartnerUltimate(innerPadding, viewModel)
         }
     }
 }
