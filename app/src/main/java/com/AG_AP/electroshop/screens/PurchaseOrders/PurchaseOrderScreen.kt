@@ -71,12 +71,12 @@ fun PurchaseOrderView(
         )
     }
 
-    if(dataUiState.showDialogBusinessPartner){
+    if (dataUiState.showDialogBusinessPartner) {
         DialogActivity(
-            data ={dataUiState.ListBusinessPartner},
-            "Seleccione cliente" ,
-            {viewModel.closeDialogBusinessPartner()},
-            {data ->
+            data = { dataUiState.ListBusinessPartner },
+            "Seleccione cliente",
+            { viewModel.closeDialogBusinessPartner() },
+            { data ->
                 if (data is BusinessPartner) {
                     viewModel.changeCardCode(data.CardCode)
                     viewModel.changeName(data.CardName)
@@ -111,7 +111,7 @@ fun PurchaseOrderView(
                         .padding(8.dp),
                     label = { Text("Código cliente") },
                     readOnly = true,
-                    trailingIcon={
+                    trailingIcon = {
                         IconButton(
                             onClick = {
                                 viewModel.showDialogBusinessPartner()
@@ -314,8 +314,8 @@ fun TableDocumentLinePurchase(
                     contentAlignment = Alignment.Center
                 ) {
                     OutlinedTextField(
-                        value = value[1].toString(),
-                        onValueChange = { it },
+                        value = dataUiState.DocumentLineList[index]?.get(1) ?: "",
+                        onValueChange = { viewModel.changeValueInTable(index, 1, it) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(MaterialTheme.colorScheme.secondaryContainer)
@@ -333,8 +333,8 @@ fun TableDocumentLinePurchase(
                     contentAlignment = Alignment.Center
                 ) {
                     OutlinedTextField(
-                        value = value[2].toString(),
-                        onValueChange = { it },
+                        value = dataUiState.DocumentLineList[index]?.get(2) ?: "",
+                        onValueChange = { viewModel.changeValueInTable(index, 2, it) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(MaterialTheme.colorScheme.secondaryContainer)
@@ -352,8 +352,8 @@ fun TableDocumentLinePurchase(
                     contentAlignment = Alignment.Center
                 ) {
                     OutlinedTextField(
-                        value = value[3].toString(),
-                        onValueChange = { it },
+                        value = dataUiState.DocumentLineList[index]?.get(3) ?: "",
+                        onValueChange = { viewModel.changeValueInTable(index, 3, it) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(MaterialTheme.colorScheme.secondaryContainer)
@@ -371,8 +371,8 @@ fun TableDocumentLinePurchase(
                     contentAlignment = Alignment.Center
                 ) {
                     OutlinedTextField(
-                        value = value[4].toString(),
-                        onValueChange = { it },
+                        value = dataUiState.DocumentLineList[index]?.get(4) ?: "",
+                        onValueChange = { viewModel.changeValueInTable(index, 4, it) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(MaterialTheme.colorScheme.secondaryContainer)
@@ -390,8 +390,8 @@ fun TableDocumentLinePurchase(
                     contentAlignment = Alignment.Center
                 ) {
                     OutlinedTextField(
-                        value = value[5].toString(),
-                        onValueChange = { it },
+                        value = dataUiState.DocumentLineList[index]?.get(5) ?: "",
+                        onValueChange = { viewModel.changeValueInTable(index, 5, it) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(MaterialTheme.colorScheme.secondaryContainer)
@@ -399,6 +399,7 @@ fun TableDocumentLinePurchase(
                     )
                 }
             }
+
         }
     }
 }

@@ -30,9 +30,11 @@ class PurchaseOrderViewModel : ViewModel(), ActionViewModel {
         BusinessPartnerCRUD.getAllObject { list ->
             val mutableList = list as? MutableList<BusinessPartner>
             mutableList?.let {
-                _uiState.update { currentState -> currentState.copy(
-                    ListBusinessPartner = it.toList()
-                ) }
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        ListBusinessPartner = it.toList()
+                    )
+                }
             }
         }
     }
@@ -68,11 +70,49 @@ class PurchaseOrderViewModel : ViewModel(), ActionViewModel {
         }
     }
 
-    fun changeSalesPersonCode(name: String){
+    fun changeSalesPersonCode(name: String) {
         _uiState.update { currentState ->
             currentState.copy(
                 SalesPersonCode = name
             )
+        }
+    }
+
+    fun changeValueInTable(lineNum: Int, position: Int, value: String) {
+        //Sacamos el valor del numero de la linea
+        val lineList = _uiState.value.DocumentLineList
+        if (lineList != null) {
+            val editedLine = lineList[lineNum]
+
+            editedLine?.set(position, value)
+
+            Log.i("Pruebas", "Linea: $lineNum, Posicion: $position, value: $value")
+
+            val fullLine = _uiState.value.DocumentLineList
+            Log.w("Pruebas", "Antes lista: ${fullLine.toString()}")
+
+            if (editedLine != null) {
+                fullLine.replace(lineNum, editedLine)
+
+
+                Log.w("Pruebas", "Después lista: ${fullLine.toString()}")
+
+                Log.e(
+                    "Pruebas",
+                    "Antes de actualizacion: ${_uiState.value.DocumentLineList.toString()}"
+                )
+
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        DocumentLineList = fullLine
+                    )
+                }
+
+                Log.e(
+                    "Pruebas",
+                    "lista actualizada? : ${_uiState.value.DocumentLineList.toString()}"
+                )
+            }
         }
     }
 
@@ -129,7 +169,7 @@ class PurchaseOrderViewModel : ViewModel(), ActionViewModel {
         }
     }
 
-    fun showDialogBusinessPartner(){
+    fun showDialogBusinessPartner() {
         _uiState.update { currentState ->
             currentState.copy(
                 showDialogBusinessPartner = true
@@ -137,7 +177,7 @@ class PurchaseOrderViewModel : ViewModel(), ActionViewModel {
         }
     }
 
-    fun closeDialogBusinessPartner(){
+    fun closeDialogBusinessPartner() {
         _uiState.update { currentState ->
             currentState.copy(
                 showDialogBusinessPartner = false
@@ -183,7 +223,7 @@ class PurchaseOrderViewModel : ViewModel(), ActionViewModel {
                 Log.e("Errores", e.stackTraceToString())
                 text = "Hubo un error con la creación del pedido de compra"
             }
-            
+
             if (!data) {
                 val emptyList: MutableList<ArticleUiState?> = mutableListOf()
                 val documentLineList = DocumentLineForMutableList(emptyList)
@@ -622,9 +662,9 @@ class PurchaseOrderViewModel : ViewModel(), ActionViewModel {
             return
         } else {
             //fin pruebas
-            if (_uiState.value.DocumentLine.size != 0 ) {
+            if (_uiState.value.DocumentLine.size != 0) {
                 val ultData = _uiState.value.DocumentLine[_uiState.value.DocumentLine.size - 1]
-                if(objectReflex.equals(ultData)){
+                if (objectReflex.equals(ultData)) {
                     _uiState.value.DocumentLine.removeAt(_uiState.value.DocumentLine.size - 1)
                 }
             }
