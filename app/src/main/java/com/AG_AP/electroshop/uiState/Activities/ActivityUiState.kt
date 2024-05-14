@@ -28,7 +28,8 @@ data class ActivityUiState(
     val ListBusinessPartner:List<BusinessPartner> = listOf(),
     val ListActivityTheSAP:List<Activity> = listOf(),
     val ListActivityTheTablet:List<Activity> = listOf(),
-    val ActionButton:String = "Añadir y ver"
+    val ActionButton:String = "Añadir y ver",
+    val dataFilter:String = "C00003"
 )
 /*val nota:String = "Esto es una nota",
 val ActivityDate:String = "2016-08-30",
