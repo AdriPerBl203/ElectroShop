@@ -7,6 +7,8 @@ import com.AG_AP.electroshop.firebase.OrderCRUD
 import com.AG_AP.electroshop.firebase.models.BusinessPartner
 import com.AG_AP.electroshop.firebase.models.Item
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
+import com.AG_AP.electroshop.functions.InterconexionUpdateArticle
+import com.AG_AP.electroshop.uiState.Items.ArticleUiState
 import com.AG_AP.electroshop.uiState.Items.DialogArticleUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,49 +21,13 @@ class DialogArticleViewModel : ViewModel() {
     val uiState: StateFlow<DialogArticleUiState> = _uiState.asStateFlow()
 
     init {
-        /*OrderCRUD.getAllObject { list ->
-            val mutableList = list as? MutableList<OrderFireBase>
-            mutableList?.let {
-                _uiState.update { currentState -> currentState.copy(
-                    ListItems = it.toList(),
-                    discount ="",
-                    price ="",
-                    count ="",
-                    description ="",
-                    codeArticle ="",
-                ) }
-            }
-        }*/
-
-        /*
-        BusinessPartnerCRUD.getAllObject { list ->
-            val mutableList = list as? MutableList<BusinessPartner>
-            mutableList?.let {
-                _uiState.update { currentState -> currentState.copy(
-                    ListItems = it.toList(),
-                    discount ="",
-                    price ="",
-                    count ="",
-                    description ="",
-                    codeArticle ="",
-                ) }
-            }
-        }
-
-         */
-
         ItemCRUD.getAllItems {
             list ->
             val mutableList = list as? MutableList<Item>
 
             mutableList?.let {
                 _uiState.update { currentState -> currentState.copy(
-                    ListItems = it.toList(),
-                    discount = "",
-                    price = "",
-                    count = "",
-                    description = "",
-                    codeArticle = "",
+                    ListItems = it.toList()
                 ) }
             }
         }
@@ -121,6 +87,18 @@ class DialogArticleViewModel : ViewModel() {
             count ="0",
             description ="",
             codeArticle ="",
+        ) }
+    }
+
+    fun showDateForUpdate(data: ArticleUiState) {
+        val d = InterconexionUpdateArticle.data?.copy()
+        InterconexionUpdateArticle.data=null
+        _uiState.update { currentState -> currentState.copy(
+            discount = d?.DiscountPercent.toString(),
+            price = d?.Price.toString(),
+            count = d?.Quantity.toString(),
+            description = d?.ItemDescription.toString(),
+            codeArticle = d?.ItemCode.toString(),
         ) }
     }
 }

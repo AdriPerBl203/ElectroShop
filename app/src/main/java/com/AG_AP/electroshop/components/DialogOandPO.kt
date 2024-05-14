@@ -27,15 +27,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.AG_AP.electroshop.firebase.models.Item
+import com.AG_AP.electroshop.functions.InterconexionUpdateArticle
 import com.AG_AP.electroshop.viewModels.Items.DialogArticleViewModel
 
 @Composable
 fun DialogOandPO(
     viewModel: DialogArticleViewModel = viewModel(),
     closeDialog: () -> Unit,
-    returnData: (List<String>) -> Unit
+    returnData: (List<String>) -> Unit,
+    index: Int =-1
 ) {
     val dataUiState by viewModel.uiState.collectAsState()
+
+    if(InterconexionUpdateArticle.data != null){
+        viewModel.showDateForUpdate(InterconexionUpdateArticle.data!!)
+    }
+
     Dialog(onDismissRequest = { closeDialog() }) {
         if (dataUiState.showDialogSelectCodeArticle) {
             DialogActivity(
