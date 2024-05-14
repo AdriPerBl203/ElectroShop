@@ -1,6 +1,7 @@
 package com.AG_AP.electroshop.viewModels.Activities
 
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
@@ -67,13 +68,23 @@ class ActivityViewModel : ViewModel(), ActionViewModel {
             val mutableList = list as? MutableList<Activity>
             var listShow: MutableList<Activity> = mutableListOf()
             var listShowTable: MutableList<Activity> = mutableListOf()
-            mutableList?.forEach { it->
-                if(it.SAP){
-                    listShow+=it
-                }else{
-                    listShowTable+=it
+            mutableList?.let { list ->
+                list.forEach { item ->
+                    val updatedItem = when (item.Priority) {
+                        "pr_Low" -> item.copy(Priority = "Bajo")
+                        "pr_Normal" -> item.copy(Priority = "Normal")
+                        "pr_High" -> item.copy(Priority = "Alto")
+                        else -> item
+                    }
+
+                    if (updatedItem.SAP) {
+                        listShow += updatedItem
+                    } else {
+                        listShowTable += updatedItem
+                    }
                 }
             }
+
             mutableList?.let {
                 _uiState.update { currentState -> currentState.copy(
                     ListActivityTheSAP = listShow.toList(),
@@ -341,6 +352,13 @@ class ActivityViewModel : ViewModel(), ActionViewModel {
         ) }
     }
 
+
+    fun changeDataFilter(it:String){
+        _uiState.update { currentState -> currentState.copy(
+            dataFilter = it
+        ) }
+    }
+
     fun showDialogOrder(){
         _uiState.update { currentState -> currentState.copy(
             showDialogOrder = true
@@ -410,5 +428,39 @@ class ActivityViewModel : ViewModel(), ActionViewModel {
             U_SEIPEDIDOCLIENTE = item.U_SEIPEDIDOCLIENTE.toString(),
             U_SEIPEDIDOCOMPRAS = item.U_SEIPEDIDOCOMPRAS.toString()
         ) }
+    }
+
+    fun findFilter(){
+        val filter = _uiState.value.dataFilter
+
+        ActivityCRUD.filterForCardCode(filter){list ->
+            val mutableList = list as? MutableList<Activity>
+            var listShow: MutableList<Activity> = mutableListOf()
+            var listShowTable: MutableList<Activity> = mutableListOf()
+            mutableList?.let { list ->
+                list.forEach { item ->
+                    val updatedItem = when (item.Priority) {
+                        "pr_Low" -> item.copy(Priority = "Bajo")
+                        "pr_Normal" -> item.copy(Priority = "Normal")
+                        "pr_High" -> item.copy(Priority = "Alto")
+                        else -> item
+                    }
+
+                    if (updatedItem.SAP) {
+                        listShow += updatedItem
+                    } else {
+                        listShowTable += updatedItem
+                    }
+                }
+            }
+
+            mutableList?.let {
+                _uiState.update { currentState -> currentState.copy(
+                    ListActivityTheSAP = listShow.toList(),
+                    ListActivityTheTablet = listShowTable.toList()
+                ) }
+            }
+        }
+
     }
 }

@@ -169,4 +169,55 @@ object ActivityCRUD {
             }
     }
 
+    fun filterForCardCode(cardCode: String,callback:(MutableList<Activity>)->Unit){
+        this.database
+            .collection(this.coleccion)
+            .whereEqualTo("CardCode",cardCode)
+            .get()
+            .addOnSuccessListener {
+                    lista ->
+                val ActivityList = mutableListOf<Activity>()
+
+                for (document in lista.documents) {
+                    val dataActivity = document.data
+                    val idFireBase = dataActivity?.get("idFireBase").toString()
+                    val nota = dataActivity?.get("nota").toString()
+                    val ActivityDate = dataActivity?.get("ActivityDate").toString()
+                    val ActivityTime = dataActivity?.get("ActivityTime").toString()
+                    val CardCode = dataActivity?.get("CardCode").toString()
+                    val EndTime = dataActivity?.get("EndTime").toString()
+                    val Action = dataActivity?.get("Action").toString()
+                    val Tel = dataActivity?.get("Tel").toString()
+                    val ClgCode = dataActivity?.get("ClgCode").toString()
+                    val Priority = dataActivity?.get("Priority").toString()
+                    val U_SEIPEDIDOCOMPRAS = dataActivity?.get("U_SEIPEDIDOCOMPRAS").toString().toInt()
+                    val U_SEIPEDIDOCLIENTE = dataActivity?.get("U_SEIPEDIDOCLIENTE").toString().toInt()
+                    val SAP = dataActivity?.get("SAP").toString().toBoolean()
+                    val dataReturn: Activity = Activity(
+                        idFireBase,
+                        nota,
+                        ActivityDate,
+                        ActivityTime,
+                        CardCode,
+                        EndTime,
+                        Action,
+                        Tel,
+                        ClgCode,
+                        Priority,
+                        U_SEIPEDIDOCOMPRAS,
+                        U_SEIPEDIDOCLIENTE,
+                        SAP
+                    )
+
+                    ActivityList.add(dataReturn)
+                }
+
+                callback(ActivityList)
+            }
+            .addOnFailureListener {
+                Log.e("Errores", "Error en get Actividades, posiblemente vacio $it")
+                callback(mutableListOf())
+            }
+
+    }
 }
