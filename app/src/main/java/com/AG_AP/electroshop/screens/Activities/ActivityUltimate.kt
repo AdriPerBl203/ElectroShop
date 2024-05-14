@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -18,6 +19,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.CallMade
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -328,13 +330,13 @@ fun ActivityUltimate(
 
             }  //
             Column(
-                modifier= Modifier.width(250.dp)
+                modifier= Modifier.width(200.dp)
             ){
                 OutlinedTextField(
                     value = dataUiState.dataFilter,
                     onValueChange = { viewModel.changeDataFilter(it) },
                     modifier = Modifier
-                        .width(300.dp)
+                        .width(200.dp)
                         .padding(8.dp),
                     label = { Text("Buscar") }
                 )
@@ -406,67 +408,86 @@ fun LazyColumnWithCards(data: List<Activity>, viewModel: ActivityViewModel) {
     LazyColumn(
         modifier = Modifier.padding(horizontal = 10.dp, vertical = 15.dp)
     ) {
-        items(data) { item ->
-            Card(
-                modifier = Modifier
-                    .padding(4.dp)
-                    .width(200.dp)
-                    .height(190.dp)
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.Start
+
+        if (data.size == 0) {
+            item() {
+                Card(
+                    modifier = Modifier
+                        .padding(4.dp)
+                        .width(200.dp)
+                        .height(190.dp)
                 ) {
-                    Column() {
-                        Row {
-                            Text(
-                                text = item.ActivityDate.split("T")[0],
-                                modifier = Modifier.padding(16.dp)
-                            )
-                            IconButton(onClick = {
-                                viewModel.showDataPlus(item)
-                            }) {
-                                Icon(
-                                    imageVector = Icons.Filled.Add,
-                                    contentDescription = "Settings",
-                                    tint = MaterialTheme.colorScheme.primaryContainer
+                    Column(
+                        modifier=Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Text(text = "Sin datos")
+                    }
+                }
+            }
+        }else{
+            items(data) { item ->
+                Card(
+                    modifier = Modifier
+                        .padding(4.dp)
+                        .width(200.dp)
+                        .height(190.dp)
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.Start
+                    ) {
+                        Column() {
+                            Row {
+                                Text(
+                                    text = item.ActivityDate.split("T")[0],
+                                    modifier = Modifier.padding(16.dp)
+                                )
+                                IconButton(onClick = {
+                                    viewModel.showDataPlus(item)
+                                }) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Add,
+                                        contentDescription = "Settings",
+                                        tint = MaterialTheme.colorScheme.primaryContainer
+                                    )
+                                }
+                            }
+
+                            Row() {
+                                Text(
+                                    text = item.ActivityTime,
+                                    modifier = Modifier.padding(16.dp)
+                                )
+                                Text(
+                                    text = item.EndTime,
+                                    modifier = Modifier.padding(16.dp)
                                 )
                             }
-                        }
 
-                        Row() {
-                            Text(
-                                text = item.ActivityTime,
-                                modifier = Modifier.padding(16.dp)
-                            )
-                            Text(
-                                text = item.EndTime,
-                                modifier = Modifier.padding(16.dp)
-                            )
-                        }
+                            Row() {
+                                Text(
+                                    text = item.CardCode,
+                                    modifier = Modifier.padding(16.dp)
+                                )
 
-                        Row() {
-                            Text(
-                                text = item.CardCode,
-                                modifier = Modifier.padding(16.dp)
-                            )
+                                Text(
+                                    text = item.Priority,
+                                    modifier = Modifier.padding(16.dp),
+                                    color = when (item.Priority) {
+                                        "Bajo" -> Color.Green
+                                        "Normal" -> Color.Magenta
+                                        "Alto" -> Color.Red
+                                        else -> Color.Black
+                                    }
+                                )
 
-                            Text(
-                                text = item.Priority,
-                                modifier = Modifier.padding(16.dp),
-                                color = when (item.Priority) {
-                                    "Bajo" -> Color.Green
-                                    "Normal" -> Color.Magenta
-                                    "Alto" -> Color.Red
-                                    else -> Color.Black
-                                }
-                            )
-
+                            }
                         }
                     }
                 }
             }
         }
-
     }
 }
 
@@ -517,8 +538,14 @@ fun ScaffoldActivityUltimate(
                         value = dataUiState.ActionButton,
                         onValueChange = {},
                         readOnly = true,
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                        modifier = Modifier.menuAnchor()
+                        trailingIcon = {
+                            IconButton(
+                                onClick = { viewModel.ejecutarAction(navController) }) {
+                                Icon(Icons.Filled.CallMade, contentDescription = "Shopping Cart Icon")
+                            }
+                        },
+                        modifier = Modifier.menuAnchor(),
+                        leadingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) }
                     )
 
                     ExposedDropdownMenu(
@@ -536,12 +563,12 @@ fun ScaffoldActivityUltimate(
                         }
                     }
                 }
-                Button(
+                /*Button(
                     modifier = Modifier.padding(start = 15.dp, end = 15.dp),
                     onClick = { viewModel.ejecutarAction(navController) }
                 ) {
                     Text(text = "Acción")
-                }
+                }*/
                 Button(
                     modifier = Modifier.padding(start = 15.dp, end = 15.dp),
                     onClick = { navController.popBackStack() }
