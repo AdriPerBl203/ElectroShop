@@ -43,6 +43,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -124,7 +125,7 @@ fun ActivityUltimate(
     ) {
         Row(
         ) {
-            Column { //
+            /*Column { //
                 val coffeeDrinks =
                     arrayOf("Llamada telefónica", "Reunión", "Tarea", "Nota", "Campaña", "Otros")
                 var expanded by remember { mutableStateOf(false) }
@@ -324,20 +325,20 @@ fun ActivityUltimate(
                     }
                 )
 
-            } //
+            } */ //
             Column(
                 modifier= Modifier.width(250.dp)
             ){
                 OutlinedTextField(
-                    value = "",
-                    onValueChange = { /*TODO*/ },
+                    value = dataUiState.dataFilter,
+                    onValueChange = { viewModel.changeDataFilter(it) },
                     modifier = Modifier
                         .width(300.dp)
                         .padding(8.dp),
                     label = { Text("Buscar") }
                 )
 
-                    ElevatedButton(onClick = { /*TODO*/ }) {
+                    ElevatedButton(onClick = { viewModel.findFilter() }) {
                         Text("Buscar")
                     }
 
@@ -390,34 +391,53 @@ fun LazyRowWithCards(data: List<Activity>, viewModel: ActivityViewModel) {
                 modifier = Modifier
                     .padding(4.dp)
                     .width(200.dp)
-                    .height(150.dp)
+                    .height(190.dp)
             ) {
                 Column(
-                    horizontalAlignment= Alignment.Start,
-                    verticalArrangement= Arrangement.SpaceBetween
+                    horizontalAlignment= Alignment.Start
                 ){
                     Column(){
-                        Text(
-                            text = item.ActivityDate.split("T")[0],
-                            modifier = Modifier.padding(16.dp)
-                        )
-                        Text(
-                            text = item.ActivityTime,
-                            modifier = Modifier.padding(16.dp)
-                        )
-                        Text(
-                            text = item.EndTime,
-                            modifier = Modifier.padding(16.dp)
-                        )
-                        IconButton(onClick = {
-                            viewModel.showDataPlus(item)
-                        }) {
-                            Icon(imageVector = Icons.Filled.Add, contentDescription = "Settings", tint = MaterialTheme.colorScheme.primaryContainer)
+                        Row {
+                            Text(
+                                text = item.ActivityDate.split("T")[0],
+                                modifier = Modifier.padding(16.dp)
+                            )
+                            IconButton(onClick = {
+                                viewModel.showDataPlus(item)
+                            }) {
+                                Icon(imageVector = Icons.Filled.Add, contentDescription = "Settings", tint = MaterialTheme.colorScheme.primaryContainer)
+                            }
                         }
-                    }
 
-                    Row(){
+                        Row(){
+                            Text(
+                                text = item.ActivityTime,
+                                modifier = Modifier.padding(16.dp)
+                            )
+                            Text(
+                                text = item.EndTime,
+                                modifier = Modifier.padding(16.dp)
+                            )
+                        }
 
+                        Row(){
+                            Text(
+                                text = item.CardCode,
+                                modifier = Modifier.padding(16.dp)
+                            )
+
+                            Text(
+                                text = item.Priority,
+                                modifier = Modifier.padding(16.dp),
+                                color = when (item.Priority) {
+                                    "Bajo" -> Color.Green
+                                    "Normal" -> Color.Magenta
+                                    "Alto" -> Color.Red
+                                    else -> Color.Black
+                                }
+                            )
+
+                        }
                     }
                 }
             }
@@ -506,7 +526,11 @@ fun ScaffoldActivityUltimate(
             }
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { /*TODO*/ }) {
+            FloatingActionButton(
+                onClick = {
+                    viewModel.findFilter()
+                }
+            ) {
                 Icon(Icons.Default.Add, contentDescription = "Buscar")
             }
         }
