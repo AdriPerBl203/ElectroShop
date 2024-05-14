@@ -207,7 +207,7 @@ fun AppNav(navController: NavHostController = rememberNavController(), context: 
         composable(
             route = Routes.ActivityUltimate.route
         ) {
-            ScaffoldActivityUltimate(navController)
+            ScaffoldActivityUltimate(navController =navController)
         }
     }
 }

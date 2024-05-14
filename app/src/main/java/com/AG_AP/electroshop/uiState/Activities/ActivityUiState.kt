@@ -1,5 +1,6 @@
 package com.AG_AP.electroshop.uiState.Activities
 
+import com.AG_AP.electroshop.firebase.models.Activity
 import com.AG_AP.electroshop.firebase.models.BusinessPartner
 import com.AG_AP.electroshop.firebase.models.DocumentLineFireBase
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
@@ -24,7 +25,10 @@ data class ActivityUiState(
     val showDialogBussinesPartner:Boolean = false,
     val ListOrders:List<OrderFireBase> = listOf(),
     val ListPurchaseOrders:List<OrderFireBase> = listOf(),
-    val ListBusinessPartner:List<BusinessPartner> = listOf()
+    val ListBusinessPartner:List<BusinessPartner> = listOf(),
+    val ListActivityTheSAP:List<Activity> = listOf(),
+    val ListActivityTheTablet:List<Activity> = listOf(),
+    val ActionButton:String = "Añadir y ver"
 )
 /*val nota:String = "Esto es una nota",
 val ActivityDate:String = "2016-08-30",
