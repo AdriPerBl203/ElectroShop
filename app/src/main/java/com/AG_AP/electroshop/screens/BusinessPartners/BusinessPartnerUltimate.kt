@@ -215,50 +215,75 @@ fun LazyColumnWithCards(data: List<BusinessPartner?>, viewModel: BusinessPartner
     LazyColumn(
         modifier = Modifier.padding(horizontal = 10.dp, vertical = 15.dp)
     ) {
-        items(data) { item ->
-            Card(
-                modifier = Modifier
-                    .padding(4.dp)
-                    .width(200.dp)
-                    .height(150.dp)
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.Start,
-                    verticalArrangement = Arrangement.SpaceBetween
+        if (data.size > 0) {
+            items(data) { item ->
+                Card(
+                    modifier = Modifier
+                        .padding(4.dp)
+                        .width(200.dp)
+                        .height(150.dp)
                 ) {
-                    Column {
-                        if (item != null) {
-                            Text(
-                                text = item.CardCode,
-                                modifier = Modifier.padding(start = 16.dp, 5.dp)
-                            )
-                            Text(
-                                text = item.CardName,
-                                modifier = Modifier.padding(start = 16.dp, 5.dp)
-                            )
-                            Text(
-                                text = item.Cellular,
-                                modifier = Modifier.padding(start = 16.dp, 5.dp)
-                            )
-                        } else {
-                            Text(
-                                text = "",
-                                modifier = Modifier.padding(start = 16.dp, 5.dp)
-                            )
+                    Column(
+                        horizontalAlignment = Alignment.Start,
+                        verticalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Column {
+                            if (item != null) {
+                                Text(
+                                    text = item.CardCode,
+                                    modifier = Modifier.padding(start = 16.dp, 5.dp)
+                                )
+                                Text(
+                                    text = item.CardName,
+                                    modifier = Modifier.padding(start = 16.dp, 5.dp)
+                                )
+                                Text(
+                                    text = item.Cellular,
+                                    modifier = Modifier.padding(start = 16.dp, 5.dp)
+                                )
+                            } else {
+                                Text(
+                                    text = "",
+                                    modifier = Modifier.padding(start = 16.dp, 5.dp)
+                                )
+                            }
+                            IconButton(onClick = {
+                                viewModel.replaceData(item)
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Filled.Add,
+                                    contentDescription = "Settings",
+                                    tint = MaterialTheme.colorScheme.primaryContainer
+                                )
+                            }
                         }
-                        IconButton(onClick = {
-                            viewModel.replaceData(item)
-                        }) {
-                            Icon(
-                                imageVector = Icons.Filled.Add,
-                                contentDescription = "Settings",
-                                tint = MaterialTheme.colorScheme.primaryContainer
+                    }
+                }
+            }
+        } else {
+            item {
+                Card(
+                    modifier = Modifier
+                        .padding(4.dp)
+                        .width(200.dp)
+                        .height(150.dp)
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.Start,
+                        verticalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Column {
+                            Text(
+                                text = "No hay datos",
+                                modifier = Modifier.padding(24.dp)
                             )
+
                         }
                     }
                 }
             }
         }
+
     }
 }
 
