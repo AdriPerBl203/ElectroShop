@@ -3,6 +3,7 @@ package com.AG_AP.electroshop.viewModels.Activities
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
 import com.AG_AP.electroshop.firebase.ActivityCRUD
 import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
 import com.AG_AP.electroshop.firebase.OrderCRUD
@@ -60,6 +61,26 @@ class ActivityViewModel : ViewModel(), ActionViewModel {
                 ) }
             }
         }
+
+        //ListArticleSAP
+        ActivityCRUD.getAllActivity { list ->
+            val mutableList = list as? MutableList<Activity>
+            var listShow: MutableList<Activity> = mutableListOf()
+            var listShowTable: MutableList<Activity> = mutableListOf()
+            mutableList?.forEach { it->
+                if(it.SAP){
+                    listShow+=it
+                }else{
+                    listShowTable+=it
+                }
+            }
+            mutableList?.let {
+                _uiState.update { currentState -> currentState.copy(
+                    ListActivityTheSAP = listShow.toList(),
+                    ListActivityTheTablet = listShowTable.toList()
+                ) }
+            }
+        }
     }
 
     fun refreshScreen() {
@@ -75,6 +96,12 @@ class ActivityViewModel : ViewModel(), ActionViewModel {
             nota = it
         ) }
     }
+
+    fun changeActionButton(it: String) {
+        _uiState.update { currentState -> currentState.copy(
+            ActionButton = it
+        ) }
+    }
     fun changeActivityDate(it: String) {
         _uiState.update { currentState -> currentState.copy(
             ActivityDate = it
@@ -85,9 +112,11 @@ class ActivityViewModel : ViewModel(), ActionViewModel {
             ActivityTime = it
         ) }
     }
-    fun changeCardCode(it: String) {
+    fun changeCardCode(it: Any) {
+
+        val aux = it as BusinessPartner
         _uiState.update { currentState -> currentState.copy(
-            CardCode = it
+            CardCode = aux.CardCode
         ) }
     }
     fun changeEndTime(it: String) {
@@ -120,15 +149,17 @@ class ActivityViewModel : ViewModel(), ActionViewModel {
         ) }
     }
 
-    fun changePedidoCompra(it: String) {
+    fun changePedidoCompra(it: Any) {
+        val aux = it as String
         _uiState.update { currentState -> currentState.copy(
-            U_SEIPEDIDOCOMPRAS = it
+            U_SEIPEDIDOCOMPRAS = aux
         ) }
     }
 
-    fun changePedidoCliente(it: String) {
+    fun changePedidoCliente(it: Any) {
+        val aux = it as String
         _uiState.update { currentState -> currentState.copy(
-            U_SEIPEDIDOCLIENTE = it
+            U_SEIPEDIDOCLIENTE = aux
         ) }
     }
 
@@ -284,6 +315,20 @@ class ActivityViewModel : ViewModel(), ActionViewModel {
         }
     }
 
+    fun ejecutarAction(navController: NavHostController) {
+
+        when(_uiState.value.ActionButton){
+            "Añadir y ver" -> guardar(true)
+            "Añadir y nuevo" -> guardar(false)
+            "Añadir y salir" -> {
+                guardar(false)
+                navController.popBackStack()
+            }
+            "Actualizar" -> update()
+            "Borrar" -> borrar()
+        }
+    }
+
     override fun menssageFunFalse() {
         _uiState.update { currentState -> currentState.copy(
             message = false
@@ -329,6 +374,41 @@ class ActivityViewModel : ViewModel(), ActionViewModel {
     fun changeStartTime(data :String){
         _uiState.update { currentState -> currentState.copy(
             ActivityTime = data
+        ) }
+    }
+
+    fun showDataPlus(item:Activity){
+
+        var actionAux:String =""
+        when(item.Action){
+            "cn_Conversation" -> actionAux = "Llamada telefónica"
+            "cn_Meeting" -> actionAux = "Reunión"
+            "cn_Task" -> actionAux = "Tarea"
+            "cn_Note" -> actionAux = "Nota"
+            "cn_Campaign" -> actionAux = "Campaña"
+            "cn_Other" -> actionAux = "Otros"
+        }
+
+        var priorityAux: String = ""
+
+        when (item.Priority) {
+            "pr_Low" -> priorityAux = "Bajo"
+            "pr_Normal" -> priorityAux = "Normal"
+            "pr_High" -> priorityAux = "Alto"
+        }
+
+        _uiState.update { currentState -> currentState.copy(
+            nota = item.nota,
+            ActivityDate =item.ActivityDate,
+            ActivityTime =item.ActivityTime,
+            CardCode=item.CardCode,
+            EndTime=item.EndTime,
+            Action=actionAux,
+            Priority = priorityAux,
+            Tel = item.Tel,
+            ClgCode = item.ClgCode,
+            U_SEIPEDIDOCLIENTE = item.U_SEIPEDIDOCLIENTE.toString(),
+            U_SEIPEDIDOCOMPRAS = item.U_SEIPEDIDOCOMPRAS.toString()
         ) }
     }
 }
