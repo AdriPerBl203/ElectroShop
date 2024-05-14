@@ -184,13 +184,13 @@ fun ScaffoldBusinessPartner(
             ) {
                 Button(
                     modifier = Modifier.padding(start = 15.dp, end = 15.dp),
-                    onClick = { viewModel.guardar(false) }
+                    onClick = { viewModel.save(false) }
                 ) {
                     Text(text = "Añadir y nuevo")
                 }
                 Button(
                     modifier = Modifier.padding(start = 15.dp, end = 15.dp),
-                    onClick = { viewModel.guardar(true) }
+                    onClick = { viewModel.save(true) }
                 ) {
                     Text(text = "Añadir y ver")
                 }
@@ -202,7 +202,7 @@ fun ScaffoldBusinessPartner(
                 }
                 Button(
                     modifier = Modifier.padding(start = 15.dp, end = 15.dp),
-                    onClick = { viewModel.borrar() }
+                    onClick = { viewModel.delete() }
                 ) {
                     Text(text = "Borrar")
                 }

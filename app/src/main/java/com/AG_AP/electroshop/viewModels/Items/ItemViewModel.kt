@@ -134,7 +134,7 @@ class ItemViewModel : ViewModel(), ActionViewModel {
 
     }
 
-    override fun guardar(data: Boolean) {
+    override fun save(data: Boolean) {
         val itemCode = _uiState.value.ItemCode
         val itemName = _uiState.value.itemName
         val itemType = _uiState.value.itemType
@@ -253,7 +253,7 @@ class ItemViewModel : ViewModel(), ActionViewModel {
 
     }
 
-    override fun borrar() {
+    override fun delete() {
         val itemCode = _uiState.value.ItemCode
         var text = "Articulo eliminado"
 

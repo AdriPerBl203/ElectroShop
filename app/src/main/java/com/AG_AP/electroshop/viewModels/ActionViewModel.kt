@@ -1,9 +1,9 @@
 package com.AG_AP.electroshop.viewModels
 
 interface ActionViewModel {
-    fun guardar(data: Boolean)
+    fun save(data: Boolean)
     fun update()
-    fun borrar()
+    fun delete()
 
     fun find()
 
