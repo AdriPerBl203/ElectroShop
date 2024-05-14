@@ -128,7 +128,7 @@ fun ActivityUltimate(
     ) {
         Row(
         ) {
-            /*Column { //
+            Column { //
                 val coffeeDrinks =
                     arrayOf("Llamada telefónica", "Reunión", "Tarea", "Nota", "Campaña", "Otros")
                 var expanded by remember { mutableStateOf(false) }
@@ -328,7 +328,7 @@ fun ActivityUltimate(
                     }
                 )
 
-            } */ //
+            }  //
             Column(
                 modifier= Modifier.width(200.dp)
             ){
