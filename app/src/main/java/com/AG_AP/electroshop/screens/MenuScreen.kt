@@ -288,7 +288,7 @@ fun MenuBody(
                             modifier= Modifier
                                 .padding(30.dp)
                                 .width(200.dp),
-                            onClick = { navController.navigate(route = Routes.MixedOrderScreen.route) }
+                            onClick = { navController.navigate(route = Routes.ScreenOrder.route) }
                         ) {
                             Text("Pedido de cliente")
                         }
