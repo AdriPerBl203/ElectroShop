@@ -635,38 +635,45 @@ class OrderViewModel : ViewModel(), ActionViewModel {
             return
         } else {
 
-            if(InterconexionUpdateArticle.index  !=-1){
-                val i = InterconexionUpdateArticle.index
-                _uiState.value.DocumentLine[i] = ArticleUiState(
-                    i,
-                    list[0] ?: "",
-                    list[1] ?: "",
-                    list[2].toFloat() ?: 0.0F,
-                    list[3].toFloat() ?: 0.0F,
-                    list[4].toFloat() ?: 0.0F
-                )
-                InterconexionUpdateArticle.index= -1
-                return
-            }
+            when (InterconexionUpdateArticle.index) {
+                -1 -> {
 
+                    if (_uiState.value.DocumentLine.size != 0) {
+                        val ultData =
+                            _uiState.value.DocumentLine[_uiState.value.DocumentLine.size - 1]
+                        if (objectReflex.equals(ultData)) {
+                            _uiState.value.DocumentLine.removeAt(_uiState.value.DocumentLine.size - 1)
+                        }
+                    }
 
-            if (_uiState.value.DocumentLine.size != 0 ) {
-                val ultData = _uiState.value.DocumentLine[_uiState.value.DocumentLine.size - 1]
-                if(objectReflex.equals(ultData)){
-                    _uiState.value.DocumentLine.removeAt(_uiState.value.DocumentLine.size - 1)
+                    var index = _uiState.value.DocumentLine.size
+                    index++
+                    _uiState.value.DocumentLine += ArticleUiState(
+                        index,
+                        list[0] ?: "",
+                        list[1] ?: "",
+                        list[2].toFloat() ?: 0.0F,
+                        list[3].toFloat() ?: 0.0F,
+                        list[4].toFloat() ?: 0.0F
+                    )
+
+                }
+
+                else -> {
+
+                    val i = InterconexionUpdateArticle.index
+                    _uiState.value.DocumentLine[i] = ArticleUiState(
+                        i,
+                        list[0] ?: "",
+                        list[1] ?: "",
+                        list[2].toFloat() ?: 0.0F,
+                        list[3].toFloat() ?: 0.0F,
+                        list[4].toFloat() ?: 0.0F
+                    )
+                    InterconexionUpdateArticle.index = -1
                 }
             }
 
-            var index = _uiState.value.DocumentLine.size
-            index++
-            _uiState.value.DocumentLine += ArticleUiState(
-                index,
-                list[0] ?: "",
-                list[1] ?: "",
-                list[2].toFloat() ?: 0.0F,
-                list[3].toFloat() ?: 0.0F,
-                list[4].toFloat() ?: 0.0F
-            )
             var tastAux = _uiState.value.trash
             tastAux++
             _uiState.update { currentState ->
