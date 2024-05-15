@@ -26,7 +26,8 @@ data class OrderUiState(
     val showToast: Boolean = false,
     val ListItems:List<OrderFireBase> = listOf(),
     val showDialogBusinessPartner:Boolean = false,
-    val ListBusinessPartner:List<BusinessPartner> = listOf()
+    val ListBusinessPartner:List<BusinessPartner> = listOf(),
+    val dialogAddArticleUpdate:Boolean = false,
 )
 
 /*

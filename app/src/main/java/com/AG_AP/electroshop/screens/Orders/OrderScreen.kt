@@ -12,15 +12,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddBox
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ElevatedButton
@@ -39,18 +37,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.AG_AP.electroshop.viewModels.Orders.OrderViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.AG_AP.electroshop.components.DatePicker
 import com.AG_AP.electroshop.components.DialogActivity
 import com.AG_AP.electroshop.uiState.Orders.OrderUiState
 import com.AG_AP.electroshop.components.DialogOandPO
 import com.AG_AP.electroshop.firebase.models.BusinessPartner
+import com.AG_AP.electroshop.functions.InterconexionUpdateArticle
 import com.AG_AP.electroshop.functions.ObjectContext
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -95,7 +92,7 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
         //.verticalScroll(rememberScrollState())
     ) {
         Row {
-            Column {
+            /*Column { //
                 OutlinedTextField(
                     value = dataUiState.SalesPersonCode,
                     onValueChange = { viewModel.changeSalesPersonCode(it) },
@@ -157,7 +154,7 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
                 DatePicker("Fecha documento ", dataUiState.DocDate) { fechaDocumento ->
                     viewModel.changeDocDate(fechaDocumento)
                 }
-            }
+            }*/ //
 
             Column(
                 modifier = Modifier
@@ -249,10 +246,11 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
 @Composable
 fun TableDocumentLineOrder(dataUiState: OrderUiState, viewModel: OrderViewModel) {
 
-    val numCols = 6
+    val numCols = 7
 
     // Datos de ejemplo para las cabeceras
     val headers = listOf(
+        "Editar",
         "Nº",
         "Código Articulo",
         "Descripción articulo",
@@ -286,6 +284,29 @@ fun TableDocumentLineOrder(dataUiState: OrderUiState, viewModel: OrderViewModel)
 
     LazyVerticalGrid(columns = GridCells.Fixed(numCols)) {
         dataUiState.DocumentLineList.forEach { index, value ->
+            item {
+                Box(
+                    modifier = Modifier
+                        .border(1.dp, MaterialTheme.colorScheme.primary)
+                        .background(MaterialTheme.colorScheme.secondaryContainer)
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    IconButton(
+                        modifier = Modifier
+                            .height(50.dp)
+                            .wrapContentSize(),
+                        onClick = {
+                            viewModel.showDialogaddArticle()
+                            InterconexionUpdateArticle.data=dataUiState.DocumentLine[index]
+                            InterconexionUpdateArticle.index = index
+                            // TODO obejct
+                        }
+                    ) {
+                        Icon(Icons.Filled.Edit, contentDescription = "+ Icon")
+                    }
+                }
+            }
             item {
                 Box(
                     modifier = Modifier

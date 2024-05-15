@@ -5,13 +5,13 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
-import com.AG_AP.electroshop.firebase.ItemCRUD
 import com.AG_AP.electroshop.firebase.OrderCRUD
 import com.AG_AP.electroshop.firebase.SEIConfigCRUD
 import com.AG_AP.electroshop.firebase.models.BusinessPartner
 import com.AG_AP.electroshop.firebase.models.DocumentLineFireBase
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
 import com.AG_AP.electroshop.firebase.models.SEIConfig
+import com.AG_AP.electroshop.functions.InterconexionUpdateArticle
 import com.AG_AP.electroshop.functions.ObjectContext
 import com.AG_AP.electroshop.uiState.Items.ArticleUiState
 import com.AG_AP.electroshop.uiState.Orders.OrderUiState
@@ -610,6 +610,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
         }
     }
 
+
     fun addArticle(list: List<String>) {
 
         val objectReflex = ArticleUiState(
@@ -633,7 +634,22 @@ class OrderViewModel : ViewModel(), ActionViewModel {
             }
             return
         } else {
-            //fin pruebas
+
+            if(InterconexionUpdateArticle.index  !=-1){
+                val i = InterconexionUpdateArticle.index
+                _uiState.value.DocumentLine[i] = ArticleUiState(
+                    i,
+                    list[0] ?: "",
+                    list[1] ?: "",
+                    list[2].toFloat() ?: 0.0F,
+                    list[3].toFloat() ?: 0.0F,
+                    list[4].toFloat() ?: 0.0F
+                )
+                InterconexionUpdateArticle.index= -1
+                return
+            }
+
+
             if (_uiState.value.DocumentLine.size != 0 ) {
                 val ultData = _uiState.value.DocumentLine[_uiState.value.DocumentLine.size - 1]
                 if(objectReflex.equals(ultData)){
@@ -660,5 +676,9 @@ class OrderViewModel : ViewModel(), ActionViewModel {
                 )
             }
         }
+    }
+
+    fun editarArticulo(index: Int) {
+        Log.i("EditarArticulo", index.toString())
     }
 }
