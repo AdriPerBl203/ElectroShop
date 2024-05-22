@@ -21,6 +21,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddBox
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ElevatedButton
@@ -48,6 +49,7 @@ import com.AG_AP.electroshop.components.DatePicker
 import com.AG_AP.electroshop.components.DialogActivity
 import com.AG_AP.electroshop.components.DialogOandPO
 import com.AG_AP.electroshop.firebase.models.BusinessPartner
+import com.AG_AP.electroshop.functions.InterconexionUpdateArticle
 import com.AG_AP.electroshop.functions.ObjectContext
 import com.AG_AP.electroshop.uiState.PurchaseOrders.PurchaseOrderUiState
 import com.AG_AP.electroshop.viewModels.PurchaseOrders.PurchaseOrderViewModel
@@ -198,17 +200,6 @@ fun PurchaseOrderView(
                     ) {
                         Text(text = "-")
                     }
-                    IconButton(
-                        modifier = Modifier
-                            .background(MaterialTheme.colorScheme.primary)
-                            .border(
-                                BorderStroke(0.5.dp, Color.Black)
-                            )
-                            .padding(start = 0.5.dp),
-                        onClick = { viewModel.addLine() }
-                    ) {
-                        Text(text = "+")
-                    }
                 }
                 //}
             }
@@ -252,10 +243,11 @@ fun TableDocumentLinePurchase(
     viewModel: PurchaseOrderViewModel
 ) {
 
-    val numCols = 6
+    val numCols = 7
 
     // Datos de ejemplo para las cabeceras
     val headers = listOf(
+        "Editar",
         "Nº",
         "Código Articulo",
         "Descripción articulo",
@@ -289,6 +281,29 @@ fun TableDocumentLinePurchase(
 
     LazyVerticalGrid(columns = GridCells.Fixed(numCols)) {
         dataUiState.DocumentLineList.forEach { index, value ->
+            item {
+                Box(
+                    modifier = Modifier
+                        .border(1.dp, MaterialTheme.colorScheme.primary)
+                        .background(MaterialTheme.colorScheme.secondaryContainer)
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    IconButton(
+                        modifier = Modifier
+                            .height(50.dp)
+                            .wrapContentSize(),
+                        onClick = {
+                            viewModel.showDialogaddArticle()
+                            InterconexionUpdateArticle.data=dataUiState.DocumentLine[index]
+                            InterconexionUpdateArticle.index = index
+                            // TODO obejct
+                        }
+                    ) {
+                        Icon(Icons.Filled.Edit, contentDescription = "+ Icon")
+                    }
+                }
+            }
             item {
                 Box(
                     modifier = Modifier
