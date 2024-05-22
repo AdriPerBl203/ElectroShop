@@ -201,17 +201,6 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
                     ) {
                         Text(text = "-")
                     }
-                    IconButton(
-                        modifier = Modifier
-                            .background(MaterialTheme.colorScheme.primary)
-                            .border(
-                                BorderStroke(0.5.dp, Color.Black)
-                            )
-                            .padding(start = 0.5.dp),
-                        onClick = { viewModel.addLine() }
-                    ) {
-                        Text(text = "+")
-                    }
                 }
                 //}
 
