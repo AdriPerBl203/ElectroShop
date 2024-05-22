@@ -3,9 +3,9 @@ package com.AG_AP.electroshop.firebase
 import android.annotation.SuppressLint
 import android.util.Log
 import com.AG_AP.electroshop.firebase.models.SEIConfig
-import com.google.firebase.firestore.FirebaseFirestore
 
 object SEIConfigCRUD {
+ /*
 
     @SuppressLint("StaticFieldLeak")
     var database: FirebaseFirestore = DatabaseInitializer.database
@@ -147,5 +147,7 @@ object SEIConfigCRUD {
         return uNameList
     }
 
+
+  */
 
 }

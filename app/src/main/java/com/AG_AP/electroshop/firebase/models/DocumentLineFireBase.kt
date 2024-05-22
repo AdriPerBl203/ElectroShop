@@ -1,5 +1,7 @@
 package com.AG_AP.electroshop.firebase.models
 
+import io.realm.kotlin.types.RealmObject
+
 data class DocumentLineFireBase(
     val ItemCode: String,
     val ItemDescription: String,
@@ -7,7 +9,7 @@ data class DocumentLineFireBase(
     val DiscountPercent: Double,
     val LineNum: Int,
     val Price: Double
-){
+) : RealmObject  {
     fun toHashMap(): HashMap<String, Any> {
         val hashMap = HashMap<String, Any>()
         hashMap["ItemCode"] = this.ItemCode

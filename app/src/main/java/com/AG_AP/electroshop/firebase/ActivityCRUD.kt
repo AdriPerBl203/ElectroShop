@@ -6,14 +6,11 @@ import com.AG_AP.electroshop.firebase.models.Activity
 import com.AG_AP.electroshop.firebase.models.Price
 
 object ActivityCRUD {
-
-    @SuppressLint("StaticFieldLeak")
-    var database: FirebaseFirestore = DatabaseInitializer.database
+/*
 
     val coleccion = "SEIactividades"
 
     fun insertActivity(activity : Activity) {
-
         this.database
             .collection(this.coleccion)
             .document(activity.ClgCode.toString())
@@ -219,4 +216,6 @@ object ActivityCRUD {
             }
 
     }
+
+ */
 }

@@ -6,10 +6,10 @@ import com.AG_AP.electroshop.firebase.models.Item
 import com.AG_AP.electroshop.firebase.models.ItemType
 import com.AG_AP.electroshop.firebase.models.Price
 import com.AG_AP.electroshop.firebase.models.SpecialPriceFireBase
-import com.google.firebase.firestore.FirebaseFirestore
 
 object SpecialPricesCRUD {
 
+    /*
     @SuppressLint("StaticFieldLeak")
     var database: FirebaseFirestore = DatabaseInitializer.database
 
@@ -184,4 +184,6 @@ object SpecialPricesCRUD {
                 Log.e("Errores", "Error en SpecialPrice item por id $it")
             }
     }
+
+     */
 }

@@ -1,8 +1,7 @@
 package com.AG_AP.electroshop.firebase.models
 
-import com.google.firebase.database.IgnoreExtraProperties
+import io.realm.kotlin.types.RealmObject
 
-@IgnoreExtraProperties
 data class SEIConfig(
     val Code: Int,
     val U_Empleado: Int,
@@ -12,7 +11,7 @@ data class SEIConfig(
     val U_actividad: String,
     val U_PedidoCI: String,
     val U_PedidoCO: String,
-) {
+) : RealmObject {
     fun toHashMap(): HashMap<String, Any> {
         val hashMap = HashMap<String, Any>()
         hashMap["Code"] = Code

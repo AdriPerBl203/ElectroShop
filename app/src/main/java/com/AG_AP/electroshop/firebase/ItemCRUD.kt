@@ -5,10 +5,9 @@ import android.util.Log
 import com.AG_AP.electroshop.firebase.models.Item
 import com.AG_AP.electroshop.firebase.models.ItemType
 import com.AG_AP.electroshop.firebase.models.Price
-import com.google.firebase.firestore.FirebaseFirestore
 
 object ItemCRUD {
-
+/*
     @SuppressLint("StaticFieldLeak")
     var database: FirebaseFirestore = DatabaseInitializer.database
 
@@ -271,4 +270,6 @@ object ItemCRUD {
                 Log.e("Errores", "Error en delete item por id $it")
             }
     }
+
+ */
 }

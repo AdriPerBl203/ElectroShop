@@ -3,10 +3,9 @@ package com.AG_AP.electroshop.firebase
 import android.annotation.SuppressLint
 import android.util.Log
 import com.AG_AP.electroshop.firebase.models.Price
-import com.google.firebase.firestore.FirebaseFirestore
 
 object PriceListCRUD {
-
+/*
     @SuppressLint("StaticFieldLeak")
     var database: FirebaseFirestore = DatabaseInitializer.database
 
@@ -115,4 +114,6 @@ object PriceListCRUD {
             }
     }
 
+
+ */
 }

@@ -4,9 +4,9 @@ import android.annotation.SuppressLint
 import android.util.Log
 import com.AG_AP.electroshop.firebase.models.DocumentLineFireBase
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
-import com.google.firebase.firestore.FirebaseFirestore
 
-object OrderCRUD : ActionFirebase {
+object OrderCRUD {
+/*
     @SuppressLint("StaticFieldLeak")
     var database: FirebaseFirestore = DatabaseInitializer.database
 
@@ -297,4 +297,6 @@ object OrderCRUD : ActionFirebase {
                 Log.e("Errores", "Error en delete order por id $id")
             }
     }
+
+ */
 }

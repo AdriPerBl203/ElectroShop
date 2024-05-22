@@ -4,10 +4,9 @@ import android.annotation.SuppressLint
 import android.util.Log
 import com.AG_AP.electroshop.firebase.models.Activity
 import com.AG_AP.electroshop.firebase.models.BusinessPartner
-import com.google.firebase.firestore.FirebaseFirestore
 
-object BusinessPartnerCRUD : ActionFirebase {
-
+object BusinessPartnerCRUD {
+/*
     @SuppressLint("StaticFieldLeak")
     var database: FirebaseFirestore = DatabaseInitializer.database
 
@@ -268,4 +267,6 @@ object BusinessPartnerCRUD : ActionFirebase {
                 Log.e("Errores", "Error en delete cliente por id $it")
             }
     }
+
+ */
 }

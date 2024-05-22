@@ -1,14 +1,13 @@
 package com.AG_AP.electroshop.firebase.models
 
-import com.google.firebase.database.IgnoreExtraProperties
+import io.realm.kotlin.types.RealmObject
 
-@IgnoreExtraProperties
 data class Price(
     val priceList: Int,
     val price: Number,
     val currency: String,
     val SAP: Boolean
-) {
+) : RealmObject {
     fun toHashMap(): HashMap<String, Any> {
         val hashMap = HashMap<String, Any>()
         hashMap["PriceList"] = priceList

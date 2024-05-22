@@ -1,16 +1,12 @@
 package com.AG_AP.electroshop.firebase
 
 import android.annotation.SuppressLint
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.firestoreSettings
-import com.google.firebase.firestore.memoryCacheSettings
-import com.google.firebase.firestore.persistentCacheSettings
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 
 internal object DatabaseInitializer {
-
+/*
     @SuppressLint("StaticFieldLeak")
     open var database: FirebaseFirestore = getInstance()
 
@@ -77,5 +73,7 @@ internal object DatabaseInitializer {
     }
 
      */
+
+ */
 
 }

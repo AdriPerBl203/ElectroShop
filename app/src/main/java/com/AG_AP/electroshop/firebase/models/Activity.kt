@@ -1,8 +1,8 @@
 package com.AG_AP.electroshop.firebase.models
 
-import com.google.firebase.database.IgnoreExtraProperties
+import io.realm.kotlin.types.RealmObject
 
-@IgnoreExtraProperties
+
 data class Activity(
     val idFireBase: String? = null,
     val nota:String,
@@ -17,7 +17,7 @@ data class Activity(
     val U_SEIPEDIDOCOMPRAS:Int?,
     val U_SEIPEDIDOCLIENTE:Int?,
     val SAP:Boolean,
-){
+) : RealmObject {
     fun toHashMap(): HashMap<String, Any> {
         val hashMap = HashMap<String, Any>()
         idFireBase?.let { hashMap["idFireBase"] = it }
