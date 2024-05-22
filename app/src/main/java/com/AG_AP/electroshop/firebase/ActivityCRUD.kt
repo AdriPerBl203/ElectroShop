@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.util.Log
 import com.AG_AP.electroshop.firebase.models.Activity
 import com.AG_AP.electroshop.firebase.models.Price
-import com.google.firebase.firestore.FirebaseFirestore
 
 object ActivityCRUD {
 

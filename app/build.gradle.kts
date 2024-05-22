@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
-    id("com.google.gms.google-services")
+    id("io.realm.kotlin")
 }
 
 android {
@@ -66,8 +66,6 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.6.0")
     implementation("androidx.navigation:navigation-compose:2.7.7")
     implementation("at.favre.lib:bcrypt:0.9.0")
-    implementation(libs.firebase.auth)
-    implementation(libs.firebase.database)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.annotation)
@@ -81,8 +79,11 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    //Firebase
-    implementation(platform("com.google.firebase:firebase-bom:32.8.1"))
-    implementation(libs.firebase.firestore)
+    //Realm
+    implementation("io.realm.kotlin:library-base:1.16.0")
+    // If using Device Sync
+    implementation("io.realm.kotlin:library-sync:1.16.0")
+    // If using coroutines with the SDK
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0")
 
 }
