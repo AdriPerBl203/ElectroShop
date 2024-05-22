@@ -456,6 +456,9 @@ class SettingsViewModel : ViewModel() {
             val dataLogin = Login(Config.dataBase, Config.password, Config.login)
             LoginObj.loginAcessTwoversion(dataLogin, Config.rulUse)
             //TODO
+
+            //añadir precios especiales
+                deleteAndInsertSpecialPrice()
                 deleteAndInsertPriceList()
                 deleteAndInsertItem()// Correcta
                 deleteAndInsertUserUdo() //
@@ -484,6 +487,9 @@ class SettingsViewModel : ViewModel() {
                  progress = false
              ) }
          }*/
+    }
+
+    private fun deleteAndInsertSpecialPrice() {
     }
 
     private fun enablebtn(url: String) {
