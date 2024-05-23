@@ -2,10 +2,12 @@ package com.AG_AP.electroshop.firebase
 
 import android.annotation.SuppressLint
 import android.util.Log
+import com.AG_AP.electroshop.firebase.models.OrderFireBase
 import com.AG_AP.electroshop.firebase.models.SEIConfig
+import io.realm.kotlin.ext.query
 
-object SEIConfigCRUD {
- /*
+object SEIConfigCRUD : ActionFirebase {
+    /*
 
     @SuppressLint("StaticFieldLeak")
     var database: FirebaseFirestore = DatabaseInitializer.database
@@ -149,5 +151,60 @@ object SEIConfigCRUD {
 
 
   */
+
+
+    val realm = DatabaseInitializer.realm
+
+    override fun insert(data: Any) {
+        val sieconfig = data as SEIConfig
+
+        realm.writeBlocking {
+            copyToRealm(sieconfig)
+        }
+    }
+
+    override fun getObjectById(id: Int, callback: (Any?) -> Unit) {
+        val byId =
+            realm.query<SEIConfig>("idFireBase = $0", id.toString()).first().find() as SEIConfig
+        callback(byId)
+
+    }
+
+    override fun getObjectByIdToString(id: String, callback: (Any?) -> Unit) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getAllObject(callback: (MutableList<*>?) -> Unit) {
+        val all = realm.query<SEIConfig>().find() as MutableList<*>?
+        callback(all)
+    }
+
+    override suspend fun updateObjectById(data: Any) {
+        val sEIConfig = data as SEIConfig
+        realm.query<SEIConfig>("Code = $0", sEIConfig.Code)
+            .first()
+            .find()
+            ?.also { oldActivity ->
+                realm.write {
+                    findLatest(oldActivity)?.let { it ->
+                        it.Code = sEIConfig.Code
+                        it.U_Empleado = sEIConfig.U_Empleado
+                        it.U_name = sEIConfig.U_name
+                        it.U_password = sEIConfig.U_password
+                        it.U_articulo = sEIConfig.U_articulo
+                        it.U_actividad = sEIConfig.U_actividad
+                        it.U_PedidoCI = sEIConfig.U_PedidoCI
+                        it.U_PedidoCO = sEIConfig.U_PedidoCO
+                    }
+                }
+            }
+    }
+
+    override suspend fun deleteObjectById(id: String) {
+        val deleteObejct = realm.query<SEIConfig>("Code = $0", id)
+        realm.writeBlocking {
+            delete(deleteObejct)
+        }
+    }
 
 }
