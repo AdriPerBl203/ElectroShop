@@ -157,17 +157,17 @@ class ItemViewModel : ViewModel(), ActionViewModel {
         }
         var text = "Nuevo articulo añadido"
 
-        val item = Item(
-            null,
-            itemCode,
-            itemName,
-            itemType,
-            mainSupplier,
-            itemPrice,
-            manageSerialNumbers,
-            autoCreateSerialNumbers,
-            false
-        )
+        val item = Item().apply {
+            this.idFireBase = null
+            this.ItemCode = itemCode
+            this.itemName = itemName
+            this.itemType = itemType
+            this.mainSupplier = mainSupplier
+            this.itemPrice = itemPrice
+            this.manageSerialNumbers = manageSerialNumbers
+            this.autoCreateSerialNumbersOnRelease = autoCreateSerialNumbers
+            this.SAP = false
+        }
 
         viewModelScope.launch {
             try {
@@ -222,17 +222,17 @@ class ItemViewModel : ViewModel(), ActionViewModel {
         }
         var text = "Articulo actualizado"
 
-        val item = Item(
-            null,
-            itemCode,
-            itemName,
-            itemType,
-            mainSupplier,
-            itemPrice,
-            manageSerialNumbers,
-            autoCreateSerialNumbers,
-            false
-        )
+        val item = Item().apply {
+            this.idFireBase = null
+            this.ItemCode = itemCode
+            this.itemName = itemName
+            this.itemType = itemType
+            this.mainSupplier = mainSupplier
+            this.itemPrice = itemPrice
+            this.manageSerialNumbers = manageSerialNumbers
+            this.autoCreateSerialNumbersOnRelease = autoCreateSerialNumbers
+            this.SAP = false
+        }
 
         viewModelScope.launch {
             try {
