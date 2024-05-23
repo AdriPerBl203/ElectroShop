@@ -6,29 +6,30 @@ import com.AG_AP.electroshop.firebase.models.Activity
 import com.AG_AP.electroshop.firebase.models.Price
 import io.realm.kotlin.delete
 import io.realm.kotlin.ext.query
+import io.realm.kotlin.query.RealmResults
 
 object ActivityCRUD {
 
     val realm = DatabaseInitializer.realm
 
-    fun insertActivity(activity : Activity) {
+    fun insertActivity(activity: Activity) {
         realm.writeBlocking {
             copyToRealm(activity)
         }
     }
 
-    fun insertActivityForFireBase(activity : Activity) {
+    fun insertActivityForFireBase(activity: Activity) {
         TODO()
     }
 
-    fun getActivityById(id: Int,callback:(Activity?)->Unit) {
+    fun getActivityById(id: Int, callback: (Activity?) -> Unit) {
         val byId =
             realm.query<Activity>("idFireBase = $0", id.toString()).first().find() as Activity
         callback(byId)
     }
 
-    fun getAllActivity(callback: (MutableList<Activity>) -> Unit) {
-        val all = realm.query<Activity>().find() as MutableList<Activity>
+    fun getAllActivity(callback: (RealmResults<Activity>) -> Unit) {
+        val all = realm.query<Activity>().find()
         callback(all)
     }
 
@@ -60,18 +61,25 @@ object ActivityCRUD {
     }
 
     fun deleteActivityById(id: String) {
-        val activityToDel :Activity? = realm.query<Activity>("ClgCode = $0", id).find().firstOrNull()
-        if(activityToDel != null){
+        val activityToDel = realm.query<Activity>("ClgCode == $0", id).find().firstOrNull()
+        if (activityToDel != null) {
             realm.writeBlocking {
-                delete(activityToDel)
+                findLatest(activityToDel)
+                    ?.also { delete(it) }
             }
         }
-
     }
 
-    fun filterForCardCode(cardCode: String,callback:(MutableList<Activity>)->Unit) {
+    fun filterForCardCode(cardCode: String, callback: (MutableList<Activity>) -> Unit) {
         val byId =
             realm.query<Activity>("CardCode = $0", cardCode).find() as MutableList<Activity>
         callback(byId)
+    }
+
+    fun deleteAll() {
+        realm.writeBlocking {
+            delete<Activity>()
+        }
+
     }
 }

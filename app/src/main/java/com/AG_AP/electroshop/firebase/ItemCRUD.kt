@@ -25,7 +25,7 @@ object ItemCRUD {
 
     fun getItemById(itemId: String, callback: (Item?) -> Unit) {
         val byId =
-            realm.query<Item>("idFireBase = $0", itemId).first().find() as Item
+            realm.query<Item>("ItemCode = $0", itemId).first().find() as Item
         callback(byId)
     }
 
@@ -36,7 +36,7 @@ object ItemCRUD {
 
     suspend fun updateItemById(item: Item) {
 
-        realm.query<Item>("idFireBase = $0", item.idFireBase)
+        realm.query<Item>("ItemCode = $0", item.idFireBase)
             .first()
             .find()
             ?.also { oldActivity ->
@@ -56,9 +56,9 @@ object ItemCRUD {
             }
     }
 
-    fun deleteItemById(itemId: String) {
-        val deleteObejct = realm.query<Item>("idFireBase = $0", itemId)
-        realm.writeBlocking {
+    suspend fun deleteItemById(itemId: String) {
+        val deleteObejct = realm.query<Item>("ItemCode == $0", itemId)
+        realm.write {
             delete(deleteObejct)
         }
     }

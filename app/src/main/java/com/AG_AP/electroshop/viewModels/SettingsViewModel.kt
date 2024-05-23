@@ -461,7 +461,7 @@ class SettingsViewModel : ViewModel() {
                 //deleteAndInsertSpecialPrice()
                 //deleteAndInsertPriceList()
                 //deleteAndInsertItem()// Correcta
-                //deleteAndInsertUserUdo() //
+               // deleteAndInsertUserUdo() //
                 //deleteAndInsertBusinessPartner() // Correcta
                 deleteAndInsertActivity() // Correcto
                 //deleteAndInsertOrders() //Corecta

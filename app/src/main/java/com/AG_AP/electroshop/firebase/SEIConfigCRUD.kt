@@ -31,9 +31,12 @@ object SEIConfigCRUD {
     }
 
      fun deleteSEIConfigById(idConfig: Int) {
-         val deleteObejct = realm.query<SEIConfig>("Code = $0", idConfig)
+         val deleteObejct = realm.query<SEIConfig>("Code == $0", idConfig).find().firstOrNull()
          realm.writeBlocking {
-             delete(deleteObejct)
+             if (deleteObejct != null) {
+                 findLatest(deleteObejct)
+                     ?.also { delete(it) }
+             }
          }
     }
 
