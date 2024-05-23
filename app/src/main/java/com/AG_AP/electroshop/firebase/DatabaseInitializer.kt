@@ -1,11 +1,34 @@
 package com.AG_AP.electroshop.firebase
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.Network
 
-internal object DatabaseInitializer {
+import com.AG_AP.electroshop.firebase.models.Activity
+import com.AG_AP.electroshop.firebase.models.BusinessPartner
+import com.AG_AP.electroshop.firebase.models.Item
+import com.AG_AP.electroshop.firebase.models.Price
+import com.AG_AP.electroshop.firebase.models.SEIConfig
+import com.AG_AP.electroshop.firebase.models.SpecialPriceFireBase
+import io.realm.kotlin.Realm
+import io.realm.kotlin.RealmConfiguration
+
+object DatabaseInitializer {
+
+    val configuration = RealmConfiguration.create(
+        schema = setOf(
+            Activity::class,
+            BusinessPartner::class,
+            Item::class,
+            Price::class,
+            SEIConfig::class,
+            SpecialPriceFireBase::class
+        )
+    )
+
+    val realm = getInstance()
+
+    private fun getInstance(): Realm {
+        return Realm.open(configuration)
+    }
+
 /*
     @SuppressLint("StaticFieldLeak")
     open var database: FirebaseFirestore = getInstance()
