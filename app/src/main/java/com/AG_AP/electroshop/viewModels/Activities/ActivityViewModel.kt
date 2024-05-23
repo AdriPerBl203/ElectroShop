@@ -1,14 +1,12 @@
 package com.AG_AP.electroshop.viewModels.Activities
 
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.AG_AP.electroshop.firebase.ActivityCRUD
 import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
 import com.AG_AP.electroshop.firebase.OrderCRUD
-import com.AG_AP.electroshop.firebase.PurchaseOrderCRUD
 import com.AG_AP.electroshop.firebase.models.Activity
 import com.AG_AP.electroshop.firebase.models.BusinessPartner
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
@@ -39,16 +37,6 @@ class ActivityViewModel : ViewModel(), ActionViewModel {
             mutableList?.let {
                 _uiState.update { currentState -> currentState.copy(
                     ListOrders = it.toList()
-                ) }
-            }
-        }
-
-        //purchaseOrder
-        PurchaseOrderCRUD.getAllObject { list ->
-            val mutableList = list as? MutableList<OrderFireBase>
-            mutableList?.let {
-                _uiState.update { currentState -> currentState.copy(
-                    ListPurchaseOrders = it.toList()
                 ) }
             }
         }
