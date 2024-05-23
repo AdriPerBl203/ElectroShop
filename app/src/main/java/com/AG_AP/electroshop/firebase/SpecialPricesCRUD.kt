@@ -198,6 +198,7 @@ object SpecialPricesCRUD : ActionFirebase {
         }
     }
     //BASURA getObjectById
+    @Deprecated("")
     override fun getObjectById(id: Int, callback: (Any?) -> Unit) {
         val byId =
             realm.query<SpecialPriceFireBase>("idFireBase = $0", id.toString()).first().find() as SEIConfig
