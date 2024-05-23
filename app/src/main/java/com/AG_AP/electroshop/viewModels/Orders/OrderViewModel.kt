@@ -95,23 +95,21 @@ class OrderViewModel : ViewModel(), ActionViewModel {
         var text = "Pedido de venta actualizado"
 
 
-        val orderFireBase = OrderFireBase(
-            "",
-            docNum,
-            cardCode,
-            cardName,
-            docDate,
-            docDueDate,
-            taxDate,
-            discountPercent,
-            documentLine,
-            false,
-            SalesPersonCode
-        )
+        var orderFireBase: OrderFireBase =  OrderFireBase().apply {
+            this.CardCode = cardCode
+            this.CardName = cardName
+            this.DocDate = docDate
+            this.DocDueDate = docDueDate
+            this.DocNum = docNum
+            this.DiscountPercent = discountPercent
+            this.TaxDate = taxDate
+            this.SalesPersonCode = SalesPersonCode
+            this.DocumentLines = documentLine
+        }
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                OrderCRUD.insertForFireBase(orderFireBase)
+                OrderCRUD.insert(orderFireBase)
             } catch (e: Exception) {
                 Log.e("Errores", e.stackTraceToString())
                 text = "Hubo un error con la creación del pedido de venta"
@@ -185,19 +183,17 @@ class OrderViewModel : ViewModel(), ActionViewModel {
         val documentLine = hashMapToDocumentLine()
         var text = "Pedido actualizado"
 
-        val orderFireBase = OrderFireBase(
-            null,
-            docNum,
-            cardCode,
-            cardName,
-            docDate,
-            docDueDate,
-            taxDate,
-            discountPercent,
-            documentLine,
-            false,
-            SalesPersonCode
-        )
+        val orderFireBase = OrderFireBase().apply {
+            this.DocNum = docNum
+            this.CardCode = cardCode
+            this.CardName = cardName
+            this.DocDate = docDate
+            this.DocDueDate = docDueDate
+            this.TaxDate = taxDate
+            this.DiscountPercent = discountPercent
+            this.DocumentLines = documentLine
+            this.SalesPersonCode = SalesPersonCode
+        }
 
         viewModelScope.launch {
             try {
@@ -418,14 +414,14 @@ class OrderViewModel : ViewModel(), ActionViewModel {
             val price = value[4].toDouble()
             val discountPercent = value[5].toDouble()
 
-            val newDocumentLine = DocumentLineFireBase(
-                itemCode,
-                itemDescription,
-                quantity,
-                discountPercent,
-                index,
-                price
-            )
+            val newDocumentLine = DocumentLineFireBase().apply {
+                this.LineNum = index
+                this.ItemCode = itemCode
+                this.ItemDescription = itemDescription
+                this.Quantity = quantity
+                this.Price = price
+                this.DiscountPercent = discountPercent
+            }
             listDocumentLineFireBase.add(newDocumentLine)
         }
 
