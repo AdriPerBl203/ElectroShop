@@ -16,6 +16,8 @@ import com.AG_AP.electroshop.functions.ObjectContext
 import com.AG_AP.electroshop.uiState.Items.ArticleUiState
 import com.AG_AP.electroshop.uiState.Orders.OrderUiState
 import com.AG_AP.electroshop.viewModels.ActionViewModel
+import io.realm.kotlin.ext.toRealmList
+import io.realm.kotlin.types.RealmList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -95,7 +97,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
         var text = "Pedido de venta actualizado"
 
 
-        var orderFireBase: OrderFireBase =  OrderFireBase().apply {
+        var orderFireBase: OrderFireBase = OrderFireBase().apply {
             this.CardCode = cardCode
             this.CardName = cardName
             this.DocDate = docDate
@@ -401,7 +403,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
     }
 
 
-    private fun hashMapToDocumentLine(): List<DocumentLineFireBase> {
+    private fun hashMapToDocumentLine(): RealmList<DocumentLineFireBase> {
         val listDocumentLineFireBase: MutableList<DocumentLineFireBase> = mutableListOf()
 
         val documentLineList = _uiState.value.DocumentLineList
@@ -425,7 +427,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
             listDocumentLineFireBase.add(newDocumentLine)
         }
 
-        return listDocumentLineFireBase.toList()
+        return listDocumentLineFireBase.toRealmList()
     }
 
     private fun DocumentLineForMutableList(list: MutableList<ArticleUiState?>): ConcurrentHashMap<Int, MutableList<String>> {

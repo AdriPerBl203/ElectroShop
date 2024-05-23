@@ -1,8 +1,9 @@
 package com.AG_AP.electroshop.firebase.models
 
 
+import io.realm.kotlin.ext.realmListOf
+import io.realm.kotlin.types.RealmList
 import io.realm.kotlin.types.RealmObject
-import io.realm.kotlin.types.annotations.Ignore
 
 class OrderFireBase : RealmObject {
     var idFireBase: String? = null
@@ -13,8 +14,7 @@ class OrderFireBase : RealmObject {
     var DocDueDate: String = ""
     var TaxDate: String = ""
     var DiscountPercent: Double = 0.0
-    @Ignore
-    var DocumentLines: List<DocumentLineFireBase> = listOf()
+    var DocumentLines: RealmList<DocumentLineFireBase> = realmListOf()
     var Slpcode: String = ""
     var SAP: Boolean = false
     var SalesPersonCode:Int = 0

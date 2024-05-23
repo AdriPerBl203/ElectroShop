@@ -41,6 +41,7 @@ import com.AG_AP.electroshop.functions.validarURL
 //import com.AG_AP.electroshop.functions.validarURL
 import com.AG_AP.electroshop.uiState.SettingUiState
 import com.google.gson.Gson
+import io.realm.kotlin.ext.toRealmList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -565,7 +566,7 @@ class SettingsViewModel : ViewModel() {
                     element.DocDueDate
                     element.TaxDate
                     element.DiscountPercent
-                    this.DocumentLines = documentList
+                    this.DocumentLines = documentList.toRealmList()
                     this.SAP = true
                     element.SalesPersonCode
                 }
