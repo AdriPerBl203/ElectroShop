@@ -72,7 +72,13 @@ class DialogPLViewModel : ViewModel() {
         val writtenPrice = _uiState.value.PriceWritten
 
         if (priceList != null && (choosenCurrency != null && choosenCurrency != "") && (writtenPrice != null && writtenPrice >= 0.0)) {
-            val itemPrice = Price(priceList.toInt(), writtenPrice, choosenCurrency, true)
+            //priceList.toInt(), writtenPrice, choosenCurrency, true
+            val itemPrice = Price().apply {
+                this.priceList = priceList.toInt()
+                this.currency = choosenCurrency
+                this.price = writtenPrice
+                this.SAP = true
+            }
 
             _uiState.update { currentState ->
                 currentState.copy(
