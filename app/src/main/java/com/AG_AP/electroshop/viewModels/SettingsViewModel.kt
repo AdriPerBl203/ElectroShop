@@ -308,7 +308,7 @@ class SettingsViewModel : ViewModel() {
             if (userForUdo is SeiConfigUser) {
                 userForUdo.value.forEach { element ->
                     Log.e("JOSELITOO", element.U_name)
-                    SEIConfigCRUD.deleteSEIConfigById(element.U_name)
+                    SEIConfigCRUD.deleteSEIConfigById(element.Code)
                 }
                 println("aaaaaaaaaaaaaaaaaaa")
             }

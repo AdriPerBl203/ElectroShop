@@ -16,7 +16,7 @@ object PriceListCRUD {
 
     fun getPrecioById(idPrecio: String, callback: (Price?) -> Unit) {
         val byId =
-            OrderCRUD.realm.query<Price>("priceList = $0", idPrecio).first()
+            realm.query<Price>("priceList = $0", idPrecio).first()
                 .find() as Price
         callback(byId)
     }
@@ -31,7 +31,7 @@ object PriceListCRUD {
             .first()
             .find()
             ?.also { oldActivity ->
-                OrderCRUD.realm.write {
+                realm.write {
                     findLatest(oldActivity)?.let { it ->
                         it.priceList = price.priceList
                         it.price = price.price
@@ -42,9 +42,9 @@ object PriceListCRUD {
             }
     }
 
-    fun deletePrecioById(idPrecio: String) {
-        val deleteObejct = OrderCRUD.realm.query<Price>("priceList == $0", idPrecio)
-        OrderCRUD.realm.writeBlocking {
+    suspend fun deletePrecioById(idPrecio: String) {
+        val deleteObejct = realm.query<Price>("priceList == $0", idPrecio)
+        realm.write {
             delete(deleteObejct)
         }
     }
