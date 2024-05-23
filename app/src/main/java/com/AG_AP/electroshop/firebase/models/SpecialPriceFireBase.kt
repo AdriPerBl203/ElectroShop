@@ -3,10 +3,10 @@ package com.AG_AP.electroshop.firebase.models
 import io.realm.kotlin.types.RealmObject
 
 class SpecialPriceFireBase: RealmObject {
-    val ItemCode: String = ""
-    val CardCode: String = ""
-    val Price: Double = 0.0
-    val Currency: String = ""
-    val DiscountPercent: Double = 0.0
-    val PriceListNum: Int = 0
+    var ItemCode: String = ""
+    var CardCode: String = ""
+    var Price: Double = 0.0
+    var Currency: String = ""
+    var DiscountPercent: Double = 0.0
+    var PriceListNum: Int = 0
 }
