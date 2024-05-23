@@ -1,6 +1,7 @@
 package com.AG_AP.electroshop.firebase.models
 
 import com.AG_AP.electroshop.endpoints.models.orders.DocumentLine
+import io.realm.kotlin.types.RealmObject
 
 data class OrderFireBase(
     val idFireBase: String? = null,
@@ -15,7 +16,7 @@ data class OrderFireBase(
     //TODO slpcode
     val SAP: Boolean,
     val SalesPersonCode:Int,
-){
+) : RealmObject {
     fun toHashMap(): HashMap<String, Any> {
         val hashMap = HashMap<String, Any>()
         idFireBase?.let { hashMap["idFireBase"] = it }
