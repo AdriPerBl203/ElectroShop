@@ -3,6 +3,7 @@ package com.AG_AP.electroshop.firebase
 
 import com.AG_AP.electroshop.firebase.models.Activity
 import com.AG_AP.electroshop.firebase.models.BusinessPartner
+import com.AG_AP.electroshop.firebase.models.DocumentLineFireBase
 import com.AG_AP.electroshop.firebase.models.Item
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
 import com.AG_AP.electroshop.firebase.models.Price
@@ -21,7 +22,8 @@ object DatabaseInitializer {
             Price::class,
             SEIConfig::class,
             SpecialPriceFireBase::class,
-            OrderFireBase::class
+            OrderFireBase::class,
+            DocumentLineFireBase::class
         )
     )
 
