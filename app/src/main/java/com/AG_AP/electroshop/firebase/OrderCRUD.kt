@@ -336,21 +336,6 @@ object OrderCRUD : ActionFirebase {
             .first()
             .find()
             ?.also { oldActivity ->
-
-                /*
-                *  var idFireBase: String? = null,
-                    var DocNum: Int,
-                    var CardCode: String,
-                    var CardName: String,
-                    var DocDate: String,
-                    var DocDueDate: String,
-                    var TaxDate: String,
-                    var DiscountPercent: Double,
-                    var DocumentLines: List<DocumentLineFireBase>,
-                    var SAP: Boolean,
-                    var SalesPersonCode:Int,
-                *
-                * */
                 realm.write {
                     findLatest(oldActivity)?.let { it ->
                         it.DocNum = orderFireBase.DocNum
