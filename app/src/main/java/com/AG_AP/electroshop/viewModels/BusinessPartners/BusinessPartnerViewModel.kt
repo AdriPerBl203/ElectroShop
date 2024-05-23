@@ -158,13 +158,13 @@ class BusinessPartnerViewModel : ViewModel(), ActionViewModel {
 
     fun search(sap: Boolean, deviceOrSap: Boolean, callback: (List<BusinessPartner?>) -> Unit) {
         if (deviceOrSap) {
-            BusinessPartnerCRUD.getBPBySAP(sap) {
+            /*BusinessPartnerCRUD.getBPBySAP(sap) {
                 callback(it)
-            }
+            }*/
         } else {
-            BusinessPartnerCRUD.getBPByName(_uiState.value.FilterByName, sap) {
+            /*BusinessPartnerCRUD.getBPByName(_uiState.value.FilterByName, sap) {
                 callback(it)
-            }
+            }*/
         }
 
     }
@@ -197,7 +197,14 @@ class BusinessPartnerViewModel : ViewModel(), ActionViewModel {
         var EmailAddress = _uiState.value.EmailAddress
         val Cellular = _uiState.value.Cellular
         val dataAux: BusinessPartner =
-            BusinessPartner("", CardCode, CardType, CardName, EmailAddress, Cellular, false)
+            BusinessPartner().apply {
+                this.CardCode = CardCode
+                this.CardType = CardType
+                this.CardName = CardName
+                this.Cellular = Cellular
+                this.EmailAddress = EmailAddress
+                this.SAP = false
+            }
         var text = "Nuevo cliente añadido"
         viewModelScope.launch {
             try {
@@ -239,7 +246,14 @@ class BusinessPartnerViewModel : ViewModel(), ActionViewModel {
         var EmailAddress = _uiState.value.EmailAddress
         val Cellular = _uiState.value.Cellular
         val data: BusinessPartner =
-            BusinessPartner("", CardCode, CardType, CardName, EmailAddress, Cellular, false)
+            BusinessPartner().apply {
+                this.CardCode = CardCode
+                this.CardType = CardType
+                this.CardName = CardName
+                this.Cellular = Cellular
+                this.EmailAddress = EmailAddress
+                this.SAP = false
+            }
         var text = "Actividad actualizada"
         viewModelScope.launch {
             try {
