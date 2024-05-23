@@ -2,16 +2,16 @@ package com.AG_AP.electroshop.firebase.models
 
 import io.realm.kotlin.types.RealmObject
 
-data class Item(
-    val idFireBase: String? = null,
-    val ItemCode:String,
-    val itemName: String,
-    val itemType: ItemType,
-    val mainSupplier: String?,
-    val itemPrice: List<Price>?,
-    val manageSerialNumbers: String,
-    val autoCreateSerialNumbersOnRelease: String,
-    val SAP: Boolean
+class Item(
+    var idFireBase: String? = null,
+    var ItemCode:String,
+    var itemName: String,
+    var itemType: ItemType,
+    var mainSupplier: String?,
+    var itemPrice: List<Price>?,
+    var manageSerialNumbers: String,
+    var autoCreateSerialNumbersOnRelease: String,
+    var SAP: Boolean
 ) : RealmObject {
     fun toHashMap(): HashMap<String, Any?> {
         val hashMap = HashMap<String, Any?>()
@@ -29,7 +29,7 @@ data class Item(
         hashMap["Mainsupplier"] = mainSupplier
         if (!itemPrice.isNullOrEmpty()) {
             val itemPricesList = mutableListOf<HashMap<String, Any>>()
-            for (precio in itemPrice) {
+            for (precio in itemPrice!!) {
                 val precioMap = HashMap<String, Any>()
                 precioMap["PriceList"] = precio.priceList
                 precioMap["Price"] = precio.price

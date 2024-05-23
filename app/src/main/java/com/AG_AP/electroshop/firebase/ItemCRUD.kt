@@ -2,12 +2,15 @@ package com.AG_AP.electroshop.firebase
 
 import android.annotation.SuppressLint
 import android.util.Log
+import com.AG_AP.electroshop.firebase.models.Activity
+import com.AG_AP.electroshop.firebase.models.BusinessPartner
 import com.AG_AP.electroshop.firebase.models.Item
 import com.AG_AP.electroshop.firebase.models.ItemType
 import com.AG_AP.electroshop.firebase.models.Price
+import io.realm.kotlin.ext.query
 
-object ItemCRUD {
-/*
+object ItemCRUD : ActionFirebase {
+    /*
     @SuppressLint("StaticFieldLeak")
     var database: FirebaseFirestore = DatabaseInitializer.database
 
@@ -272,4 +275,60 @@ object ItemCRUD {
     }
 
  */
+
+
+    val realm = DatabaseInitializer.realm
+
+    override fun insert(data: Any) {
+        val item = data as Item
+
+        realm.writeBlocking {
+            copyToRealm(item)
+        }
+    }
+
+    override fun getObjectById(id: Int, callback: (Any?) -> Unit) {
+        val byId =
+            realm.query<Item>("idFireBase = $0", id.toString()).first().find() as Item
+        callback(byId)
+
+    }
+
+    override fun getObjectByIdToString(id: String, callback: (Any?) -> Unit) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getAllObject(callback: (MutableList<*>?) -> Unit) {
+        val all = realm.query<Item>().find() as MutableList<*>?
+        callback(all)
+    }
+
+    override suspend fun updateObjectById(data: Any) {
+        val item = data as Item
+        realm.query<Item>("idFireBase = $0", item.idFireBase)
+            .first()
+            .find()
+            ?.also { oldActivity ->
+                realm.write {
+                    findLatest(oldActivity)?.let { it ->
+                        it.idFireBase = item.idFireBase
+                        it.ItemCode = item.ItemCode
+                        it.itemName = item.itemName
+                        it.itemType = item.itemType
+                        it.mainSupplier = item.mainSupplier
+                        it.itemPrice = item.itemPrice
+                        it.manageSerialNumbers = item.manageSerialNumbers
+                        it.autoCreateSerialNumbersOnRelease = item.autoCreateSerialNumbersOnRelease
+                        it.SAP = item.SAP
+                    }
+                }
+            }
+    }
+
+    override suspend fun deleteObjectById(id: String) {
+        val deleteObejct = realm.query<Item>("idFireBase = $0", id)
+        realm.writeBlocking {
+            delete(deleteObejct)
+        }
+    }
 }
