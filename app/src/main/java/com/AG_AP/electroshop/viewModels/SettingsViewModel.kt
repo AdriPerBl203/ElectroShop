@@ -308,7 +308,7 @@ class SettingsViewModel : ViewModel() {
             if (userForUdo is SeiConfigUser) {
                 userForUdo.value.forEach { element ->
                     Log.e("JOSELITOO", element.U_name)
-                    SEIConfigCRUD.deleteSEIConfigById(element.Code)
+                    SEIConfigCRUD.deleteSEIConfigById(element.Code.toInt())
                 }
                 println("aaaaaaaaaaaaaaaaaaa")
             }
@@ -414,17 +414,16 @@ class SettingsViewModel : ViewModel() {
                 val activity: com.AG_AP.electroshop.firebase.models.Activity =
                     com.AG_AP.electroshop.firebase.models.Activity().apply {
                         this.idFireBase = ""
-                        element.Notes ?: ""
-                        element.ActivityDate ?: ""
-                        element.ActivityTime ?: ""
-                        element.CardCode ?: ""
-                        element.EndTime ?: ""
-                        element.Activity ?: ""
-                        element.Notes ?: ""
-                        element.ActivityCode.toString() ?: ""
-                        element.Priority ?: ""
-                        element.U_SEIPEDIDOCOMPRAS ?: 0
-                        element.U_SEIPEDIDOCLIENTE ?: 0
+                        this.nota = element.Notes ?: ""
+                        this.ActivityDate = element.ActivityDate ?: ""
+                        this.ActivityTime = element.ActivityTime ?: ""
+                        this.CardCode = element.CardCode ?: ""
+                        this.EndTime = element.EndTime ?: ""
+                        this.Action = element.Activity ?: ""
+                        this.ClgCode = element.ActivityCode.toString() ?: ""
+                        this.Priority = element.Priority ?: ""
+                        this.U_SEIPEDIDOCOMPRAS = element.U_SEIPEDIDOCOMPRAS ?: 0
+                        this.U_SEIPEDIDOCLIENTE = element.U_SEIPEDIDOCLIENTE ?: 0
                         this.SAP = true
                     }
                 ActivityCRUD.insertActivity(activity)
@@ -459,11 +458,11 @@ class SettingsViewModel : ViewModel() {
             //TODO
 
             //añadir precios especiales
-                deleteAndInsertSpecialPrice()
-                deleteAndInsertPriceList()
-                deleteAndInsertItem()// Correcta
-                deleteAndInsertUserUdo() //
-                deleteAndInsertBusinessPartner() // Correcta
+                //deleteAndInsertSpecialPrice()
+                //deleteAndInsertPriceList()
+                //deleteAndInsertItem()// Correcta
+                //deleteAndInsertUserUdo() //
+                //deleteAndInsertBusinessPartner() // Correcta
                 deleteAndInsertActivity() // Correcto
                 //deleteAndInsertOrders() //Corecta
                 //deleteAndInsertPurchaseOrders() //Correcta

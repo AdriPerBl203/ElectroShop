@@ -30,7 +30,7 @@ object SEIConfigCRUD {
         callback(all)
     }
 
-     fun deleteSEIConfigById(idConfig: String) {
+     fun deleteSEIConfigById(idConfig: Int) {
          val deleteObejct = realm.query<SEIConfig>("Code = $0", idConfig)
          realm.writeBlocking {
              delete(deleteObejct)

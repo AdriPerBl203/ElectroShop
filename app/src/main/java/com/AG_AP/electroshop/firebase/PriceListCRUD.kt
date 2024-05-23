@@ -43,9 +43,12 @@ object PriceListCRUD {
     }
 
     suspend fun deletePrecioById(idPrecio: String) {
-        val deleteObejct = realm.query<Price>("priceList == $0", idPrecio)
-        realm.write {
-            delete(deleteObejct)
+
+        val deleteObejct = realm.query<Price>("priceList == $0", idPrecio).find()
+        realm.writeBlocking {
+            if(!deleteObejct.isNotEmpty()){
+                delete(deleteObejct)
+            }
         }
     }
 

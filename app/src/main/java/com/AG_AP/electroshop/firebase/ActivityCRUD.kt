@@ -60,10 +60,13 @@ object ActivityCRUD {
     }
 
     fun deleteActivityById(id: String) {
-        val activityToDel = realm.query<Activity>("ClgCode = $0", id)
-        realm.writeBlocking {
-            delete(activityToDel)
+        val activityToDel :Activity? = realm.query<Activity>("ClgCode = $0", id).find().firstOrNull()
+        if(activityToDel != null){
+            realm.writeBlocking {
+                delete(activityToDel)
+            }
         }
+
     }
 
     fun filterForCardCode(cardCode: String,callback:(MutableList<Activity>)->Unit) {
