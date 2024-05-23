@@ -3,19 +3,19 @@ package com.AG_AP.electroshop.firebase.models
 import com.AG_AP.electroshop.endpoints.models.orders.DocumentLine
 import io.realm.kotlin.types.RealmObject
 
-data class OrderFireBase(
-    val idFireBase: String? = null,
-    val DocNum: Int,
-    val CardCode: String,
-    val CardName: String,
-    val DocDate: String,
-    val DocDueDate: String,
-    val TaxDate: String,
-    val DiscountPercent: Double,
-    val DocumentLines: List<DocumentLineFireBase>,
+class OrderFireBase(
+    var idFireBase: String? = null,
+    var DocNum: Int,
+    var CardCode: String,
+    var CardName: String,
+    var DocDate: String,
+    var DocDueDate: String,
+    var TaxDate: String,
+    var DiscountPercent: Double,
+    var DocumentLines: List<DocumentLineFireBase>,
     //TODO slpcode
-    val SAP: Boolean,
-    val SalesPersonCode:Int,
+    var SAP: Boolean,
+    var SalesPersonCode:Int,
 ) : RealmObject {
     fun toHashMap(): HashMap<String, Any> {
         val hashMap = HashMap<String, Any>()

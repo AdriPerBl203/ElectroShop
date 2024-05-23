@@ -2,15 +2,14 @@ package com.AG_AP.electroshop.firebase.models
 
 import io.realm.kotlin.types.RealmObject
 
-data class BusinessPartner(
-    val idFireBase: String? = null,
-    val CardCode:String ="",
-    val CardType:String ="",
-    val CardName:String ="",
-    val Cellular:String ="",
-    val EmailAddress:String ="",
-
-    val SAP: Boolean
+class BusinessPartner(
+    var idFireBase: String? = null,
+    var CardCode:String ="",
+    var CardType:String ="",
+    var CardName:String ="",
+    var Cellular:String ="",
+    var EmailAddress:String ="",
+    var SAP: Boolean
 ) : RealmObject {
     fun toHashMap(): HashMap<String, Any> {
         val hashMap = HashMap<String, Any>()
