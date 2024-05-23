@@ -4,19 +4,19 @@ import io.realm.kotlin.types.RealmObject
 
 
 data class Activity(
-    val idFireBase: String? = null,
-    val nota:String,
-    val ActivityDate:String,
-    val ActivityTime:String,
-    val CardCode:String,
-    val EndTime:String,
-    val Action:String,
-    val Tel:String,
-    val ClgCode:String,
-    val Priority:String,
-    val U_SEIPEDIDOCOMPRAS:Int?,
-    val U_SEIPEDIDOCLIENTE:Int?,
-    val SAP:Boolean,
+    var idFireBase: String? = null,
+    var nota:String,
+    var ActivityDate:String,
+    var ActivityTime:String,
+    var CardCode:String,
+    var EndTime:String,
+    var Action:String,
+    var Tel:String,
+    var ClgCode:String,
+    var Priority:String,
+    var U_SEIPEDIDOCOMPRAS:Int?,
+    var U_SEIPEDIDOCLIENTE:Int?,
+    var SAP:Boolean,
 ) : RealmObject {
     fun toHashMap(): HashMap<String, Any> {
         val hashMap = HashMap<String, Any>()

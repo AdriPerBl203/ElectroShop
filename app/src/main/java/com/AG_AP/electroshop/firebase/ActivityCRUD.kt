@@ -4,9 +4,72 @@ import android.annotation.SuppressLint
 import android.util.Log
 import com.AG_AP.electroshop.firebase.models.Activity
 import com.AG_AP.electroshop.firebase.models.Price
+import io.realm.kotlin.delete
+import io.realm.kotlin.ext.query
 
-object ActivityCRUD {
-/*
+object ActivityCRUD : ActionFirebase {
+
+    val realm = DatabaseInitializer.realm
+
+    override fun insert(data: Any) {
+        val Activity = data as Activity
+
+        realm.writeBlocking {
+            copyToRealm(Activity)
+        }
+    }
+
+    override fun getObjectById(id: Int, callback: (Any?) -> Unit) {
+        val byId =
+            realm.query<Activity>("idFireBase = $0", id.toString()).first().find() as Activity
+        callback(byId)
+
+    }
+
+    override fun getObjectByIdToString(id: String, callback: (Any?) -> Unit) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getAllObject(callback: (MutableList<*>?) -> Unit) {
+        val all = realm.query<Activity>().find() as MutableList<*>?
+        callback(all)
+    }
+
+    override suspend fun updateObjectById(data: Any) {
+        val activity = data as Activity
+        realm.query<Activity>("idFireBase = $0", activity.idFireBase)
+            .first()
+            .find()
+            ?.also { oldActivity ->
+                realm.write {
+                    findLatest(oldActivity)?.let { it ->
+                        it.idFireBase = activity.idFireBase
+                        it.nota = activity.nota
+                        it.ActivityTime = activity.ActivityTime
+                        it.ActivityDate = activity.ActivityDate
+                        it.CardCode = activity.CardCode
+                        it.EndTime = activity.EndTime
+                        it.Action = activity.Action
+                        it.Tel = activity.Tel
+                        it.ClgCode = activity.ClgCode
+                        it.Priority = activity.Priority
+                        it.U_SEIPEDIDOCOMPRAS = activity.U_SEIPEDIDOCOMPRAS
+                        it.U_SEIPEDIDOCLIENTE = activity.U_SEIPEDIDOCLIENTE
+                        it.SAP = activity.SAP
+
+                    }
+                }
+            }
+    }
+
+    override suspend fun deleteObjectById(id: String) {
+        val activityToDel = realm.query<Activity>("idFireBase = $0", id)
+        realm.writeBlocking {
+            delete(activityToDel)
+        }
+    }
+
+    /*
 
     val coleccion = "SEIactividades"
 
