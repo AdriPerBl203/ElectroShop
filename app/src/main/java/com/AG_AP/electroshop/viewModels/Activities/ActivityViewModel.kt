@@ -70,17 +70,17 @@ class ActivityViewModel : ViewModel(), ActionViewModel {
             var listShowTable: MutableList<Activity> = mutableListOf()
             mutableList?.let { list ->
                 list.forEach { item ->
-                    val updatedItem = when (item.Priority) {
-                        "pr_Low" -> item.copy(Priority = "Bajo")
-                        "pr_Normal" -> item.copy(Priority = "Normal")
-                        "pr_High" -> item.copy(Priority = "Alto")
+                    when (item.Priority) {
+                        "pr_Low" -> item.Priority = "Bajo"
+                        "pr_Normal" -> item.Priority = "Normal"
+                        "pr_High" -> item.Priority = "Alto"
                         else -> item
                     }
 
-                    if (updatedItem.SAP) {
-                        listShow += updatedItem
+                    if (item.SAP) {
+                        listShow += item
                     } else {
-                        listShowTable += updatedItem
+                        listShowTable += item
                     }
                 }
             }
@@ -186,7 +186,21 @@ class ActivityViewModel : ViewModel(), ActionViewModel {
         val Priority = _uiState.value.Priority
         val pedidoCliente = _uiState.value.U_SEIPEDIDOCLIENTE.toInt()
         val pedidoCompra = _uiState.value.U_SEIPEDIDOCOMPRAS.toInt()
-        val Activity = Activity("",nota,ActivityDate,ActivityTime,CardCode,EndTime,Action,Tel,ClgCode,Priority,pedidoCompra,pedidoCliente,false)
+        //"",nota,ActivityDate,ActivityTime,CardCode,EndTime,Action,Tel,ClgCode,Priority,pedidoCompra,pedidoCliente,false
+        val Activity = Activity().apply {
+            this.nota = nota
+            this.ActivityDate = ActivityDate
+            this.ActivityTime = ActivityTime
+            this.CardCode = CardCode
+            this.EndTime = EndTime
+            this.Action = Action
+            this.Tel = Tel
+            this.ClgCode = ClgCode
+            this.Priority = Priority
+            this.U_SEIPEDIDOCLIENTE = pedidoCliente
+            this.U_SEIPEDIDOCOMPRAS = pedidoCompra
+            this.SAP = false
+        }
         var text ="Actividad actualizada"
         viewModelScope.launch {
             try{
@@ -294,11 +308,26 @@ class ActivityViewModel : ViewModel(), ActionViewModel {
         val pedidoCliente = _uiState.value.U_SEIPEDIDOCLIENTE.toInt() ?: 0
         val pedidoCompra = _uiState.value.U_SEIPEDIDOCOMPRAS.toInt() ?: 0
         val dataConcat = ActivityDate.plus("T00:00:00Z")
-        val newActivity = Activity("",nota,dataConcat,ActivityTime,CardCode,EndTime,Action,Tel,ClgCode,Priority,pedidoCompra,pedidoCliente,false)
+        //"",nota,dataConcat,ActivityTime,CardCode,EndTime,Action,Tel,ClgCode,Priority,pedidoCompra,pedidoCliente,false
+        val newActivity = Activity().apply {
+            this.nota = nota
+            this.ActivityDate = dataConcat
+            this.ActivityTime = ActivityTime
+            this.CardCode = CardCode
+            this.EndTime = EndTime
+            this.Action = Action
+            this.Tel = Tel
+            this.ClgCode = ClgCode
+            this.Priority = Priority
+            this.U_SEIPEDIDOCLIENTE = pedidoCliente
+            this.U_SEIPEDIDOCOMPRAS = pedidoCompra
+            this.SAP = false
+
+        }
         var text ="Nueva Actividad añadida"
         viewModelScope.launch {
             try{
-                ActivityCRUD.insertActivityForFireBase(newActivity)
+                ActivityCRUD.insertActivity(newActivity)
             }catch (e:Exception){
                 println(e.message)
                 text= "Hubo un error con la creación de la actividad."
@@ -440,17 +469,17 @@ class ActivityViewModel : ViewModel(), ActionViewModel {
             var listShowTable: MutableList<Activity> = mutableListOf()
             mutableList?.let { list ->
                 list.forEach { item ->
-                    val updatedItem = when (item.Priority) {
-                        "pr_Low" -> item.copy(Priority = "Bajo")
-                        "pr_Normal" -> item.copy(Priority = "Normal")
-                        "pr_High" -> item.copy(Priority = "Alto")
+                    when (item.Priority) {
+                        "pr_Low" -> item.Priority= "Bajo"
+                        "pr_Normal" -> item.Priority= "Normal"
+                        "pr_High" -> item.Priority= "Alto"
                         else -> item
                     }
 
-                    if (updatedItem.SAP) {
-                        listShow += updatedItem
+                    if (item.SAP) {
+                        listShow += item
                     } else {
-                        listShowTable += updatedItem
+                        listShowTable += item
                     }
                 }
             }
