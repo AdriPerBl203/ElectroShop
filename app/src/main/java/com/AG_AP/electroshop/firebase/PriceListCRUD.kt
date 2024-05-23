@@ -1,119 +1,52 @@
 package com.AG_AP.electroshop.firebase
 
-import android.annotation.SuppressLint
-import android.util.Log
+import com.AG_AP.electroshop.firebase.models.OrderFireBase
 import com.AG_AP.electroshop.firebase.models.Price
+import io.realm.kotlin.ext.query
 
 object PriceListCRUD {
-/*
-    @SuppressLint("StaticFieldLeak")
-    var database: FirebaseFirestore = DatabaseInitializer.database
 
-    val coleccion = "SEIlistaPrecios"
+    val realm = DatabaseInitializer.realm
 
-    fun insertPrecio(priceList: Int, price: Number, currency: String, SAP: Boolean) {
-        val precio = Price(priceList, price, currency, SAP).toHashMap()
-
-        database
-            .collection(this.coleccion)
-            .document(priceList.toString())
-            .set(precio)
-            .addOnSuccessListener {
-                Log.e("Pruebas", "Creado lista de precios: ${it.toString()}")
-            }
-            .addOnFailureListener { e ->
-                Log.w("Errores", "Error añadiendo el documento $e")
-            }
+    fun insertPrecio(Price: Price) {
+        realm.writeBlocking {
+            copyToRealm(Price)
+        }
     }
 
     fun getPrecioById(idPrecio: String, callback: (Price?) -> Unit) {
-        database
-            .collection(this.coleccion)
-            .document(idPrecio)
-            .get()
-            .addOnSuccessListener {
-                if (it.exists()) {
-                    val datosPrice = it.data
-                    Log.e("Pruebas", "Datos: ${datosPrice.toString()}")
-
-
-                    val priceListDatos = datosPrice?.get("PriceList")
-                    val priceDatos = datosPrice?.get("Price")
-                    val currency = datosPrice?.get("Currency")
-                    val SAP = datosPrice?.get("SAP").toString().toBoolean() ?: false
-
-                    Log.wtf("Pruebas", "PriceList: ${priceListDatos.toString().toInt()}, PriceDatos: ${priceDatos.toString().toBigDecimal()}, currency: ${currency.toString()}")
-
-                    val price = Price(priceListDatos.toString().toInt(), priceDatos.toString().toBigDecimal(), currency.toString(), SAP)
-                    callback(price)
-                } else {
-                    callback(null)
-                }
-            }
-            .addOnFailureListener {
-                Log.e("Errores", "Error en get precio por id, posiblemente no exista $it")
-            }
+        val byId =
+            OrderCRUD.realm.query<Price>("priceList = $0", idPrecio).first()
+                .find() as Price
+        callback(byId)
     }
 
     fun getAllPrecios(callback: (MutableList<Price>) -> Unit) {
-        database
-            .collection(this.coleccion)
-            .get()
-            .addOnSuccessListener {
-                lista ->
-                val preciosList = mutableListOf<Price>()
-
-                for (document in lista.documents) {
-                    val datosPrice = document.data
-
-                    val priceListDatos = datosPrice?.get("PriceList")
-                    val priceDatos = datosPrice?.get("Price")
-                    val currency = datosPrice?.get("Currency")
-                    val SAP = datosPrice?.get("SAP").toString().toBoolean() ?: false
-
-                    val price = Price(
-                        priceListDatos.toString().toInt(),
-                        priceDatos.toString().toBigDecimal(),
-                        currency.toString(),
-                        SAP
-                    )
-                    preciosList.add(price)
-                }
-
-                callback(preciosList)
-            }
-            .addOnFailureListener {
-                Log.e("Errores", "Error en get precios, posiblemente vacio $it")
-                callback(mutableListOf())
-            }
+        val all = realm.query<Price>().find() as MutableList<Price>
+        callback(all)
     }
 
-    fun updatePrecioById(idPrecio: String, price: Price) {
-        database
-            .collection(this.coleccion)
-            .document(idPrecio)
-            .update(price.toHashMap())
-            .addOnSuccessListener {
-                Log.e("Pruebas", "Updateado el precio con id: $idPrecio")
-            }
-            .addOnFailureListener {
-                Log.e("Errores", "Error en get update precio por id $it")
+    suspend fun updatePrecioById(idPrecio: String, price: Price) {
+        realm.query<Price>("priceList = $0", idPrecio)
+            .first()
+            .find()
+            ?.also { oldActivity ->
+                OrderCRUD.realm.write {
+                    findLatest(oldActivity)?.let { it ->
+                        it.priceList = price.priceList
+                        it.price = price.price
+                        it.currency = price.currency
+                        it.SAP = it.SAP
+                    }
+                }
             }
     }
 
     fun deletePrecioById(idPrecio: String) {
-        database
-            .collection(this.coleccion)
-            .document(idPrecio)
-            .delete()
-            .addOnSuccessListener {
-                Log.e("Pruebas", "Borrado el precio con id: $idPrecio")
-            }
-            .addOnFailureListener {
-                Log.e("Errores", "Error en delete precio por id $it")
-            }
+        val deleteObejct = OrderCRUD.realm.query<OrderFireBase>("priceList = $0", idPrecio)
+        OrderCRUD.realm.writeBlocking {
+            delete(deleteObejct)
+        }
     }
 
-
- */
 }

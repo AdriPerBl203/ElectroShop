@@ -9,14 +9,12 @@ import com.AG_AP.electroshop.endpoints.models.item.getItems.GetItems
 import com.AG_AP.electroshop.endpoints.models.login.Login
 import com.AG_AP.electroshop.endpoints.models.orders.Orders
 import com.AG_AP.electroshop.endpoints.models.priceList.PriceList
-import com.AG_AP.electroshop.endpoints.models.purchaseOrders.PurchaseOrders
 import com.AG_AP.electroshop.endpoints.objects.ActivityObj
 import com.AG_AP.electroshop.endpoints.objects.BusinessPartnersObj
 import com.AG_AP.electroshop.endpoints.objects.ItemObj
 import com.AG_AP.electroshop.endpoints.objects.LoginObj
 import com.AG_AP.electroshop.endpoints.objects.OrdersObj
 import com.AG_AP.electroshop.endpoints.objects.PriceListObj
-import com.AG_AP.electroshop.endpoints.objects.PurchaseOrdersObj
 import com.AG_AP.electroshop.endpoints.udo.models.CreateField
 import com.AG_AP.electroshop.endpoints.udo.models.createUdo.CreateUdo
 import com.AG_AP.electroshop.endpoints.udo.models.createUdo.UserObjectMDFindColumn
@@ -29,7 +27,6 @@ import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
 import com.AG_AP.electroshop.firebase.ItemCRUD
 import com.AG_AP.electroshop.firebase.OrderCRUD
 import com.AG_AP.electroshop.firebase.PriceListCRUD
-import com.AG_AP.electroshop.firebase.PurchaseOrderCRUD
 import com.AG_AP.electroshop.firebase.SEIConfigCRUD
 import com.AG_AP.electroshop.firebase.models.BusinessPartner
 import com.AG_AP.electroshop.firebase.models.DocumentLineFireBase
@@ -281,17 +278,18 @@ class SettingsViewModel : ViewModel() {
     private suspend fun UserUdoInsertFireBase(userForUdo: SeiConfigUser?) {
         if (userForUdo is SeiConfigUser) {
             userForUdo.value.forEach { element ->
+                val seiConfig = SEIConfig().apply {
+                    element.Code.toInt()
+                    element.U_Empleado
+                    element.U_name
+                    element.U_password
+                    element.U_articulo
+                    element.U_actividad
+                    element.U_PedidoCl
+                    element.U_PedidoCO
+                }
                 SEIConfigCRUD.insertSEIConfig(
-                    SEIConfig(
-                        element.Code.toInt(),
-                        element.U_Empleado,
-                        element.U_name,
-                        element.U_password,
-                        element.U_articulo,
-                        element.U_actividad,
-                        element.U_PedidoCl,
-                        element.U_PedidoCO
-                    )
+                    seiConfig
                 )
                 Log.e("JOSELITOLOQUITO", "Usuarios check")
             }
@@ -358,16 +356,18 @@ class SettingsViewModel : ViewModel() {
                     email = element.EmailAddress
                 }
 
+                val bp = BusinessPartner().apply {
+                    idFireBase = ""
+                    element.CardCode
+                    element.CardType
+                    element.CardName
+                    this.Cellular = phone1
+                    this.EmailAddress = email
+                    this.SAP = true
+                }
+
                 BusinessPartnerCRUD.insert(
-                    BusinessPartner(
-                        "",
-                        element.CardCode,
-                        element.CardType,
-                        element.CardName,
-                        phone1,
-                        email,
-                        true
-                    )
+                    bp
                 )
             }
             _uiState.update { currentState ->
@@ -411,21 +411,21 @@ class SettingsViewModel : ViewModel() {
             }
             listActivitySAP.forEach { element ->
                 val activity: com.AG_AP.electroshop.firebase.models.Activity =
-                    com.AG_AP.electroshop.firebase.models.Activity(
-                        "",
-                        element.Notes ?: "",
-                        element.ActivityDate ?: "",
-                        element.ActivityTime ?: "",
-                        element.CardCode ?: "",
-                        element.EndTime ?: "",
-                        element.Activity ?: "",
-                        element.Notes ?: "",//
-                        element.ActivityCode.toString() ?: "",
-                        element.Priority ?: "",
-                        element.U_SEIPEDIDOCOMPRAS ?: 0,
-                        element.U_SEIPEDIDOCLIENTE ?: 0,
-                        true
-                    )
+                    com.AG_AP.electroshop.firebase.models.Activity().apply {
+                        this.idFireBase = ""
+                        element.Notes ?: ""
+                        element.ActivityDate ?: ""
+                        element.ActivityTime ?: ""
+                        element.CardCode ?: ""
+                        element.EndTime ?: ""
+                        element.Activity ?: ""
+                        element.Notes ?: ""
+                        element.ActivityCode.toString() ?: ""
+                        element.Priority ?: ""
+                        element.U_SEIPEDIDOCOMPRAS ?: 0
+                        element.U_SEIPEDIDOCLIENTE ?: 0
+                        this.SAP = true
+                    }
                 ActivityCRUD.insertActivity(activity)
             }
             _uiState.update { currentState ->
@@ -514,72 +514,6 @@ class SettingsViewModel : ViewModel() {
         }
     }
 
-    private fun deleteAndInsertPurchaseOrders() {
-        viewModelScope.launch(Dispatchers.IO) {
-            var listPurchaseOrderSAP: MutableList<com.AG_AP.electroshop.endpoints.models.purchaseOrders.Value> =
-                mutableListOf()
-            var checkSAP: Boolean = false
-            var purchaseOrders: PurchaseOrders? = PurchaseOrdersObj.getPurchaseOrders(Config.rulUse)
-            while (!checkSAP) {
-                if (purchaseOrders != null) {
-                    if (purchaseOrders.odataNextLink.isNullOrEmpty()) {
-                        purchaseOrders.value.forEach {
-                            listPurchaseOrderSAP += it
-                        }
-                        checkSAP = true
-                    } else {
-                        purchaseOrders.value.forEach {
-                            listPurchaseOrderSAP += it
-                        }
-                        val num: List<String> = purchaseOrders.odataNextLink.split("=")
-                        purchaseOrders = PurchaseOrdersObj.getPurchaseOrdersExtenExten(
-                            Config.rulUse,
-                            num[1].toInt()
-                        )
-                    }
-                }
-            }
-            listPurchaseOrderSAP.forEach { element ->
-                PurchaseOrderCRUD.deleteObjectById(element.DocNum.toString())
-            }
-            listPurchaseOrderSAP.forEach { element ->
-                //lista de precios
-                val documentList: MutableList<DocumentLineFireBase> = mutableListOf()
-                element.DocumentLines.forEachIndexed { index, it ->
-                    documentList.add(
-                        index,
-                        DocumentLineFireBase(
-                            it.ItemCode,
-                            it.ItemDescription ?: "",
-                            it.Quantity,
-                            it.DiscountPercent,
-                            it.LineNum,
-                            it.Price,
-                        )
-                    )
-                }
-                val orderInsert: OrderFireBase = OrderFireBase(
-                    "",
-                    element.DocNum,
-                    element.CardCode,
-                    element.CardName,
-                    element.DocDate,
-                    element.DocDueDate,
-                    element.TaxDate,
-                    element.DiscountPercent,
-                    documentList,
-                    true,
-                    element.SalesPersonCode
-                )
-                PurchaseOrderCRUD.insert(orderInsert)
-            }
-            _uiState.update { currentState -> currentState.copy(
-                checkPurchaseOrder = true
-            ) }
-            Log.e("sync","order sync")
-        }
-    }
-
     private fun deleteAndInsertOrders() {
         viewModelScope.launch(Dispatchers.IO) {
             var listOrderSAP: MutableList<com.AG_AP.electroshop.endpoints.models.orders.Value> =
@@ -609,31 +543,32 @@ class SettingsViewModel : ViewModel() {
                 //lista de precios
                 val documentList: MutableList<DocumentLineFireBase> = mutableListOf()
                 element.DocumentLines.forEachIndexed { index, it ->
+                    val line = DocumentLineFireBase().apply {
+                        it.ItemCode
+                        it.ItemDescription ?: ""
+                        it.Quantity
+                        it.DiscountPercent
+                        it.LineNum
+                        it.Price
+                    }
                     documentList.add(
                         index,
-                        DocumentLineFireBase(
-                            it.ItemCode,
-                            it.ItemDescription ?: "",
-                            it.Quantity,
-                            it.DiscountPercent,
-                            it.LineNum,
-                            it.Price,
-                        )
+                        line
                     )
                 }
-                val orderInsert: OrderFireBase = OrderFireBase(
-                    "",
-                    element.DocNum,
-                    element.CardCode,
-                    element.CardName,
-                    element.DocDate,
-                    element.DocDueDate,
-                    element.TaxDate,
-                    element.DiscountPercent,
-                    documentList,
-                    true,
+                val orderInsert: OrderFireBase = OrderFireBase().apply {
+                    this.idFireBase = ""
+                    element.DocNum
+                    element.CardCode
+                    element.CardName
+                    element.DocDate
+                    element.DocDueDate
+                    element.TaxDate
+                    element.DiscountPercent
+                    this.DocumentLines = documentList
+                    this.SAP = true
                     element.SalesPersonCode
-                )
+                }
                 OrderCRUD.insert(orderInsert)
             }
             _uiState.update { currentState ->
@@ -674,27 +609,30 @@ class SettingsViewModel : ViewModel() {
                 //lista de precios
                 val listPrice: MutableList<Price> = mutableListOf()
                 element.ItemPrices.forEachIndexed { index, itemPrice ->
+                    val price = Price().apply {
+                        this.priceList = itemPrice.PriceList ?: 0
+                        price = itemPrice.Price ?: 0.0F
+                        currency = itemPrice.Currency ?: ""
+                        SAP = true
+                    }
                     listPrice.add(
                         index,
-                        Price(
-                            itemPrice.PriceList ?: 0,
-                            itemPrice.Price ?: 0.0F,
-                            itemPrice.Currency ?: "",
-                            true
-                        )
+                        price
                     )
                 }
-                val item: Item = Item(
-                    "",
-                    element.ItemCode ?: "",
-                    element.ItemName ?: "",
-                    ItemType.Articulo,
-                    element.ItemName ?: "",
-                    listPrice.toList(),
-                    element.ManageSerialNumbers ?: "",
-                    element.AutoCreateSerialNumbersOnRelease ?: "",
-                    true
-                )
+                val item: Item = Item().apply {
+                    idFireBase = ""
+                    ItemCode = element.ItemCode ?: ""
+                    itemName = element.ItemName ?: ""
+                    itemType = ItemType.Articulo
+                    mainSupplier = element.ItemName ?: ""
+                    this.itemPrice = listPrice.toList()
+                    manageSerialNumbers = element.ManageSerialNumbers ?: ""
+                    autoCreateSerialNumbersOnRelease = element.AutoCreateSerialNumbersOnRelease ?: ""
+                    SAP = true
+
+                }
+
                 ItemCRUD.insertItem(item)
             }
             _uiState.update { currentState ->
@@ -756,18 +694,22 @@ class SettingsViewModel : ViewModel() {
 
     private fun deleteAndInsertPriceList() {
         viewModelScope.launch(Dispatchers.IO) {
-            val priceList = PriceListObj.getPriceLists(Config.rulUse)
+            var priceList = PriceListObj.getPriceLists(Config.rulUse)
             if (priceList is PriceList) {
                 priceList.value.forEach { element ->
                     Log.e("JOSELITOO", element.toString())
                     PriceListCRUD.deletePrecioById(element.BasePriceList.toString())
                 }
                 priceList.value.forEach { element ->
+                    val price = Price().apply {
+                        this.priceList = element.BasePriceList
+                        price = element.FixedAmount
+                        currency = element.DefaultPrimeCurrency
+                        SAP = true
+                    }
+
                     PriceListCRUD.insertPrecio(
-                        element.BasePriceList,
-                        element.FixedAmount.toDouble(),
-                        element.DefaultPrimeCurrency,
-                        true
+                        price
                     )
                 }
             }

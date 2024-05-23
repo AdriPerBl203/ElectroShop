@@ -12,7 +12,6 @@ import com.AG_AP.electroshop.screens.Activities.MixedScaffoldActivityScreen
 import com.AG_AP.electroshop.screens.Activities.MixedScaffoldBusinessPartnerScreen
 import com.AG_AP.electroshop.screens.Activities.MixedScaffoldItemScreen
 import com.AG_AP.electroshop.screens.Activities.MixedScaffoldOrderScreen
-import com.AG_AP.electroshop.screens.Activities.MixedScaffoldPurchaseOrderScreen
 import com.AG_AP.electroshop.screens.Activities.ScaffoldActivity
 import com.AG_AP.electroshop.screens.Activities.ScaffoldActivityUltimate
 import com.AG_AP.electroshop.screens.Activities.ScaffoldListActivity
@@ -25,8 +24,6 @@ import com.AG_AP.electroshop.screens.Items.ScaffoldItem
 import com.AG_AP.electroshop.screens.Items.ScaffoldListItems
 import com.AG_AP.electroshop.screens.Orders.ScaffoldListOrder
 import com.AG_AP.electroshop.screens.Orders.ScaffoldOrder
-import com.AG_AP.electroshop.screens.PurchaseOrders.ScaffoldListPurchaseOrder
-import com.AG_AP.electroshop.screens.PurchaseOrders.ScaffoldPurchaseOrder
 import com.AG_AP.electroshop.screens.SettingScreen
 
 /**
@@ -75,12 +72,6 @@ fun AppNav(navController: NavHostController = rememberNavController(), context: 
             route = Routes.MixedOrderScreen.route
         ) {
             MixedScaffoldOrderScreen(navController = navController)
-        }
-
-        composable(
-            route = Routes.MixedPurchaseOrderScreen.route
-        ) {
-            MixedScaffoldPurchaseOrderScreen(navController = navController)
         }
 
         composable(
@@ -156,26 +147,6 @@ fun AppNav(navController: NavHostController = rememberNavController(), context: 
         ) { backStackEntry ->
             val id = backStackEntry.arguments?.getString("id")
             ScaffoldBusinessPartner(navController = navController, id = id)
-        }
-
-        composable(
-            route = Routes.PurchaseOrderScreen.route
-        ) {
-            ScaffoldPurchaseOrder(navController = navController)
-        }
-
-        composable(
-            route = Routes.PurchaseOrderList.route
-        ) {
-            ScaffoldListPurchaseOrder(navController = navController)
-        }
-
-        composable(
-            route = Routes.PurchaseOrderAux.route + "/{id}",
-            arguments = listOf(navArgument("id") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val id = backStackEntry.arguments?.getString("id")
-            ScaffoldPurchaseOrder(navController = navController, id = id)
         }
 
         composable(

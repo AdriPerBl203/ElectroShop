@@ -25,10 +25,6 @@ enum class Routes(val route: String) {
     ScreenOrderList(route = "OrderList"),
     ScreenOrderAux(route = "Order"),
 
-    PurchaseOrderScreen(route = "PurchaseOrderScreen"),
-    PurchaseOrderList(route = "PurchaseOrderList"),
-    PurchaseOrderAux(route = "PurchaseOrderScreen"),
-
     ItemScreen(route = "ItemScreen"),
     ItemScreenList(route = "ItemScreenList"),
     ItemScreenAux(route = "ItemScreen")
