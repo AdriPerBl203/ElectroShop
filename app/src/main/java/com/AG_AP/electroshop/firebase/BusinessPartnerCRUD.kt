@@ -4,9 +4,10 @@ import android.annotation.SuppressLint
 import android.util.Log
 import com.AG_AP.electroshop.firebase.models.Activity
 import com.AG_AP.electroshop.firebase.models.BusinessPartner
+import io.realm.kotlin.ext.query
 
-object BusinessPartnerCRUD {
-/*
+object BusinessPartnerCRUD : ActionFirebase {
+    /*
     @SuppressLint("StaticFieldLeak")
     var database: FirebaseFirestore = DatabaseInitializer.database
 
@@ -269,4 +270,74 @@ object BusinessPartnerCRUD {
     }
 
  */
+    val realm = DatabaseInitializer.realm
+
+    override fun insert(data: Any) {
+        val BusinessPartner = data as BusinessPartner
+
+        realm.writeBlocking {
+            copyToRealm(BusinessPartner)
+        }
+    }
+
+    override fun getObjectById(id: Int, callback: (Any?) -> Unit) {
+        val byId =
+            realm.query<Activity>("idFireBase = $0", id.toString()).first().find() as BusinessPartner
+        callback(byId)
+
+    }
+
+    override fun getObjectByIdToString(id: String, callback: (Any?) -> Unit) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getAllObject(callback: (MutableList<*>?) -> Unit) {
+        val all = realm.query<BusinessPartner>().find() as MutableList<*>?
+        callback(all)
+    }
+
+    override suspend fun updateObjectById(data: Any) {
+        val businessPartner = data as BusinessPartner
+        realm.query<BusinessPartner>("idFireBase = $0", businessPartner.idFireBase)
+            .first()
+            .find()
+            ?.also { oldActivity ->
+                realm.write {
+                    findLatest(oldActivity)?.let { it ->
+                        it.idFireBase = businessPartner.idFireBase
+                        it.CardCode = businessPartner.CardCode
+                        it.CardType = businessPartner.CardType
+                        it.CardName = businessPartner.CardName
+                        it.Cellular = businessPartner.Cellular
+                        it.EmailAddress = businessPartner.EmailAddress
+                        it.SAP = businessPartner.SAP
+                    }
+                }
+            }
+    }
+
+    override suspend fun deleteObjectById(id: String) {
+        val activityToDel = realm.query<Activity>("idFireBase = $0", id)
+        realm.writeBlocking {
+            delete(activityToDel)
+        }
+    }
+
+
+    fun insertForFireBase(data: BusinessPartner) {
+        //TODO("Not yet implemented")
+        /*val docRef = this.database
+            .collection(this.coleccion)
+            .document()
+        val newdata = data.copy(idFireBase = docRef.id) // Guardar el ID generado dentro de la actividad
+        docRef
+            .set(newdata.toHashMap())
+            .addOnSuccessListener {
+                Log.e("FireBase", "Creado Business Partner con ID: ${docRef.id}")
+            }
+            .addOnFailureListener { e ->
+                Log.w("FireBase", "Error añadiendo el documento $e")
+            }*/
+    }
+
 }
