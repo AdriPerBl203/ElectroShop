@@ -27,10 +27,24 @@ object DatabaseInitializer {
         )
     )
 
+    val schemaVersion = RealmConfiguration.Builder(
+        schema = setOf(
+        Activity::class,
+        BusinessPartner::class,
+        Item::class,
+        Price::class,
+        SEIConfig::class,
+        SpecialPriceFireBase::class,
+        OrderFireBase::class,
+        DocumentLineFireBase::class
+    ))
+        .schemaVersion(2)
+        .build()
+
     val realm = getInstance()
 
     private fun getInstance(): Realm {
-        return Realm.open(configuration)
+        return Realm.open(schemaVersion)
     }
 
 /*

@@ -27,7 +27,7 @@ object PriceListCRUD {
     }
 
     suspend fun updatePrecioById(idPrecio: String, price: Price) {
-        realm.query<Price>("priceList = $0", idPrecio)
+        realm.query<Price>("priceList == $0", idPrecio)
             .first()
             .find()
             ?.also { oldActivity ->
@@ -43,7 +43,7 @@ object PriceListCRUD {
     }
 
     fun deletePrecioById(idPrecio: String) {
-        val deleteObejct = OrderCRUD.realm.query<OrderFireBase>("priceList = $0", idPrecio)
+        val deleteObejct = OrderCRUD.realm.query<Price>("priceList == $0", idPrecio)
         OrderCRUD.realm.writeBlocking {
             delete(deleteObejct)
         }
