@@ -611,7 +611,7 @@ class SettingsViewModel : ViewModel() {
                 element.ItemPrices.forEachIndexed { index, itemPrice ->
                     val price = Price().apply {
                         this.priceList = itemPrice.PriceList ?: 0
-                        price = itemPrice.Price ?: 0.0F
+                        price = itemPrice.Price ?: 0.0
                         currency = itemPrice.Currency ?: ""
                         SAP = true
                     }
@@ -624,7 +624,7 @@ class SettingsViewModel : ViewModel() {
                     idFireBase = ""
                     ItemCode = element.ItemCode ?: ""
                     itemName = element.ItemName ?: ""
-                    itemType = ItemType.Articulo
+                    itemType = "I"
                     mainSupplier = element.ItemName ?: ""
                     this.itemPrice = listPrice.toList()
                     manageSerialNumbers = element.ManageSerialNumbers ?: ""

@@ -62,7 +62,7 @@ class ItemViewModel : ViewModel(), ActionViewModel {
         }
     }
 
-    fun changeItemType(itemType: ItemType) {
+    fun changeItemType(itemType: String) {
         _uiState.update { currentState ->
             currentState.copy(
                 itemType = itemType
@@ -161,7 +161,7 @@ class ItemViewModel : ViewModel(), ActionViewModel {
             this.idFireBase = null
             this.ItemCode = itemCode
             this.itemName = itemName
-            this.itemType = itemType
+            this.itemType = itemType.toString()
             this.mainSupplier = mainSupplier
             this.itemPrice = itemPrice
             this.manageSerialNumbers = manageSerialNumbers
@@ -185,7 +185,7 @@ class ItemViewModel : ViewModel(), ActionViewModel {
 
                         ItemCode = "",
                         itemName = "",
-                        itemType = ItemType.Articulo,
+                        itemType = ItemType.Articulo.toString(),
                         mainSupplier = "",
                         itemPrice = mutableListOf(),
                         manageSerialNumbers = false,
@@ -272,7 +272,7 @@ class ItemViewModel : ViewModel(), ActionViewModel {
 
                     ItemCode = "",
                     itemName = "",
-                    itemType = ItemType.Articulo,
+                    itemType = ItemType.Articulo.toString(),
                     mainSupplier = "",
                     itemPrice = mutableListOf(),
                     manageSerialNumbers = false,

@@ -110,7 +110,7 @@ fun ItemView(innerPadding: PaddingValues, viewModel: ItemViewModel, id: String?)
                             DropdownMenuItem(
                                 text = { Text(text = item.toString()) },
                                 onClick = {
-                                    viewModel.changeItemType(item)
+                                    viewModel.changeItemType(item.toString())
                                     expanded = false
                                 }
                             )
