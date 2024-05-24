@@ -4,7 +4,9 @@ import android.annotation.SuppressLint
 import android.util.Log
 import com.AG_AP.electroshop.firebase.models.Activity
 import com.AG_AP.electroshop.firebase.models.BusinessPartner
+import io.realm.kotlin.delete
 import io.realm.kotlin.ext.query
+import io.realm.kotlin.query.RealmResults
 
 object BusinessPartnerCRUD : ActionFirebase {
     /*
@@ -292,8 +294,8 @@ object BusinessPartnerCRUD : ActionFirebase {
     }
 
     override fun getAllObject(callback: (MutableList<*>?) -> Unit) {
-        val all = realm.query<BusinessPartner>().find() as MutableList<*>?
-        callback(all)
+        val all = realm.query<BusinessPartner>().find() as RealmResults<*>?
+        callback(all?.toMutableList())
     }
 
     override suspend fun updateObjectById(data: Any) {
@@ -317,12 +319,20 @@ object BusinessPartnerCRUD : ActionFirebase {
     }
 
     override suspend fun deleteObjectById(id: String) {
-        val activityToDel = realm.query<Activity>("idFireBase = $0", id)
-        realm.writeBlocking {
-            delete(activityToDel)
+        val deleteObejct = realm.query<BusinessPartner>("CardCode == $0", id).find().firstOrNull()
+        if (deleteObejct != null) {
+            realm.writeBlocking {
+                findLatest(deleteObejct)
+                    ?.also { delete(it) }
+            }
         }
     }
 
+    fun deleteAll() {
+        realm.writeBlocking {
+            delete<BusinessPartner>()
+        }
+    }
 
     fun insertForFireBase(data: BusinessPartner) {
         //TODO("Not yet implemented")

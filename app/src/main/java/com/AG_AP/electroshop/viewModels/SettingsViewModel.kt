@@ -350,18 +350,22 @@ class SettingsViewModel : ViewModel() {
             listBusinessPartnerSAP.forEach { element ->
                 var email: String = ""
                 var phone1: String = ""
+                var CardName:String = ""
                 if (!element.Phone1.isNullOrEmpty()) {
                     phone1 = element.Phone1
                 }
                 if (!element.EmailAddress.isNullOrEmpty()) {
                     email = element.EmailAddress
                 }
+                if (!element.CardName.isNullOrEmpty()) {
+                    CardName = element.CardName
+                }
 
                 val bp = BusinessPartner().apply {
-                    idFireBase = ""
-                    element.CardCode
-                    element.CardType
-                    element.CardName
+                    this.idFireBase = ""
+                    this.CardCode = element.CardCode
+                    this.CardType = element.CardType
+                    this.CardName = CardName
                     this.Cellular = phone1
                     this.EmailAddress = email
                     this.SAP = true
@@ -462,8 +466,8 @@ class SettingsViewModel : ViewModel() {
                 //deleteAndInsertPriceList()
                 //deleteAndInsertItem()// Correcta
                // deleteAndInsertUserUdo() //
-                //deleteAndInsertBusinessPartner() // Correcta
-                deleteAndInsertActivity() // Correcto
+                deleteAndInsertBusinessPartner() //
+                //deleteAndInsertActivity() // revisado
                 //deleteAndInsertOrders() //Corecta
                 //deleteAndInsertPurchaseOrders() //Correcta
                 enablebtn(Config.rulUse)
