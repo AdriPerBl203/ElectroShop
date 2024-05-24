@@ -13,6 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.AG_AP.electroshop.firebase.ActivityCRUD
 import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
+import com.AG_AP.electroshop.firebase.ItemCRUD
+import com.AG_AP.electroshop.firebase.OrderCRUD
 import com.AG_AP.electroshop.firebase.SEIConfigCRUD
 import com.AG_AP.electroshop.functions.Config
 import com.AG_AP.electroshop.functions.ObjectContext
@@ -24,6 +26,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             //ActivityCRUD.deleteAll()
+            //ItemCRUD.deleteAll()
+            //OrderCRUD.deleteAll()
 
             /*SEIConfigCRUD.getAllSEIConfig { it ->
                 it?.forEach { bp ->

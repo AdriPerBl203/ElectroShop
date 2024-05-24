@@ -9,7 +9,7 @@ class OrderFireBase : RealmObject {
     var idFireBase: String? = null
     var DocNum: Int = 0
     var CardCode: String = ""
-    var CardName: String = ""
+    var CardName: String? = ""
     var DocDate: String = ""
     var DocDueDate: String = ""
     var TaxDate: String = ""

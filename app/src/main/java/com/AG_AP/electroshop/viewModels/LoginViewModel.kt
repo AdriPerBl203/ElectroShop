@@ -65,7 +65,7 @@ class LoginViewModel : ViewModel() {
                         circularProgress = true
                     )
                 }
-                SEIConfigCRUD.getSEIConfigById(userName) { data ->
+                SEIConfigCRUD.getSEIConfigByName(userName) { data ->
                     if (data != null) {
                         if (data.U_password == pass) {
                             SessionObj.inserData(

@@ -99,7 +99,7 @@ class MenuViewModel : ViewModel() {
                             // Crear una instancia de PostOrder
                             val postOrder = PostOrder(
                                 CardCode = x.CardCode,
-                                CardName = x.CardName,
+                                CardName = x.CardName ?: "",
                                 DiscountPercent = x.DiscountPercent,
                                 DocDate = x.DocDate.plus("T00:00:00Z"),
                                 DocDueDate = x.DocDueDate.plus("T00:00:00Z"),

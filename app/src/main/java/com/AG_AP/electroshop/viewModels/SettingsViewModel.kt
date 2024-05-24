@@ -465,13 +465,13 @@ class SettingsViewModel : ViewModel() {
             //TODO
 
             //añadir precios especiales
-                //deleteAndInsertSpecialPrice() // revisado
-                deleteAndInsertPriceList()
-                //deleteAndInsertItem()// Correcta
-                //deleteAndInsertUserUdo() // revisado
-                //deleteAndInsertBusinessPartner() // revisado
-                //deleteAndInsertActivity() // revisado
-                //deleteAndInsertOrders() //
+                deleteAndInsertSpecialPrice() // correcta
+                //deleteAndInsertPriceList()
+                deleteAndInsertItem()// Correcta
+                deleteAndInsertUserUdo() // revisado
+                deleteAndInsertBusinessPartner() // revisado
+                deleteAndInsertActivity() // revisado
+                deleteAndInsertOrders() //
                 enablebtn(Config.rulUse)
         }
 
@@ -602,12 +602,12 @@ class SettingsViewModel : ViewModel() {
                 val documentList: MutableList<DocumentLineFireBase> = mutableListOf()
                 element.DocumentLines.forEachIndexed { index, it ->
                     val line = DocumentLineFireBase().apply {
-                        it.ItemCode
-                        it.ItemDescription ?: ""
-                        it.Quantity
-                        it.DiscountPercent
-                        it.LineNum
-                        it.Price
+                        ItemCode = it.ItemCode
+                        ItemDescription = it.ItemDescription ?: ""
+                        Quantity = it.Quantity
+                        DiscountPercent = it.DiscountPercent
+                        LineNum = it.LineNum
+                        Price = it.Price
                     }
                     documentList.add(
                         index,
@@ -616,16 +616,16 @@ class SettingsViewModel : ViewModel() {
                 }
                 val orderInsert: OrderFireBase = OrderFireBase().apply {
                     this.idFireBase = ""
-                    element.DocNum
-                    element.CardCode
-                    element.CardName
-                    element.DocDate
-                    element.DocDueDate
-                    element.TaxDate
-                    element.DiscountPercent
+                    DocNum = element.DocNum
+                    CardCode = element.CardCode
+                    CardName = element.CardName
+                    DocDate = element.DocDate
+                    DocDueDate = element.DocDueDate
+                    TaxDate = element.TaxDate
+                    DiscountPercent = element.DiscountPercent
                     this.DocumentLines = documentList.toRealmList()
                     this.SAP = true
-                    element.SalesPersonCode
+                    SalesPersonCode = element.SalesPersonCode
                 }
                 OrderCRUD.insert(orderInsert)
             }
@@ -751,7 +751,6 @@ class SettingsViewModel : ViewModel() {
     }
 
     private fun deleteAndInsertPriceList() {
-        //TODO("ACABAR LA LISTA DE PRECIOS")
         viewModelScope.launch(Dispatchers.IO) {
             var priceList = PriceListObj.getPriceLists(Config.rulUse)
             if (priceList is PriceList) {

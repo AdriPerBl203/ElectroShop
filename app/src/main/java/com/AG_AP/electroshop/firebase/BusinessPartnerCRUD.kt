@@ -284,7 +284,7 @@ object BusinessPartnerCRUD : ActionFirebase {
 
     override fun getObjectById(id: Int, callback: (Any?) -> Unit) {
         val byId =
-            realm.query<Activity>("idFireBase = $0", id.toString()).first().find() as BusinessPartner
+            realm.query<Activity>("CardCode = $0", id.toString()).first().find() as BusinessPartner
         callback(byId)
 
     }
@@ -294,13 +294,13 @@ object BusinessPartnerCRUD : ActionFirebase {
     }
 
     override fun getAllObject(callback: (MutableList<*>?) -> Unit) {
-        val all = realm.query<BusinessPartner>().find() as RealmResults<*>?
-        callback(all?.toMutableList())
+        val all = realm.query<BusinessPartner>().find()
+        callback(all.toMutableList())
     }
 
     override suspend fun updateObjectById(data: Any) {
         val businessPartner = data as BusinessPartner
-        realm.query<BusinessPartner>("idFireBase = $0", businessPartner.idFireBase)
+        realm.query<BusinessPartner>("CardCode = $0", businessPartner.CardCode)
             .first()
             .find()
             ?.also { oldActivity ->

@@ -1,6 +1,8 @@
 package com.AG_AP.electroshop.firebase
 
 import com.AG_AP.electroshop.firebase.models.Item
+import com.AG_AP.electroshop.firebase.models.SEIConfig
+import io.realm.kotlin.delete
 import io.realm.kotlin.ext.query
 
 object ItemCRUD {
@@ -57,7 +59,12 @@ object ItemCRUD {
                 delete(deleteObejct)
             }
         }
+    }
 
+    fun deleteAll() {
+        realm.writeBlocking {
+            delete<Item>()
+        }
     }
 
 
