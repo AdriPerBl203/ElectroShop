@@ -464,7 +464,7 @@ class SettingsViewModel : ViewModel() {
 
             //añadir precios especiales
                 deleteAndInsertSpecialPrice() // correcta
-                //deleteAndInsertPriceList()
+                deleteAndInsertPriceList() // correcta
                 deleteAndInsertItem()// Correcta
                 deleteAndInsertUserUdo() // revisado
                 deleteAndInsertBusinessPartner() // revisado

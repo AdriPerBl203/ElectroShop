@@ -21,13 +21,13 @@ object ActivityCRUD {
 
     fun getActivityById(id: Int, callback: (Activity?) -> Unit) {
         val byId =
-            realm.query<Activity>("idFireBase = $0", id.toString()).first().find() as Activity
+            realm.query<Activity>("ClgCode = $0", id.toString()).find().first() as Activity
         callback(byId)
     }
 
-    fun getAllActivity(callback: (RealmResults<Activity>) -> Unit) {
+    fun getAllActivity(callback: (MutableList<Activity>) -> Unit) {
         val all = realm.query<Activity>().find()
-        callback(all)
+        callback(all.toMutableList())
     }
 
     suspend fun updateActivityById(data: Activity) {

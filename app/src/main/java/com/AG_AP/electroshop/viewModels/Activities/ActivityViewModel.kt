@@ -58,12 +58,12 @@ class ActivityViewModel : ViewModel(), ActionViewModel {
             var listShowTable: MutableList<Activity> = mutableListOf()
             mutableList?.let { list ->
                 list.forEach { item ->
-                    when (item.Priority) {
+                    /*when (item.Priority) {
                         "pr_Low" -> item.Priority = "Bajo"
                         "pr_Normal" -> item.Priority = "Normal"
                         "pr_High" -> item.Priority = "Alto"
                         else -> item
-                    }
+                    }*/
 
                     if (item.SAP) {
                         listShow += item
