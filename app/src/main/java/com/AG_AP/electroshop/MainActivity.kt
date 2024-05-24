@@ -12,6 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.AG_AP.electroshop.firebase.ActivityCRUD
+import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
+import com.AG_AP.electroshop.firebase.SEIConfigCRUD
 import com.AG_AP.electroshop.functions.Config
 import com.AG_AP.electroshop.functions.ObjectContext
 import com.AG_AP.electroshop.nav.AppNav
@@ -23,11 +25,24 @@ class MainActivity : ComponentActivity() {
         setContent {
             //ActivityCRUD.deleteAll()
 
+            /*SEIConfigCRUD.getAllSEIConfig { it ->
+                it?.forEach { bp ->
+                    Log.i("Pruebas", "${bp.toString()} ")
+                }
+            }*/
+
+            //BusinessPartnerCRUD.deleteAll()
+            /*BusinessPartnerCRUD.getAllObject {
+                it?.forEach { bp ->
+                    Log.i("Pruebas", "${bp.toString()} ")
+                }
+            }
+
             ActivityCRUD.getAllActivity {
                 it.forEach { act ->
                     Log.i("Pruebas", "${act.ClgCode} + ${act.toString()} ")
                 }
-            }
+            }*/
 
             BlueSkyTheme {
                 // A surface container using the 'background' color from the theme

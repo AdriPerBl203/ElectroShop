@@ -28,12 +28,14 @@ import com.AG_AP.electroshop.firebase.ItemCRUD
 import com.AG_AP.electroshop.firebase.OrderCRUD
 import com.AG_AP.electroshop.firebase.PriceListCRUD
 import com.AG_AP.electroshop.firebase.SEIConfigCRUD
+import com.AG_AP.electroshop.firebase.SpecialPricesCRUD
 import com.AG_AP.electroshop.firebase.models.BusinessPartner
 import com.AG_AP.electroshop.firebase.models.DocumentLineFireBase
 import com.AG_AP.electroshop.firebase.models.Item
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
 import com.AG_AP.electroshop.firebase.models.ItemPrice
 import com.AG_AP.electroshop.firebase.models.SEIConfig
+import com.AG_AP.electroshop.firebase.models.SpecialPriceFireBase
 import com.AG_AP.electroshop.functions.Config
 import com.AG_AP.electroshop.functions.ConfigurationApplication
 import com.AG_AP.electroshop.functions.validarURL
@@ -461,7 +463,7 @@ class SettingsViewModel : ViewModel() {
             //TODO
 
             //añadir precios especiales
-                //deleteAndInsertSpecialPrice()
+                deleteAndInsertSpecialPrice()
                 //deleteAndInsertPriceList()
                 deleteAndInsertItem()// Correcta
                 deleteAndInsertUserUdo() // revisado
@@ -492,13 +494,65 @@ class SettingsViewModel : ViewModel() {
     }
 
     private fun deleteAndInsertSpecialPrice() {
+        //TODO("Hacer esto con el endpoint")
+        viewModelScope.launch(Dispatchers.IO) {
+            var listSpecialPricesSAP: MutableList<com.AG_AP.electroshop.endpoints.models.specialPrices.Value> =
+                mutableListOf()
+            var checkSAP: Boolean = false
+            var specialPrices = ItemObj.getSpecialPrices(Config.rulUse)
+            while (!checkSAP) {
+                if (specialPrices != null) {
+                    if (specialPrices.odataNextLink.isNullOrEmpty()) {
+                        specialPrices.value.forEach {
+                            listSpecialPricesSAP += it
+                        }
+                        checkSAP = true
+                    } else {
+                        specialPrices.value.forEach {
+                            listSpecialPricesSAP += it
+                        }
+                        val num: List<String> = specialPrices.odataNextLink.split("=")
+                        //TODO("Revisar si se quiere añadir mas descuentos especiales")
+                        /*specialPrices = BusinessPartnersObj.getBusinessPartnersExten(
+                            Config.rulUse,
+                            num[1].toInt()
+                        )*/
+                    }
+                }
+            }
+
+            //Borramos todos los precios especiales
+            SpecialPricesCRUD.deleteAll()
+
+            listSpecialPricesSAP.forEach { element ->
+
+                val bp = SpecialPriceFireBase().apply {
+                    this.Price = element.Price ?: 0.0
+                    this.CardCode = element.CardCode ?: ""
+                    this.ItemCode = element.ItemCode ?: ""
+                    this.Currency = element.Currency ?: ""
+                    this.PriceListNum = element.PriceListNum ?: 0
+                    this.DiscountPercent = element.DiscountPercent ?: 0.0
+                }
+                SpecialPricesCRUD.insert(
+                    bp
+                )
+            }
+            _uiState.update { currentState ->
+                currentState.copy(
+                    checkPreciosEspeciales = true
+                )
+            }
+
+            Log.e("sync", "Precios especiales sincronizados")
+        }
     }
 
     private fun enablebtn(url: String) {
         viewModelScope.launch(Dispatchers.IO) {
             var aux: Boolean = true
             while (aux){
-                if(_uiState.value.checkUserUdo && _uiState.value.checkBusinessPartner && _uiState.value.checkActivity && _uiState.value.checkItem){
+                if(_uiState.value.checkUserUdo && _uiState.value.checkBusinessPartner && _uiState.value.checkActivity && _uiState.value.checkItem && _uiState.value.checkPreciosEspeciales){
 
                     aux = false
                     LoginObj.logout(url)
