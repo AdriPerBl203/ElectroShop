@@ -31,9 +31,8 @@ import com.AG_AP.electroshop.firebase.SEIConfigCRUD
 import com.AG_AP.electroshop.firebase.models.BusinessPartner
 import com.AG_AP.electroshop.firebase.models.DocumentLineFireBase
 import com.AG_AP.electroshop.firebase.models.Item
-import com.AG_AP.electroshop.firebase.models.ItemType
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
-import com.AG_AP.electroshop.firebase.models.Price
+import com.AG_AP.electroshop.firebase.models.ItemPrice
 import com.AG_AP.electroshop.firebase.models.SEIConfig
 import com.AG_AP.electroshop.functions.Config
 import com.AG_AP.electroshop.functions.ConfigurationApplication
@@ -464,10 +463,10 @@ class SettingsViewModel : ViewModel() {
             //añadir precios especiales
                 //deleteAndInsertSpecialPrice()
                 //deleteAndInsertPriceList()
-                //deleteAndInsertItem()// Correcta
-                deleteAndInsertUserUdo() //
-                //deleteAndInsertBusinessPartner() // revisado
-                //deleteAndInsertActivity() // revisado
+                deleteAndInsertItem()// Correcta
+                deleteAndInsertUserUdo() // revisado
+                deleteAndInsertBusinessPartner() // revisado
+                deleteAndInsertActivity() // revisado
                 //deleteAndInsertOrders() //
                 enablebtn(Config.rulUse)
         }
@@ -610,9 +609,9 @@ class SettingsViewModel : ViewModel() {
             }
             listItemSAP.forEach { element ->
                 //lista de precios
-                val listPrice: MutableList<Price> = mutableListOf()
+                val listPrice: MutableList<ItemPrice> = mutableListOf()
                 element.ItemPrices.forEachIndexed { index, itemPrice ->
-                    val price = Price().apply {
+                    val price = ItemPrice().apply {
                         this.priceList = itemPrice.PriceList ?: 0
                         price = itemPrice.Price ?: 0.0
                         currency = itemPrice.Currency ?: ""
@@ -629,7 +628,7 @@ class SettingsViewModel : ViewModel() {
                     itemName = element.ItemName ?: ""
                     itemType = "I"
                     mainSupplier = element.ItemName ?: ""
-                    this.itemPrice = listPrice.toList()
+                    this.itemPrice = listPrice.toRealmList()
                     manageSerialNumbers = element.ManageSerialNumbers ?: ""
                     autoCreateSerialNumbersOnRelease = element.AutoCreateSerialNumbersOnRelease ?: ""
                     SAP = true
@@ -704,7 +703,7 @@ class SettingsViewModel : ViewModel() {
                     PriceListCRUD.deletePrecioById(element.BasePriceList.toString())
                 }
                 priceList.value.forEach { element ->
-                    val price = Price().apply {
+                    val price = ItemPrice().apply {
                         this.priceList = element.BasePriceList
                         price = element.FixedAmount
                         currency = element.DefaultPrimeCurrency

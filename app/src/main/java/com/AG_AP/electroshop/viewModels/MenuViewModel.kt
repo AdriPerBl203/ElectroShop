@@ -16,7 +16,6 @@ import com.AG_AP.electroshop.endpoints.objects.BusinessPartnersObj
 import com.AG_AP.electroshop.endpoints.objects.ItemObj
 import com.AG_AP.electroshop.endpoints.objects.LoginObj
 import com.AG_AP.electroshop.endpoints.objects.OrdersObj
-import com.AG_AP.electroshop.endpoints.objects.PurchaseOrdersObj
 import com.AG_AP.electroshop.firebase.ActivityCRUD
 import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
 import com.AG_AP.electroshop.firebase.ItemCRUD
@@ -25,7 +24,7 @@ import com.AG_AP.electroshop.firebase.models.BusinessPartner
 import com.AG_AP.electroshop.firebase.models.Item
 import com.AG_AP.electroshop.firebase.models.ItemType
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
-import com.AG_AP.electroshop.firebase.models.Price
+import com.AG_AP.electroshop.firebase.models.ItemPrice
 import com.AG_AP.electroshop.functions.Config
 import com.AG_AP.electroshop.functions.ListCheckTotal
 import com.AG_AP.electroshop.functions.SessionObj
@@ -363,9 +362,9 @@ class MenuViewModel : ViewModel() {
                         }
                         listItemSAP.forEach{element ->
                             //lista de precios
-                            val listPrice: MutableList<Price> = mutableListOf()
+                            val listPrice: MutableList<ItemPrice> = mutableListOf()
                             element.ItemPrices.forEachIndexed { index, itemPrice ->
-                                val price = Price().apply {
+                                val price = ItemPrice().apply {
                                     itemPrice.PriceList ?:0
                                     itemPrice.Price ?:0.0F
                                     itemPrice.Currency ?:""

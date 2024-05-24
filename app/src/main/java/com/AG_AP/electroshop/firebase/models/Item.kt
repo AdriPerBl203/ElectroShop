@@ -1,7 +1,8 @@
 package com.AG_AP.electroshop.firebase.models
 
+import io.realm.kotlin.ext.realmListOf
+import io.realm.kotlin.types.RealmList
 import io.realm.kotlin.types.RealmObject
-import io.realm.kotlin.types.annotations.Ignore
 
 class Item : RealmObject {
     var idFireBase: String? = null
@@ -9,8 +10,7 @@ class Item : RealmObject {
     var itemName: String = ""
     var itemType: String = "I"
     var mainSupplier: String? = ""
-    @Ignore
-    var itemPrice: List<Price>? = listOf()
+    var itemPrice: RealmList<ItemPrice>? = realmListOf()
     var manageSerialNumbers: String = ""
     var autoCreateSerialNumbersOnRelease: String = ""
     var SAP: Boolean = false

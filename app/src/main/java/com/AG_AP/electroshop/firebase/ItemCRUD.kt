@@ -1,12 +1,6 @@
 package com.AG_AP.electroshop.firebase
 
-import android.annotation.SuppressLint
-import android.util.Log
-import com.AG_AP.electroshop.firebase.models.Activity
-import com.AG_AP.electroshop.firebase.models.BusinessPartner
 import com.AG_AP.electroshop.firebase.models.Item
-import com.AG_AP.electroshop.firebase.models.ItemType
-import com.AG_AP.electroshop.firebase.models.Price
 import io.realm.kotlin.ext.query
 
 object ItemCRUD {
@@ -30,8 +24,8 @@ object ItemCRUD {
     }
 
     fun getAllItems(callback: (MutableList<Item>) -> Unit) {
-        val all = realm.query<Item>().find() as MutableList<Item>
-        callback(all)
+        val all = realm.query<Item>().find()
+        callback(all.toMutableList())
     }
 
     suspend fun updateItemById(item: Item) {
@@ -57,9 +51,14 @@ object ItemCRUD {
     }
 
     suspend fun deleteItemById(itemId: String) {
-        val deleteObejct = realm.query<Item>("ItemCode == $0", itemId)
-        realm.write {
-            delete(deleteObejct)
+        val deleteObejct = realm.query<Item>("ItemCode == $0", itemId).find().firstOrNull()
+        if (deleteObejct != null) {
+            realm.write {
+                delete(deleteObejct)
+            }
         }
+
     }
+
+
 }

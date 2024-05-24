@@ -6,7 +6,7 @@ import com.AG_AP.electroshop.firebase.models.BusinessPartner
 import com.AG_AP.electroshop.firebase.models.DocumentLineFireBase
 import com.AG_AP.electroshop.firebase.models.Item
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
-import com.AG_AP.electroshop.firebase.models.Price
+import com.AG_AP.electroshop.firebase.models.ItemPrice
 import com.AG_AP.electroshop.firebase.models.SEIConfig
 import com.AG_AP.electroshop.firebase.models.SpecialPriceFireBase
 import io.realm.kotlin.Realm
@@ -19,7 +19,7 @@ object DatabaseInitializer {
             Activity::class,
             BusinessPartner::class,
             Item::class,
-            Price::class,
+            ItemPrice::class,
             SEIConfig::class,
             SpecialPriceFireBase::class,
             OrderFireBase::class,
@@ -32,7 +32,7 @@ object DatabaseInitializer {
         Activity::class,
         BusinessPartner::class,
         Item::class,
-        Price::class,
+        ItemPrice::class,
         SEIConfig::class,
         SpecialPriceFireBase::class,
         OrderFireBase::class,

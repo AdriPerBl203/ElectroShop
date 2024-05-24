@@ -1,41 +1,40 @@
 package com.AG_AP.electroshop.firebase
 
-import com.AG_AP.electroshop.firebase.models.OrderFireBase
-import com.AG_AP.electroshop.firebase.models.Price
+import com.AG_AP.electroshop.firebase.models.ItemPrice
 import io.realm.kotlin.ext.query
 
 object PriceListCRUD {
 
     val realm = DatabaseInitializer.realm
 
-    fun insertPrecio(Price: Price) {
+    fun insertPrecio(ItemPrice: ItemPrice) {
         realm.writeBlocking {
-            copyToRealm(Price)
+            copyToRealm(ItemPrice)
         }
     }
 
-    fun getPrecioById(idPrecio: String, callback: (Price?) -> Unit) {
+    fun getPrecioById(idPrecio: String, callback: (ItemPrice?) -> Unit) {
         val byId =
-            realm.query<Price>("priceList = $0", idPrecio).first()
-                .find() as Price
+            realm.query<ItemPrice>("priceList = $0", idPrecio).first()
+                .find() as ItemPrice
         callback(byId)
     }
 
-    fun getAllPrecios(callback: (MutableList<Price>) -> Unit) {
-        val all = realm.query<Price>().find() as MutableList<Price>
+    fun getAllPrecios(callback: (MutableList<ItemPrice>) -> Unit) {
+        val all = realm.query<ItemPrice>().find() as MutableList<ItemPrice>
         callback(all)
     }
 
-    suspend fun updatePrecioById(idPrecio: String, price: Price) {
-        realm.query<Price>("priceList == $0", idPrecio)
+    suspend fun updatePrecioById(idPrecio: String, itemPrice: ItemPrice) {
+        realm.query<ItemPrice>("priceList == $0", idPrecio)
             .first()
             .find()
             ?.also { oldActivity ->
                 realm.write {
                     findLatest(oldActivity)?.let { it ->
-                        it.priceList = price.priceList
-                        it.price = price.price
-                        it.currency = price.currency
+                        it.priceList = itemPrice.priceList
+                        it.price = itemPrice.price
+                        it.currency = itemPrice.currency
                         it.SAP = it.SAP
                     }
                 }
@@ -44,7 +43,7 @@ object PriceListCRUD {
 
     suspend fun deletePrecioById(idPrecio: String) {
 
-        val deleteObejct = realm.query<Price>("priceList == $0", idPrecio).find()
+        val deleteObejct = realm.query<ItemPrice>("priceList == $0", idPrecio).find()
         realm.writeBlocking {
             if(!deleteObejct.isNotEmpty()){
                 delete(deleteObejct)

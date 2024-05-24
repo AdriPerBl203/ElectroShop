@@ -29,7 +29,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.AG_AP.electroshop.firebase.models.Price
+import com.AG_AP.electroshop.firebase.models.ItemPrice
 import com.AG_AP.electroshop.viewModels.Items.DialogPLViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,8 +37,8 @@ import com.AG_AP.electroshop.viewModels.Items.DialogPLViewModel
 fun DialogCustomPriceList(
     onDismissRequest: () -> Unit,
     viewModel: DialogPLViewModel = viewModel(),
-    itemPricesAlreadyInserted: MutableList<Price>?,
-    callback: (Price?) -> Unit
+    itemPricesAlreadyInserted: MutableList<ItemPrice>?,
+    callback: (ItemPrice?) -> Unit
 ) {
     val dataUiState by viewModel.uiState.collectAsState()
     Dialog(
@@ -56,12 +56,12 @@ fun DialogCustomPriceList(
                     .fillMaxSize()
             ) {
                 val availablePrices = dataUiState.AvailablePriceList
-                var newList: MutableList<Price?> = mutableListOf()
+                var newList: MutableList<ItemPrice?> = mutableListOf()
 
                 if (!itemPricesAlreadyInserted.isNullOrEmpty()) {
                     availablePrices.forEach { price ->
                         if (price != null) {
-                            var priceToInsert: Price? = null
+                            var priceToInsert: ItemPrice? = null
                             itemPricesAlreadyInserted.forEach { priceInserted ->
                                 if (price.currency == priceInserted.currency) {
                                     priceToInsert = null
