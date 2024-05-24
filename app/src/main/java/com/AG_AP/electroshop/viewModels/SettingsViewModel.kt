@@ -309,12 +309,11 @@ class SettingsViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             val userForUdo = UDOobj.getUserTableUDO(Config.rulUse)
             if (userForUdo is SeiConfigUser) {
-                userForUdo.value.forEach { element ->
-                    Log.e("JOSELITOO", element.U_name)
-                    SEIConfigCRUD.deleteSEIConfigById(element.Code.toInt())
-                }
+
                 println("aaaaaaaaaaaaaaaaaaa")
             }
+            //Borramos todos
+            SEIConfigCRUD.deleteAll()
 
             UserUdoInsertFireBase(userForUdo)
         }
@@ -346,9 +345,8 @@ class SettingsViewModel : ViewModel() {
                 }
             }
 
-            listBusinessPartnerSAP.forEach { element ->
-                BusinessPartnerCRUD.deleteObjectById(element.CardCode)
-            }
+            //Borramos todos los interlocutores
+            BusinessPartnerCRUD.deleteAll()
 
             listBusinessPartnerSAP.forEach { element ->
                 var email: String = ""
@@ -594,9 +592,10 @@ class SettingsViewModel : ViewModel() {
                     }
                 }
             }
-            listOrderSAP.forEach { element ->
-                OrderCRUD.deleteObjectById(element.DocNum.toString())
-            }
+
+            //Borramos todos los pedidos
+            OrderCRUD.deleteAll()
+
             listOrderSAP.forEach { element ->
                 //lista de precios
                 val documentList: MutableList<DocumentLineFireBase> = mutableListOf()
@@ -660,9 +659,10 @@ class SettingsViewModel : ViewModel() {
                     }
                 }
             }
-            listItemSAP.forEach { element ->
-                ItemCRUD.deleteItemById(element.ItemCode.toString())
-            }
+
+            //Borramos los items
+            ItemCRUD.deleteAll()
+
             listItemSAP.forEach { element ->
                 //lista de precios
                 val listPrice: MutableList<ItemPrice> = mutableListOf()
