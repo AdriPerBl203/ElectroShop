@@ -128,7 +128,7 @@ fun ActivityUltimate(
     ) {
         Row(
         ) {
-            Column { //
+            /*Column { //
                 val coffeeDrinks =
                     arrayOf("Llamada telefónica", "Reunión", "Tarea", "Nota", "Campaña", "Otros")
                 var expanded by remember { mutableStateOf(false) }
@@ -328,7 +328,7 @@ fun ActivityUltimate(
                     }
                 )
 
-            }  //
+            } */ //
             Column(
                 modifier= Modifier.width(200.dp)
             ){
@@ -472,12 +472,17 @@ fun LazyColumnWithCards(data: List<Activity>, viewModel: ActivityViewModel) {
                                 )
 
                                 Text(
-                                    text = item.Priority,
+                                    text =  when (item.Priority) {
+                                        "pr_Low" -> "Bajo"
+                                        "pr_Normal" -> "Normal"
+                                        "pr_High" -> "Alto"
+                                        else -> ""
+                                    },
                                     modifier = Modifier.padding(16.dp),
                                     color = when (item.Priority) {
-                                        "Bajo" -> Color.Green
-                                        "Normal" -> Color.Magenta
-                                        "Alto" -> Color.Red
+                                        "pr_Low" -> Color.Green
+                                        "pr_Normal" -> Color.Magenta
+                                        "pr_High" -> Color.Red
                                         else -> Color.Black
                                     }
                                 )
