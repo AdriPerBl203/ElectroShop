@@ -41,6 +41,7 @@ object DatabaseInitializer {
         .directory("data/data/com.AG_AP.electroshop/databases")
         .name("electroshop.realm")
         .schemaVersion(3)
+        .deleteRealmIfMigrationNeeded()
         .build()
 
     val realm = getInstance()
