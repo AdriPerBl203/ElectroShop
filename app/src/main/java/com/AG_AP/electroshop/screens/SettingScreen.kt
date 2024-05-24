@@ -229,6 +229,14 @@ fun SettingScreen(
                                                 CircularIndicator(25.dp)
                                             }
                                         }
+                                        Row(){
+                                            Text("Sincronizando precios especiales")
+                                            if(dataUiState.checkPreciosEspeciales){
+                                                Icon(imageVector = Icons.Filled.CheckCircle, contentDescription = "", tint= MaterialTheme.colorScheme.surface)
+                                            }else{
+                                                CircularIndicator(25.dp)
+                                            }
+                                        }
                                     }
                                 }
                             }
