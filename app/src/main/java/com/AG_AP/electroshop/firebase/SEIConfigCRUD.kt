@@ -22,7 +22,7 @@ object SEIConfigCRUD {
 
     fun getSEIConfigById(Code: String, callback: (SEIConfig?) -> Unit) {
         val byId =
-            realm.query<SEIConfig>("Code = $0", Code).find().first()
+            realm.query<SEIConfig>("U_name = $0", Code).find().first()
         callback(byId)
 
     }
