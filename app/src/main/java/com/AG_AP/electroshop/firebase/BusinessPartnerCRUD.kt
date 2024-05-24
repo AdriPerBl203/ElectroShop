@@ -284,13 +284,15 @@ object BusinessPartnerCRUD : ActionFirebase {
 
     override fun getObjectById(id: Int, callback: (Any?) -> Unit) {
         val byId =
-            realm.query<Activity>("CardCode = $0", id.toString()).first().find() as BusinessPartner
+            realm.query<BusinessPartner>("CardCode = $0", id.toString()).find().first()
         callback(byId)
 
     }
 
     override fun getObjectByIdToString(id: String, callback: (Any?) -> Unit) {
-        TODO("Not yet implemented")
+        val byId =
+            realm.query<BusinessPartner>("CardCode = $0", id.toString()).find().firstOrNull()
+        callback(byId)
     }
 
     override fun getAllObject(callback: (MutableList<*>?) -> Unit) {
@@ -332,6 +334,18 @@ object BusinessPartnerCRUD : ActionFirebase {
         realm.writeBlocking {
             delete<BusinessPartner>()
         }
+    }
+
+
+    fun getBPBySAP(sap: Boolean, callback: (List<BusinessPartner?>) -> Unit) {
+        val all = realm.query<BusinessPartner>("SAP == $0", sap).find()
+        callback(all.toList())
+    }
+
+    fun getBPByName(name: String, sap: Boolean, callback: (List<BusinessPartner?>) -> Unit) {
+        val all =
+            realm.query<BusinessPartner>("SAP == $0", sap).query("CardName == $0", name).find()
+        callback(all.toList())
     }
 
     fun insertForFireBase(data: BusinessPartner) {

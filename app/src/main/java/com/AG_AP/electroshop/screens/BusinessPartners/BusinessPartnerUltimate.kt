@@ -215,7 +215,7 @@ fun LazyColumnWithCards(data: List<BusinessPartner?>, viewModel: BusinessPartner
     LazyColumn(
         modifier = Modifier.padding(horizontal = 10.dp, vertical = 15.dp)
     ) {
-        if (data.size > 0) {
+        if (data.isNotEmpty()) {
             items(data) { item ->
                 Card(
                     modifier = Modifier

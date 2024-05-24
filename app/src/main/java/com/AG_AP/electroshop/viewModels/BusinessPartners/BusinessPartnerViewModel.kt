@@ -158,13 +158,13 @@ class BusinessPartnerViewModel : ViewModel(), ActionViewModel {
 
     fun search(sap: Boolean, deviceOrSap: Boolean, callback: (List<BusinessPartner?>) -> Unit) {
         if (deviceOrSap) {
-            /*BusinessPartnerCRUD.getBPBySAP(sap) {
+            BusinessPartnerCRUD.getBPBySAP(sap) {
                 callback(it)
-            }*/
+            }
         } else {
-            /*BusinessPartnerCRUD.getBPByName(_uiState.value.FilterByName, sap) {
+            BusinessPartnerCRUD.getBPByName(_uiState.value.FilterByName, sap) {
                 callback(it)
-            }*/
+            }
         }
 
     }
