@@ -211,7 +211,7 @@ class BusinessPartnerViewModel : ViewModel(), ActionViewModel {
                 if (!validateEmail(EmailAddress) && EmailAddress.isNotEmpty()) {
                     throw RuntimeException()
                 }
-                BusinessPartnerCRUD.insertForFireBase(dataAux)
+                BusinessPartnerCRUD.insert(dataAux)
             } catch (e: Exception) {
                 println(e.message)
                 text = "Hubo un error con la creación del cliente."
