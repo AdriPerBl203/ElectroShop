@@ -38,7 +38,9 @@ object DatabaseInitializer {
         OrderFireBase::class,
         DocumentLineFireBase::class
     ))
-        .schemaVersion(2)
+        .directory("data/data/com.AG_AP.electroshop/databases")
+        .name("electroshop.realm")
+        .schemaVersion(3)
         .build()
 
     val realm = getInstance()
