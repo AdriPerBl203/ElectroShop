@@ -280,14 +280,14 @@ class SettingsViewModel : ViewModel() {
         if (userForUdo is SeiConfigUser) {
             userForUdo.value.forEach { element ->
                 val seiConfig = SEIConfig().apply {
-                    element.Code.toInt()
-                    element.U_Empleado
-                    element.U_name
-                    element.U_password
-                    element.U_articulo
-                    element.U_actividad
-                    element.U_PedidoCl
-                    element.U_PedidoCO
+                    this.Code = element.Code.toInt()
+                    this.U_Empleado = element.U_Empleado ?: 0
+                    this.U_name = element.U_name ?: ""
+                    this.U_password = element.U_password ?: ""
+                    this.U_articulo = element.U_articulo ?: ""
+                    this.U_actividad = element.U_actividad ?: ""
+                    this.U_PedidoCI = element.U_PedidoCl ?: ""
+                    this.U_PedidoCO = element.U_PedidoCO ?: ""
                 }
                 SEIConfigCRUD.insertSEIConfig(
                     seiConfig
@@ -465,11 +465,10 @@ class SettingsViewModel : ViewModel() {
                 //deleteAndInsertSpecialPrice()
                 //deleteAndInsertPriceList()
                 //deleteAndInsertItem()// Correcta
-               // deleteAndInsertUserUdo() //
-                deleteAndInsertBusinessPartner() //
+                deleteAndInsertUserUdo() //
+                //deleteAndInsertBusinessPartner() // revisado
                 //deleteAndInsertActivity() // revisado
-                //deleteAndInsertOrders() //Corecta
-                //deleteAndInsertPurchaseOrders() //Correcta
+                //deleteAndInsertOrders() //
                 enablebtn(Config.rulUse)
         }
 

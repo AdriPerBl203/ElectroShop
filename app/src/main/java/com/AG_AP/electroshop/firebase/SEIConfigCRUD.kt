@@ -2,9 +2,12 @@ package com.AG_AP.electroshop.firebase
 
 import android.annotation.SuppressLint
 import android.util.Log
+import com.AG_AP.electroshop.firebase.models.Activity
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
 import com.AG_AP.electroshop.firebase.models.SEIConfig
+import io.realm.kotlin.delete
 import io.realm.kotlin.ext.query
+import io.realm.kotlin.query.RealmResults
 
 object SEIConfigCRUD {
 
@@ -26,8 +29,8 @@ object SEIConfigCRUD {
     }
 
     fun getAllSEIConfig(callback: (MutableList<SEIConfig>?) -> Unit) {
-        val all = realm.query<SEIConfig>().find() as MutableList<SEIConfig>?
-        callback(all)
+        val all = realm.query<SEIConfig>().find()  as RealmResults<SEIConfig>?
+        callback(all?.toMutableList())
     }
 
      fun deleteSEIConfigById(idConfig: Int) {
@@ -38,6 +41,12 @@ object SEIConfigCRUD {
                      ?.also { delete(it) }
              }
          }
+    }
+
+    fun deleteAll() {
+        realm.writeBlocking {
+            delete<SEIConfig>()
+        }
     }
 
     /*fun getU_nameTheUser():MutableList<String?>{

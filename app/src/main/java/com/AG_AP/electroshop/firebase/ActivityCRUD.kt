@@ -80,6 +80,5 @@ object ActivityCRUD {
         realm.writeBlocking {
             delete<Activity>()
         }
-
     }
 }
