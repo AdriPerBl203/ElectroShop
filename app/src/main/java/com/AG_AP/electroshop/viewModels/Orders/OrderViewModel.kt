@@ -272,7 +272,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
                     _uiState.update { currentState ->
                         currentState.copy(
                             CardCode = dataAux.CardCode,
-                            CardName = dataAux.CardName,
+                            CardName = dataAux.CardName ?: "",
                             DocNum = dataAux.DocNum,
                             DocDate = dataAux.DocDate,
                             DocDueDate = dataAux.DocDueDate,

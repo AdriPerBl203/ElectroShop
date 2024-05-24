@@ -1,11 +1,8 @@
 package com.AG_AP.electroshop.firebase
 
-import android.annotation.SuppressLint
-import android.util.Log
-import com.AG_AP.electroshop.firebase.models.Activity
 import com.AG_AP.electroshop.firebase.models.BusinessPartner
-import com.AG_AP.electroshop.firebase.models.DocumentLineFireBase
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
+import io.realm.kotlin.delete
 import io.realm.kotlin.ext.query
 
 object OrderCRUD : ActionFirebase {
@@ -38,8 +35,8 @@ object OrderCRUD : ActionFirebase {
     }
 
     override fun getAllObject(callback: (MutableList<*>?) -> Unit) {
-        val all = realm.query<OrderFireBase>().find() as MutableList<*>?
-        callback(all)
+        val all = realm.query<OrderFireBase>().find()
+        callback(all.toMutableList())
     }
 
     override suspend fun updateObjectById(data: Any) {
@@ -68,9 +65,17 @@ object OrderCRUD : ActionFirebase {
     }
 
     override suspend fun deleteObjectById(id: String) {
-        val deleteObejct = realm.query<OrderFireBase>("idFireBase = $0", id)
+        val deleteObejct = realm.query<OrderFireBase>("DocNum = $0", id).find().firstOrNull()
+        if (deleteObejct != null) {
+            realm.writeBlocking {
+                delete(deleteObejct)
+            }
+        }
+    }
+
+    fun deleteAll() {
         realm.writeBlocking {
-            delete(deleteObejct)
+            delete<OrderFireBase>()
         }
     }
 
