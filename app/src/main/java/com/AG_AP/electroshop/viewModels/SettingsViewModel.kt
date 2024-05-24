@@ -27,6 +27,7 @@ import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
 import com.AG_AP.electroshop.firebase.ItemCRUD
 import com.AG_AP.electroshop.firebase.OrderCRUD
 import com.AG_AP.electroshop.firebase.PriceListCRUD
+import com.AG_AP.electroshop.firebase.PriceListForListCRUD
 import com.AG_AP.electroshop.firebase.SEIConfigCRUD
 import com.AG_AP.electroshop.firebase.SpecialPricesCRUD
 import com.AG_AP.electroshop.firebase.models.BusinessPartner
@@ -34,6 +35,7 @@ import com.AG_AP.electroshop.firebase.models.DocumentLineFireBase
 import com.AG_AP.electroshop.firebase.models.Item
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
 import com.AG_AP.electroshop.firebase.models.ItemPrice
+import com.AG_AP.electroshop.firebase.models.PriceListRealm
 import com.AG_AP.electroshop.firebase.models.SEIConfig
 import com.AG_AP.electroshop.firebase.models.SpecialPriceFireBase
 import com.AG_AP.electroshop.functions.Config
@@ -463,12 +465,12 @@ class SettingsViewModel : ViewModel() {
             //TODO
 
             //añadir precios especiales
-                deleteAndInsertSpecialPrice()
-                //deleteAndInsertPriceList()
-                deleteAndInsertItem()// Correcta
-                deleteAndInsertUserUdo() // revisado
-                deleteAndInsertBusinessPartner() // revisado
-                deleteAndInsertActivity() // revisado
+                //deleteAndInsertSpecialPrice() // revisado
+                deleteAndInsertPriceList()
+                //deleteAndInsertItem()// Correcta
+                //deleteAndInsertUserUdo() // revisado
+                //deleteAndInsertBusinessPartner() // revisado
+                //deleteAndInsertActivity() // revisado
                 //deleteAndInsertOrders() //
                 enablebtn(Config.rulUse)
         }
@@ -552,7 +554,7 @@ class SettingsViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             var aux: Boolean = true
             while (aux){
-                if(_uiState.value.checkUserUdo && _uiState.value.checkBusinessPartner && _uiState.value.checkActivity && _uiState.value.checkItem && _uiState.value.checkPreciosEspeciales){
+                if(_uiState.value.checkUserUdo && _uiState.value.checkBusinessPartner && _uiState.value.checkActivity && _uiState.value.checkItem && _uiState.value.checkPreciosEspeciales && _uiState.value.checkPriceLists){
 
                     aux = false
                     LoginObj.logout(url)
@@ -749,25 +751,29 @@ class SettingsViewModel : ViewModel() {
     }
 
     private fun deleteAndInsertPriceList() {
+        //TODO("ACABAR LA LISTA DE PRECIOS")
         viewModelScope.launch(Dispatchers.IO) {
             var priceList = PriceListObj.getPriceLists(Config.rulUse)
             if (priceList is PriceList) {
+                PriceListForListCRUD.deleteAll()
                 priceList.value.forEach { element ->
-                    Log.e("JOSELITOO", element.toString())
-                    PriceListCRUD.deletePrecioById(element.BasePriceList.toString())
-                }
-                priceList.value.forEach { element ->
-                    val price = ItemPrice().apply {
-                        this.priceList = element.BasePriceList
-                        price = element.FixedAmount
-                        currency = element.DefaultPrimeCurrency
-                        SAP = true
+                    val d = PriceListRealm().apply {
+                        this.PriceListName = element.PriceListName
+                        this.Active = element.Active
+                        this.BasePriceList = element.BasePriceList.toString()
+                        this.PriceListNo = element.PriceListNo.toString()
                     }
-
-                    PriceListCRUD.insertPrecio(
-                        price
+                    PriceListForListCRUD.insert(
+                        d
                     )
                 }
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        checkPriceLists = true
+                    )
+                }
+
+                Log.e("sync", "lista de precios  sincronizados")
             }
         }
     }

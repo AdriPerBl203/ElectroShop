@@ -19,6 +19,7 @@ data class SettingUiState(
     val checkOrder:Boolean = false,
     val checkPurchaseOrder:Boolean = false,
     val checkPreciosEspeciales:Boolean = false,
+    val checkPriceLists:Boolean = false,
     val textShow:Boolean =true,
     val btnSyncEnable:Boolean =true,
     val btnEnable:Boolean =true,

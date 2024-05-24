@@ -230,8 +230,8 @@ fun SettingScreen(
                                             }
                                         }
                                         Row(){
-                                            Text("Sincronizando precios especiales")
-                                            if(dataUiState.checkPreciosEspeciales){
+                                            Text("Sincronizando lista de precios")
+                                            if(dataUiState.checkPriceLists){
                                                 Icon(imageVector = Icons.Filled.CheckCircle, contentDescription = "", tint= MaterialTheme.colorScheme.surface)
                                             }else{
                                                 CircularIndicator(25.dp)

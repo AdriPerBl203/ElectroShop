@@ -7,6 +7,7 @@ import com.AG_AP.electroshop.firebase.models.DocumentLineFireBase
 import com.AG_AP.electroshop.firebase.models.Item
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
 import com.AG_AP.electroshop.firebase.models.ItemPrice
+import com.AG_AP.electroshop.firebase.models.PriceListRealm
 import com.AG_AP.electroshop.firebase.models.SEIConfig
 import com.AG_AP.electroshop.firebase.models.SpecialPriceFireBase
 import io.realm.kotlin.Realm
@@ -23,7 +24,8 @@ object DatabaseInitializer {
             SEIConfig::class,
             SpecialPriceFireBase::class,
             OrderFireBase::class,
-            DocumentLineFireBase::class
+            DocumentLineFireBase::class,
+            PriceListRealm::class
         )
     )
 
@@ -36,7 +38,8 @@ object DatabaseInitializer {
         SEIConfig::class,
         SpecialPriceFireBase::class,
         OrderFireBase::class,
-        DocumentLineFireBase::class
+        DocumentLineFireBase::class,
+        PriceListRealm::class
     ))
         .directory("data/data/com.AG_AP.electroshop/databases")
         .name("electroshop.realm")

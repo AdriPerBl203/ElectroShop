@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.util.Log
 import com.AG_AP.electroshop.firebase.models.Item
 import com.AG_AP.electroshop.firebase.models.ItemType
-import com.AG_AP.electroshop.firebase.models.Price
 import com.AG_AP.electroshop.firebase.models.SEIConfig
 import com.AG_AP.electroshop.firebase.models.SpecialPriceFireBase
 import io.realm.kotlin.delete
