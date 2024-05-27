@@ -292,21 +292,6 @@ fun MenuBody(
                     }
                 }
 
-                Row (
-
-                ){
-                    if(dataUiState.pedidoCL == "S"){
-                        ElevatedButton(
-                            modifier= Modifier
-                                .padding(30.dp)
-                                .width(200.dp),
-                            onClick = { navController.navigate(route = Routes.MixedPurchaseOrderScreen.route) }
-                        ) {
-                            Text("Pedido de compra")
-                        }
-                    }
-                }
-
                 Row {
                     if(dataUiState.articulo == "S"){
                         ElevatedButton(

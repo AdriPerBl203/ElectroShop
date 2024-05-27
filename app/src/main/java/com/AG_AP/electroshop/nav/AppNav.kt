@@ -120,6 +120,7 @@ fun AppNav(navController: NavHostController = rememberNavController(), context: 
         ) {
             ScaffoldListBusinessPartner(navController = navController)
         }
+
         composable(
             route = Routes.ScreenOrder.route
         ) {
