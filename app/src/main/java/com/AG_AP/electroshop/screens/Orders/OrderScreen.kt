@@ -128,16 +128,16 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
                     //.height(400.dp)
                     .padding(horizontal = 10.dp)
             ) {
-                items(dataUiState.ListOrders){order ->
+                items(dataUiState.ListOrders) { order ->
                     Card(
                         modifier = Modifier.padding(5.dp).height(200.dp)
-                    ){
+                    ) {
                         Column(
                             modifier = Modifier.padding(3.dp)
                         ) {
                             Row(
-                                modifier= Modifier.fillMaxWidth(),
-                                horizontalArrangement= Arrangement.SpaceBetween,
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
                             ) {
                                 Text(text = order.DocDate.split("T").firstOrNull() ?: "Sin fecha")
                                 IconButton(onClick = {
@@ -151,9 +151,9 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
                                 }
                             }
                             Row(
-                                modifier= Modifier.fillMaxWidth(),
-                                horizontalArrangement= Arrangement.SpaceBetween,
-                            ){
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                            ) {
                                 Text(text = order.CardCode)
                             }
                             Spacer(modifier = Modifier.height(5.dp))
@@ -166,6 +166,7 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
                     }
                 }
             }
+            Row{
             Column { //
                 OutlinedTextField(
                     value = dataUiState.SalesPersonCode,
@@ -275,63 +276,67 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
                 }
             }
         }
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 30.dp, end = 30.dp)
-                .background(MaterialTheme.colorScheme.background)
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 30.dp, end = 30.dp)
-                    .background(MaterialTheme.colorScheme.background)
-            ) {
-                //TODO cuando sea inactivo el pedido no deja aumentar ni disminuir las lineas
-                //if (id == null) {
-                Row {
-                    IconButton(
+
+            Row{
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 30.dp, end = 30.dp)
+                        .background(MaterialTheme.colorScheme.background)
+                ) {
+                    Column(
                         modifier = Modifier
-                            .background(MaterialTheme.colorScheme.primary)
-                            .border(
-                                BorderStroke(0.5.dp, Color.Black)
-                            )
-                            .padding(end = 0.5.dp),
-                        onClick = { viewModel.deleteLine() }
+                            .fillMaxWidth()
+                            .padding(top = 30.dp, end = 30.dp)
+                            .background(MaterialTheme.colorScheme.background)
                     ) {
-                        Text(text = "-")
+                        //TODO cuando sea inactivo el pedido no deja aumentar ni disminuir las lineas
+                        //if (id == null) {
+                        Row {
+                            IconButton(
+                                modifier = Modifier
+                                    .background(MaterialTheme.colorScheme.primary)
+                                    .border(
+                                        BorderStroke(0.5.dp, Color.Black)
+                                    )
+                                    .padding(end = 0.5.dp),
+                                onClick = { viewModel.deleteLine() }
+                            ) {
+                                Text(text = "-")
+                            }
+                        }
+                        //}
+
+                        TableDocumentLineOrder(dataUiState, viewModel)
+
+                        if (dataUiState.showToast) {
+                            Toast.makeText(
+                                ObjectContext.context,
+                                dataUiState.text,
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    }
+                    Column {
+                        /*if (dataUiState.message) {
+                            Snackbar(
+                                modifier = Modifier.padding(16.dp),
+                                action = {
+                                    Button(
+                                        onClick = {
+                                            viewModel.menssageFunFalse()
+                                        }
+                                    ) {
+                                        Text("Cerrar")
+                                    }
+                                },
+                                content = {
+                                    Text(dataUiState.text)
+                                }
+                            )
+                        }*/
                     }
                 }
-                //}
-
-                TableDocumentLineOrder(dataUiState, viewModel)
-
-                if (dataUiState.showToast) {
-                    Toast.makeText(
-                        ObjectContext.context,
-                        dataUiState.text,
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
-            Column {
-                /*if (dataUiState.message) {
-                    Snackbar(
-                        modifier = Modifier.padding(16.dp),
-                        action = {
-                            Button(
-                                onClick = {
-                                    viewModel.menssageFunFalse()
-                                }
-                            ) {
-                                Text("Cerrar")
-                            }
-                        },
-                        content = {
-                            Text(dataUiState.text)
-                        }
-                    )
-                }*/
             }
         }
     }
