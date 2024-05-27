@@ -30,6 +30,7 @@ import com.AG_AP.electroshop.functions.ListCheckTotal
 import com.AG_AP.electroshop.functions.SessionObj
 import com.AG_AP.electroshop.nav.Routes
 import com.AG_AP.electroshop.uiState.MenuUiState
+import io.realm.kotlin.ext.toRealmList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -365,10 +366,10 @@ class MenuViewModel : ViewModel() {
                             val listPrice: MutableList<ItemPrice> = mutableListOf()
                             element.ItemPrices.forEachIndexed { index, itemPrice ->
                                 val price = ItemPrice().apply {
-                                    itemPrice.PriceList ?:0
-                                    itemPrice.Price ?:0.0F
-                                    itemPrice.Currency ?:""
-                                    true
+                                    priceList = itemPrice.PriceList ?:0
+                                    price = itemPrice.Price ?:0.0
+                                    currency = itemPrice.Currency ?:""
+                                    SAP = true
                                 }
                                 listPrice.add(
                                     index,
@@ -376,15 +377,15 @@ class MenuViewModel : ViewModel() {
                                 )
                             }
                             val item : Item = Item().apply {
-                                ""
-                                element.ItemCode ?: ""
-                                element.ItemName ?: ""
-                                ItemType.Articulo
-                                element.Mainsupplier ?: ""
-                                listPrice.toList()
-                                element.ManageSerialNumbers ?: ""
-                                element.AutoCreateSerialNumbersOnRelease ?: ""
-                                true
+                                idFireBase = ""
+                                ItemCode = element.ItemCode ?: ""
+                                itemName = element.ItemName ?: ""
+                                itemType = "I"
+                                mainSupplier = element.Mainsupplier ?: ""
+                                itemPrice = listPrice.toRealmList()
+                                manageSerialNumbers = element.ManageSerialNumbers ?: ""
+                                autoCreateSerialNumbersOnRelease = element.AutoCreateSerialNumbersOnRelease ?: ""
+                                SAP = true
                             }
                             ItemCRUD.insertItem(item)
                         }

@@ -104,7 +104,7 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
                     modifier = Modifier
                         .width(300.dp)
                         .padding(8.dp),
-                    label = { Text("SLPCODE") }
+                    label = { Text("SLPCode") }
                 )
 
                 OutlinedTextField(
@@ -132,7 +132,8 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
                     modifier = Modifier
                         .width(300.dp)
                         .padding(8.dp),
-                    label = { Text("Nombre") }
+                    label = { Text("Nombre") },
+                    readOnly = true
                 )
 
                 OutlinedTextField(
@@ -150,13 +151,31 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
             }
 
             Column {
-                DatePicker("Fecha contabilizacion ", dataUiState.TaxDate) { fechaDocumento ->
+                DatePicker(
+                    "Fecha contabilizacion ",
+                    dataUiState.TaxDate,
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .width(300.dp)
+                ) { fechaDocumento ->
                     viewModel.changeTaxDate(fechaDocumento)
                 }
-                DatePicker("Fecha entrega ", dataUiState.DocDueDate) { fechaDocumento ->
+                DatePicker(
+                    "Fecha entrega ",
+                    dataUiState.DocDueDate,
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .width(300.dp)
+                ) { fechaDocumento ->
                     viewModel.changeDocDueDate(fechaDocumento)
                 }
-                DatePicker("Fecha documento ", dataUiState.DocDate) { fechaDocumento ->
+                DatePicker(
+                    "Fecha documento ",
+                    dataUiState.DocDate,
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .width(300.dp)
+                ) { fechaDocumento ->
                     viewModel.changeDocDate(fechaDocumento)
                 }
             } //
@@ -292,7 +311,7 @@ fun TableDocumentLineOrder(dataUiState: OrderUiState, viewModel: OrderViewModel)
                             .wrapContentSize(),
                         onClick = {
                             viewModel.showDialogaddArticle()
-                            InterconexionUpdateArticle.data=dataUiState.DocumentLine[index]
+                            InterconexionUpdateArticle.data = dataUiState.DocumentLine[index]
                             InterconexionUpdateArticle.index = index
                             // TODO obejct
                         }

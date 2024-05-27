@@ -54,9 +54,9 @@ fun DialogOandPO(
                         viewModel.changeCodeArticle(data.ItemCode)
                         viewModel.changeDescription(data.itemName)
                         //TODO controlar si es un pedido de compra y venta
-                        viewModel.changeCount("1")
-                        viewModel.changePrice("1")
-                        viewModel.changeDiscount("0")
+                        viewModel.changeCount(data.itemPrice?.get(1)?.quantity.toString())
+                        viewModel.changePrice(data.itemPrice?.get(1)?.price.toString())
+                        viewModel.changeDiscount(data.itemPrice?.get(1)?.discount.toString())
                     } else {
                         viewModel.changeCodeArticle(data.toString())
                     }
@@ -105,7 +105,7 @@ fun DialogOandPO(
                     )
 
                     OutlinedTextField(
-                        value = dataUiState.count,
+                        value = dataUiState.count.toString(),
                         onValueChange = { viewModel.changeCount(it) },
                         modifier = Modifier
                             .width(300.dp)
@@ -117,7 +117,7 @@ fun DialogOandPO(
 
                 Column {
                     OutlinedTextField(
-                        value = dataUiState.price,
+                        value = dataUiState.price.toString(),
                         onValueChange = { viewModel.changePrice(it) },
                         modifier = Modifier
                             .width(300.dp)
@@ -128,7 +128,7 @@ fun DialogOandPO(
                     )
 
                     OutlinedTextField(
-                        value = dataUiState.discount,
+                        value = dataUiState.discount.toString(),
                         onValueChange = { viewModel.changeDiscount(it) },
                         modifier = Modifier
                             .width(300.dp)
@@ -155,7 +155,7 @@ fun DialogOandPO(
                             dataUiState.price,
                             dataUiState.discount
                         )
-                        returnData(listData)
+                        returnData(listData as List<String>)
                         viewModel.resetData()
                         closeDialog()
                     }

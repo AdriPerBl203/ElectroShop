@@ -26,6 +26,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.math.roundToLong
 
 class OrderViewModel : ViewModel(), ActionViewModel {
 
@@ -35,12 +36,13 @@ class OrderViewModel : ViewModel(), ActionViewModel {
     init {
         DocumentLineForMutableList()
 
-        val sharedPref = ObjectContext.context.getSharedPreferences("userConected", Context.MODE_PRIVATE)
+        val sharedPref =
+            ObjectContext.context.getSharedPreferences("userConected", Context.MODE_PRIVATE)
         val savedUserName = sharedPref.getString("userConected", null)
 
         if (savedUserName != null) {
-            SEIConfigCRUD.getSEIConfigById(savedUserName){it->
-                if(it is SEIConfig){
+            SEIConfigCRUD.getSEIConfigById(savedUserName) { it ->
+                if (it is SEIConfig) {
                     _uiState.update { currentState ->
                         currentState.copy(
                             SalesPersonCode = it.U_Empleado.toString()
@@ -64,9 +66,11 @@ class OrderViewModel : ViewModel(), ActionViewModel {
         BusinessPartnerCRUD.getAllObject { list ->
             val mutableList = list as? MutableList<BusinessPartner>
             mutableList?.let {
-                _uiState.update { currentState -> currentState.copy(
-                    ListBusinessPartner = it.toList()
-                ) }
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        ListBusinessPartner = it.toList()
+                    )
+                }
             }
         }
 
@@ -524,7 +528,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
         }
     }
 
-    fun changeSalesPersonCode(name: String){
+    fun changeSalesPersonCode(name: String) {
         _uiState.update { currentState ->
             currentState.copy(
                 SalesPersonCode = name
@@ -533,7 +537,37 @@ class OrderViewModel : ViewModel(), ActionViewModel {
     }
 
     fun changeDiscount(it: String) {
-        //TODO
+        var disc = 0.0
+        try {
+            var decimal = it.substringAfter(".", "")
+            var num = it.substringBefore(".", "")
+
+            if (decimal.length > 2) {
+                decimal = decimal.substring(2)
+            }
+
+            if (num.length > 3) {
+                num = num.substring(3)
+            }
+
+
+            val numTotal = "$num.$decimal"
+            disc = numTotal.toDouble()
+
+            if (disc <= 0.0) {
+                disc = 0.0
+            } else if (disc >= 100.0) {
+                disc = 100.0
+            }
+        } catch (e: Exception) {
+            Log.e("Errores", e.stackTraceToString())
+        }
+
+        _uiState.update { currentState ->
+            currentState.copy(
+                DiscountPercent = disc
+            )
+        }
     }
 
     fun changeName(it: String) {
