@@ -654,6 +654,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
         if (list[0].isEmpty() || list[1].isEmpty() || list[2].isEmpty() || list[3].isEmpty() || list[4].isEmpty()) {
             _uiState.update { currentState ->
                 currentState.copy(
+                    text = "Existen algunos campos vacios",
                     showToast = true
                 )
             }
@@ -661,6 +662,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
                 delay(3000)
                 _uiState.update { currentState ->
                     currentState.copy(
+                        text = "",
                         showToast = false
                     )
                 }
@@ -719,17 +721,35 @@ class OrderViewModel : ViewModel(), ActionViewModel {
     }
 
     fun ejecutarAction(navController: NavHostController) {
+        if (check()) {
+            when (_uiState.value.ActionButton) {
+                "Añadir y ver" -> save(true)
+                "Añadir y nuevo" -> save(false)
+                "Añadir y salir" -> {
+                    save(false)
+                    navController.popBackStack()
+                }
 
-        when(_uiState.value.ActionButton){
-            "Añadir y ver" -> save(true)
-            "Añadir y nuevo" -> save(false)
-            "Añadir y salir" -> {
-                save(false)
-                navController.popBackStack()
+                "Actualizar" -> update()
+                "Borrar" -> delete()
+                else -> ""
             }
-            "Actualizar" -> update()
-            "Borrar" -> delete()
-            else -> ""
+        } else {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    text = "Falta rellenar algún campo o añadir al menos un articulo",
+                    showToast = true
+                )
+            }
+            viewModelScope.launch {
+                delay(3000)
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        text = "",
+                        showToast = false
+                    )
+                }
+            }
         }
     }
 
@@ -739,6 +759,23 @@ class OrderViewModel : ViewModel(), ActionViewModel {
                 ActionButton = it
             )
         }
+    }
+
+    fun check(): Boolean {
+        val cardCode = _uiState.value.CardCode
+        val mainSupplier = _uiState.value.SalesPersonCode
+        val fechaContabilizacion = _uiState.value.TaxDate
+        val fechaEntrega = _uiState.value.DocDueDate
+        val fechaDocumento = _uiState.value.DocDate
+        val lista = _uiState.value.DocumentLineList
+
+        var allCheck = false
+
+        if (cardCode.isNotEmpty() && mainSupplier.isNotEmpty() && fechaContabilizacion.isNotEmpty() && fechaEntrega.isNotEmpty() && fechaDocumento.isNotEmpty() && lista.isNotEmpty()) {
+            allCheck = true
+        }
+
+        return allCheck
     }
 
     fun editarArticulo(index: Int) {
