@@ -141,7 +141,8 @@ class OrderViewModel : ViewModel(), ActionViewModel {
                         DiscountPercent = 0.0,
                         DocumentLine = emptyList,
                         DocumentLineList = documentLineList,
-                        trash = 0
+                        trash = 0,
+                        totalPrice = 0.0
                     )
                 }
             } else {
@@ -251,7 +252,8 @@ class OrderViewModel : ViewModel(), ActionViewModel {
                     DiscountPercent = 0.0,
                     DocumentLine = emptyList,
                     DocumentLineList = documentLineList,
-                    trash = 0
+                    trash = 0,
+                    totalPrice = 0.0
                 )
             }
         }
@@ -284,7 +286,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
                             TaxDate = dataAux.TaxDate,
                             DiscountPercent = dataAux.DiscountPercent,
                             DocumentLine = dataList,
-                            DocumentLineList = mutableDataList
+                            DocumentLineList = mutableDataList,
                         )
                     }
                 } else {
@@ -535,6 +537,29 @@ class OrderViewModel : ViewModel(), ActionViewModel {
                 SalesPersonCode = name
             )
         }
+    }
+
+    fun changeTotalPrice() {
+        val lista = _uiState.value.DocumentLineList
+        val size = _uiState.value.DocumentLine.size
+        var sumaTotal = 0.0
+
+        if (size > 0) {
+            lista.forEach { (index, value) ->
+                try {
+                    sumaTotal += value[4].toDouble()
+                } catch (e: Exception) {
+                    Log.e("Errores", e.stackTraceToString())
+                }
+            }
+        }
+
+        _uiState.update { currentState ->
+            currentState.copy(
+                totalPrice = sumaTotal
+            )
+        }
+
     }
 
     fun changeDiscount(it: String) {
