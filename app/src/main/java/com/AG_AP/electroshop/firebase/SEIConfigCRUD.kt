@@ -28,10 +28,14 @@ object SEIConfigCRUD {
     }
 
     fun getSEIConfigByName(Name: String, callback: (SEIConfig?) -> Unit) {
-        val byId =
-            realm.query<SEIConfig>("U_name = $0", Name).find().first()
-        callback(byId)
-
+        try {
+            val resultList = realm.query<SEIConfig>("U_name = $0", Name).find()
+            val byId = resultList.firstOrNull()
+            callback(byId)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            callback(null)
+        }
     }
 
     fun getAllSEIConfig(callback: (MutableList<SEIConfig>?) -> Unit) {
