@@ -6,8 +6,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddBox
@@ -69,6 +71,7 @@ fun DialogOandPO(
             shape = RoundedCornerShape(16.dp),
             modifier = Modifier
                 .padding(10.dp)
+                .verticalScroll(rememberScrollState())
         ) {
             Row (
                 verticalAlignment = Alignment.CenterVertically,
@@ -140,13 +143,17 @@ fun DialogOandPO(
                     )
                 }
             }
-            Row(
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 10.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
+                horizontalAlignment= Alignment.CenterHorizontally
+                /*verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center*/
             ) {
+                if(dataUiState.showMessageSpecialPrices){
+                    Text(text = "Se ha añadido un descuento.")
+                }
                 ElevatedButton(
                     onClick = {
                         val listData = listOf(
