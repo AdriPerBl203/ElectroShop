@@ -29,6 +29,7 @@ data class OrderUiState(
     val ListBusinessPartner: List<BusinessPartner> = listOf(),
     val dialogAddArticleUpdate: Boolean = false,
     val ActionButton: String = "Añadir y ver",
+    val totalPrice: Double = 0.0
 )
 
 /*

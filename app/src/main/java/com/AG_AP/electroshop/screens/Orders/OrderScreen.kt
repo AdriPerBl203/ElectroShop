@@ -68,6 +68,10 @@ import com.AG_AP.electroshop.functions.ObjectContext
 fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String?) {
     val dataUiState by viewModel.uiState.collectAsState()
 
+    //Comprueba si hay algún articulo, si lo hay actualiza el precio total
+    viewModel.changeTotalPrice()
+
+
     if (dataUiState.showDialogAddArticle) {
         DialogOandPO(
             closeDialog = { viewModel.closeDialogaddArticle() },
@@ -187,6 +191,18 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
                 ) { fechaDocumento ->
                     viewModel.changeDocDate(fechaDocumento)
                 }
+                OutlinedTextField(
+                    value = dataUiState.totalPrice.toString(),
+                    onValueChange = { viewModel.changeTotalPrice() },
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .width(300.dp),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    readOnly = true,
+                    suffix = { Text(text = "€") },
+                    label = { Text("Precio total") }
+                )
+
             } //
 
             Column(
