@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -18,8 +19,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AddCard
 import androidx.compose.material.icons.filled.CallMade
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Inbox
+import androidx.compose.material.icons.filled.LocalActivity
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -55,7 +61,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.AG_AP.electroshop.components.DatePicker
 import com.AG_AP.electroshop.components.DialogActivity
+import com.AG_AP.electroshop.components.TopBarButton
 import com.AG_AP.electroshop.firebase.models.Activity
+import com.AG_AP.electroshop.nav.Routes
 import com.AG_AP.electroshop.uiState.Activities.ActivityUiState
 import com.AG_AP.electroshop.viewModels.Activities.ActivityViewModel
 import java.util.Calendar
@@ -497,7 +505,31 @@ fun ScaffoldActivityUltimate(
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 title = {
-                    Text("Gestión de actividades")
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        TopBarButton(
+                            "Activiades",
+                            { navController.navigate(route = Routes.ActivityUltimate.route)},
+                            Icons.Default.LocalActivity
+                        )
+                        TopBarButton(
+                            "Clientes",
+                            { navController.navigate(route = Routes.BusinessPartnerUltimate.route)},
+                            Icons.Default.AccountBox
+                        )
+                        TopBarButton(
+                            "Articulos",
+                            { navController.navigate(route = Routes.ItemScreen.route)},
+                            Icons.Default.Inbox
+                            )
+                        TopBarButton(
+                            "Pedidos",
+                            { navController.navigate(route = Routes.ScreenOrder.route)},
+                            Icons.Default.AddCard
+                            )
+                    }
                 }
             )
         },
