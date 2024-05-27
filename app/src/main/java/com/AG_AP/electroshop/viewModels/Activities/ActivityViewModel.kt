@@ -293,8 +293,15 @@ class ActivityViewModel : ViewModel(), ActionViewModel {
             "Normal"->Priority= "pr_Normal"
             "Alto"->    Priority= "pr_High"
         }
-        val pedidoCliente = _uiState.value.U_SEIPEDIDOCLIENTE.toInt() ?: 0
-        val pedidoCompra = _uiState.value.U_SEIPEDIDOCOMPRAS.toInt() ?: 0
+
+        var pedidoCliente = _uiState.value.U_SEIPEDIDOCLIENTE
+        var pedidoCompra = _uiState.value.U_SEIPEDIDOCOMPRAS
+        if(pedidoCliente.isEmpty()){
+            pedidoCliente = "0"
+        }
+        if(pedidoCompra.isEmpty()){
+            pedidoCompra = "0"
+        }
         val dataConcat = ActivityDate.plus("T00:00:00Z")
         //"",nota,dataConcat,ActivityTime,CardCode,EndTime,Action,Tel,ClgCode,Priority,pedidoCompra,pedidoCliente,false
         val newActivity = Activity().apply {
@@ -307,8 +314,8 @@ class ActivityViewModel : ViewModel(), ActionViewModel {
             this.Tel = Tel
             this.ClgCode = ClgCode
             this.Priority = Priority
-            this.U_SEIPEDIDOCLIENTE = pedidoCliente
-            this.U_SEIPEDIDOCOMPRAS = pedidoCompra
+            this.U_SEIPEDIDOCLIENTE = pedidoCliente.toInt()
+            this.U_SEIPEDIDOCOMPRAS = pedidoCompra.toInt()
             this.SAP = false
 
         }
