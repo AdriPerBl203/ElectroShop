@@ -88,6 +88,11 @@ class DialogArticleViewModel : ViewModel() {
         SpecialPricesCRUD.getSpecialPrice(cardCode,itenCode){x->
             if(x != null){
                 changeDiscount(x.DiscountPercent.toString())
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        showMessageSpecialPrices=true
+                    )
+                }
             }
         }
 
@@ -156,6 +161,7 @@ class DialogArticleViewModel : ViewModel() {
                 count = 1.0,
                 description = "",
                 codeArticle = "",
+                showMessageSpecialPrices = false
             )
         }
     }
