@@ -128,7 +128,7 @@ fun ActivityUltimate(
     ) {
         Row(
         ) {
-            /*Column { //
+            Column { //
                 val coffeeDrinks =
                     arrayOf("Llamada telefónica", "Reunión", "Tarea", "Nota", "Campaña", "Otros")
                 var expanded by remember { mutableStateOf(false) }
@@ -309,26 +309,7 @@ fun ActivityUltimate(
                     }
                 }
 
-                OutlinedTextField(
-                    value = dataUiState.U_SEIPEDIDOCOMPRAS,
-                    onValueChange = { viewModel.changePedidoCompra(it) },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    label = { Text("Asociar pedido de compra") },
-                    readOnly = true,
-                    trailingIcon = {
-                        IconButton(
-                            onClick = {
-                                viewModel.showDialogPurchaseOrder()
-                            }
-                        ) {
-                            Icon(Icons.Filled.Add, contentDescription = "Shopping Cart Icon")
-                        }
-                    }
-                )
-
-            } */ //
+            }
             Column(
                 modifier= Modifier.width(200.dp)
             ){
@@ -516,7 +497,7 @@ fun ScaffoldActivityUltimate(
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 title = {
-                    Text("Gestión de clientes")
+                    Text("Gestión de actividades")
                 }
             )
         },
