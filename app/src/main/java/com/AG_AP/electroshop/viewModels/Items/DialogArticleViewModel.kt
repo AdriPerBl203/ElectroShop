@@ -2,12 +2,9 @@ package com.AG_AP.electroshop.viewModels.Items
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
 import com.AG_AP.electroshop.firebase.ItemCRUD
-import com.AG_AP.electroshop.firebase.OrderCRUD
-import com.AG_AP.electroshop.firebase.models.BusinessPartner
+import com.AG_AP.electroshop.firebase.SpecialPricesCRUD
 import com.AG_AP.electroshop.firebase.models.Item
-import com.AG_AP.electroshop.firebase.models.OrderFireBase
 import com.AG_AP.electroshop.functions.InterconexionUpdateArticle
 import com.AG_AP.electroshop.uiState.Items.ArticleUiState
 import com.AG_AP.electroshop.uiState.Items.DialogArticleUiState
@@ -82,6 +79,15 @@ class DialogArticleViewModel : ViewModel() {
                 currentState.copy(
                     price = 0.0
                 )
+            }
+        }
+
+    }
+
+    fun SpecialPrices(itenCode: String, cardCode: String){
+        SpecialPricesCRUD.getSpecialPrice(cardCode,itenCode){x->
+            if(x != null){
+                changeDiscount(x.DiscountPercent.toString())
             }
         }
 

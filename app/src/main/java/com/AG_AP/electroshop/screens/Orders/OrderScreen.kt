@@ -74,7 +74,8 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
             returnData = { list ->
                 Log.e("LisDataArticle", list.toString())
                 viewModel.addArticle(list)
-            }
+            },
+            cardCode = dataUiState.CardCode,
         )
     }
     if (dataUiState.showDialogBusinessPartner) {

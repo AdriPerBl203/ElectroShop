@@ -35,7 +35,8 @@ fun DialogOandPO(
     viewModel: DialogArticleViewModel = viewModel(),
     closeDialog: () -> Unit,
     returnData: (List<String>) -> Unit,
-    index: Int =-1
+    index: Int =-1,
+    cardCode:String = ""
 ) {
     val dataUiState by viewModel.uiState.collectAsState()
 
@@ -56,6 +57,7 @@ fun DialogOandPO(
                         viewModel.changeCount(data.itemPrice?.get(1)?.quantity.toString())
                         viewModel.changePrice(data.itemPrice?.get(1)?.price.toString())
                         viewModel.changeDiscount(data.itemPrice?.get(1)?.discount.toString())
+                        viewModel.SpecialPrices(data.ItemCode,cardCode)
                     } else {
                         viewModel.changeCodeArticle(data.toString())
                     }
