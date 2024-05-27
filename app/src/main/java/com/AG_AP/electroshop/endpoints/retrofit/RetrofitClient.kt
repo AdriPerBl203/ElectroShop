@@ -51,11 +51,18 @@ object RetrofitClient {
         }
     }
 
-    val retrofit = Retrofit.Builder()
+    var retrofit = Retrofit.Builder()
         .baseUrl(baseUrl)
         .addConverterFactory(GsonConverterFactory.create())
         .client(getUnsafeOkHttpClient()) // Usa el cliente personalizado aquí
         .build()
 
-    val apiService = retrofit.create(LoginInterface::class.java)
+    fun setURL(url: String) {
+        baseUrl = url
+        retrofit = Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(getUnsafeOkHttpClient()) // Usa el cliente personalizado aquí
+            .build()
+    }
 }

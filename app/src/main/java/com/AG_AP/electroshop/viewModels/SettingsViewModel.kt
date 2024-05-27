@@ -153,20 +153,34 @@ class SettingsViewModel : ViewModel() {
             }
             val dataLogin = Login(dataBase, password, login)
             val data = LoginObj.loginAcessTwoversion(dataLogin, urlInt)
+            var dataUrlExt:Boolean =false
+            var urlCheck:String =urlInt
+            var urlCheckTip:String = "Int"
+            if(!data){
+                dataUrlExt = LoginObj.loginAcessTwoversion(dataLogin, urlExt)
+                urlCheck =urlExt
+                urlCheckTip = "Ext"
+            }
             var text: String = ""
             Log.e("SettingScreen", "Conexión realizada")
             //LoginObj.logout(urlInt)
-            if (data) {
+            if (data || dataUrlExt) {
                 text = "Test realizado con éxito."
                 _uiState.update { currentState ->
                     currentState.copy(
                         message = true,
                         text = text,
                         progress = false,
-                        ButtomEnable = true
+                        ButtomEnable = true,
+                        urlCheck = urlCheck,
+                        urlTipCheck = urlCheckTip
                     )
                 }
-                LoginObj.logout(urlInt)
+                if(data){
+                    LoginObj.logout(urlInt)
+                }else if(dataUrlExt){
+                    LoginObj.logout(urlExt)
+                }
             } else {
                 text = "Test NO realizado con éxito."
                 _uiState.update { currentState ->
@@ -494,7 +508,6 @@ class SettingsViewModel : ViewModel() {
     }
 
     private fun deleteAndInsertSpecialPrice() {
-        //TODO("Hacer esto con el endpoint")
         viewModelScope.launch(Dispatchers.IO) {
             var listSpecialPricesSAP: MutableList<com.AG_AP.electroshop.endpoints.models.specialPrices.Value> =
                 mutableListOf()
@@ -709,7 +722,9 @@ class SettingsViewModel : ViewModel() {
         val login = _uiState.value.login
         val password = _uiState.value.password
         val dataBase = _uiState.value.dataBase
-        val dataConfiguration = ConfigurationApplication(login, password, dataBase, urlExt, urlInt)
+        val url = _uiState.value.urlCheck
+        val urlTipCheck = _uiState.value.urlTipCheck
+        val dataConfiguration = ConfigurationApplication(login, password, dataBase, url,urlTipCheck)
         val gson = Gson()
         val jsonData: String = gson.toJson(dataConfiguration)
 
@@ -737,16 +752,29 @@ class SettingsViewModel : ViewModel() {
         val json = sharedPref?.getString("configuration", null)
         if (!json.isNullOrEmpty()) {
             val dataConfig = gson.fromJson(json, ConfigurationApplication::class.java)
-            _uiState.update { currentState ->
-                currentState.copy(
-                    urlInt = dataConfig.urlInt,
-                    urlExt = dataConfig.urlExt,
-                    login = dataConfig.login,
-                    password = dataConfig.password,
-                    dataBase = dataConfig.dataBase,
-                    init = false
-                )
+            if(dataConfig.urlTipCheck == "Int"){
+                _uiState.update { currentState ->
+
+                    currentState.copy(
+                        urlInt = dataConfig.url,
+                        login = dataConfig.login,
+                        password = dataConfig.password,
+                        dataBase = dataConfig.dataBase,
+                        init = false
+                    )
+                }
+            }else if(dataConfig.urlTipCheck == "Ext"){
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        urlExt = dataConfig.url,
+                        login = dataConfig.login,
+                        password = dataConfig.password,
+                        dataBase = dataConfig.dataBase,
+                        init = false
+                    )
+                }
             }
+
         }
     }
 

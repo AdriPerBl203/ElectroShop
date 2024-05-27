@@ -4,6 +4,8 @@ data class SettingUiState(
     val login:String = "",
     val password:String = "",
     val dataBase:String = "",
+    val urlCheck:String ="",
+    val urlTipCheck:String ="",
     val urlExt:String = "",
     val urlInt:String = "",
     val ButtomEnable:Boolean = false,
