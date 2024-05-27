@@ -1,5 +1,9 @@
 package com.AG_AP.electroshop.uiState
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Sync
+import androidx.compose.ui.graphics.vector.ImageVector
+
 data class SettingUiState(
     val login:String = "",
     val password:String = "",
@@ -25,7 +29,9 @@ data class SettingUiState(
     val textShow:Boolean =true,
     val btnSyncEnable:Boolean =true,
     val btnEnable:Boolean =true,
-    val btnExitEnable:Boolean =true
+    val btnExitEnable:Boolean =true,
+    val iconInt:ImageVector = Icons.Default.Sync,
+    val iconExt:ImageVector = Icons.Default.Sync
 )
 /*
 *

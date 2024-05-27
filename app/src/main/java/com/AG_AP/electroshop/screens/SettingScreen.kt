@@ -21,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.ContentPasteSearch
 import androidx.compose.material.icons.filled.KeyboardReturn
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material3.Button
@@ -88,6 +89,7 @@ fun SettingScreen(
                     value = dataUiState.urlExt,
                     onValueChange = { viewModel.changeUrlExt(it) },
                     label = { Text("URL externa") },
+                    trailingIcon = { Icon(imageVector = dataUiState.iconExt, contentDescription = "emailIcon") },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 16.dp)
@@ -96,6 +98,7 @@ fun SettingScreen(
                     value = dataUiState.urlInt,
                     onValueChange = { viewModel.changeUrlInt(it) },
                     label = { Text("URL interna") },
+                    trailingIcon = { Icon(imageVector = dataUiState.iconInt, contentDescription = "emailIcon") },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 16.dp)

@@ -2,6 +2,9 @@ package com.AG_AP.electroshop.viewModels
 
 import android.content.Context
 import android.util.Log
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Sync
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.AG_AP.electroshop.endpoints.models.activity.Activity
@@ -166,19 +169,31 @@ class SettingsViewModel : ViewModel() {
             //LoginObj.logout(urlInt)
             if (data || dataUrlExt) {
                 text = "Test realizado con éxito."
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        message = true,
-                        text = text,
-                        progress = false,
-                        ButtomEnable = true,
-                        urlCheck = urlCheck,
-                        urlTipCheck = urlCheckTip
-                    )
-                }
                 if(data){
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            message = true,
+                            text = text,
+                            progress = false,
+                            ButtomEnable = true,
+                            urlCheck = urlCheck,
+                            urlTipCheck = urlCheckTip,
+                            iconInt = Icons.Default.CheckCircle
+                        )
+                    }
                     LoginObj.logout(urlInt)
                 }else if(dataUrlExt){
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            message = true,
+                            text = text,
+                            progress = false,
+                            ButtomEnable = true,
+                            urlCheck = urlCheck,
+                            urlTipCheck = urlCheckTip,
+                            iconExt = Icons.Default.CheckCircle
+                        )
+                    }
                     LoginObj.logout(urlExt)
                 }
             } else {
