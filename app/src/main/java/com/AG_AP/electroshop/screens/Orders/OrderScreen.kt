@@ -237,8 +237,8 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
                 if (dataUiState.showToast) {
                     Toast.makeText(
                         ObjectContext.context,
-                        "Existen algunos campos vacios",
-                        Toast.LENGTH_SHORT
+                        dataUiState.text,
+                        Toast.LENGTH_LONG
                     ).show()
                 }
             }
@@ -359,7 +359,8 @@ fun TableDocumentLineOrder(dataUiState: OrderUiState, viewModel: OrderViewModel)
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(MaterialTheme.colorScheme.secondaryContainer)
-                            .height(50.dp)
+                            .height(50.dp),
+                        readOnly = true
                     )
                 }
             }
@@ -378,7 +379,8 @@ fun TableDocumentLineOrder(dataUiState: OrderUiState, viewModel: OrderViewModel)
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(MaterialTheme.colorScheme.secondaryContainer)
-                            .height(50.dp)
+                            .height(50.dp),
+                        readOnly = true
                     )
                 }
             }
@@ -397,7 +399,8 @@ fun TableDocumentLineOrder(dataUiState: OrderUiState, viewModel: OrderViewModel)
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(MaterialTheme.colorScheme.secondaryContainer)
-                            .height(50.dp)
+                            .height(50.dp),
+                        readOnly = true
                     )
                 }
             }
@@ -416,7 +419,8 @@ fun TableDocumentLineOrder(dataUiState: OrderUiState, viewModel: OrderViewModel)
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(MaterialTheme.colorScheme.secondaryContainer)
-                            .height(50.dp)
+                            .height(50.dp),
+                        readOnly = true
                     )
                 }
             }
@@ -435,7 +439,8 @@ fun TableDocumentLineOrder(dataUiState: OrderUiState, viewModel: OrderViewModel)
                         modifier = Modifier
                             .fillMaxWidth()
                             .background(MaterialTheme.colorScheme.secondaryContainer)
-                            .height(50.dp)
+                            .height(50.dp),
+                        readOnly = true
                     )
                 }
             }
