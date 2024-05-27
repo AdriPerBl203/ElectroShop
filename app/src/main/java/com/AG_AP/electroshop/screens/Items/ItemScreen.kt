@@ -1,6 +1,7 @@
 package com.AG_AP.electroshop.screens.Items
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -14,7 +15,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.AddCard
+import androidx.compose.material.icons.filled.Inbox
+import androidx.compose.material.icons.filled.LocalActivity
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
@@ -47,7 +52,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.AG_AP.electroshop.components.DialogCustomBusinessPartner
 import com.AG_AP.electroshop.components.DialogCustomPriceList
+import com.AG_AP.electroshop.components.TopBarButton
 import com.AG_AP.electroshop.firebase.models.ItemType
+import com.AG_AP.electroshop.nav.Routes
 import com.AG_AP.electroshop.uiState.Items.ItemUiState
 import com.AG_AP.electroshop.viewModels.Items.ItemViewModel
 
@@ -322,7 +329,31 @@ fun ScaffoldItem(
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 title = {
-                    Text("Gestión de articulos")
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        TopBarButton(
+                            "Activiades",
+                            { navController.navigate(route = Routes.ActivityUltimate.route)},
+                            Icons.Default.LocalActivity
+                        )
+                        TopBarButton(
+                            "Clientes",
+                            { navController.navigate(route = Routes.BusinessPartnerUltimate.route)},
+                            Icons.Default.AccountBox
+                        )
+                        TopBarButton(
+                            "Articulos",
+                            { navController.navigate(route = Routes.ItemScreen.route)},
+                            Icons.Default.Inbox
+                        )
+                        TopBarButton(
+                            "Pedidos",
+                            { navController.navigate(route = Routes.ScreenOrder.route)},
+                            Icons.Default.AddCard
+                        )
+                    }
                 }
             )
         },
