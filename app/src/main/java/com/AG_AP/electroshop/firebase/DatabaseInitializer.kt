@@ -3,9 +3,11 @@ package com.AG_AP.electroshop.firebase
 
 import com.AG_AP.electroshop.firebase.models.Activity
 import com.AG_AP.electroshop.firebase.models.BusinessPartner
+import com.AG_AP.electroshop.firebase.models.DocumentLineFireBase
 import com.AG_AP.electroshop.firebase.models.Item
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
-import com.AG_AP.electroshop.firebase.models.Price
+import com.AG_AP.electroshop.firebase.models.ItemPrice
+import com.AG_AP.electroshop.firebase.models.PriceListRealm
 import com.AG_AP.electroshop.firebase.models.SEIConfig
 import com.AG_AP.electroshop.firebase.models.SpecialPriceFireBase
 import io.realm.kotlin.Realm
@@ -18,17 +20,37 @@ object DatabaseInitializer {
             Activity::class,
             BusinessPartner::class,
             Item::class,
-            Price::class,
+            ItemPrice::class,
             SEIConfig::class,
             SpecialPriceFireBase::class,
-            OrderFireBase::class
+            OrderFireBase::class,
+            DocumentLineFireBase::class,
+            PriceListRealm::class
         )
     )
+
+    val schemaVersion = RealmConfiguration.Builder(
+        schema = setOf(
+        Activity::class,
+        BusinessPartner::class,
+        Item::class,
+        ItemPrice::class,
+        SEIConfig::class,
+        SpecialPriceFireBase::class,
+        OrderFireBase::class,
+        DocumentLineFireBase::class,
+        PriceListRealm::class
+    ))
+        .directory("data/data/com.AG_AP.electroshop/databases")
+        .name("electroshop.realm")
+        .schemaVersion(3)
+        .deleteRealmIfMigrationNeeded()
+        .build()
 
     val realm = getInstance()
 
     private fun getInstance(): Realm {
-        return Realm.open(configuration)
+        return Realm.open(schemaVersion)
     }
 
 /*

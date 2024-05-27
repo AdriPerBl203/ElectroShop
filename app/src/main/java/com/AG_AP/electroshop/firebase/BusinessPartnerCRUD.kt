@@ -4,7 +4,9 @@ import android.annotation.SuppressLint
 import android.util.Log
 import com.AG_AP.electroshop.firebase.models.Activity
 import com.AG_AP.electroshop.firebase.models.BusinessPartner
+import io.realm.kotlin.delete
 import io.realm.kotlin.ext.query
+import io.realm.kotlin.query.RealmResults
 
 object BusinessPartnerCRUD : ActionFirebase {
     /*
@@ -282,23 +284,25 @@ object BusinessPartnerCRUD : ActionFirebase {
 
     override fun getObjectById(id: Int, callback: (Any?) -> Unit) {
         val byId =
-            realm.query<Activity>("idFireBase = $0", id.toString()).first().find() as BusinessPartner
+            realm.query<BusinessPartner>("CardCode = $0", id.toString()).find().first()
         callback(byId)
 
     }
 
     override fun getObjectByIdToString(id: String, callback: (Any?) -> Unit) {
-        TODO("Not yet implemented")
+        val byId =
+            realm.query<BusinessPartner>("CardCode = $0", id.toString()).find().firstOrNull()
+        callback(byId)
     }
 
     override fun getAllObject(callback: (MutableList<*>?) -> Unit) {
-        val all = realm.query<BusinessPartner>().find() as MutableList<*>?
-        callback(all)
+        val all = realm.query<BusinessPartner>().find()
+        callback(all.toMutableList())
     }
 
     override suspend fun updateObjectById(data: Any) {
         val businessPartner = data as BusinessPartner
-        realm.query<BusinessPartner>("idFireBase = $0", businessPartner.idFireBase)
+        realm.query<BusinessPartner>("CardCode = $0", businessPartner.CardCode)
             .first()
             .find()
             ?.also { oldActivity ->
@@ -317,12 +321,32 @@ object BusinessPartnerCRUD : ActionFirebase {
     }
 
     override suspend fun deleteObjectById(id: String) {
-        val activityToDel = realm.query<Activity>("idFireBase = $0", id)
-        realm.writeBlocking {
-            delete(activityToDel)
+        val deleteObejct = realm.query<BusinessPartner>("CardCode == $0", id).find().firstOrNull()
+        if (deleteObejct != null) {
+            realm.writeBlocking {
+                findLatest(deleteObejct)
+                    ?.also { delete(it) }
+            }
         }
     }
 
+    fun deleteAll() {
+        realm.writeBlocking {
+            delete<BusinessPartner>()
+        }
+    }
+
+
+    fun getBPBySAP(sap: Boolean, callback: (List<BusinessPartner?>) -> Unit) {
+        val all = realm.query<BusinessPartner>("SAP == $0", sap).find()
+        callback(all.toList())
+    }
+
+    fun getBPByName(name: String, sap: Boolean, callback: (List<BusinessPartner?>) -> Unit) {
+        val all =
+            realm.query<BusinessPartner>("SAP == $0", sap).query("CardName == $0", name).find()
+        callback(all.toList())
+    }
 
     fun insertForFireBase(data: BusinessPartner) {
         //TODO("Not yet implemented")

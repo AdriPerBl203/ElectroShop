@@ -8,7 +8,6 @@ enum class Routes(val route: String) {
     MixedActivityScreen(route = "MixedActivityScreen"),
     MixedBusinessPartnerScreen(route = "MixedBusinessPartnerScreen"),
     MixedOrderScreen(route = "MixedOrderScreen"),
-    MixedPurchaseOrderScreen(route = "MixedPurchaseOrderScreen"),
     MixedItemScreen(route = "MixedItemScreen"),
 
     ScreenActivity(route = "ActivityScreen"),
@@ -24,10 +23,6 @@ enum class Routes(val route: String) {
     ScreenOrder(route = "Order"),
     ScreenOrderList(route = "OrderList"),
     ScreenOrderAux(route = "Order"),
-
-    PurchaseOrderScreen(route = "PurchaseOrderScreen"),
-    PurchaseOrderList(route = "PurchaseOrderList"),
-    PurchaseOrderAux(route = "PurchaseOrderScreen"),
 
     ItemScreen(route = "ItemScreen"),
     ItemScreenList(route = "ItemScreenList"),

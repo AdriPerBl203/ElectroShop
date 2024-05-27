@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
 import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
 import com.AG_AP.electroshop.firebase.OrderCRUD
 import com.AG_AP.electroshop.firebase.SEIConfigCRUD
@@ -16,6 +17,8 @@ import com.AG_AP.electroshop.functions.ObjectContext
 import com.AG_AP.electroshop.uiState.Items.ArticleUiState
 import com.AG_AP.electroshop.uiState.Orders.OrderUiState
 import com.AG_AP.electroshop.viewModels.ActionViewModel
+import io.realm.kotlin.ext.toRealmList
+import io.realm.kotlin.types.RealmList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,6 +27,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.math.roundToLong
 
 class OrderViewModel : ViewModel(), ActionViewModel {
 
@@ -33,12 +37,13 @@ class OrderViewModel : ViewModel(), ActionViewModel {
     init {
         DocumentLineForMutableList()
 
-        val sharedPref = ObjectContext.context.getSharedPreferences("userConected", Context.MODE_PRIVATE)
+        val sharedPref =
+            ObjectContext.context.getSharedPreferences("userConected", Context.MODE_PRIVATE)
         val savedUserName = sharedPref.getString("userConected", null)
 
         if (savedUserName != null) {
-            SEIConfigCRUD.getSEIConfigById(savedUserName){it->
-                if(it is SEIConfig){
+            SEIConfigCRUD.getSEIConfigById(savedUserName) { it ->
+                if (it is SEIConfig) {
                     _uiState.update { currentState ->
                         currentState.copy(
                             SalesPersonCode = it.U_Empleado.toString()
@@ -62,9 +67,11 @@ class OrderViewModel : ViewModel(), ActionViewModel {
         BusinessPartnerCRUD.getAllObject { list ->
             val mutableList = list as? MutableList<BusinessPartner>
             mutableList?.let {
-                _uiState.update { currentState -> currentState.copy(
-                    ListBusinessPartner = it.toList()
-                ) }
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        ListBusinessPartner = it.toList()
+                    )
+                }
             }
         }
 
@@ -95,23 +102,21 @@ class OrderViewModel : ViewModel(), ActionViewModel {
         var text = "Pedido de venta actualizado"
 
 
-        val orderFireBase = OrderFireBase(
-            "",
-            docNum,
-            cardCode,
-            cardName,
-            docDate,
-            docDueDate,
-            taxDate,
-            discountPercent,
-            documentLine,
-            false,
-            SalesPersonCode
-        )
+        var orderFireBase: OrderFireBase = OrderFireBase().apply {
+            this.CardCode = cardCode
+            this.CardName = cardName
+            this.DocDate = docDate
+            this.DocDueDate = docDueDate
+            this.DocNum = docNum
+            this.DiscountPercent = discountPercent
+            this.TaxDate = taxDate
+            this.SalesPersonCode = SalesPersonCode
+            this.DocumentLines = documentLine
+        }
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                OrderCRUD.insertForFireBase(orderFireBase)
+                OrderCRUD.insert(orderFireBase)
             } catch (e: Exception) {
                 Log.e("Errores", e.stackTraceToString())
                 text = "Hubo un error con la creación del pedido de venta"
@@ -185,19 +190,17 @@ class OrderViewModel : ViewModel(), ActionViewModel {
         val documentLine = hashMapToDocumentLine()
         var text = "Pedido actualizado"
 
-        val orderFireBase = OrderFireBase(
-            null,
-            docNum,
-            cardCode,
-            cardName,
-            docDate,
-            docDueDate,
-            taxDate,
-            discountPercent,
-            documentLine,
-            false,
-            SalesPersonCode
-        )
+        val orderFireBase = OrderFireBase().apply {
+            this.DocNum = docNum
+            this.CardCode = cardCode
+            this.CardName = cardName
+            this.DocDate = docDate
+            this.DocDueDate = docDueDate
+            this.TaxDate = taxDate
+            this.DiscountPercent = discountPercent
+            this.DocumentLines = documentLine
+            this.SalesPersonCode = SalesPersonCode
+        }
 
         viewModelScope.launch {
             try {
@@ -274,7 +277,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
                     _uiState.update { currentState ->
                         currentState.copy(
                             CardCode = dataAux.CardCode,
-                            CardName = dataAux.CardName,
+                            CardName = dataAux.CardName ?: "",
                             DocNum = dataAux.DocNum,
                             DocDate = dataAux.DocDate,
                             DocDueDate = dataAux.DocDueDate,
@@ -405,7 +408,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
     }
 
 
-    private fun hashMapToDocumentLine(): List<DocumentLineFireBase> {
+    private fun hashMapToDocumentLine(): RealmList<DocumentLineFireBase> {
         val listDocumentLineFireBase: MutableList<DocumentLineFireBase> = mutableListOf()
 
         val documentLineList = _uiState.value.DocumentLineList
@@ -418,18 +421,18 @@ class OrderViewModel : ViewModel(), ActionViewModel {
             val price = value[4].toDouble()
             val discountPercent = value[5].toDouble()
 
-            val newDocumentLine = DocumentLineFireBase(
-                itemCode,
-                itemDescription,
-                quantity,
-                discountPercent,
-                index,
-                price
-            )
+            val newDocumentLine = DocumentLineFireBase().apply {
+                this.LineNum = index
+                this.ItemCode = itemCode
+                this.ItemDescription = itemDescription
+                this.Quantity = quantity
+                this.Price = price
+                this.DiscountPercent = discountPercent
+            }
             listDocumentLineFireBase.add(newDocumentLine)
         }
 
-        return listDocumentLineFireBase.toList()
+        return listDocumentLineFireBase.toRealmList()
     }
 
     private fun DocumentLineForMutableList(list: MutableList<ArticleUiState?>): ConcurrentHashMap<Int, MutableList<String>> {
@@ -526,7 +529,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
         }
     }
 
-    fun changeSalesPersonCode(name: String){
+    fun changeSalesPersonCode(name: String) {
         _uiState.update { currentState ->
             currentState.copy(
                 SalesPersonCode = name
@@ -535,7 +538,37 @@ class OrderViewModel : ViewModel(), ActionViewModel {
     }
 
     fun changeDiscount(it: String) {
-        //TODO
+        var disc = 0.0
+        try {
+            var decimal = it.substringAfter(".", "")
+            var num = it.substringBefore(".", "")
+
+            if (decimal.length > 2) {
+                decimal = decimal.substring(2)
+            }
+
+            if (num.length > 3) {
+                num = num.substring(3)
+            }
+
+
+            val numTotal = "$num.$decimal"
+            disc = numTotal.toDouble()
+
+            if (disc <= 0.0) {
+                disc = 0.0
+            } else if (disc >= 100.0) {
+                disc = 100.0
+            }
+        } catch (e: Exception) {
+            Log.e("Errores", e.stackTraceToString())
+        }
+
+        _uiState.update { currentState ->
+            currentState.copy(
+                DiscountPercent = disc
+            )
+        }
     }
 
     fun changeName(it: String) {
@@ -682,6 +715,29 @@ class OrderViewModel : ViewModel(), ActionViewModel {
                     trash = tastAux
                 )
             }
+        }
+    }
+
+    fun ejecutarAction(navController: NavHostController) {
+
+        when(_uiState.value.ActionButton){
+            "Añadir y ver" -> save(true)
+            "Añadir y nuevo" -> save(false)
+            "Añadir y salir" -> {
+                save(false)
+                navController.popBackStack()
+            }
+            "Actualizar" -> update()
+            "Borrar" -> delete()
+            else -> ""
+        }
+    }
+
+    fun changeActionButton(it: String) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                ActionButton = it
+            )
         }
     }
 

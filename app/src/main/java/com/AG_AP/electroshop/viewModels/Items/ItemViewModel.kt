@@ -6,9 +6,10 @@ import androidx.lifecycle.viewModelScope
 import com.AG_AP.electroshop.firebase.ItemCRUD
 import com.AG_AP.electroshop.firebase.models.Item
 import com.AG_AP.electroshop.firebase.models.ItemType
-import com.AG_AP.electroshop.firebase.models.Price
+import com.AG_AP.electroshop.firebase.models.ItemPrice
 import com.AG_AP.electroshop.uiState.Items.ItemUiState
 import com.AG_AP.electroshop.viewModels.ActionViewModel
+import io.realm.kotlin.ext.toRealmList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -35,9 +36,9 @@ class ItemViewModel : ViewModel(), ActionViewModel {
         }
     }
 
-    fun addItemPriceList(price: Price) {
+    fun addItemPriceList(itemPrice: ItemPrice) {
         val list = _uiState.value.itemPrice
-        list?.add(price)
+        list?.add(itemPrice)
 
         _uiState.update { currentState ->
             currentState.copy(
@@ -62,7 +63,7 @@ class ItemViewModel : ViewModel(), ActionViewModel {
         }
     }
 
-    fun changeItemType(itemType: ItemType) {
+    fun changeItemType(itemType: String) {
         _uiState.update { currentState ->
             currentState.copy(
                 itemType = itemType
@@ -78,7 +79,7 @@ class ItemViewModel : ViewModel(), ActionViewModel {
         }
     }
 
-    fun changeItemPrice(priceLists: MutableList<Price>?) {
+    fun changeItemPrice(priceLists: MutableList<ItemPrice>?) {
         _uiState.update { currentState ->
             currentState.copy(
                 itemPrice = priceLists
@@ -118,12 +119,12 @@ class ItemViewModel : ViewModel(), ActionViewModel {
         }
     }
 
-    fun eraseIndividualPriceList(price: Price) {
+    fun eraseIndividualPriceList(itemPrice: ItemPrice) {
         val listAfterDel = _uiState.value.itemPrice
         var trash = _uiState.value.trash
 
         trash += 1
-        listAfterDel?.remove(price)
+        listAfterDel?.remove(itemPrice)
 
         _uiState.update { currentState ->
             currentState.copy(
@@ -157,17 +158,17 @@ class ItemViewModel : ViewModel(), ActionViewModel {
         }
         var text = "Nuevo articulo añadido"
 
-        val item = Item(
-            null,
-            itemCode,
-            itemName,
-            itemType,
-            mainSupplier,
-            itemPrice,
-            manageSerialNumbers,
-            autoCreateSerialNumbers,
-            false
-        )
+        val item = Item().apply {
+            this.idFireBase = null
+            this.ItemCode = itemCode
+            this.itemName = itemName
+            this.itemType = itemType.toString()
+            this.mainSupplier = mainSupplier
+            this.itemPrice = itemPrice?.toRealmList()
+            this.manageSerialNumbers = manageSerialNumbers
+            this.autoCreateSerialNumbersOnRelease = autoCreateSerialNumbers
+            this.SAP = false
+        }
 
         viewModelScope.launch {
             try {
@@ -185,7 +186,7 @@ class ItemViewModel : ViewModel(), ActionViewModel {
 
                         ItemCode = "",
                         itemName = "",
-                        itemType = ItemType.Articulo,
+                        itemType = ItemType.Articulo.toString(),
                         mainSupplier = "",
                         itemPrice = mutableListOf(),
                         manageSerialNumbers = false,
@@ -222,17 +223,17 @@ class ItemViewModel : ViewModel(), ActionViewModel {
         }
         var text = "Articulo actualizado"
 
-        val item = Item(
-            null,
-            itemCode,
-            itemName,
-            itemType,
-            mainSupplier,
-            itemPrice,
-            manageSerialNumbers,
-            autoCreateSerialNumbers,
-            false
-        )
+        val item = Item().apply {
+            this.idFireBase = null
+            this.ItemCode = itemCode
+            this.itemName = itemName
+            this.itemType = itemType
+            this.mainSupplier = mainSupplier
+            this.itemPrice = itemPrice?.toRealmList()
+            this.manageSerialNumbers = manageSerialNumbers
+            this.autoCreateSerialNumbersOnRelease = autoCreateSerialNumbers
+            this.SAP = false
+        }
 
         viewModelScope.launch {
             try {
@@ -272,7 +273,7 @@ class ItemViewModel : ViewModel(), ActionViewModel {
 
                     ItemCode = "",
                     itemName = "",
-                    itemType = ItemType.Articulo,
+                    itemType = ItemType.Articulo.toString(),
                     mainSupplier = "",
                     itemPrice = mutableListOf(),
                     manageSerialNumbers = false,
@@ -311,7 +312,7 @@ class ItemViewModel : ViewModel(), ActionViewModel {
                             itemName = dataAux.itemName,
                             itemType = dataAux.itemType,
                             mainSupplier = dataAux.mainSupplier ?: "",
-                            itemPrice = dataAux.itemPrice as MutableList<Price>?,
+                            itemPrice = dataAux.itemPrice as MutableList<ItemPrice>?,
                             manageSerialNumbers = manageSerialNumbers,
                             autoCreateSerialNumbersOnRelease = autoCreateSerialNumbers,
 

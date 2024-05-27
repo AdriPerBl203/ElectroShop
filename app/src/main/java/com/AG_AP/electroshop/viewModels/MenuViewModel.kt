@@ -9,32 +9,28 @@ import com.AG_AP.electroshop.endpoints.models.businessPartners.PostBusinesspartn
 import com.AG_AP.electroshop.endpoints.models.item.getItems.GetItems
 import com.AG_AP.electroshop.endpoints.models.item.postItems.PostItem
 import com.AG_AP.electroshop.endpoints.models.login.Login
-import com.AG_AP.electroshop.endpoints.models.orders.Orders
 import com.AG_AP.electroshop.endpoints.models.orders.post.DocumentLine
 import com.AG_AP.electroshop.endpoints.models.orders.post.PostOrder
-import com.AG_AP.electroshop.endpoints.models.purchaseOrders.PurchaseOrders
 import com.AG_AP.electroshop.endpoints.objects.ActivityObj
 import com.AG_AP.electroshop.endpoints.objects.BusinessPartnersObj
 import com.AG_AP.electroshop.endpoints.objects.ItemObj
 import com.AG_AP.electroshop.endpoints.objects.LoginObj
 import com.AG_AP.electroshop.endpoints.objects.OrdersObj
-import com.AG_AP.electroshop.endpoints.objects.PurchaseOrdersObj
 import com.AG_AP.electroshop.firebase.ActivityCRUD
 import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
 import com.AG_AP.electroshop.firebase.ItemCRUD
 import com.AG_AP.electroshop.firebase.OrderCRUD
-import com.AG_AP.electroshop.firebase.PurchaseOrderCRUD
 import com.AG_AP.electroshop.firebase.models.BusinessPartner
-import com.AG_AP.electroshop.firebase.models.DocumentLineFireBase
 import com.AG_AP.electroshop.firebase.models.Item
 import com.AG_AP.electroshop.firebase.models.ItemType
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
-import com.AG_AP.electroshop.firebase.models.Price
+import com.AG_AP.electroshop.firebase.models.ItemPrice
 import com.AG_AP.electroshop.functions.Config
 import com.AG_AP.electroshop.functions.ListCheckTotal
 import com.AG_AP.electroshop.functions.SessionObj
 import com.AG_AP.electroshop.nav.Routes
 import com.AG_AP.electroshop.uiState.MenuUiState
+import io.realm.kotlin.ext.toRealmList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -104,7 +100,7 @@ class MenuViewModel : ViewModel() {
                             // Crear una instancia de PostOrder
                             val postOrder = PostOrder(
                                 CardCode = x.CardCode,
-                                CardName = x.CardName,
+                                CardName = x.CardName ?: "",
                                 DiscountPercent = x.DiscountPercent,
                                 DocDate = x.DocDate.plus("T00:00:00Z"),
                                 DocDueDate = x.DocDueDate.plus("T00:00:00Z"),
@@ -115,7 +111,7 @@ class MenuViewModel : ViewModel() {
                             )
                             OrdersObj.postOrders(Config.rulUse,postOrder)
                             if(x.idFireBase !=null){
-                                OrderCRUD.deleteObjectById(x.idFireBase)
+                                OrderCRUD.deleteObjectById(x.idFireBase!!)
                             }
                         }
                     }
@@ -188,113 +184,6 @@ class MenuViewModel : ViewModel() {
         }
     }
 
-    fun upPurchaseOrders(bol: Boolean) {
-        PurchaseOrderCRUD.getAllObject { list ->
-            viewModelScope.launch() {
-                val dataLogin = Login(Config.dataBase, Config.password, Config.login)
-                if(bol){
-                    LoginObj.loginAcessTwoversion(dataLogin, Config.rulUse)
-                }
-                if (list != null) {
-                    val listAux = list as MutableList<OrderFireBase>
-                    for (x in listAux) {
-                        if (!x.SAP) {
-                            var documentLineAux:MutableList<DocumentLine> = mutableListOf<DocumentLine>()
-                            var auxNum:Int =0
-                            for(y in x.DocumentLines){
-                                documentLineAux.add(
-                                    auxNum,
-                                    DocumentLine(
-                                        y.DiscountPercent, y.ItemCode, y.LineNum,y.Price,y.Quantity.toInt()
-                                    )
-                                )
-                                auxNum++
-                            }
-                            // Crear una instancia de PostOrder
-                            val postOrder = PostOrder(
-                                CardCode = x.CardCode,
-                                CardName = x.CardName,
-                                DiscountPercent = x.DiscountPercent,
-                                DocDate = x.DocDate.plus("T00:00:00Z"),
-                                DocDueDate = x.DocDueDate.plus("T00:00:00Z"),
-                                DocNum = x.DocNum,
-                                DocumentLines = documentLineAux,
-                                TaxDate = x.TaxDate.plus("T00:00:00Z"),
-                                SalesPersonCode = x.SalesPersonCode
-                            )
-                            PurchaseOrdersObj.postPurchaseOrders(Config.rulUse,postOrder)
-                            if(x.idFireBase !=null){
-                                PurchaseOrderCRUD.deleteObjectById(x.idFireBase)
-                            }
-                        }
-                    }
-                    ListCheckTotal.addInfo("Pedido compra actualizadas")
-                    if(bol){
-                        LoginObj.logout(Config.rulUse)
-                        _uiState.update { currentState -> currentState.copy(
-                            checkProgresCircular = false
-                        ) }
-                    }
-                }
-                /*viewModelScope.launch(Dispatchers.IO) {
-                    var listPurchaseOrderSAP: MutableList<com.AG_AP.electroshop.endpoints.models.purchaseOrders.Value> =
-                        mutableListOf()
-                    var checkSAP: Boolean = false
-                    var purchaseOrders : PurchaseOrders? = PurchaseOrdersObj.getPurchaseOrders(Config.rulUse)
-                    while (!checkSAP) {
-                        if (purchaseOrders != null) {
-                            if (purchaseOrders.odataNextLink.isNullOrEmpty()) {
-                                purchaseOrders.value.forEach {
-                                    listPurchaseOrderSAP += it
-                                }
-                                checkSAP=true
-                            }else{
-                                purchaseOrders.value.forEach {
-                                    listPurchaseOrderSAP += it
-                                }
-                                val num :List<String> = purchaseOrders.odataNextLink.split("=")
-                                purchaseOrders =PurchaseOrdersObj.getPurchaseOrdersExtenExten(Config.rulUse,num[1].toInt())
-                            }
-                        }
-                    }
-                    listPurchaseOrderSAP.forEach{element ->
-                            PurchaseOrderCRUD.deleteObjectById(element.DocNum.toString())
-                        }
-                    listPurchaseOrderSAP.forEach{element ->
-                            //lista de precios
-                            val documentList: MutableList<DocumentLineFireBase> = mutableListOf()
-                            element.DocumentLines.forEachIndexed { index, it ->
-                                documentList.add(
-                                    index,
-                                    DocumentLineFireBase(
-                                        it.ItemCode,
-                                        it.ItemDescription ?: "",
-                                        it.Quantity,
-                                        it.DiscountPercent,
-                                        it.LineNum,
-                                        it.Price
-                                    )
-                                )
-                            }
-                            val orderInsert : OrderFireBase = OrderFireBase(
-                                "",
-                                element.DocNum,
-                                element.CardCode,
-                                element.CardName,
-                                element.DocDate,
-                                element.DocDueDate,
-                                element.TaxDate,
-                                element.DiscountPercent,
-                                documentList,
-                                true,
-                                element.SalesPersonCode
-                            )
-                            PurchaseOrderCRUD.insert(orderInsert)
-                        }
-                }*/
-            }
-        }
-    }
 
     fun upBusinessPartners(bol: Boolean) {
         viewModelScope.launch() {
@@ -333,7 +222,7 @@ class MenuViewModel : ViewModel() {
                                 )
                                 BusinessPartnersObj.postBusinessPartners(Config.rulUse, data)
                                 if (x.idFireBase != null) {
-                                    BusinessPartnerCRUD.deleteObjectById(x.idFireBase)
+                                    BusinessPartnerCRUD.deleteObjectById(x.idFireBase!!)
                                 }
                             }
                         }
@@ -377,17 +266,17 @@ class MenuViewModel : ViewModel() {
                             if (!element.EmailAddress.isNullOrEmpty()) {
                                 email = element.EmailAddress
                             }
-
+                            val bp = BusinessPartner().apply {
+                                ""
+                                element.CardCode
+                                element.CardType
+                                element.CardName
+                                phone1
+                                email
+                                true
+                            }
                             BusinessPartnerCRUD.insert(
-                                BusinessPartner(
-                                    "",
-                                    element.CardCode,
-                                    element.CardType,
-                                    element.CardName,
-                                    phone1,
-                                    email,
-                                    true
-                                )
+                                bp
                             )
                         }
                         ListCheckTotal.addInfo("Clientes actualizadas")
@@ -443,7 +332,7 @@ class MenuViewModel : ViewModel() {
 
                                 ItemObj.postItems(Config.rulUse, item)
                                 if (x.idFireBase != null) {
-                                    ItemCRUD.deleteItemById(x.idFireBase)
+                                    ItemCRUD.deleteItemById(x.idFireBase!!)
                                 }
                             }
                         }
@@ -474,29 +363,30 @@ class MenuViewModel : ViewModel() {
                         }
                         listItemSAP.forEach{element ->
                             //lista de precios
-                            val listPrice: MutableList<Price> = mutableListOf()
+                            val listPrice: MutableList<ItemPrice> = mutableListOf()
                             element.ItemPrices.forEachIndexed { index, itemPrice ->
+                                val price = ItemPrice().apply {
+                                    priceList = itemPrice.PriceList ?:0
+                                    price = itemPrice.Price ?:0.0
+                                    currency = itemPrice.Currency ?:""
+                                    SAP = true
+                                }
                                 listPrice.add(
                                     index,
-                                    Price(
-                                        itemPrice.PriceList ?:0,
-                                        itemPrice.Price ?:0.0F,
-                                        itemPrice.Currency ?:"",
-                                        true
-                                    )
+                                    price
                                 )
                             }
-                            val item : Item = Item(
-                                "",
-                                element.ItemCode ?: "",
-                                element.ItemName ?: "",
-                                ItemType.Articulo,
-                                element.Mainsupplier ?: "",
-                                listPrice.toList(),
-                                element.ManageSerialNumbers ?: "",
-                                element.AutoCreateSerialNumbersOnRelease ?: "",
-                                true
-                            )
+                            val item : Item = Item().apply {
+                                idFireBase = ""
+                                ItemCode = element.ItemCode ?: ""
+                                itemName = element.ItemName ?: ""
+                                itemType = "I"
+                                mainSupplier = element.Mainsupplier ?: ""
+                                itemPrice = listPrice.toRealmList()
+                                manageSerialNumbers = element.ManageSerialNumbers ?: ""
+                                autoCreateSerialNumbersOnRelease = element.AutoCreateSerialNumbersOnRelease ?: ""
+                                SAP = true
+                            }
                             ItemCRUD.insertItem(item)
                         }
                         ListCheckTotal.addInfo("Artículos actualizados")
@@ -539,7 +429,7 @@ class MenuViewModel : ViewModel() {
                             ActivityObj.PostActivities(Config.rulUse, data)
                             //TODO
                             if(x.idFireBase !=null){
-                                ActivityCRUD.deleteActivityById(x.idFireBase)
+                                ActivityCRUD.deleteActivityById(x.idFireBase!!)
                             }
                         }
                     }
@@ -570,21 +460,21 @@ class MenuViewModel : ViewModel() {
                                 ActivityCRUD.deleteActivityById(element.ActivityCode.toString())
                             }
                         listActivitySAP.forEach{element ->
-                                val activity : com.AG_AP.electroshop.firebase.models.Activity = com.AG_AP.electroshop.firebase.models.Activity(
-                                    "",
-                                    element.Notes ?: "",
-                                    element.ActivityDate ?: "",
-                                    element.ActivityTime ?: "",
-                                    element.CardCode ?: "",
-                                    element.EndTime ?: "",
-                                    element.Activity ?: "",
-                                    element.Notes ?: "",//
-                                    element.ActivityCode.toString() ?: "",
-                                    element.Priority ?: "",
-                                    element.U_SEIPEDIDOCOMPRAS ?: 0,
-                                    element.U_SEIPEDIDOCLIENTE ?: 0,
+                                val activity : com.AG_AP.electroshop.firebase.models.Activity = com.AG_AP.electroshop.firebase.models.Activity().apply {
+                                    ""
+                                    element.Notes ?: ""
+                                    element.ActivityDate ?: ""
+                                    element.ActivityTime ?: ""
+                                    element.CardCode ?: ""
+                                    element.EndTime ?: ""
+                                    element.Activity ?: ""
+                                    element.Notes ?: ""
+                                    element.ActivityCode.toString() ?: ""
+                                    element.Priority ?: ""
+                                    element.U_SEIPEDIDOCOMPRAS ?: 0
+                                    element.U_SEIPEDIDOCLIENTE ?: 0
                                     true
-                                )
+                                }
                                 ActivityCRUD.insertActivity(activity)
                             }
                             ListCheckTotal.addInfo("Actividades actualizadas")

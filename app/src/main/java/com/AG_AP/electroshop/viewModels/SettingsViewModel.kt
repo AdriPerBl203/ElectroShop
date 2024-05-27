@@ -2,6 +2,9 @@ package com.AG_AP.electroshop.viewModels
 
 import android.content.Context
 import android.util.Log
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Sync
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.AG_AP.electroshop.endpoints.models.activity.Activity
@@ -9,14 +12,12 @@ import com.AG_AP.electroshop.endpoints.models.item.getItems.GetItems
 import com.AG_AP.electroshop.endpoints.models.login.Login
 import com.AG_AP.electroshop.endpoints.models.orders.Orders
 import com.AG_AP.electroshop.endpoints.models.priceList.PriceList
-import com.AG_AP.electroshop.endpoints.models.purchaseOrders.PurchaseOrders
 import com.AG_AP.electroshop.endpoints.objects.ActivityObj
 import com.AG_AP.electroshop.endpoints.objects.BusinessPartnersObj
 import com.AG_AP.electroshop.endpoints.objects.ItemObj
 import com.AG_AP.electroshop.endpoints.objects.LoginObj
 import com.AG_AP.electroshop.endpoints.objects.OrdersObj
 import com.AG_AP.electroshop.endpoints.objects.PriceListObj
-import com.AG_AP.electroshop.endpoints.objects.PurchaseOrdersObj
 import com.AG_AP.electroshop.endpoints.udo.models.CreateField
 import com.AG_AP.electroshop.endpoints.udo.models.createUdo.CreateUdo
 import com.AG_AP.electroshop.endpoints.udo.models.createUdo.UserObjectMDFindColumn
@@ -29,21 +30,24 @@ import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
 import com.AG_AP.electroshop.firebase.ItemCRUD
 import com.AG_AP.electroshop.firebase.OrderCRUD
 import com.AG_AP.electroshop.firebase.PriceListCRUD
-import com.AG_AP.electroshop.firebase.PurchaseOrderCRUD
+import com.AG_AP.electroshop.firebase.PriceListForListCRUD
 import com.AG_AP.electroshop.firebase.SEIConfigCRUD
+import com.AG_AP.electroshop.firebase.SpecialPricesCRUD
 import com.AG_AP.electroshop.firebase.models.BusinessPartner
 import com.AG_AP.electroshop.firebase.models.DocumentLineFireBase
 import com.AG_AP.electroshop.firebase.models.Item
-import com.AG_AP.electroshop.firebase.models.ItemType
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
-import com.AG_AP.electroshop.firebase.models.Price
+import com.AG_AP.electroshop.firebase.models.ItemPrice
+import com.AG_AP.electroshop.firebase.models.PriceListRealm
 import com.AG_AP.electroshop.firebase.models.SEIConfig
+import com.AG_AP.electroshop.firebase.models.SpecialPriceFireBase
 import com.AG_AP.electroshop.functions.Config
 import com.AG_AP.electroshop.functions.ConfigurationApplication
 import com.AG_AP.electroshop.functions.validarURL
 //import com.AG_AP.electroshop.functions.validarURL
 import com.AG_AP.electroshop.uiState.SettingUiState
 import com.google.gson.Gson
+import io.realm.kotlin.ext.toRealmList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -152,20 +156,46 @@ class SettingsViewModel : ViewModel() {
             }
             val dataLogin = Login(dataBase, password, login)
             val data = LoginObj.loginAcessTwoversion(dataLogin, urlInt)
+            var dataUrlExt:Boolean =false
+            var urlCheck:String =urlInt
+            var urlCheckTip:String = "Int"
+            if(!data){
+                dataUrlExt = LoginObj.loginAcessTwoversion(dataLogin, urlExt)
+                urlCheck =urlExt
+                urlCheckTip = "Ext"
+            }
             var text: String = ""
             Log.e("SettingScreen", "Conexión realizada")
             //LoginObj.logout(urlInt)
-            if (data) {
+            if (data || dataUrlExt) {
                 text = "Test realizado con éxito."
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        message = true,
-                        text = text,
-                        progress = false,
-                        ButtomEnable = true
-                    )
+                if(data){
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            message = true,
+                            text = text,
+                            progress = false,
+                            ButtomEnable = true,
+                            urlCheck = urlCheck,
+                            urlTipCheck = urlCheckTip,
+                            iconInt = Icons.Default.CheckCircle
+                        )
+                    }
+                    LoginObj.logout(urlInt)
+                }else if(dataUrlExt){
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            message = true,
+                            text = text,
+                            progress = false,
+                            ButtomEnable = true,
+                            urlCheck = urlCheck,
+                            urlTipCheck = urlCheckTip,
+                            iconExt = Icons.Default.CheckCircle
+                        )
+                    }
+                    LoginObj.logout(urlExt)
                 }
-                LoginObj.logout(urlInt)
             } else {
                 text = "Test NO realizado con éxito."
                 _uiState.update { currentState ->
@@ -281,17 +311,18 @@ class SettingsViewModel : ViewModel() {
     private suspend fun UserUdoInsertFireBase(userForUdo: SeiConfigUser?) {
         if (userForUdo is SeiConfigUser) {
             userForUdo.value.forEach { element ->
+                val seiConfig = SEIConfig().apply {
+                    this.Code = element.Code.toInt()
+                    this.U_Empleado = element.U_Empleado ?: 0
+                    this.U_name = element.U_name ?: ""
+                    this.U_password = element.U_password ?: ""
+                    this.U_articulo = element.U_articulo ?: ""
+                    this.U_actividad = element.U_actividad ?: ""
+                    this.U_PedidoCI = element.U_PedidoCl ?: ""
+                    this.U_PedidoCO = element.U_PedidoCO ?: ""
+                }
                 SEIConfigCRUD.insertSEIConfig(
-                    SEIConfig(
-                        element.Code.toInt(),
-                        element.U_Empleado,
-                        element.U_name,
-                        element.U_password,
-                        element.U_articulo,
-                        element.U_actividad,
-                        element.U_PedidoCl,
-                        element.U_PedidoCO
-                    )
+                    seiConfig
                 )
                 Log.e("JOSELITOLOQUITO", "Usuarios check")
             }
@@ -307,12 +338,11 @@ class SettingsViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             val userForUdo = UDOobj.getUserTableUDO(Config.rulUse)
             if (userForUdo is SeiConfigUser) {
-                userForUdo.value.forEach { element ->
-                    Log.e("JOSELITOO", element.U_name)
-                    SEIConfigCRUD.deleteSEIConfigById(element.U_name)
-                }
+
                 println("aaaaaaaaaaaaaaaaaaa")
             }
+            //Borramos todos
+            SEIConfigCRUD.deleteAll()
 
             UserUdoInsertFireBase(userForUdo)
         }
@@ -344,30 +374,35 @@ class SettingsViewModel : ViewModel() {
                 }
             }
 
-            listBusinessPartnerSAP.forEach { element ->
-                BusinessPartnerCRUD.deleteObjectById(element.CardCode)
-            }
+            //Borramos todos los interlocutores
+            BusinessPartnerCRUD.deleteAll()
 
             listBusinessPartnerSAP.forEach { element ->
                 var email: String = ""
                 var phone1: String = ""
+                var CardName:String = ""
                 if (!element.Phone1.isNullOrEmpty()) {
                     phone1 = element.Phone1
                 }
                 if (!element.EmailAddress.isNullOrEmpty()) {
                     email = element.EmailAddress
                 }
+                if (!element.CardName.isNullOrEmpty()) {
+                    CardName = element.CardName
+                }
+
+                val bp = BusinessPartner().apply {
+                    this.idFireBase = ""
+                    this.CardCode = element.CardCode
+                    this.CardType = element.CardType
+                    this.CardName = CardName
+                    this.Cellular = phone1
+                    this.EmailAddress = email
+                    this.SAP = true
+                }
 
                 BusinessPartnerCRUD.insert(
-                    BusinessPartner(
-                        "",
-                        element.CardCode,
-                        element.CardType,
-                        element.CardName,
-                        phone1,
-                        email,
-                        true
-                    )
+                    bp
                 )
             }
             _uiState.update { currentState ->
@@ -411,21 +446,20 @@ class SettingsViewModel : ViewModel() {
             }
             listActivitySAP.forEach { element ->
                 val activity: com.AG_AP.electroshop.firebase.models.Activity =
-                    com.AG_AP.electroshop.firebase.models.Activity(
-                        "",
-                        element.Notes ?: "",
-                        element.ActivityDate ?: "",
-                        element.ActivityTime ?: "",
-                        element.CardCode ?: "",
-                        element.EndTime ?: "",
-                        element.Activity ?: "",
-                        element.Notes ?: "",//
-                        element.ActivityCode.toString() ?: "",
-                        element.Priority ?: "",
-                        element.U_SEIPEDIDOCOMPRAS ?: 0,
-                        element.U_SEIPEDIDOCLIENTE ?: 0,
-                        true
-                    )
+                    com.AG_AP.electroshop.firebase.models.Activity().apply {
+                        this.idFireBase = ""
+                        this.nota = element.Notes ?: ""
+                        this.ActivityDate = element.ActivityDate ?: ""
+                        this.ActivityTime = element.ActivityTime ?: ""
+                        this.CardCode = element.CardCode ?: ""
+                        this.EndTime = element.EndTime ?: ""
+                        this.Action = element.Activity ?: ""
+                        this.ClgCode = element.ActivityCode.toString() ?: ""
+                        this.Priority = element.Priority ?: ""
+                        this.U_SEIPEDIDOCOMPRAS = element.U_SEIPEDIDOCOMPRAS ?: 0
+                        this.U_SEIPEDIDOCLIENTE = element.U_SEIPEDIDOCLIENTE ?: 0
+                        this.SAP = true
+                    }
                 ActivityCRUD.insertActivity(activity)
             }
             _uiState.update { currentState ->
@@ -458,14 +492,13 @@ class SettingsViewModel : ViewModel() {
             //TODO
 
             //añadir precios especiales
-                deleteAndInsertSpecialPrice()
-                deleteAndInsertPriceList()
+                deleteAndInsertSpecialPrice() // correcta
+                deleteAndInsertPriceList() // correcta
                 deleteAndInsertItem()// Correcta
-                deleteAndInsertUserUdo() //
-                deleteAndInsertBusinessPartner() // Correcta
-                deleteAndInsertActivity() // Correcto
-                //deleteAndInsertOrders() //Corecta
-                //deleteAndInsertPurchaseOrders() //Correcta
+                deleteAndInsertUserUdo() // revisado
+                deleteAndInsertBusinessPartner() // revisado
+                deleteAndInsertActivity() // revisado
+                deleteAndInsertOrders() //
                 enablebtn(Config.rulUse)
         }
 
@@ -490,13 +523,64 @@ class SettingsViewModel : ViewModel() {
     }
 
     private fun deleteAndInsertSpecialPrice() {
+        viewModelScope.launch(Dispatchers.IO) {
+            var listSpecialPricesSAP: MutableList<com.AG_AP.electroshop.endpoints.models.specialPrices.Value> =
+                mutableListOf()
+            var checkSAP: Boolean = false
+            var specialPrices = ItemObj.getSpecialPrices(Config.rulUse)
+            while (!checkSAP) {
+                if (specialPrices != null) {
+                    if (specialPrices.odataNextLink.isNullOrEmpty()) {
+                        specialPrices.value.forEach {
+                            listSpecialPricesSAP += it
+                        }
+                        checkSAP = true
+                    } else {
+                        specialPrices.value.forEach {
+                            listSpecialPricesSAP += it
+                        }
+                        val num: List<String> = specialPrices.odataNextLink.split("=")
+                        //TODO("Revisar si se quiere añadir mas descuentos especiales")
+                        /*specialPrices = BusinessPartnersObj.getBusinessPartnersExten(
+                            Config.rulUse,
+                            num[1].toInt()
+                        )*/
+                    }
+                }
+            }
+
+            //Borramos todos los precios especiales
+            SpecialPricesCRUD.deleteAll()
+
+            listSpecialPricesSAP.forEach { element ->
+
+                val bp = SpecialPriceFireBase().apply {
+                    this.Price = element.Price ?: 0.0
+                    this.CardCode = element.CardCode ?: ""
+                    this.ItemCode = element.ItemCode ?: ""
+                    this.Currency = element.Currency ?: ""
+                    this.PriceListNum = element.PriceListNum ?: 0
+                    this.DiscountPercent = element.DiscountPercent ?: 0.0
+                }
+                SpecialPricesCRUD.insert(
+                    bp
+                )
+            }
+            _uiState.update { currentState ->
+                currentState.copy(
+                    checkPreciosEspeciales = true
+                )
+            }
+
+            Log.e("sync", "Precios especiales sincronizados")
+        }
     }
 
     private fun enablebtn(url: String) {
         viewModelScope.launch(Dispatchers.IO) {
             var aux: Boolean = true
             while (aux){
-                if(_uiState.value.checkUserUdo && _uiState.value.checkBusinessPartner && _uiState.value.checkActivity && _uiState.value.checkItem){
+                if(_uiState.value.checkUserUdo && _uiState.value.checkBusinessPartner && _uiState.value.checkActivity && _uiState.value.checkItem && _uiState.value.checkPreciosEspeciales && _uiState.value.checkPriceLists){
 
                     aux = false
                     LoginObj.logout(url)
@@ -511,72 +595,6 @@ class SettingsViewModel : ViewModel() {
                     btnExitEnable = true
                 )
             }
-        }
-    }
-
-    private fun deleteAndInsertPurchaseOrders() {
-        viewModelScope.launch(Dispatchers.IO) {
-            var listPurchaseOrderSAP: MutableList<com.AG_AP.electroshop.endpoints.models.purchaseOrders.Value> =
-                mutableListOf()
-            var checkSAP: Boolean = false
-            var purchaseOrders: PurchaseOrders? = PurchaseOrdersObj.getPurchaseOrders(Config.rulUse)
-            while (!checkSAP) {
-                if (purchaseOrders != null) {
-                    if (purchaseOrders.odataNextLink.isNullOrEmpty()) {
-                        purchaseOrders.value.forEach {
-                            listPurchaseOrderSAP += it
-                        }
-                        checkSAP = true
-                    } else {
-                        purchaseOrders.value.forEach {
-                            listPurchaseOrderSAP += it
-                        }
-                        val num: List<String> = purchaseOrders.odataNextLink.split("=")
-                        purchaseOrders = PurchaseOrdersObj.getPurchaseOrdersExtenExten(
-                            Config.rulUse,
-                            num[1].toInt()
-                        )
-                    }
-                }
-            }
-            listPurchaseOrderSAP.forEach { element ->
-                PurchaseOrderCRUD.deleteObjectById(element.DocNum.toString())
-            }
-            listPurchaseOrderSAP.forEach { element ->
-                //lista de precios
-                val documentList: MutableList<DocumentLineFireBase> = mutableListOf()
-                element.DocumentLines.forEachIndexed { index, it ->
-                    documentList.add(
-                        index,
-                        DocumentLineFireBase(
-                            it.ItemCode,
-                            it.ItemDescription ?: "",
-                            it.Quantity,
-                            it.DiscountPercent,
-                            it.LineNum,
-                            it.Price,
-                        )
-                    )
-                }
-                val orderInsert: OrderFireBase = OrderFireBase(
-                    "",
-                    element.DocNum,
-                    element.CardCode,
-                    element.CardName,
-                    element.DocDate,
-                    element.DocDueDate,
-                    element.TaxDate,
-                    element.DiscountPercent,
-                    documentList,
-                    true,
-                    element.SalesPersonCode
-                )
-                PurchaseOrderCRUD.insert(orderInsert)
-            }
-            _uiState.update { currentState -> currentState.copy(
-                checkPurchaseOrder = true
-            ) }
-            Log.e("sync","order sync")
         }
     }
 
@@ -602,38 +620,40 @@ class SettingsViewModel : ViewModel() {
                     }
                 }
             }
-            listOrderSAP.forEach { element ->
-                OrderCRUD.deleteObjectById(element.DocNum.toString())
-            }
+
+            //Borramos todos los pedidos
+            OrderCRUD.deleteAll()
+
             listOrderSAP.forEach { element ->
                 //lista de precios
                 val documentList: MutableList<DocumentLineFireBase> = mutableListOf()
                 element.DocumentLines.forEachIndexed { index, it ->
+                    val line = DocumentLineFireBase().apply {
+                        ItemCode = it.ItemCode
+                        ItemDescription = it.ItemDescription ?: ""
+                        Quantity = it.Quantity
+                        DiscountPercent = it.DiscountPercent
+                        LineNum = it.LineNum
+                        Price = it.Price
+                    }
                     documentList.add(
                         index,
-                        DocumentLineFireBase(
-                            it.ItemCode,
-                            it.ItemDescription ?: "",
-                            it.Quantity,
-                            it.DiscountPercent,
-                            it.LineNum,
-                            it.Price,
-                        )
+                        line
                     )
                 }
-                val orderInsert: OrderFireBase = OrderFireBase(
-                    "",
-                    element.DocNum,
-                    element.CardCode,
-                    element.CardName,
-                    element.DocDate,
-                    element.DocDueDate,
-                    element.TaxDate,
-                    element.DiscountPercent,
-                    documentList,
-                    true,
-                    element.SalesPersonCode
-                )
+                val orderInsert: OrderFireBase = OrderFireBase().apply {
+                    this.idFireBase = ""
+                    DocNum = element.DocNum
+                    CardCode = element.CardCode
+                    CardName = element.CardName
+                    DocDate = element.DocDate
+                    DocDueDate = element.DocDueDate
+                    TaxDate = element.TaxDate
+                    DiscountPercent = element.DiscountPercent
+                    this.DocumentLines = documentList.toRealmList()
+                    this.SAP = true
+                    SalesPersonCode = element.SalesPersonCode
+                }
                 OrderCRUD.insert(orderInsert)
             }
             _uiState.update { currentState ->
@@ -667,34 +687,38 @@ class SettingsViewModel : ViewModel() {
                     }
                 }
             }
-            listItemSAP.forEach { element ->
-                ItemCRUD.deleteItemById(element.ItemCode.toString())
-            }
+
+            //Borramos los items
+            ItemCRUD.deleteAll()
+
             listItemSAP.forEach { element ->
                 //lista de precios
-                val listPrice: MutableList<Price> = mutableListOf()
+                val listPrice: MutableList<ItemPrice> = mutableListOf()
                 element.ItemPrices.forEachIndexed { index, itemPrice ->
+                    val price = ItemPrice().apply {
+                        this.priceList = itemPrice.PriceList ?: 0
+                        price = itemPrice.Price ?: 0.0
+                        currency = itemPrice.Currency ?: ""
+                        SAP = true
+                    }
                     listPrice.add(
                         index,
-                        Price(
-                            itemPrice.PriceList ?: 0,
-                            itemPrice.Price ?: 0.0F,
-                            itemPrice.Currency ?: "",
-                            true
-                        )
+                        price
                     )
                 }
-                val item: Item = Item(
-                    "",
-                    element.ItemCode ?: "",
-                    element.ItemName ?: "",
-                    ItemType.Articulo,
-                    element.ItemName ?: "",
-                    listPrice.toList(),
-                    element.ManageSerialNumbers ?: "",
-                    element.AutoCreateSerialNumbersOnRelease ?: "",
-                    true
-                )
+                val item: Item = Item().apply {
+                    idFireBase = ""
+                    ItemCode = element.ItemCode ?: ""
+                    itemName = element.ItemName ?: ""
+                    itemType = "I"
+                    mainSupplier = element.ItemName ?: ""
+                    this.itemPrice = listPrice.toRealmList()
+                    manageSerialNumbers = element.ManageSerialNumbers ?: ""
+                    autoCreateSerialNumbersOnRelease = element.AutoCreateSerialNumbersOnRelease ?: ""
+                    SAP = true
+
+                }
+
                 ItemCRUD.insertItem(item)
             }
             _uiState.update { currentState ->
@@ -713,7 +737,9 @@ class SettingsViewModel : ViewModel() {
         val login = _uiState.value.login
         val password = _uiState.value.password
         val dataBase = _uiState.value.dataBase
-        val dataConfiguration = ConfigurationApplication(login, password, dataBase, urlExt, urlInt)
+        val url = _uiState.value.urlCheck
+        val urlTipCheck = _uiState.value.urlTipCheck
+        val dataConfiguration = ConfigurationApplication(login, password, dataBase, url,urlTipCheck)
         val gson = Gson()
         val jsonData: String = gson.toJson(dataConfiguration)
 
@@ -741,35 +767,55 @@ class SettingsViewModel : ViewModel() {
         val json = sharedPref?.getString("configuration", null)
         if (!json.isNullOrEmpty()) {
             val dataConfig = gson.fromJson(json, ConfigurationApplication::class.java)
-            _uiState.update { currentState ->
-                currentState.copy(
-                    urlInt = dataConfig.urlInt,
-                    urlExt = dataConfig.urlExt,
-                    login = dataConfig.login,
-                    password = dataConfig.password,
-                    dataBase = dataConfig.dataBase,
-                    init = false
-                )
+            if(dataConfig.urlTipCheck == "Int"){
+                _uiState.update { currentState ->
+
+                    currentState.copy(
+                        urlInt = dataConfig.url,
+                        login = dataConfig.login,
+                        password = dataConfig.password,
+                        dataBase = dataConfig.dataBase,
+                        init = false
+                    )
+                }
+            }else if(dataConfig.urlTipCheck == "Ext"){
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        urlExt = dataConfig.url,
+                        login = dataConfig.login,
+                        password = dataConfig.password,
+                        dataBase = dataConfig.dataBase,
+                        init = false
+                    )
+                }
             }
+
         }
     }
 
     private fun deleteAndInsertPriceList() {
         viewModelScope.launch(Dispatchers.IO) {
-            val priceList = PriceListObj.getPriceLists(Config.rulUse)
+            var priceList = PriceListObj.getPriceLists(Config.rulUse)
             if (priceList is PriceList) {
+                PriceListForListCRUD.deleteAll()
                 priceList.value.forEach { element ->
-                    Log.e("JOSELITOO", element.toString())
-                    PriceListCRUD.deletePrecioById(element.BasePriceList.toString())
-                }
-                priceList.value.forEach { element ->
-                    PriceListCRUD.insertPrecio(
-                        element.BasePriceList,
-                        element.FixedAmount.toDouble(),
-                        element.DefaultPrimeCurrency,
-                        true
+                    val d = PriceListRealm().apply {
+                        this.PriceListName = element.PriceListName
+                        this.Active = element.Active
+                        this.BasePriceList = element.BasePriceList.toString()
+                        this.PriceListNo = element.PriceListNo.toString()
+                    }
+                    PriceListForListCRUD.insert(
+                        d
                     )
                 }
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        checkPriceLists = true
+                    )
+                }
+
+                Log.e("sync", "lista de precios  sincronizados")
             }
         }
     }

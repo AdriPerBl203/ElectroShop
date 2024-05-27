@@ -1,14 +1,13 @@
 package com.AG_AP.electroshop.uiState.Items
 
-import com.AG_AP.electroshop.firebase.models.ItemType
-import com.AG_AP.electroshop.firebase.models.Price
+import com.AG_AP.electroshop.firebase.models.ItemPrice
 
 data class ItemUiState(
     val ItemCode: String = "",
     val itemName: String = "",
-    val itemType: ItemType = ItemType.Articulo,
+    val itemType: String = "I",
     val mainSupplier: String = "",
-    val itemPrice: MutableList<Price>? = mutableListOf(),
+    val itemPrice: MutableList<ItemPrice>? = mutableListOf(),
     val manageSerialNumbers: Boolean = false,
     val autoCreateSerialNumbersOnRelease: Boolean = false,
     val message: Boolean = false,

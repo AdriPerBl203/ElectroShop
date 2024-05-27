@@ -6,11 +6,11 @@ import com.AG_AP.electroshop.firebase.models.OrderFireBase
 
 data class DialogArticleUiState(
     val codeArticle: String = "",
-    val description:String ="",
-    val count:String ="0",
-    val price:String ="0",
-    val discount:String ="0",
+    val description: String = "",
+    val count: Double = 1.0,
+    val price: Double = 0.0,
+    val discount: Double = 0.0,
     //val ListItems:List<OrderFireBase> = listOf(),
-    val ListItems:List<Item> = listOf(),
-    val showDialogSelectCodeArticle:Boolean =false
+    val ListItems: List<Item> = listOf(),
+    val showDialogSelectCodeArticle: Boolean = false
 )

@@ -161,9 +161,6 @@ fun ListDraw(viewModel: MenuViewModel, navController: NavHostController) {
         ListActionDraw("Subir clientes",Icons.Filled.AccountCircle,"Sincronizando clientes"){
             viewModel.upBusinessPartners(true)
         },
-        ListActionDraw("Subir pedido de compra",Icons.Filled.Reorder,"Sincronizando pedido de compra"){
-            viewModel.upPurchaseOrders(true)
-        },
         ListActionDraw("Subir pedido de cliente",Icons.Filled.AddBusiness,"Sincronizando pedido de cliente"){
             viewModel.upOrder(true)
         },
@@ -291,21 +288,6 @@ fun MenuBody(
                             onClick = { navController.navigate(route = Routes.ScreenOrder.route) }
                         ) {
                             Text("Pedido de cliente")
-                        }
-                    }
-                }
-
-                Row (
-
-                ){
-                    if(dataUiState.pedidoCL == "S"){
-                        ElevatedButton(
-                            modifier= Modifier
-                                .padding(30.dp)
-                                .width(200.dp),
-                            onClick = { navController.navigate(route = Routes.MixedPurchaseOrderScreen.route) }
-                        ) {
-                            Text("Pedido de compra")
                         }
                     }
                 }

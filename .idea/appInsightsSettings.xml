@@ -9,10 +9,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.AG_AP.electroshop" />
-                  <option name="mobileSdkAppId" value="1:465915942953:android:fb2db607b69947c7ffa438" />
-                  <option name="projectId" value="electroshop-8ef47" />
-                  <option name="projectNumber" value="465915942953" />
+                  <option name="appId" value="PLACEHOLDER" />
+                  <option name="mobileSdkAppId" value="" />
+                  <option name="projectId" value="" />
+                  <option name="projectNumber" value="" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

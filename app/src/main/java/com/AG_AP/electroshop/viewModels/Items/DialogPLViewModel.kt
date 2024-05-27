@@ -3,7 +3,7 @@ package com.AG_AP.electroshop.viewModels.Items
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.AG_AP.electroshop.firebase.PriceListCRUD
-import com.AG_AP.electroshop.firebase.models.Price
+import com.AG_AP.electroshop.firebase.models.ItemPrice
 import com.AG_AP.electroshop.uiState.Items.DialogPLUiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -72,7 +72,13 @@ class DialogPLViewModel : ViewModel() {
         val writtenPrice = _uiState.value.PriceWritten
 
         if (priceList != null && (choosenCurrency != null && choosenCurrency != "") && (writtenPrice != null && writtenPrice >= 0.0)) {
-            val itemPrice = Price(priceList.toInt(), writtenPrice, choosenCurrency, true)
+            //priceList.toInt(), writtenPrice, choosenCurrency, true
+            val itemPrice = ItemPrice().apply {
+                this.priceList = priceList.toInt()
+                this.currency = choosenCurrency
+                this.price = writtenPrice
+                this.SAP = true
+            }
 
             _uiState.update { currentState ->
                 currentState.copy(

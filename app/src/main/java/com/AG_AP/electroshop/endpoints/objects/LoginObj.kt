@@ -8,13 +8,13 @@ import com.AG_AP.electroshop.functions.Config
 
 object LoginObj {
 
-    suspend fun loginAcessTwoversion(data: Login, urlInt: String): Boolean {
-        RetrofitClient.baseUrl = urlInt
+    suspend fun loginAcessTwoversion(data: Login, url: String): Boolean {
+        RetrofitClient.setURL(url)
         val apiService = RetrofitClient.retrofit.create(LoginInterface::class.java)
         var request:LoginReturn? = null
         return try {
             request = apiService.login(data)
-            Config.rulUse = urlInt
+            Config.rulUse = url
             true
         } catch (e: Exception) {
             false

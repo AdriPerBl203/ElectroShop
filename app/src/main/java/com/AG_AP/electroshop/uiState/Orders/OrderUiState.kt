@@ -21,13 +21,14 @@ data class OrderUiState(
     val message: Boolean = false,
     val progress: Boolean = false,
     val text: String = "",
-    val showDialogAddArticle:Boolean = false,
-    val showDialogSelectCodeArticle:Boolean = false,
+    val showDialogAddArticle: Boolean = false,
+    val showDialogSelectCodeArticle: Boolean = false,
     val showToast: Boolean = false,
-    val ListItems:List<OrderFireBase> = listOf(),
-    val showDialogBusinessPartner:Boolean = false,
-    val ListBusinessPartner:List<BusinessPartner> = listOf(),
-    val dialogAddArticleUpdate:Boolean = false,
+    val ListItems: List<OrderFireBase> = listOf(),
+    val showDialogBusinessPartner: Boolean = false,
+    val ListBusinessPartner: List<BusinessPartner> = listOf(),
+    val dialogAddArticleUpdate: Boolean = false,
+    val ActionButton: String = "Añadir y ver",
 )
 
 /*

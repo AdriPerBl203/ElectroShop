@@ -19,7 +19,7 @@ object Config {
             this.login = dataConfig.login
             this.password = dataConfig.password
             this.dataBase = dataConfig.dataBase
-            this.rulUse = dataConfig.urlInt
+            this.rulUse = dataConfig.url
         }
     }
 }

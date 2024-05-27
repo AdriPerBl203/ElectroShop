@@ -35,7 +35,8 @@ fun DialogOandPO(
     viewModel: DialogArticleViewModel = viewModel(),
     closeDialog: () -> Unit,
     returnData: (List<String>) -> Unit,
-    index: Int =-1
+    index: Int =-1,
+    cardCode:String = ""
 ) {
     val dataUiState by viewModel.uiState.collectAsState()
 
@@ -53,10 +54,10 @@ fun DialogOandPO(
                     if (data is Item) {
                         viewModel.changeCodeArticle(data.ItemCode)
                         viewModel.changeDescription(data.itemName)
-                        //TODO controlar si es un pedido de compra y venta
-                        viewModel.changeCount("1")
-                        viewModel.changePrice("1")
-                        viewModel.changeDiscount("0")
+                        viewModel.changeCount(data.itemPrice?.get(1)?.quantity.toString())
+                        viewModel.changePrice(data.itemPrice?.get(1)?.price.toString())
+                        viewModel.changeDiscount(data.itemPrice?.get(1)?.discount.toString())
+                        viewModel.SpecialPrices(data.ItemCode,cardCode)
                     } else {
                         viewModel.changeCodeArticle(data.toString())
                     }
@@ -105,7 +106,7 @@ fun DialogOandPO(
                     )
 
                     OutlinedTextField(
-                        value = dataUiState.count,
+                        value = dataUiState.count.toString(),
                         onValueChange = { viewModel.changeCount(it) },
                         modifier = Modifier
                             .width(300.dp)
@@ -117,7 +118,7 @@ fun DialogOandPO(
 
                 Column {
                     OutlinedTextField(
-                        value = dataUiState.price,
+                        value = dataUiState.price.toString(),
                         onValueChange = { viewModel.changePrice(it) },
                         modifier = Modifier
                             .width(300.dp)
@@ -128,7 +129,7 @@ fun DialogOandPO(
                     )
 
                     OutlinedTextField(
-                        value = dataUiState.discount,
+                        value = dataUiState.discount.toString(),
                         onValueChange = { viewModel.changeDiscount(it) },
                         modifier = Modifier
                             .width(300.dp)
@@ -151,9 +152,9 @@ fun DialogOandPO(
                         val listData = listOf(
                             dataUiState.codeArticle,
                             dataUiState.description,
-                            dataUiState.count,
-                            dataUiState.price,
-                            dataUiState.discount
+                            dataUiState.count.toString(),
+                            dataUiState.price.toString(),
+                            dataUiState.discount.toString()
                         )
                         returnData(listData)
                         viewModel.resetData()
