@@ -62,7 +62,7 @@ class DialogArticleViewModel : ViewModel() {
         } else {
             _uiState.update { currentState ->
                 currentState.copy(
-                    count = 0.0
+                    count = 1.0
                 )
             }
         }
@@ -135,7 +135,7 @@ class DialogArticleViewModel : ViewModel() {
                 showDialogSelectCodeArticle = true,
                 discount = 0.0,
                 price = 0.0,
-                count = 0.0,
+                count = 1.0,
                 description = "",
                 codeArticle = "",
             )
@@ -147,7 +147,7 @@ class DialogArticleViewModel : ViewModel() {
             currentState.copy(
                 discount = 0.0,
                 price = 0.0,
-                count = 0.0,
+                count = 1.0,
                 description = "",
                 codeArticle = "",
             )

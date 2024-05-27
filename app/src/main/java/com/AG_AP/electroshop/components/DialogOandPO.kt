@@ -53,7 +53,6 @@ fun DialogOandPO(
                     if (data is Item) {
                         viewModel.changeCodeArticle(data.ItemCode)
                         viewModel.changeDescription(data.itemName)
-                        //TODO controlar si es un pedido de compra y venta
                         viewModel.changeCount(data.itemPrice?.get(1)?.quantity.toString())
                         viewModel.changePrice(data.itemPrice?.get(1)?.price.toString())
                         viewModel.changeDiscount(data.itemPrice?.get(1)?.discount.toString())
@@ -151,11 +150,11 @@ fun DialogOandPO(
                         val listData = listOf(
                             dataUiState.codeArticle,
                             dataUiState.description,
-                            dataUiState.count,
-                            dataUiState.price,
-                            dataUiState.discount
+                            dataUiState.count.toString(),
+                            dataUiState.price.toString(),
+                            dataUiState.discount.toString()
                         )
-                        returnData(listData as List<String>)
+                        returnData(listData)
                         viewModel.resetData()
                         closeDialog()
                     }
