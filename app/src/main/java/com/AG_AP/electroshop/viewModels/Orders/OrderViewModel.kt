@@ -27,7 +27,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.concurrent.ConcurrentHashMap
-import kotlin.math.roundToLong
 
 class OrderViewModel : ViewModel(), ActionViewModel {
 
@@ -58,7 +57,8 @@ class OrderViewModel : ViewModel(), ActionViewModel {
             mutableList?.let {
                 _uiState.update { currentState ->
                     currentState.copy(
-                        ListItems = it.toList()
+                        ListItems = it.toList(),
+                        ListOrders= it.toList()
                     )
                 }
             }
@@ -777,6 +777,61 @@ class OrderViewModel : ViewModel(), ActionViewModel {
 
         return allCheck
     }
+
+    fun showOrderComplete(order: OrderFireBase) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                CardCode = order.CardCode,
+                CardName = order.CardName ?: "",
+                DocNum = order.DocNum,
+                DocDate = order.DocDate,
+                DocDueDate = order.DocDueDate,
+                TaxDate = order.TaxDate,
+                DiscountPercent = order.DiscountPercent,
+                SalesPersonCode = order.Slpcode,
+                DocumentLineList = DocumentLineForMutableListSinceListOrder(order.DocumentLines.toMutableList())
+            )
+        }
+
+    }
+
+    private fun DocumentLineForMutableListSinceListOrder(listItems: MutableList<DocumentLineFireBase>): ConcurrentHashMap<Int, MutableList<String>> {
+        _uiState.value.DocumentLineList.clear()
+
+        listItems.forEachIndexed { index, element ->
+            if (element != null) {
+                val listToAdd = element.let {
+                    if (it.ItemDescription.toString() == "null") {
+                        val ItemDescription = ""
+                        mutableListOf(
+                            it.LineNum.toString(),
+                            it.ItemCode.toString(),
+                            ItemDescription,
+                            it.Quantity.toString(),
+                            it.Price.toString(),
+                            it.DiscountPercent.toString()
+                        )
+                    } else {
+                        mutableListOf(
+                            it.LineNum.toString(),
+                            it.ItemCode.toString(),
+                            it.ItemDescription.toString(),
+                            it.Quantity.toString(),
+                            it.Price.toString(),
+                            it.DiscountPercent.toString()
+                        )
+                    }
+
+                }
+                _uiState.value.DocumentLineList[index] = listToAdd
+            }
+        }
+
+        return _uiState.value.DocumentLineList
+    }
+
+
+
 
     fun editarArticulo(index: Int) {
         Log.i("EditarArticulo", index.toString())

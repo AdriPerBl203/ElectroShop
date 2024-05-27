@@ -5,26 +5,32 @@ import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddBox
 import androidx.compose.material.icons.filled.CallMade
+import androidx.compose.material.icons.filled.Camera
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -100,12 +106,56 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
             {data -> /*viewModel.change*/ }
         )
     }*/
+
     Column(
         modifier = Modifier
             .padding(innerPadding)
-        //.verticalScroll(rememberScrollState())
     ) {
         Row {
+            LazyColumn(
+                modifier = Modifier
+                    .width(250.dp)
+                    //.height(400.dp)
+                    .padding(horizontal = 10.dp)
+            ) {
+                items(dataUiState.ListOrders){order ->
+                    Card(
+                        modifier = Modifier.padding(5.dp).height(200.dp)
+                    ){
+                        Column(
+                            modifier = Modifier.padding(3.dp)
+                        ) {
+                            Row(
+                                modifier= Modifier.fillMaxWidth(),
+                                horizontalArrangement= Arrangement.SpaceBetween,
+                            ) {
+                                Text(text = order.DocDate.split("T").firstOrNull() ?: "Sin fecha")
+                                IconButton(onClick = {
+                                    viewModel.showOrderComplete(order)
+                                }) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Camera,
+                                        contentDescription = "Settings",
+                                        tint = MaterialTheme.colorScheme.primaryContainer
+                                    )
+                                }
+                            }
+                            Row(
+                                modifier= Modifier.fillMaxWidth(),
+                                horizontalArrangement= Arrangement.SpaceBetween,
+                            ){
+                                Text(text = order.CardCode)
+                            }
+                            Spacer(modifier = Modifier.height(5.dp))
+                            order.DocumentLines.forEachIndexed { index, line ->
+                                Row {
+                                    Text(text = "${line.ItemCode} -- ${line.Quantity} -- ${line.Price}€")
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             Column { //
                 OutlinedTextField(
                     value = dataUiState.SalesPersonCode,
