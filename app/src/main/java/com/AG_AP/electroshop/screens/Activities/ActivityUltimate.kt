@@ -124,7 +124,7 @@ fun ActivityUltimate(
     Column(
         modifier = Modifier
             .padding(innerPadding)
-            //.verticalScroll(rememberScrollState())
+        //.verticalScroll(rememberScrollState())
     ) {
         Row(
         ) {
@@ -182,7 +182,7 @@ fun ActivityUltimate(
                     viewModel.changeActivityDate(it)
                 }
                 OutlinedTextField(
-                    value =  dataUiState.ActivityTime,
+                    value = dataUiState.ActivityTime,
                     onValueChange = { viewModel.changeActivityTime(it) },
                     modifier = Modifier
                         .width(300.dp)
@@ -201,7 +201,7 @@ fun ActivityUltimate(
                 )
 
                 OutlinedTextField(
-                    value =  dataUiState.U_SEIPEDIDOCLIENTE,
+                    value = dataUiState.U_SEIPEDIDOCLIENTE,
                     onValueChange = { /*dataUiState.U_SEIPEDIDOCLIENTE*/ },
                     modifier = Modifier
                         .width(300.dp)
@@ -233,7 +233,7 @@ fun ActivityUltimate(
                 val priority = arrayOf("Bajo", "Normal", "Alto")
                 var expandedTwo by remember { mutableStateOf(false) }
                 OutlinedTextField(
-                    value =  dataUiState.EndTime,
+                    value = dataUiState.EndTime,
                     onValueChange = { viewModel.changeEndTime(it) },
                     modifier = Modifier
                         .width(300.dp)
@@ -251,7 +251,7 @@ fun ActivityUltimate(
                     }
                 )
                 OutlinedTextField(
-                    value =  dataUiState.CardCode,
+                    value = dataUiState.CardCode,
                     onValueChange = { viewModel.changeCardCode(it) },
                     modifier = Modifier
                         .width(300.dp)
@@ -311,8 +311,8 @@ fun ActivityUltimate(
 
             }
             Column(
-                modifier= Modifier.width(200.dp)
-            ){
+                modifier = Modifier.width(200.dp)
+            ) {
                 OutlinedTextField(
                     value = dataUiState.dataFilter,
                     onValueChange = { viewModel.changeDataFilter(it) },
@@ -322,13 +322,13 @@ fun ActivityUltimate(
                     label = { Text("Buscar") }
                 )
 
-                    ElevatedButton(onClick = { viewModel.findFilter() }) {
-                        Text("Buscar")
-                    }
+                ElevatedButton(onClick = { viewModel.findFilter() }) {
+                    Text("Buscar")
+                }
 
-                    ElevatedButton(onClick = { /*TODO*/ }) {
-                        Text("Opciones avanzadas")
-                    }
+                ElevatedButton(onClick = { /*TODO*/ }) {
+                    Text("Opciones avanzadas")
+                }
             }
 
             /*Column(
@@ -336,27 +336,27 @@ fun ActivityUltimate(
                 horizontalAlignment= Alignment.CenterHorizontally,
                 verticalArrangement= Arrangement.Center
             ){*/
-            
-            Column(){
+
+            Column() {
                 Row(
-                    modifier=Modifier.padding(5.dp)
-                ){
+                    modifier = Modifier.padding(5.dp)
+                ) {
                     Text(text = "Total de resultados: ${dataUiState.totalSearch}")
                 }
-                
-                Row(){
+
+                Row() {
                     Column(
-                        horizontalAlignment= Alignment.CenterHorizontally
-                    ){
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
                         Text("Clientes en SAP")
-                        LazyColumnWithCards(dataUiState.ListActivityTheSAP,viewModel)
+                        LazyColumnWithCards(dataUiState.ListActivityTheSAP, viewModel)
 
                     }
                     Column(
-                        horizontalAlignment= Alignment.CenterHorizontally
-                    ){
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
                         Text("Clientes en la tablet")
-                        LazyColumnWithCards(dataUiState.ListActivityTheTablet,viewModel)
+                        LazyColumnWithCards(dataUiState.ListActivityTheTablet, viewModel)
                     }
                 }
             }
@@ -399,7 +399,7 @@ fun LazyColumnWithCards(data: List<Activity>, viewModel: ActivityViewModel) {
                         .height(190.dp)
                 ) {
                     Column(
-                        modifier=Modifier.fillMaxSize(),
+                        modifier = Modifier.fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
@@ -407,7 +407,7 @@ fun LazyColumnWithCards(data: List<Activity>, viewModel: ActivityViewModel) {
                     }
                 }
             }
-        }else{
+        } else {
             items(data) { item ->
                 Card(
                     modifier = Modifier
@@ -453,7 +453,7 @@ fun LazyColumnWithCards(data: List<Activity>, viewModel: ActivityViewModel) {
                                 )
 
                                 Text(
-                                    text =  when (item.Priority) {
+                                    text = when (item.Priority) {
                                         "pr_Low" -> "Bajo"
                                         "pr_Normal" -> "Normal"
                                         "pr_High" -> "Alto"
@@ -527,10 +527,16 @@ fun ScaffoldActivityUltimate(
                         trailingIcon = {
                             IconButton(
                                 onClick = { viewModel.ejecutarAction(navController) }) {
-                                Icon(Icons.Filled.CallMade, contentDescription = "Shopping Cart Icon")
+                                Icon(
+                                    Icons.Filled.CallMade,
+                                    contentDescription = "Shopping Cart Icon"
+                                )
                             }
                         },
-                        modifier = Modifier.menuAnchor(),
+                        modifier = Modifier
+                            .menuAnchor()
+                            .width(300.dp)
+                            .padding(8.dp),
                         leadingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) }
                     )
 
@@ -574,7 +580,7 @@ fun ScaffoldActivityUltimate(
         }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(start = 50.dp, top = 20.dp)) {
-            ActivityUltimate(innerPadding, viewModel, id,dataUiState)
+            ActivityUltimate(innerPadding, viewModel, id, dataUiState)
         }
     }
 }

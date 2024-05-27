@@ -357,6 +357,14 @@ class BusinessPartnerViewModel : ViewModel(), ActionViewModel {
         }
     }
 
+    fun changeActionButton(it: String) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                Option = it
+            )
+        }
+    }
+
     override fun menssageFunFalse() {
         _uiState.update { currentState ->
             currentState.copy(

@@ -45,6 +45,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.filled.CallMade
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -329,11 +330,20 @@ fun ScaffoldBusinessPartnerUltimate(
                         value = dataUiState.value.Option,
                         onValueChange = {},
                         readOnly = true,
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                        trailingIcon = {
+                            IconButton(
+                                onClick = { viewModel.checkOption(navController) }) {
+                                Icon(
+                                    Icons.Filled.CallMade,
+                                    contentDescription = "Shopping Cart Icon"
+                                )
+                            }
+                        },
                         modifier = Modifier
                             .menuAnchor()
                             .width(300.dp)
-                            .padding(8.dp)
+                            .padding(8.dp),
+                        leadingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) }
                     )
 
                     ExposedDropdownMenu(
@@ -344,18 +354,12 @@ fun ScaffoldBusinessPartnerUltimate(
                             DropdownMenuItem(
                                 text = { Text(text = item) },
                                 onClick = {
-                                    viewModel.changeOption(item)
+                                    viewModel.changeActionButton(item)
                                     expanded = false
                                 }
                             )
                         }
                     }
-                }
-                Button(
-                    modifier = Modifier.padding(start = 15.dp, end = 15.dp),
-                    onClick = { viewModel.checkOption(navController) }
-                ) {
-                    Text(text = "Acción")
                 }
                 Button(
                     modifier = Modifier.padding(start = 15.dp, end = 15.dp),

@@ -21,22 +21,30 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddBox
+import androidx.compose.material.icons.filled.CallMade
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -442,6 +450,7 @@ fun ScaffoldOrder(
     navController: NavHostController,
     id: String? = null
 ) {
+    val dataUiState by viewModel.uiState.collectAsState()
     if (id != null) {
         viewModel.changeDocNum(id.toInt())
         viewModel.refresh()
@@ -463,29 +472,54 @@ fun ScaffoldOrder(
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 contentColor = MaterialTheme.colorScheme.primary,
             ) {
-                Button(
-                    modifier = Modifier.padding(start = 15.dp, end = 15.dp),
-                    onClick = { viewModel.save(false) }
+                val coffeeDrinks = arrayOf(
+                    "Añadir y ver",
+                    "Añadir y nuevo",
+                    "Añadir y salir",
+                    "Actualizar",
+                    "Borrar"
+                )
+                var expanded by remember { mutableStateOf(false) }
+                ExposedDropdownMenuBox(
+                    expanded = expanded,
+                    onExpandedChange = {
+                        expanded = !expanded
+                    }
                 ) {
-                    Text(text = "Añadir y nuevo")
-                }
-                Button(
-                    modifier = Modifier.padding(start = 15.dp, end = 15.dp),
-                    onClick = { viewModel.save(true) }
-                ) {
-                    Text(text = "Añadir y ver")
-                }
-                Button(
-                    modifier = Modifier.padding(start = 15.dp, end = 15.dp),
-                    onClick = { viewModel.update() }
-                ) {
-                    Text(text = "Actualizar")
-                }
-                Button(
-                    modifier = Modifier.padding(start = 15.dp, end = 15.dp),
-                    onClick = { viewModel.delete() }
-                ) {
-                    Text(text = "Borrar")
+                    TextField(
+                        value = dataUiState.ActionButton,
+                        onValueChange = {},
+                        readOnly = true,
+                        trailingIcon = {
+                            IconButton(
+                                onClick = { viewModel.ejecutarAction(navController) }) {
+                                Icon(
+                                    Icons.Filled.CallMade,
+                                    contentDescription = "Shopping Cart Icon"
+                                )
+                            }
+                        },
+                        modifier = Modifier
+                            .menuAnchor()
+                            .width(300.dp)
+                            .padding(8.dp),
+                        leadingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) }
+                    )
+
+                    ExposedDropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        coffeeDrinks.forEach { item ->
+                            DropdownMenuItem(
+                                text = { Text(text = item) },
+                                onClick = {
+                                    viewModel.changeActionButton(item)
+                                    expanded = false
+                                }
+                            )
+                        }
+                    }
                 }
                 Button(
                     modifier = Modifier.padding(start = 15.dp, end = 15.dp),

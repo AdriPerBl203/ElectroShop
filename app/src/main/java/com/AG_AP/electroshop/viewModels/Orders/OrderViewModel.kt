@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
 import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
 import com.AG_AP.electroshop.firebase.OrderCRUD
 import com.AG_AP.electroshop.firebase.SEIConfigCRUD
@@ -714,6 +715,29 @@ class OrderViewModel : ViewModel(), ActionViewModel {
                     trash = tastAux
                 )
             }
+        }
+    }
+
+    fun ejecutarAction(navController: NavHostController) {
+
+        when(_uiState.value.ActionButton){
+            "Añadir y ver" -> save(true)
+            "Añadir y nuevo" -> save(false)
+            "Añadir y salir" -> {
+                save(false)
+                navController.popBackStack()
+            }
+            "Actualizar" -> update()
+            "Borrar" -> delete()
+            else -> ""
+        }
+    }
+
+    fun changeActionButton(it: String) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                ActionButton = it
+            )
         }
     }
 
