@@ -147,7 +147,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
                 }
             } else {
                 val lineToDelete = ArticleUiState(
-                    0, "", "", 0.0F, 0.0F, 0.0F
+                    0, "", "", 0.0, 0.0, 0.0
                 )
 
                 val lineList = _uiState.value.DocumentLine
@@ -316,9 +316,9 @@ class OrderViewModel : ViewModel(), ActionViewModel {
                     lineNum,
                     itemCode,
                     itemDescription,
-                    quantity.toFloat(),
-                    price.toFloat(),
-                    discount.toFloat()
+                    quantity.toDouble(),
+                    price.toDouble(),
+                    discount.toDouble()
                 )
             )
         }
@@ -367,7 +367,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
 
     private fun trimDocumentLineList(): ConcurrentHashMap<Int, MutableList<String>> {
         val lineToDelete = ArticleUiState(
-            0, "", "", 0.0F, 0.0F, 0.0F
+            0, "", "", 0.0, 0.0, 0.0
         )
 
         val actualLineList = _uiState.value.DocumentLineList
@@ -474,7 +474,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
 
     fun addLine() {
         val objectReflex = ArticleUiState(
-            0, "", "", 0.0F, 0.0F, 0.0F
+            0, "", "", 0.0, 0.0, 0.0
         )
         val size = _uiState.value.DocumentLine.size
         if (size != 0) {
@@ -489,7 +489,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
         id++
         listAux.add(
             size, ArticleUiState(
-                id, "", "", 0.0F, 0.0F, 0.0F
+                id, "", "", 0.0, 0.0, 0.0
             )
         )
         var tastAux = _uiState.value.trash
@@ -672,7 +672,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
     fun addArticle(list: List<String>) {
 
         val objectReflex = ArticleUiState(
-            0, "", "", 0.0F, 0.0F, 0.0F
+            0, "", "", 0.0, 0.0, 0.0
         )
 
         //pruebas
@@ -712,9 +712,9 @@ class OrderViewModel : ViewModel(), ActionViewModel {
                         index,
                         list[0] ?: "",
                         list[1] ?: "",
-                        list[2].toFloat() ?: 0.0F,
-                        list[3].toFloat() ?: 0.0F,
-                        list[4].toFloat() ?: 0.0F
+                        list[2].toDouble() ?: 0.0,
+                        list[3].toDouble() ?: 0.0,
+                        list[4].toDouble() ?: 0.0
                     )
 
                 }
@@ -726,9 +726,9 @@ class OrderViewModel : ViewModel(), ActionViewModel {
                         i,
                         list[0] ?: "",
                         list[1] ?: "",
-                        list[2].toFloat() ?: 0.0F,
-                        list[3].toFloat() ?: 0.0F,
-                        list[4].toFloat() ?: 0.0F
+                        list[2].toDouble() ?: 0.0,
+                        list[3].toDouble() ?: 0.0,
+                        list[4].toDouble() ?: 0.0
                     )
                     InterconexionUpdateArticle.index = -1
                 }
@@ -804,6 +804,28 @@ class OrderViewModel : ViewModel(), ActionViewModel {
     }
 
     fun showOrderComplete(order: OrderFireBase) {
+        val documentLine: MutableList<ArticleUiState?> = mutableListOf()
+        var numInicial = 0
+
+        order.DocumentLines.forEach {
+            Log.i("Pruebas", numInicial.toString())
+            val item = ArticleUiState(
+                LineNum = numInicial,
+                ItemCode = it.ItemCode,
+                ItemDescription = it.ItemDescription,
+                Quantity = it.Quantity,
+                Price = it.Price,
+                DiscountPercent = it.DiscountPercent,
+            )
+
+            documentLine.add(item)
+            numInicial = numInicial.plus(1)
+
+        }
+
+        _uiState.value.DocumentLine.clear()
+        _uiState.value.DocumentLineList.clear()
+
         _uiState.update { currentState ->
             currentState.copy(
                 CardCode = order.CardCode,
@@ -814,6 +836,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
                 TaxDate = order.TaxDate,
                 DiscountPercent = order.DiscountPercent,
                 SalesPersonCode = order.Slpcode,
+                DocumentLine = documentLine,
                 DocumentLineList = DocumentLineForMutableListSinceListOrder(order.DocumentLines.toMutableList())
             )
         }
@@ -821,8 +844,6 @@ class OrderViewModel : ViewModel(), ActionViewModel {
     }
 
     private fun DocumentLineForMutableListSinceListOrder(listItems: MutableList<DocumentLineFireBase>): ConcurrentHashMap<Int, MutableList<String>> {
-        _uiState.value.DocumentLineList.clear()
-
         listItems.forEachIndexed { index, element ->
             if (element != null) {
                 val listToAdd = element.let {

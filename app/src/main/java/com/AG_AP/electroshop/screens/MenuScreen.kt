@@ -1,15 +1,20 @@
 package com.AG_AP.electroshop.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -24,6 +29,7 @@ import androidx.compose.material.icons.filled.KeyboardReturn
 import androidx.compose.material.icons.filled.LocalActivity
 import androidx.compose.material.icons.filled.Reorder
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Card
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -46,13 +52,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.AG_AP.electroshop.R
 import com.AG_AP.electroshop.components.DialogListDraw
 import com.AG_AP.electroshop.components.ListActionDraw
 import com.AG_AP.electroshop.functions.SessionObj
@@ -75,13 +85,13 @@ fun MenuFrontView(
     val dataUiState by viewModel.uiState.collectAsState()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    if(dataUiState.dialog){
+    if (dataUiState.dialog) {
         DialogListDraw(
-            infoDialog= dataUiState.InfoDialog,
-            actionItemList = {viewModel.closedDialog()},
+            infoDialog = dataUiState.InfoDialog,
+            actionItemList = { viewModel.closedDialog() },
             showIndicator = dataUiState.checkProgresCircular,
-            TextOrList= dataUiState.TextOrList,
-            exit = {viewModel.changeCheckProgresCircular()}
+            TextOrList = dataUiState.TextOrList,
+            exit = { viewModel.changeCheckProgresCircular() }
         )
     }
 
@@ -93,89 +103,100 @@ fun MenuFrontView(
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            ListDraw(viewModel,navController)
+            ListDraw(viewModel, navController)
         },
     ) {
-    Scaffold(
-        topBar = {
-            TopBar(
-                menuUiState = dataUiState
-            )
-        },
-        /* Boton flotante */
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    //viewModel.closeSession(navController)
-                    scope.launch {
-                        drawerState.apply {
-                            if (isClosed) open() else close()
+        Scaffold(
+            topBar = {
+                TopBar(
+                    menuUiState = dataUiState
+                )
+            },
+            /* Boton flotante */
+            floatingActionButton = {
+                FloatingActionButton(
+                    onClick = {
+                        //viewModel.closeSession(navController)
+                        scope.launch {
+                            drawerState.apply {
+                                if (isClosed) open() else close()
+                            }
                         }
                     }
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.ContentPasteSearch,
+                        contentDescription = "opciones"
+                    )
                 }
-            ) {
-                Icon(imageVector = Icons.Filled.ContentPasteSearch, contentDescription = "opciones")
+
+
+            },
+            floatingActionButtonPosition = FabPosition.End,
+            bottomBar = {
+                BottomAppBar(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        textAlign = TextAlign.Center,
+                        text = "Seidor S.A",
+                    )
+                }
             }
 
 
-        },
-        floatingActionButtonPosition = FabPosition.End,
-        bottomBar = {
-            BottomAppBar(
-                containerColor = MaterialTheme.colorScheme.primaryContainer
-            ) {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    textAlign = TextAlign.Center,
-                    text = "Seidor S.A",
-                )
-            }
+        ) {
+            /* Principal content */
+
+                innerPadding ->
+            MenuBody(
+                innerPadding = innerPadding,
+                navController,
+                dataUiState
+            )
+
         }
-
-
-    ) {
-        /* Principal content */
-
-            innerPadding ->
-        MenuBody(
-            innerPadding = innerPadding,
-            navController,
-            dataUiState
-        )
-
     }
-}
 
 }
 
 @Composable
 fun ListDraw(viewModel: MenuViewModel, navController: NavHostController) {
-    val list : List<ListActionDraw> = listOf(
-        ListActionDraw("Subir actividades",Icons.Filled.LocalActivity,"Sincronizando actividades"){
+    val list: List<ListActionDraw> = listOf(
+        ListActionDraw(
+            "Subir actividades",
+            Icons.Filled.LocalActivity,
+            "Sincronizando actividades"
+        ) {
             viewModel.upActivities(true)
         },
-        ListActionDraw("Subir articulos",Icons.Filled.Article,"Sincronizando Articulos"){
+        ListActionDraw("Subir articulos", Icons.Filled.Article, "Sincronizando Articulos") {
             viewModel.upItems(true)
         },
-        ListActionDraw("Subir clientes",Icons.Filled.AccountCircle,"Sincronizando clientes"){
+        ListActionDraw("Subir clientes", Icons.Filled.AccountCircle, "Sincronizando clientes") {
             viewModel.upBusinessPartners(true)
         },
-        ListActionDraw("Subir pedido de cliente",Icons.Filled.AddBusiness,"Sincronizando pedido de cliente"){
+        ListActionDraw(
+            "Subir pedido de cliente",
+            Icons.Filled.AddBusiness,
+            "Sincronizando pedido de cliente"
+        ) {
             viewModel.upOrder(true)
         },
-        ListActionDraw("Subir todo",Icons.Filled.AccountTree,"Sincronizando todo"){
+        ListActionDraw("Subir todo", Icons.Filled.AccountTree, "Sincronizando todo") {
             viewModel.upTotal()
         },
-        ListActionDraw("Cerrar sesión",Icons.Filled.KeyboardReturn,"Cerrar sesión") {
+        ListActionDraw("Cerrar sesión", Icons.Filled.KeyboardReturn, "Cerrar sesión") {
             viewModel.closeSession(navController)
         }
     )
     ModalDrawerSheet {
         Column(
-            modifier = Modifier.padding(top=10.dp)
+            modifier = Modifier.padding(top = 10.dp)
         ) {
-            for (x in list){
+            for (x in list) {
                 ListItem(
                     headlineContent = { Text(x.text) },
                     leadingContent = {
@@ -190,7 +211,11 @@ fun ListDraw(viewModel: MenuViewModel, navController: NavHostController) {
                             viewModel.showDialog(x.textDialog)
                             x.action()
                         }) {
-                            Icon(imageVector = Icons.Filled.AddCircle, contentDescription = "Settings", tint = MaterialTheme.colorScheme.primaryContainer)
+                            Icon(
+                                imageVector = Icons.Filled.AddCircle,
+                                contentDescription = "Settings",
+                                tint = MaterialTheme.colorScheme.primaryContainer
+                            )
                         }
                     }
                 )
@@ -202,7 +227,7 @@ fun ListDraw(viewModel: MenuViewModel, navController: NavHostController) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar( menuUiState: MenuUiState) {
+fun TopBar(menuUiState: MenuUiState) {
     TopAppBar(
         title = {
             Box(
@@ -225,6 +250,7 @@ fun TopBar( menuUiState: MenuUiState) {
 /**
  * Method that contains most of the important usages of the App
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MenuBody(
     innerPadding: PaddingValues,
@@ -241,66 +267,153 @@ fun MenuBody(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(25.dp)
-                .background(MaterialTheme.colorScheme.background, shape = RoundedCornerShape(20.dp)),
-            contentAlignment= Alignment.Center
-        ){
-            Column (
+                .background(
+                    MaterialTheme.colorScheme.background,
+                    shape = RoundedCornerShape(20.dp)
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            LazyRow(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .padding(5.dp)
-                    .background(MaterialTheme.colorScheme.primaryContainer, shape = RoundedCornerShape(20.dp))
-                    .verticalScroll(rememberScrollState()),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ){
-                Row {
-                    if(dataUiState.actividad == "S"){
-                        ElevatedButton(
-                            modifier= Modifier
-                                .padding(30.dp)
-                                .width(200.dp),
-                            onClick = { navController.navigate(route = Routes.ActivityUltimate.route) }
-                        ) {
-                            Text("Actividades")
-                        }
-                    }
-                }
-                Row (
-
-                ){
-                    ElevatedButton(
-                        modifier= Modifier
-                            .padding(30.dp)
-                            .width(200.dp),
-                        onClick = { navController.navigate(route = Routes.BusinessPartnerUltimate.route) }
+                    .background(
+                        MaterialTheme.colorScheme.primaryContainer,
+                        shape = RoundedCornerShape(20.dp)
+                    )
+            ) {
+                item {
+                    Row (
+                        modifier = Modifier.padding(10.dp)
                     ) {
-                        Text("Clientes")
-                    }
-                }
-
-                Row (
-
-                ){
-                    if(dataUiState.pedidoCL == "S"){
-                        ElevatedButton(
-                            modifier= Modifier
-                                .padding(30.dp)
-                                .width(200.dp),
-                            onClick = { navController.navigate(route = Routes.ScreenOrder.route) }
-                        ) {
-                            Text("Pedido de cliente")
+                        if (dataUiState.actividad == "S") {
+                            Card(
+                                onClick = { navController.navigate(route = Routes.ActivityUltimate.route) }) {
+                                Column(
+                                    verticalArrangement = Arrangement.Top,
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    modifier = Modifier
+                                        .size(height = 280.dp, width = 320.dp)
+                                ) {
+                                    Box (
+                                        modifier = Modifier.padding(bottom = 40.dp)
+                                    ) {
+                                        Image(
+                                            painter = painterResource(R.drawable.actividades),
+                                            contentDescription = "Actividades",
+                                            contentScale = ContentScale.Crop,
+                                            modifier = Modifier
+                                                .clip(RoundedCornerShape(16.dp))
+                                                .aspectRatio(16f / 9f)
+                                        )
+                                    }
+                                    Text(
+                                        "Actividades",
+                                        color = MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier.padding(5.dp)
+                                    )
+                                }
+                            }
                         }
                     }
                 }
-
-                Row {
-                    if(dataUiState.articulo == "S"){
-                        ElevatedButton(
-                            modifier= Modifier
-                                .padding(30.dp)
-                                .width(200.dp),
-                            onClick = { navController.navigate(route = Routes.MixedItemScreen.route) }
+                item {
+                    Card(
+                        onClick = { navController.navigate(route = Routes.BusinessPartnerUltimate.route) }) {
+                        Column(
+                            verticalArrangement = Arrangement.Top,
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier
+                                .size(height = 280.dp, width = 320.dp)
                         ) {
-                            Text("Articulos")
+                            Box (
+                                modifier = Modifier.padding(bottom = 40.dp)
+                            ) {
+                                Image(
+                                    painter = painterResource(R.drawable.clientes),
+                                    contentDescription = "Clientes",
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier
+                                        .clip(RoundedCornerShape(16.dp))
+                                        .aspectRatio(16f / 9f)
+                                )
+                            }
+                            Text(
+                                "Clientes",
+                                color = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.padding(5.dp)
+                            )
+                        }
+                    }
+                }
+                item {
+                    Row (
+                        modifier = Modifier.padding(10.dp)
+                    ) {
+                        if (dataUiState.pedidoCL == "S") {
+                            Card(
+                                onClick = { navController.navigate(route = Routes.ScreenOrder.route) }) {
+                                Column(
+                                    verticalArrangement = Arrangement.Top,
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    modifier = Modifier
+                                        .size(height = 280.dp, width = 320.dp)
+                                ) {
+                                    Box (
+                                        modifier = Modifier.padding(bottom = 40.dp)
+                                    ) {
+                                        Image(
+                                            painter = painterResource(R.drawable.pedidocliente),
+                                            contentDescription = "Pedido de cliente",
+                                            contentScale = ContentScale.Crop,
+                                            modifier = Modifier
+                                                .clip(RoundedCornerShape(16.dp))
+                                                .aspectRatio(16f / 9f)
+                                        )
+                                    }
+                                    Text(
+                                        "Pedido de cliente",
+                                        color = MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier.padding(5.dp)
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+                item {
+                    Row (
+                        modifier = Modifier.padding(10.dp)
+                    ) {
+                        if (dataUiState.articulo == "S") {
+                            Card(
+                                onClick = { navController.navigate(route = Routes.MixedItemScreen.route) }) {
+                                Column(
+                                    verticalArrangement = Arrangement.Top,
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    modifier = Modifier
+                                        .size(height = 280.dp, width = 320.dp)
+                                ) {
+                                    Box (
+                                        modifier = Modifier.padding(bottom = 40.dp)
+                                    ) {
+                                        Image(
+                                            painter = painterResource(R.drawable.articulos),
+                                            contentDescription = "Articulos",
+                                            contentScale = ContentScale.Crop,
+                                            modifier = Modifier
+                                                .clip(RoundedCornerShape(16.dp))
+                                                .aspectRatio(16f / 9f)
+                                        )
+                                    }
+                                    Text(
+                                        "Articulos",
+                                        color = MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier.padding(5.dp)
+                                    )
+                                }
+                            }
                         }
                     }
                 }

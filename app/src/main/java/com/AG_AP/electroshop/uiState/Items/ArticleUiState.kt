@@ -1,13 +1,13 @@
 package com.AG_AP.electroshop.uiState.Items
 
 data class ArticleUiState(
-    val LineNum:Int =0,
-    val ItemCode:String ="",
-    val ItemDescription:String="",
-    val Quantity: Float= 0.0F,
-    val Price: Float = 0.0F,
-    val DiscountPercent: Float =0.0F
-){
+    val LineNum: Int = 0,
+    val ItemCode: String = "",
+    val ItemDescription: String = "",
+    val Quantity: Double = 0.0,
+    val Price: Double = 0.0,
+    val DiscountPercent: Double = 0.0
+) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
