@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -88,7 +89,6 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
         DialogOandPO(
             closeDialog = { viewModel.closeDialogaddArticle() },
             returnData = { list ->
-                Log.e("LisDataArticle", list.toString())
                 viewModel.addArticle(list)
             },
             cardCode = dataUiState.CardCode,
@@ -117,224 +117,248 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
         )
     }*/
 
+    Log.i("Pruebas", "Lineas de documento: ${dataUiState.DocumentLine.toString()}")
+    Log.i("Pruebas", "Lineas de chachi: ${dataUiState.DocumentLineList.toString()}")
     Column(
         modifier = Modifier
             .padding(innerPadding)
     ) {
-        Row {
-            LazyColumn(
-                modifier = Modifier
-                    .width(250.dp)
-                    //.height(400.dp)
-                    .padding(horizontal = 10.dp)
-            ) {
-                items(dataUiState.ListOrders) { order ->
-                    Card(
-                        modifier = Modifier.padding(5.dp).height(200.dp)
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(3.dp)
-                        ) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                            ) {
-                                Text(text = order.DocDate.split("T").firstOrNull() ?: "Sin fecha")
-                                IconButton(onClick = {
-                                    viewModel.showOrderComplete(order)
-                                }) {
-                                    Icon(
-                                        imageVector = Icons.Filled.Camera,
-                                        contentDescription = "Settings",
-                                        tint = MaterialTheme.colorScheme.primaryContainer
-                                    )
+        LazyRow {
+            item {
+                Column { //
+                    OutlinedTextField(
+                        value = dataUiState.SalesPersonCode,
+                        onValueChange = { viewModel.changeSalesPersonCode(it) },
+                        modifier = Modifier
+                            .width(300.dp)
+                            .padding(8.dp),
+                        label = { Text("SLPCode") }
+                    )
+
+                    OutlinedTextField(
+                        value = dataUiState.CardCode,
+                        onValueChange = { viewModel.changeCardCode(it) },
+                        modifier = Modifier
+                            .width(300.dp)
+                            .padding(8.dp),
+                        label = { Text("Código cliente") },
+                        readOnly = true,
+                        trailingIcon = {
+                            IconButton(
+                                onClick = {
+                                    viewModel.showDialogBusinessPartner()
                                 }
-                            }
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
                             ) {
-                                Text(text = order.CardCode)
-                            }
-                            Spacer(modifier = Modifier.height(5.dp))
-                            order.DocumentLines.forEachIndexed { index, line ->
-                                Row {
-                                    Text(text = "${line.ItemCode} -- ${line.Quantity} -- ${line.Price}€")
-                                }
+                                Icon(Icons.Filled.Add, contentDescription = "Shopping Cart Icon")
                             }
                         }
-                    }
+                    )
+
+                    OutlinedTextField(
+                        value = dataUiState.CardName,
+                        onValueChange = { viewModel.changeName(it) },
+                        modifier = Modifier
+                            .width(300.dp)
+                            .padding(8.dp),
+                        label = { Text("Nombre") },
+                        readOnly = true
+                    )
+
+                    OutlinedTextField(
+                        value = dataUiState.DiscountPercent.toString(),
+                        onValueChange = { viewModel.changeDiscount(it) },
+                        modifier = Modifier
+                            .width(300.dp)
+                            .padding(8.dp),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        suffix = { Text(text = "%") },
+                        label = { Text("Descuento %") }
+                    )
+
+
                 }
             }
-            Row{
-            Column { //
-                OutlinedTextField(
-                    value = dataUiState.SalesPersonCode,
-                    onValueChange = { viewModel.changeSalesPersonCode(it) },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    label = { Text("SLPCode") }
-                )
 
-                OutlinedTextField(
-                    value = dataUiState.CardCode,
-                    onValueChange = { viewModel.changeCardCode(it) },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    label = { Text("Código cliente") },
-                    readOnly = true,
-                    trailingIcon = {
-                        IconButton(
-                            onClick = {
-                                viewModel.showDialogBusinessPartner()
-                            }
-                        ) {
-                            Icon(Icons.Filled.Add, contentDescription = "Shopping Cart Icon")
-                        }
+            item {
+                Column {
+                    DatePicker(
+                        "Fecha contabilizacion ",
+                        dataUiState.TaxDate,
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .width(300.dp)
+                    ) { fechaDocumento ->
+                        viewModel.changeTaxDate(fechaDocumento)
                     }
-                )
+                    DatePicker(
+                        "Fecha entrega ",
+                        dataUiState.DocDueDate,
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .width(300.dp)
+                    ) { fechaDocumento ->
+                        viewModel.changeDocDueDate(fechaDocumento)
+                    }
+                    DatePicker(
+                        "Fecha documento ",
+                        dataUiState.DocDate,
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .width(300.dp)
+                    ) { fechaDocumento ->
+                        viewModel.changeDocDate(fechaDocumento)
+                    }
+                    OutlinedTextField(
+                        value = dataUiState.totalPrice.toString(),
+                        onValueChange = { viewModel.changeTotalPrice() },
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .width(300.dp),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        readOnly = true,
+                        suffix = { Text(text = "€") },
+                        label = { Text("Precio total") }
+                    )
 
-                OutlinedTextField(
-                    value = dataUiState.CardName,
-                    onValueChange = { viewModel.changeName(it) },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    label = { Text("Nombre") },
-                    readOnly = true
-                )
-
-                OutlinedTextField(
-                    value = dataUiState.DiscountPercent.toString(),
-                    onValueChange = { viewModel.changeDiscount(it) },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    suffix = { Text(text = "%") },
-                    label = { Text("Descuento %") }
-                )
-
-
+                } //
             }
 
-            Column {
-                DatePicker(
-                    "Fecha contabilizacion ",
-                    dataUiState.TaxDate,
+            item {
+                Column(
                     modifier = Modifier
-                        .padding(8.dp)
-                        .width(300.dp)
-                ) { fechaDocumento ->
-                    viewModel.changeTaxDate(fechaDocumento)
-                }
-                DatePicker(
-                    "Fecha entrega ",
-                    dataUiState.DocDueDate,
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .width(300.dp)
-                ) { fechaDocumento ->
-                    viewModel.changeDocDueDate(fechaDocumento)
-                }
-                DatePicker(
-                    "Fecha documento ",
-                    dataUiState.DocDate,
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .width(300.dp)
-                ) { fechaDocumento ->
-                    viewModel.changeDocDate(fechaDocumento)
-                }
-                OutlinedTextField(
-                    value = dataUiState.totalPrice.toString(),
-                    onValueChange = { viewModel.changeTotalPrice() },
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .width(300.dp),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    readOnly = true,
-                    suffix = { Text(text = "€") },
-                    label = { Text("Precio total") }
-                )
-
-            } //
-
-            Column(
-                modifier = Modifier
-                    .padding(start = 10.dp)
-            ) {
-                ElevatedButton(
-                    onClick = {
-                        viewModel.showDialogaddArticle()
-                    }
+                        .padding(start = 10.dp, top = 8.dp)
                 ) {
-                    Text(text = "Añadir articulo")
-                    Icon(imageVector = Icons.Filled.AddBox, contentDescription = "Añadir articulo")
+                    ElevatedButton(
+                        onClick = {
+                            viewModel.showDialogaddArticle()
+                        }
+                    ) {
+                        Text(text = "Añadir articulo")
+                        Icon(
+                            imageVector = Icons.Filled.AddBox,
+                            contentDescription = "Añadir articulo"
+                        )
+                    }
                 }
             }
+
+            item {
+                ListaPedidos(dataUiState, viewModel)
+            }
+
         }
 
-            Row{
+        Row {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 30.dp, end = 30.dp)
+                    .background(MaterialTheme.colorScheme.background)
+            ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 30.dp, end = 30.dp)
                         .background(MaterialTheme.colorScheme.background)
                 ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 30.dp, end = 30.dp)
-                            .background(MaterialTheme.colorScheme.background)
-                    ) {
-                        //TODO cuando sea inactivo el pedido no deja aumentar ni disminuir las lineas
-                        //if (id == null) {
-                        Row {
-                            IconButton(
-                                modifier = Modifier
-                                    .background(MaterialTheme.colorScheme.primary)
-                                    .border(
-                                        BorderStroke(0.5.dp, Color.Black)
-                                    )
-                                    .padding(end = 0.5.dp),
-                                onClick = { viewModel.deleteLine() }
-                            ) {
-                                Text(text = "-")
-                            }
-                        }
-                        //}
-
-                        TableDocumentLineOrder(dataUiState, viewModel)
-
-                        if (dataUiState.showToast) {
-                            Toast.makeText(
-                                ObjectContext.context,
-                                dataUiState.text,
-                                Toast.LENGTH_LONG
-                            ).show()
+                    //TODO cuando sea inactivo el pedido no deja aumentar ni disminuir las lineas
+                    //if (id == null) {
+                    Row {
+                        IconButton(
+                            modifier = Modifier
+                                .background(MaterialTheme.colorScheme.primary)
+                                .border(
+                                    BorderStroke(0.5.dp, Color.Black)
+                                )
+                                .padding(end = 0.5.dp),
+                            onClick = { viewModel.deleteLine() }
+                        ) {
+                            Text(text = "-")
                         }
                     }
-                    Column {
-                        /*if (dataUiState.message) {
-                            Snackbar(
-                                modifier = Modifier.padding(16.dp),
-                                action = {
-                                    Button(
-                                        onClick = {
-                                            viewModel.menssageFunFalse()
-                                        }
-                                    ) {
-                                        Text("Cerrar")
+                    //}
+
+                    TableDocumentLineOrder(dataUiState, viewModel)
+
+                    if (dataUiState.showToast) {
+                        Toast.makeText(
+                            ObjectContext.context,
+                            dataUiState.text,
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+                Column {
+                    /*if (dataUiState.message) {
+                        Snackbar(
+                            modifier = Modifier.padding(16.dp),
+                            action = {
+                                Button(
+                                    onClick = {
+                                        viewModel.menssageFunFalse()
                                     }
-                                },
-                                content = {
-                                    Text(dataUiState.text)
+                                ) {
+                                    Text("Cerrar")
                                 }
+                            },
+                            content = {
+                                Text(dataUiState.text)
+                            }
+                        )
+                    }*/
+                }
+            }
+        }
+    }
+}
+
+
+@Composable
+private fun ListaPedidos(
+    dataUiState: OrderUiState,
+    viewModel: OrderViewModel
+) {
+    LazyColumn(
+        modifier = Modifier
+            .width(250.dp)
+            .height(350.dp)
+            .padding(horizontal = 10.dp)
+    ) {
+        items(dataUiState.ListOrders) { order ->
+            Card(
+                modifier = Modifier
+                    .padding(10.dp)
+                    .height(200.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(3.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                    ) {
+                        Text(text = order.DocDate.split("T").firstOrNull() ?: "Sin fecha")
+                        IconButton(onClick = {
+                            viewModel.showOrderComplete(order)
+                        }) {
+                            Icon(
+                                imageVector = Icons.Filled.Camera,
+                                contentDescription = "Settings",
+                                tint = MaterialTheme.colorScheme.primaryContainer
                             )
-                        }*/
+                        }
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                    ) {
+                        Text(text = order.CardCode)
+                    }
+                    Spacer(modifier = Modifier.height(5.dp))
+                    order.DocumentLines.forEachIndexed { index, line ->
+                        Row {
+                            Text(text = "${line.ItemCode} -- ${line.Quantity} -- ${line.Price}€")
+                        }
                     }
                 }
             }
@@ -552,22 +576,22 @@ fun ScaffoldOrder(
                     ) {
                         TopBarButton(
                             "Activiades",
-                            { navController.navigate(route = Routes.ActivityUltimate.route)},
+                            { navController.navigate(route = Routes.ActivityUltimate.route) },
                             Icons.Default.LocalActivity
                         )
                         TopBarButton(
                             "Clientes",
-                            { navController.navigate(route = Routes.BusinessPartnerUltimate.route)},
+                            { navController.navigate(route = Routes.BusinessPartnerUltimate.route) },
                             Icons.Default.AccountBox
                         )
                         TopBarButton(
                             "Articulos",
-                            { navController.navigate(route = Routes.ItemScreen.route)},
+                            { navController.navigate(route = Routes.ItemScreen.route) },
                             Icons.Default.Inbox
                         )
                         TopBarButton(
                             "Pedidos",
-                            { navController.navigate(route = Routes.ScreenOrder.route)},
+                            { navController.navigate(route = Routes.ScreenOrder.route) },
                             Icons.Default.AddCard
                         )
                     }
