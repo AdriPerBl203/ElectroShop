@@ -571,11 +571,12 @@ fun ScaffoldOrder(
                 ),
                 title = {
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         TopBarButton(
-                            "Activiades",
+                            "Actividades",
                             { navController.navigate(route = Routes.ActivityUltimate.route) },
                             Icons.Default.LocalActivity
                         )
