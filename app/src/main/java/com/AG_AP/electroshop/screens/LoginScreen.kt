@@ -29,6 +29,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -38,15 +39,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import coil.compose.rememberAsyncImagePainter
+import coil.decode.GifDecoder
+import coil.request.ImageRequest
+import coil.size.Size
 import com.AG_AP.electroshop.R
 import com.AG_AP.electroshop.components.CircularIndicator
+import com.AG_AP.electroshop.functions.ObjectContext
 import com.AG_AP.electroshop.viewModels.LoginViewModel
 import com.AG_AP.electroshop.nav.Routes
 
 /**
- * Method that shows the front view of the Login Screen TODO sacarlo todo a metodos extras
+ * Method that shows the front view of the Login Screen
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginFrontView(
     viewModel: LoginViewModel = viewModel(),
@@ -55,6 +60,12 @@ fun LoginFrontView(
 ) {
     val dataUiState by viewModel.uiState.collectAsState()
 
+    val painter = rememberAsyncImagePainter(
+        ImageRequest.Builder(ObjectContext.context)
+            .data(R.drawable.fondoanimado)
+            .decoderFactory(GifDecoder.Factory())
+            .build()
+    )
 
     /* Content */
     Box(
@@ -63,14 +74,25 @@ fun LoginFrontView(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
+
         /* GIF */
-        /*
-        Image(
-            painter = painter,
-            contentDescription = null,
-            contentScale = ContentScale.FillBounds
-        )
-*/
+        Box (
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = Color.Red)
+        ) {
+
+            Image(
+                painter = painter,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
+            )
+
+
+        }
+
         /* Content */
 
         Box {

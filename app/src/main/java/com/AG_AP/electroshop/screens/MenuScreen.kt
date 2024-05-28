@@ -348,29 +348,71 @@ fun MenuBody(
                     }
                 }
                 item {
-                    Row {
+                    Row (
+                        modifier = Modifier.padding(10.dp)
+                    ) {
                         if (dataUiState.pedidoCL == "S") {
-                            ElevatedButton(
-                                modifier = Modifier
-                                    .padding(30.dp)
-                                    .width(200.dp),
-                                onClick = { navController.navigate(route = Routes.ScreenOrder.route) }
-                            ) {
-                                Text("Pedido de cliente")
+                            Card(
+                                onClick = { navController.navigate(route = Routes.ScreenOrder.route) }) {
+                                Column(
+                                    verticalArrangement = Arrangement.Top,
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    modifier = Modifier
+                                        .size(height = 280.dp, width = 320.dp)
+                                ) {
+                                    Box (
+                                        modifier = Modifier.padding(bottom = 40.dp)
+                                    ) {
+                                        Image(
+                                            painter = painterResource(R.drawable.pedidocliente),
+                                            contentDescription = "Pedido de cliente",
+                                            contentScale = ContentScale.Crop,
+                                            modifier = Modifier
+                                                .clip(RoundedCornerShape(16.dp))
+                                                .aspectRatio(16f / 9f)
+                                        )
+                                    }
+                                    Text(
+                                        "Pedido de cliente",
+                                        color = MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier.padding(5.dp)
+                                    )
+                                }
                             }
                         }
                     }
                 }
                 item {
-                    Row {
+                    Row (
+                        modifier = Modifier.padding(10.dp)
+                    ) {
                         if (dataUiState.articulo == "S") {
-                            ElevatedButton(
-                                modifier = Modifier
-                                    .padding(30.dp)
-                                    .width(200.dp),
-                                onClick = { navController.navigate(route = Routes.MixedItemScreen.route) }
-                            ) {
-                                Text("Articulos")
+                            Card(
+                                onClick = { navController.navigate(route = Routes.MixedItemScreen.route) }) {
+                                Column(
+                                    verticalArrangement = Arrangement.Top,
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    modifier = Modifier
+                                        .size(height = 280.dp, width = 320.dp)
+                                ) {
+                                    Box (
+                                        modifier = Modifier.padding(bottom = 40.dp)
+                                    ) {
+                                        Image(
+                                            painter = painterResource(R.drawable.articulos),
+                                            contentDescription = "Articulos",
+                                            contentScale = ContentScale.Crop,
+                                            modifier = Modifier
+                                                .clip(RoundedCornerShape(16.dp))
+                                                .aspectRatio(16f / 9f)
+                                        )
+                                    }
+                                    Text(
+                                        "Articulos",
+                                        color = MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier.padding(5.dp)
+                                    )
+                                }
                             }
                         }
                     }
