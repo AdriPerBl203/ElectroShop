@@ -80,7 +80,6 @@ fun LoginFrontView(
             contentAlignment = Alignment.Center,
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = Color.Red)
         ) {
 
             Image(
