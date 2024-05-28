@@ -16,5 +16,6 @@ data class BusinessPartnerUiState(
 
     val BPSapList: List<BusinessPartner?> = listOf(),
     val BPDeviceList: List<BusinessPartner?> = listOf(),
+    val update: Boolean = false,
     val FilterByName: String = ""
 )
