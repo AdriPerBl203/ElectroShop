@@ -45,7 +45,7 @@ class BusinessPartnerViewModel : ViewModel(), ActionViewModel {
 
     fun refresh() {
         val id: String = _uiState.value.CardCode
-        if (id.isNotEmpty()) {
+        if (id.isNotEmpty() && !_uiState.value.update) {
             find()
         }
 
@@ -82,6 +82,14 @@ class BusinessPartnerViewModel : ViewModel(), ActionViewModel {
         }
 
 
+    }
+
+    fun changeUpdate(boolean: Boolean) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                update = boolean
+            )
+        }
     }
 
     fun changeCardCode(it: String) {
@@ -325,7 +333,8 @@ class BusinessPartnerViewModel : ViewModel(), ActionViewModel {
                             CardType = cardType,
                             CardName = dataAux.CardName,
                             Cellular = dataAux.Cellular,
-                            EmailAddress = dataAux.EmailAddress
+                            EmailAddress = dataAux.EmailAddress,
+                            update = true
                         )
                     }
                 } else {
