@@ -336,6 +336,11 @@ class SettingsViewModel : ViewModel() {
 
     private fun deleteAndInsertUserUdo() {
         viewModelScope.launch(Dispatchers.IO) {
+            val res : Boolean = UDOobj.createTable(Config.rulUse)
+            if(res){
+                creatingUDO()
+                createUsers()
+            }
             val userForUdo = UDOobj.getUserTableUDO(Config.rulUse)
             if (userForUdo is SeiConfigUser) {
 
@@ -490,36 +495,17 @@ class SettingsViewModel : ViewModel() {
             val dataLogin = Login(Config.dataBase, Config.password, Config.login)
             LoginObj.loginAcessTwoversion(dataLogin, Config.rulUse)
             //TODO
-
-            //añadir precios especiales
-                deleteAndInsertSpecialPrice() // correcta
-                deleteAndInsertPriceList() // correcta
-                deleteAndInsertItem()// Correcta
-                deleteAndInsertUserUdo() // revisado
-                deleteAndInsertBusinessPartner() // revisado
-                deleteAndInsertActivity() // revisado
-                deleteAndInsertOrders() //
-                enablebtn(Config.rulUse)
+            deleteAndInsertSpecialPrice() // correcta
+            deleteAndInsertPriceList() // correcta
+            deleteAndInsertItem()// Correcta
+            deleteAndInsertUserUdo() // revisado
+            deleteAndInsertBusinessPartner() // revisado
+            deleteAndInsertActivity() // revisado
+            deleteAndInsertOrders() //
+            enablebtn(Config.rulUse)
         }
-
-
-        /*
          Log.e("SettingViewModel","Datos obtenidos")
 
-         //UDO
-         val res : Boolean = UDOobj.createTable(Config.rulUse)
-         if(res){
-             viewModelScope.launch {
-                 creatingUDO()
-                 createUsers()
-             }
-             text ="Conexión realizada"
-             _uiState.update { currentState -> currentState.copy(
-                 message = true,
-                 text = text,
-                 progress = false
-             ) }
-         }*/
     }
 
     private fun deleteAndInsertSpecialPrice() {

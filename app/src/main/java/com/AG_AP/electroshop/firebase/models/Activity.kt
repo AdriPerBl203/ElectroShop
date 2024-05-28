@@ -1,9 +1,11 @@
 package com.AG_AP.electroshop.firebase.models
 
 import io.realm.kotlin.types.RealmObject
+import org.mongodb.kbson.ObjectId
 
 class Activity : RealmObject {
 
+    var idRealm: ObjectId = ObjectId()
     var idFireBase: String? = null
     var nota: String = ""
     var ActivityDate: String = ""
