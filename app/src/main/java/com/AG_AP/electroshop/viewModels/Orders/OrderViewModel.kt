@@ -876,7 +876,41 @@ class OrderViewModel : ViewModel(), ActionViewModel {
         return _uiState.value.DocumentLineList
     }
 
+    fun deleteObject(value: MutableList<String>) {
+        //TODO
+        val obejctDelete = ArticleUiState(
+            value[0].toInt(),
+            value[1],
+            value[2],
+            value[3].toDouble(),
+            value[4].toDouble(),
+            value[5].toDouble()
+        )
+        Log.i("Pruebas", value.toString())
 
+        _uiState.value?.DocumentLine?.let { documentLines ->
+
+            var index:Int = -1
+            documentLines.forEachIndexed { i, x ->
+                if (x != null) {
+                    if (x.equals(obejctDelete)) {
+                        index = i
+                    }
+                }
+            }
+            if(index != -1){
+                var tastAux = _uiState.value.trash
+                tastAux++
+                _uiState.value.DocumentLine.removeAt(index)
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        DocumentLineList = DocumentLineForMutableList(),
+                        trash = tastAux
+                    )
+                }
+            }
+        }
+    }
 
 
     fun editarArticulo(index: Int) {
