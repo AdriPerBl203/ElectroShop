@@ -37,6 +37,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
 
 class MenuViewModel : ViewModel() {
 
@@ -44,13 +46,15 @@ class MenuViewModel : ViewModel() {
     val uiState: StateFlow<MenuUiState> = _uiState.asStateFlow()
 
     init {
-        _uiState.update { currentState -> currentState.copy(
-            username = SessionObj.name,
-            articulo= SessionObj.articulo,
-            actividad = SessionObj.actividad,
-            pedidoCL= SessionObj.pedidoCL,
-            pedidoCO= SessionObj.pedidoCO,
-        ) }
+        _uiState.update { currentState ->
+            currentState.copy(
+                username = SessionObj.name,
+                articulo = SessionObj.articulo,
+                actividad = SessionObj.actividad,
+                pedidoCL = SessionObj.pedidoCL,
+                pedidoCO = SessionObj.pedidoCO,
+            )
+        }
     }
 
     fun closeSession(navController: NavHostController) {
@@ -63,64 +67,84 @@ class MenuViewModel : ViewModel() {
     }
 
     fun closedDialog() {
-        _uiState.update { currentState -> currentState.copy(
-            dialog = false
-        ) }
+        _uiState.update { currentState ->
+            currentState.copy(
+                dialog = false
+            )
+        }
     }
 
     fun showDialog(textDialog: String) {
-        _uiState.update { currentState -> currentState.copy(
-            InfoDialog = textDialog,
-            dialog = true
-        ) }
+        _uiState.update { currentState ->
+            currentState.copy(
+                InfoDialog = textDialog,
+                dialog = true
+            )
+        }
     }
 
     fun upOrder(bol: Boolean) {
         OrderCRUD.getAllObject { list ->
             viewModelScope.launch() {
                 val dataLogin = Login(Config.dataBase, Config.password, Config.login)
-                if(bol){
+                if (bol) {
                     LoginObj.loginAcessTwoversion(dataLogin, Config.rulUse)
                 }
                 if (list != null) {
                     val listAux = list as MutableList<OrderFireBase>
                     for (x in listAux) {
                         if (!x.SAP) {
-                            var documentLineAux:MutableList<DocumentLine> = mutableListOf<DocumentLine>()
-                            var auxNum:Int =0
-                            for(y in x.DocumentLines){
+                            var documentLineAux: MutableList<DocumentLine> =
+                                mutableListOf<DocumentLine>()
+                            var auxNum: Int = 0
+                            for (y in x.DocumentLines) {
                                 documentLineAux.add(
                                     auxNum,
                                     DocumentLine(
-                                    y.DiscountPercent, y.ItemCode, y.LineNum,y.Price,y.Quantity.toInt()
-                                )
+                                        y.DiscountPercent,
+                                        y.ItemCode,
+                                        y.LineNum,
+                                        y.Price,
+                                        y.Quantity.toInt()
+                                    )
                                 )
                                 auxNum++
                             }
                             // Crear una instancia de PostOrder
+
+                            var docDate = x.DocDate.replace("/", "-")
+                            var docDueDate = x.DocDueDate.replace("/", "-")
+                            var taxDate = x.TaxDate.replace("/", "-")
+
+                            docDate = convertirFecha(docDate)
+                            docDueDate = convertirFecha(docDueDate)
+                            taxDate = convertirFecha(taxDate)
+
                             val postOrder = PostOrder(
                                 CardCode = x.CardCode,
                                 CardName = x.CardName ?: "",
                                 DiscountPercent = x.DiscountPercent,
-                                DocDate = x.DocDate.plus("T00:00:00Z"),
-                                DocDueDate = x.DocDueDate.plus("T00:00:00Z"),
+                                DocDate = docDate.plus("T00:00:00Z"),
+                                DocDueDate = docDueDate.plus("T00:00:00Z"),
                                 DocNum = x.DocNum,
                                 DocumentLines = documentLineAux,
-                                TaxDate = x.TaxDate.plus("T00:00:00Z"),
+                                TaxDate = taxDate.plus("T00:00:00Z"),
                                 SalesPersonCode = x.SalesPersonCode
                             )
-                            OrdersObj.postOrders(Config.rulUse,postOrder)
-                            if(x.idFireBase !=null){
+                            OrdersObj.postOrders(Config.rulUse, postOrder)
+                            if (x.idFireBase != null) {
                                 OrderCRUD.deleteObjectById(x.idFireBase!!)
                             }
                         }
                     }
                     ListCheckTotal.addInfo("Pedido cliente actualizadas")
-                    if(bol){
+                    if (bol) {
                         LoginObj.logout(Config.rulUse)
-                        _uiState.update { currentState -> currentState.copy(
-                            checkProgresCircular = false
-                        ) }
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                checkProgresCircular = false
+                            )
+                        }
                     }
                 }
                 viewModelScope.launch(Dispatchers.IO) {
@@ -309,7 +333,8 @@ class MenuViewModel : ViewModel() {
                         for (x in listAux) {
                             if (!x.SAP) {
                                 //rellenar item
-                                val listPrice: MutableList<com.AG_AP.electroshop.endpoints.models.item.postItems.ItemPrice> = mutableListOf()
+                                val listPrice: MutableList<com.AG_AP.electroshop.endpoints.models.item.postItems.ItemPrice> =
+                                    mutableListOf()
                                 x.itemPrice?.forEachIndexed { index, itemPrice ->
                                     listPrice.add(
                                         index,
@@ -321,7 +346,7 @@ class MenuViewModel : ViewModel() {
                                     )
                                 }
                                 //TODO
-                                val item : PostItem = PostItem(
+                                val item: PostItem = PostItem(
                                     73,
                                     x.autoCreateSerialNumbersOnRelease ?: "N",
                                     x.itemName,
@@ -341,34 +366,34 @@ class MenuViewModel : ViewModel() {
                         var listItemSAP: MutableList<com.AG_AP.electroshop.endpoints.models.item.getItems.Value> =
                             mutableListOf()
                         var checkSAP: Boolean = false
-                        var items : GetItems? = ItemObj.getItems(Config.rulUse)
+                        var items: GetItems? = ItemObj.getItems(Config.rulUse)
                         while (!checkSAP) {
                             if (items != null) {
                                 if (items.odataNextLink.isNullOrEmpty()) {
                                     items.value.forEach {
                                         listItemSAP += it
                                     }
-                                    checkSAP=true
-                                }else{
+                                    checkSAP = true
+                                } else {
                                     items.value.forEach {
                                         listItemSAP += it
                                     }
-                                    val num :List<String> = items.odataNextLink.split("=")
-                                    items =ItemObj.getItemsExten(Config.rulUse,num[1].toInt())
+                                    val num: List<String> = items.odataNextLink.split("=")
+                                    items = ItemObj.getItemsExten(Config.rulUse, num[1].toInt())
                                 }
                             }
                         }
-                        listItemSAP.forEach{element ->
+                        listItemSAP.forEach { element ->
                             ItemCRUD.deleteItemById(element.ItemCode.toString())
                         }
-                        listItemSAP.forEach{element ->
+                        listItemSAP.forEach { element ->
                             //lista de precios
                             val listPrice: MutableList<ItemPrice> = mutableListOf()
                             element.ItemPrices.forEachIndexed { index, itemPrice ->
                                 val price = ItemPrice().apply {
-                                    priceList = itemPrice.PriceList ?:0
-                                    price = itemPrice.Price ?:0.0
-                                    currency = itemPrice.Currency ?:""
+                                    priceList = itemPrice.PriceList ?: 0
+                                    price = itemPrice.Price ?: 0.0
+                                    currency = itemPrice.Currency ?: ""
                                     SAP = true
                                 }
                                 listPrice.add(
@@ -376,7 +401,7 @@ class MenuViewModel : ViewModel() {
                                     price
                                 )
                             }
-                            val item : Item = Item().apply {
+                            val item: Item = Item().apply {
                                 idFireBase = ""
                                 ItemCode = element.ItemCode ?: ""
                                 itemName = element.ItemName ?: ""
@@ -384,7 +409,8 @@ class MenuViewModel : ViewModel() {
                                 mainSupplier = element.Mainsupplier ?: ""
                                 itemPrice = listPrice.toRealmList()
                                 manageSerialNumbers = element.ManageSerialNumbers ?: ""
-                                autoCreateSerialNumbersOnRelease = element.AutoCreateSerialNumbersOnRelease ?: ""
+                                autoCreateSerialNumbersOnRelease =
+                                    element.AutoCreateSerialNumbersOnRelease ?: ""
                                 SAP = true
                             }
                             ItemCRUD.insertItem(item)
@@ -409,7 +435,7 @@ class MenuViewModel : ViewModel() {
             ActivityCRUD.getAllActivity { list ->
                 viewModelScope.launch() {
                     val dataLogin = Login(Config.dataBase, Config.password, Config.login)
-                    if(bol){
+                    if (bol) {
                         LoginObj.loginAcessTwoversion(dataLogin, Config.rulUse)
                     }
                     for (x in list) {
@@ -428,7 +454,7 @@ class MenuViewModel : ViewModel() {
                             )
                             ActivityObj.PostActivities(Config.rulUse, data)
                             //TODO
-                            if(x.idFireBase !=null){
+                            if (x.idFireBase != null) {
                                 ActivityCRUD.deleteActivityById(x.idFireBase!!)
                             }
                         }
@@ -446,21 +472,25 @@ class MenuViewModel : ViewModel() {
                                             listActivitySAP += it
                                         }
                                     }
-                                    checkSAP=true
-                                }else{
+                                    checkSAP = true
+                                } else {
                                     activities.value.forEach {
                                         listActivitySAP += it
                                     }
-                                    val num :List<String> = activities.odataNextLink.split("=")
-                                    activities =ActivityObj.getActivitiesExten(Config.rulUse,num[1].toInt())
+                                    val num: List<String> = activities.odataNextLink.split("=")
+                                    activities = ActivityObj.getActivitiesExten(
+                                        Config.rulUse,
+                                        num[1].toInt()
+                                    )
                                 }
                             }
                         }
-                        listActivitySAP.forEach{element ->
-                                ActivityCRUD.deleteActivityById(element.ActivityCode.toString())
-                            }
-                        listActivitySAP.forEach{element ->
-                                val activity : com.AG_AP.electroshop.firebase.models.Activity = com.AG_AP.electroshop.firebase.models.Activity().apply {
+                        listActivitySAP.forEach { element ->
+                            ActivityCRUD.deleteActivityById(element.ActivityCode.toString())
+                        }
+                        listActivitySAP.forEach { element ->
+                            val activity: com.AG_AP.electroshop.firebase.models.Activity =
+                                com.AG_AP.electroshop.firebase.models.Activity().apply {
                                     ""
                                     element.Notes ?: ""
                                     element.ActivityDate ?: ""
@@ -475,15 +505,17 @@ class MenuViewModel : ViewModel() {
                                     element.U_SEIPEDIDOCLIENTE ?: 0
                                     true
                                 }
-                                ActivityCRUD.insertActivity(activity)
-                            }
-                            ListCheckTotal.addInfo("Actividades actualizadas")
-                            if(bol){
-                                LoginObj.logout(Config.rulUse)
-                                _uiState.update { currentState -> currentState.copy(
+                            ActivityCRUD.insertActivity(activity)
+                        }
+                        ListCheckTotal.addInfo("Actividades actualizadas")
+                        if (bol) {
+                            LoginObj.logout(Config.rulUse)
+                            _uiState.update { currentState ->
+                                currentState.copy(
                                     checkProgresCircular = false
-                                ) }
+                                )
                             }
+                        }
                     }
                 }
             }
@@ -491,17 +523,21 @@ class MenuViewModel : ViewModel() {
 
     }
 
-    fun changeCheckProgresCircular(){
-        _uiState.update { currentState -> currentState.copy(
-            checkProgresCircular = true,
-            TextOrList = true
-        ) }
+    fun changeCheckProgresCircular() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                checkProgresCircular = true,
+                TextOrList = true
+            )
+        }
     }
 
     fun upTotal() {
-        _uiState.update { currentState -> currentState.copy(
-            TextOrList = false
-        ) }
+        _uiState.update { currentState ->
+            currentState.copy(
+                TextOrList = false
+            )
+        }
         viewModelScope.launch() {
             ListCheckTotal.resetList()
             val dataLogin = Login(Config.dataBase, Config.password, Config.login)
@@ -529,4 +565,13 @@ class MenuViewModel : ViewModel() {
         }
     }
 
+    fun convertirFecha(fecha: String): String {
+        // Definir el formato original y el nuevo formato
+        val formatoOriginal = SimpleDateFormat("dd-MM-yyyy")
+        val nuevoFormato = SimpleDateFormat("yyyy-MM-dd")
+
+        // Convertir la fecha del formato original al nuevo formato
+        val fechaOriginal: Date = formatoOriginal.parse(fecha)
+        return nuevoFormato.format(fechaOriginal)
+    }
 }
