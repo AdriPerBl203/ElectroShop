@@ -18,11 +18,11 @@ data class SettingUiState(
     val progress:Boolean = false,
     val init:Boolean = true,
     val syncProgress:Boolean = false,
-    val checkUserUdo:Boolean = false,
-    val checkBusinessPartner:Boolean = false,
-    val checkActivity:Boolean = false,
-    val checkItem:Boolean = false,
-    val checkOrder:Boolean = false,
+    var checkUserUdo:Boolean = false,
+    var checkBusinessPartner:Boolean = false,
+    var checkActivity:Boolean = false,
+    var checkItem:Boolean = false,
+    var checkOrder:Boolean = false,
     val checkPurchaseOrder:Boolean = false,
     val checkPreciosEspeciales:Boolean = false,
     val checkPriceLists:Boolean = false,
@@ -31,7 +31,13 @@ data class SettingUiState(
     val btnEnable:Boolean =true,
     val btnExitEnable:Boolean =true,
     val iconInt:ImageVector = Icons.Default.Sync,
-    val iconExt:ImageVector = Icons.Default.Sync
+    val iconExt:ImageVector = Icons.Default.Sync,
+    val checkBoxTodo:Boolean = true,
+    val checkBoxUDO:Boolean = true,
+    val checkBoxItems:Boolean = true,
+    val checkBoxOrders:Boolean = true,
+    val checkBoxActivity:Boolean = true,
+    val checkBoxClients:Boolean = true,
 )
 /*
 *

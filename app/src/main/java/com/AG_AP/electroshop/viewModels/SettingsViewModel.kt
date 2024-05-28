@@ -497,11 +497,53 @@ class SettingsViewModel : ViewModel() {
             //TODO
             deleteAndInsertSpecialPrice() // correcta
             deleteAndInsertPriceList() // correcta
-            deleteAndInsertItem()// Correcta
-            deleteAndInsertUserUdo() // revisado
-            deleteAndInsertBusinessPartner() // revisado
-            deleteAndInsertActivity() // revisado
-            deleteAndInsertOrders() //
+            if(_uiState.value.checkBoxItems){
+                deleteAndInsertItem()// Correcta
+            }else{
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        checkItem = true
+                    )
+                }
+            }
+
+            if(_uiState.value.checkBoxUDO){
+                deleteAndInsertUserUdo() // revisado
+            }else{
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        checkUserUdo = true
+                    )
+                }
+            }
+
+            if(_uiState.value.checkBoxClients){
+                deleteAndInsertBusinessPartner() // revisado
+            }else{
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        checkBusinessPartner = true
+                    )
+                }
+            }
+            if(_uiState.value.checkBoxActivity){
+                deleteAndInsertActivity() // revisado
+            }else{
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        checkActivity = true
+                    )
+                }
+            }
+            if(_uiState.value.checkBoxOrders){
+                deleteAndInsertOrders() //
+            }else{
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        checkOrder = true
+                    )
+                }
+            }
             enablebtn(Config.rulUse)
         }
          Log.e("SettingViewModel","Datos obtenidos")
@@ -802,6 +844,117 @@ class SettingsViewModel : ViewModel() {
                 }
 
                 Log.e("sync", "lista de precios  sincronizados")
+            }
+        }
+    }
+
+    fun changecheckBoxClients() {
+        if(_uiState.value.checkBoxClients){
+            _uiState.update { currentState ->
+                currentState.copy(
+                    checkBoxClients = false
+                )
+            }
+        }else{
+            _uiState.update { currentState ->
+                currentState.copy(
+                    checkBoxClients = true,
+                    checkBoxTodo = false
+                )
+            }
+        }
+    }
+
+    fun changecheckBoxOrders() {
+        if(_uiState.value.checkBoxOrders){
+            _uiState.update { currentState ->
+                currentState.copy(
+                    checkBoxOrders = false
+                )
+            }
+        }else{
+            _uiState.update { currentState ->
+                currentState.copy(
+                    checkBoxOrders = true,
+                    checkBoxTodo = false
+                )
+            }
+        }
+    }
+
+    fun changecheckBoxUDO() {
+        if(_uiState.value.checkBoxUDO){
+            _uiState.update { currentState ->
+                currentState.copy(
+                    checkBoxUDO = false
+                )
+            }
+        }else{
+            _uiState.update { currentState ->
+                currentState.copy(
+                    checkBoxUDO = true,
+                    checkBoxTodo = false
+                )
+            }
+        }
+    }
+
+    fun changecheckBoxItems() {
+        if(_uiState.value.checkBoxItems){
+            _uiState.update { currentState ->
+                currentState.copy(
+                    checkBoxItems = false
+                )
+            }
+        }else{
+            _uiState.update { currentState ->
+                currentState.copy(
+                    checkBoxItems = true,
+                    checkBoxTodo = false
+                )
+            }
+        }
+    }
+
+    fun changecheckBoxActivity() {
+        if(_uiState.value.checkBoxActivity){
+            _uiState.update { currentState ->
+                currentState.copy(
+                    checkBoxActivity = false
+                )
+            }
+        }else{
+            _uiState.update { currentState ->
+                currentState.copy(
+                    checkBoxActivity = true,
+                    checkBoxTodo = false,
+                )
+            }
+        }
+    }
+
+    fun changecheckBoxTodo() {
+        if(_uiState.value.checkBoxTodo){
+            _uiState.update { currentState ->
+                currentState.copy(
+                    checkBoxTodo = false,
+                    checkBoxClients = false,
+                    checkBoxActivity = false,
+                    checkBoxOrders = false,
+                    checkBoxUDO = false,
+                    checkBoxItems = false
+                )
+            }
+        }else{
+            _uiState.update { currentState ->
+                currentState.copy(
+                    checkBoxTodo = true,
+                    checkBoxClients = true,
+                    checkBoxActivity = true,
+                    checkBoxOrders = true,
+                    checkBoxUDO = true,
+                    checkBoxItems = true
+                )
             }
         }
     }

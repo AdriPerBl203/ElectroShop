@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -158,6 +159,105 @@ fun SettingScreen(
                 )
             }
         }
+
+        //TODO añadir checkboxes para las configuraciones
+
+        Spacer(modifier = Modifier.height(25.dp))
+
+        Box(
+            modifier= Modifier
+                .padding(horizontal = 100.dp)
+                .background(
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                    shape = RoundedCornerShape(25.dp)
+                )
+                .border(width = 1.dp, Color.Black, shape = RoundedCornerShape(25.dp))
+        ){
+            Row(
+                modifier = Modifier.padding(start = 15.dp, end = 15.dp,top=20.dp, bottom = 20.dp)
+            ) {
+                Column {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            "Clientes"
+                        )
+                        Checkbox(
+                            checked = dataUiState.checkBoxClients,
+                            onCheckedChange = { viewModel.changecheckBoxClients() }
+                        )
+                    }
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            "Pedidos"
+                        )
+                        Checkbox(
+                            checked = dataUiState.checkBoxOrders,
+                            onCheckedChange = { viewModel.changecheckBoxOrders() }
+                        )
+                    }
+                }
+
+                Column {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            "Articulos"
+                        )
+                        Checkbox(
+                            checked = dataUiState.checkBoxItems,
+                            onCheckedChange = { viewModel.changecheckBoxItems() }
+                        )
+                    }
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            "Actividades"
+                        )
+                        Checkbox(
+                            checked = dataUiState.checkBoxActivity,
+                            onCheckedChange = { viewModel.changecheckBoxActivity() }
+                        )
+                    }
+                }
+
+                Column {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            "Usuarios"
+                        )
+                        Checkbox(
+                            checked = dataUiState.checkBoxUDO,
+                            onCheckedChange = { viewModel.changecheckBoxUDO() }
+                        )
+                    }
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            "Todo"
+                        )
+                        Checkbox(
+                            checked = dataUiState.checkBoxTodo,
+                            onCheckedChange = { viewModel.changecheckBoxTodo() }
+                        )
+                    }
+                }
+
+            }
+        }
+
+        //FIN TODO
+
         if(dataUiState.progress){
             CustomLinearProgressBar()
             //CircularIndicator(50.dp)
@@ -169,7 +269,9 @@ fun SettingScreen(
                 verticalAlignment = Alignment.CenterVertically
             ){
                 Snackbar(
-                    modifier = Modifier.padding(start=50.dp,top=16.dp).align(alignment = Alignment.CenterVertically),
+                    modifier = Modifier
+                        .padding(start = 50.dp, top = 16.dp)
+                        .align(alignment = Alignment.CenterVertically),
                     action = {
                         Button(
                             onClick = {
