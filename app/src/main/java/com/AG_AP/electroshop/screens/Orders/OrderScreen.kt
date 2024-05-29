@@ -272,7 +272,7 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
                     Text(
                         text = "Lista pedidos disponibles en SAP"
                     )
-                    ListaPedidos(dataUiState, viewModel, dataUiState.ListOrdersInSap)
+                    ListaPedidos(viewModel, dataUiState.ListOrdersInSap)
                 }
 
             } //
@@ -284,7 +284,7 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
                     Text(
                         text = "Lista pedidos disponibles en dispositivo"
                     )
-                    ListaPedidos(dataUiState, viewModel, dataUiState.ListOrdersInDevice)
+                    ListaPedidos(viewModel, dataUiState.ListOrdersInDevice)
                 }
 
             } //
@@ -358,7 +358,6 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
 
 @Composable
 private fun ListaPedidos(
-    dataUiState: OrderUiState,
     viewModel: OrderViewModel,
     list: List<OrderFireBase>
 ) {

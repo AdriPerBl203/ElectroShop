@@ -879,7 +879,8 @@ class OrderViewModel : ViewModel(), ActionViewModel {
                 DiscountPercent = order.DiscountPercent,
                 SalesPersonCode = order.Slpcode,
                 DocumentLine = documentLine,
-                DocumentLineList = DocumentLineForMutableListSinceListOrder(order.DocumentLines.toMutableList())
+                DocumentLineList = DocumentLineForMutableListSinceListOrder(order.DocumentLines.toMutableList()),
+                actualDate = true
             )
         }
 
