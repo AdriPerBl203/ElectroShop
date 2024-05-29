@@ -1,5 +1,6 @@
 package com.AG_AP.electroshop.screens.Orders
 
+import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -78,7 +79,10 @@ import com.AG_AP.electroshop.firebase.models.OrderFireBase
 import com.AG_AP.electroshop.functions.InterconexionUpdateArticle
 import com.AG_AP.electroshop.functions.ObjectContext
 import com.AG_AP.electroshop.nav.Routes
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
+@SuppressLint("NewApi")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String?) {
@@ -88,6 +92,22 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
     viewModel.changeTotalPrice()
 
     viewModel.updateLists()
+
+    if (!dataUiState.actualDate) {
+        viewModel.changeActualDate()
+        val currentDate: String
+        try {
+            val dateWithoutFormat = LocalDate.now().toString()
+            val format = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+            currentDate = dateWithoutFormat.format(format)
+
+            viewModel.changeDates(currentDate)
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
+
 
 
     if (dataUiState.showDialogAddArticle) {

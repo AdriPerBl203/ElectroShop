@@ -31,7 +31,8 @@ data class OrderUiState(
     val ListOrdersInDevice: List<OrderFireBase> = listOf(),
     val dialogAddArticleUpdate: Boolean = false,
     val ActionButton: String = "Añadir y ver",
-    val totalPrice: Double = 0.0
+    val totalPrice: Double = 0.0,
+    val actualDate: Boolean = false
 )
 
 /*

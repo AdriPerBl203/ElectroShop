@@ -108,6 +108,24 @@ class OrderViewModel : ViewModel(), ActionViewModel {
         }
     }
 
+    fun changeActualDate() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                actualDate = false
+            )
+        }
+    }
+
+    fun changeDates(date: String) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                DocDate = date,
+                DocDueDate = date,
+                TaxDate = date
+            )
+        }
+    }
+
     override fun save(data: Boolean) {
         val cardCode = _uiState.value.CardCode
         val cardName = _uiState.value.CardName
