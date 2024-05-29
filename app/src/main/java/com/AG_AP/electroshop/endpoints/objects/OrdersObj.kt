@@ -4,6 +4,7 @@ import com.AG_AP.electroshop.endpoints.interfaces.ItemInterface
 import com.AG_AP.electroshop.endpoints.interfaces.OrdersInterface
 import com.AG_AP.electroshop.endpoints.models.item.getItems.GetItems
 import com.AG_AP.electroshop.endpoints.models.orders.Orders
+import com.AG_AP.electroshop.endpoints.models.orders.orderFilterClientAndDocument.OrdersFilterClientAndDocumentLines
 import com.AG_AP.electroshop.endpoints.models.orders.post.PostOrder
 import com.AG_AP.electroshop.endpoints.retrofit.RetrofitClient
 
@@ -14,6 +15,17 @@ object OrdersObj {
         val apiService = RetrofitClient.retrofit.create(OrdersInterface::class.java)
         return try {
             apiService.getOrders()
+        } catch (e: Exception) {
+            println(e.message)
+            null
+        }
+    }
+
+    suspend fun getClientAndDocumentLinesFilter(urlInt: String): OrdersFilterClientAndDocumentLines?{
+        RetrofitClient.baseUrl = urlInt
+        val apiService = RetrofitClient.retrofit.create(OrdersInterface::class.java)
+        return try {
+            apiService.getClientAndDocumentLinesFilter()
         } catch (e: Exception) {
             println(e.message)
             null
