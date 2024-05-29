@@ -52,17 +52,6 @@ class OrderViewModel : ViewModel(), ActionViewModel {
             }
         }
 
-        OrderCRUD.getAllObject { list ->
-            val mutableList = list as? MutableList<OrderFireBase>
-            mutableList?.let {
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        ListItems = it.toList(),
-                        ListOrders= it.toList()
-                    )
-                }
-            }
-        }
 
         BusinessPartnerCRUD.getAllObject { list ->
             val mutableList = list as? MutableList<BusinessPartner>
@@ -75,6 +64,41 @@ class OrderViewModel : ViewModel(), ActionViewModel {
             }
         }
 
+    }
+
+    fun updateLists() {
+        OrderCRUD.getAllObject { list ->
+            val mutableList = list as? MutableList<OrderFireBase>
+            mutableList?.let {
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        ListItems = it.toList()
+                    )
+                }
+            }
+        }
+
+        OrderCRUD.getOrdersInSap(true) { list ->
+            val mutableList = list as? MutableList<OrderFireBase>
+            mutableList?.let {
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        ListOrdersInSap = it.toList()
+                    )
+                }
+            }
+        }
+
+        OrderCRUD.getOrdersInSap(false) { list ->
+            val mutableList = list as? MutableList<OrderFireBase>
+            mutableList?.let {
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        ListOrdersInDevice = it.toList()
+                    )
+                }
+            }
+        }
     }
 
     fun refresh() {
@@ -890,7 +914,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
 
         _uiState.value?.DocumentLine?.let { documentLines ->
 
-            var index:Int = -1
+            var index: Int = -1
             documentLines.forEachIndexed { i, x ->
                 if (x != null) {
                     if (x.equals(obejctDelete)) {
@@ -898,7 +922,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
                     }
                 }
             }
-            if(index != -1){
+            if (index != -1) {
                 var tastAux = _uiState.value.trash
                 tastAux++
                 _uiState.value.DocumentLine.removeAt(index)

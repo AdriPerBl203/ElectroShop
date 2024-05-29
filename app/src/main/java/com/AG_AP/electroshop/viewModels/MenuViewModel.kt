@@ -132,6 +132,7 @@ class MenuViewModel : ViewModel() {
                                 SalesPersonCode = x.SalesPersonCode
                             )
                             OrdersObj.postOrders(Config.rulUse, postOrder)
+                            OrderCRUD.updateOrderToSAPTrue()
                             if (x.idFireBase != null) {
                                 OrderCRUD.deleteObjectById(x.idFireBase!!)
                             }

@@ -39,12 +39,21 @@ object OrderCRUD : ActionFirebase {
         callback(all.toMutableList())
     }
 
+    /**
+     * Method that receives a boolean, if its true then it returns the list of orders which are in sap
+     * otherwise it returns those which aren't
+     */
+    fun getOrdersInSap(sap: Boolean, callback: (MutableList<*>?) -> Unit) {
+        val all = realm.query<OrderFireBase>("SAP == $0", sap).find()
+        callback(all.toMutableList())
+    }
+
     override suspend fun updateObjectById(data: Any) {
         val orderFireBase = data as OrderFireBase
         realm.query<OrderFireBase>("DocNum = $0", orderFireBase.DocNum)
-            .first()
             .find()
-            ?.also { oldActivity ->
+            .first()
+            .also { oldActivity ->
                 realm.write {
                     findLatest(oldActivity)?.let { it ->
                         it.DocNum = orderFireBase.DocNum
@@ -62,6 +71,20 @@ object OrderCRUD : ActionFirebase {
                     }
                 }
             }
+    }
+
+    suspend fun updateOrderToSAPTrue() {
+        realm.query<OrderFireBase>("SAP == $0", false).find().also { list ->
+            realm.write {
+                list.forEach { obj ->
+                    findLatest(obj)?.apply {
+                        SAP = true
+                    }
+
+                }
+            }
+        }
+
     }
 
     override suspend fun deleteObjectById(id: String) {

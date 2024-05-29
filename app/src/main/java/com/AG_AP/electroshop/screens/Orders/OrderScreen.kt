@@ -86,6 +86,8 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
     //Comprueba si hay algún articulo, si lo hay actualiza el precio total
     viewModel.changeTotalPrice()
 
+    viewModel.updateLists()
+
 
     if (dataUiState.showDialogAddArticle) {
         DialogOandPO(
@@ -243,7 +245,9 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
             }
 
             item { //
-                Column {
+                Column (
+                    modifier = Modifier.padding(10.dp)
+                ) {
                     Text(
                         text = "Lista pedidos disponibles en SAP"
                     )
@@ -253,7 +257,9 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
             } //
 
             item { //
-                Column {
+                Column (
+                    modifier = Modifier.padding(10.dp)
+                ) {
                     Text(
                         text = "Lista pedidos disponibles en dispositivo"
                     )
