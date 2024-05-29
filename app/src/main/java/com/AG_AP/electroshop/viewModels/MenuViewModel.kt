@@ -1,5 +1,6 @@
 package com.AG_AP.electroshop.viewModels
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
@@ -38,6 +39,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
+import java.time.DateTimeException
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Date
 
 class MenuViewModel : ViewModel() {
@@ -116,9 +120,17 @@ class MenuViewModel : ViewModel() {
                             var docDueDate = x.DocDueDate.replace("/", "-")
                             var taxDate = x.TaxDate.replace("/", "-")
 
-                            docDate = convertirFecha(docDate)
-                            docDueDate = convertirFecha(docDueDate)
-                            taxDate = convertirFecha(taxDate)
+                            if (!checkFecha(docDate)) {
+                                docDate = convertirFecha(docDate)
+                            }
+
+                            if (!checkFecha(docDueDate)) {
+                                docDueDate = convertirFecha(docDueDate)
+                            }
+
+                            if (!checkFecha(taxDate)) {
+                                taxDate = convertirFecha(taxDate)
+                            }
 
                             val postOrder = PostOrder(
                                 CardCode = x.CardCode,
@@ -574,5 +586,16 @@ class MenuViewModel : ViewModel() {
         // Convertir la fecha del formato original al nuevo formato
         val fechaOriginal: Date = formatoOriginal.parse(fecha)
         return nuevoFormato.format(fechaOriginal)
+    }
+
+    @SuppressLint("NewApi")
+    fun checkFecha(fecha: String) : Boolean {
+        val formato = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        return try {
+            LocalDate.parse(fecha, formato)
+            true
+        } catch (e: DateTimeException) {
+            false
+        }
     }
 }
