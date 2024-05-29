@@ -105,15 +105,23 @@ fun ItemView(innerPadding: PaddingValues, viewModel: ItemViewModel, id: String?)
                                 Text(text = it.itemName)
                             }
                             Spacer(modifier = Modifier.height(5.dp))
+                            var aux =0
                             it.itemPrice?.forEachIndexed { index, priceItem ->
                                 Row {
-
                                     for(i in dataUiState.PriceListObject!!){
                                         if(i.PriceListNo.toInt() == priceItem.priceList){
-                                            Text(text = "${i.PriceListName} -- ${priceItem.price}€")
+                                            if(priceItem.price != 0.0){
+                                                Text(text = "${i.PriceListName} -- ${priceItem.price}€")
+                                                aux++
+                                            }
                                         }
                                     }
+
                                 }
+                            }
+                            if(aux == 0){
+                                Text(text = "No hay precios")
+                                aux=0
                             }
                         }
                     }
