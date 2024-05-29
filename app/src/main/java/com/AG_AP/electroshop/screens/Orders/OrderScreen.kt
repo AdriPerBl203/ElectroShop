@@ -345,7 +345,7 @@ private fun ListaPedidos(
     LazyColumn(
         modifier = Modifier
             .width(250.dp)
-            .height(350.dp)
+            .height(300.dp)
             .padding(horizontal = 10.dp)
     ) {
         if (list.isNotEmpty()) {
