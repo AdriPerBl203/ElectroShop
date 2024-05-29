@@ -4,6 +4,9 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.AG_AP.electroshop.firebase.ItemCRUD
+import com.AG_AP.electroshop.firebase.OrderCRUD
+import com.AG_AP.electroshop.firebase.PriceListCRUD
+import com.AG_AP.electroshop.firebase.PriceListForListCRUD
 import com.AG_AP.electroshop.firebase.models.Item
 import com.AG_AP.electroshop.firebase.models.ItemType
 import com.AG_AP.electroshop.firebase.models.ItemPrice
@@ -27,6 +30,37 @@ class ItemViewModel : ViewModel(), ActionViewModel {
         if (id.isNotEmpty()) {
             find()
         }
+
+        PriceListForListCRUD.getAllPrecios { list->
+            _uiState.update { currentState ->
+                currentState.copy(
+                    PriceListObject= list
+                )
+            }
+        }
+
+        ItemCRUD.getAllItems { list->
+            if(list != null){
+
+                val ListAuxItems = mutableListOf<Item>()
+                var aux =0
+                list.asReversed().forEach { i ->
+                    if(aux <= 20){
+                        Log.i("ItemViewModel", i.toString())
+                        ListAuxItems += i
+                        aux++
+                    }
+                }
+
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        itemsList= ListAuxItems
+                    )
+                }
+            }
+
+        }
+
     }
 
     fun refresh() {

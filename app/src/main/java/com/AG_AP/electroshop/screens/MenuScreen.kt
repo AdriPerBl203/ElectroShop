@@ -388,7 +388,7 @@ fun MenuBody(
                     ) {
                         if (dataUiState.articulo == "S") {
                             Card(
-                                onClick = { navController.navigate(route = Routes.MixedItemScreen.route) }) {
+                                onClick = { navController.navigate(route = Routes.ItemScreen.route) }) {
                                 Column(
                                     verticalArrangement = Arrangement.Top,
                                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -421,7 +421,7 @@ fun MenuBody(
         }
     }
 }
-
+/*
 @Preview(
     showBackground = true,
     showSystemUi = true,
@@ -430,4 +430,4 @@ fun MenuBody(
 @Composable
 fun MenuFrontViewPreview() {
     //MenuFrontView(navController = navController)
-}
+}*/

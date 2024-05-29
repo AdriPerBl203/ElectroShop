@@ -8,9 +8,11 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,11 +20,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddCard
+import androidx.compose.material.icons.filled.Camera
 import androidx.compose.material.icons.filled.Inbox
 import androidx.compose.material.icons.filled.LocalActivity
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -68,6 +72,54 @@ fun ItemView(innerPadding: PaddingValues, viewModel: ItemViewModel, id: String?)
         modifier = Modifier
             .padding(innerPadding)
     ) {
+        LazyRow() {
+            dataUiState.itemsList?.let {
+                items(it.toList()){ it->
+                    Card(
+                        modifier = Modifier
+                            .padding(10.dp)
+                            .height(200.dp)
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(3.dp)
+                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                            ) {
+                                Text(text = it.ItemCode)
+                                IconButton(onClick = {
+                                    //viewModel.showOrderComplete(order)
+                                }) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Camera,
+                                        contentDescription = "Settings",
+                                        tint = MaterialTheme.colorScheme.primaryContainer
+                                    )
+                                }
+                            }
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                            ) {
+                                Text(text = it.itemName)
+                            }
+                            Spacer(modifier = Modifier.height(5.dp))
+                            it.itemPrice?.forEachIndexed { index, priceItem ->
+                                Row {
+
+                                    for(i in dataUiState.PriceListObject!!){
+                                        if(i.PriceListNo.toInt() == priceItem.priceList){
+                                            Text(text = "${i.PriceListName} -- ${priceItem.price}€")
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
         Row {
             Column {
                 OutlinedTextField(

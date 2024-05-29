@@ -1,6 +1,9 @@
 package com.AG_AP.electroshop.uiState.Items
 
+import com.AG_AP.electroshop.endpoints.models.priceList.PriceList
+import com.AG_AP.electroshop.firebase.models.Item
 import com.AG_AP.electroshop.firebase.models.ItemPrice
+import com.AG_AP.electroshop.firebase.models.PriceListRealm
 
 data class ItemUiState(
     val ItemCode: String = "",
@@ -8,6 +11,8 @@ data class ItemUiState(
     val itemType: String = "I",
     val mainSupplier: String = "",
     val itemPrice: MutableList<ItemPrice>? = mutableListOf(),
+    val itemsList: MutableList<Item>? = mutableListOf(),
+    val PriceListObject: MutableList<PriceListRealm>? = mutableListOf(),
     val manageSerialNumbers: Boolean = false,
     val autoCreateSerialNumbersOnRelease: Boolean = false,
     val message: Boolean = false,
