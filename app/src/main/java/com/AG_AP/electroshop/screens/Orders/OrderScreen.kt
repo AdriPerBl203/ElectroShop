@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -245,7 +246,7 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
             }
 
             item { //
-                Column (
+                Column(
                     modifier = Modifier.padding(10.dp)
                 ) {
                     Text(
@@ -257,7 +258,7 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
             } //
 
             item { //
-                Column (
+                Column(
                     modifier = Modifier.padding(10.dp)
                 ) {
                     Text(
@@ -392,11 +393,21 @@ private fun ListaPedidos(
                 Card(
                     modifier = Modifier
                         .padding(10.dp)
+                        .width(200.dp)
                         .height(200.dp)
                 ) {
-                    Text (
-                        text = "No hay datos"
-                    )
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
+                        modifier = Modifier
+                            .padding(3.dp)
+                            .fillMaxSize()
+                    ) {
+                        Text(
+                            text = "No hay datos",
+                            textAlign = TextAlign.Center
+                        )
+                    }
                 }
             }
         }
