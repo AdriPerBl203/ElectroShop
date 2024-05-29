@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
+import com.AG_AP.electroshop.firebase.OrderCRUD
 import com.AG_AP.electroshop.firebase.models.BusinessPartner
 import com.AG_AP.electroshop.uiState.BusinessPartners.BusinessPartnerUiState
 import com.AG_AP.electroshop.viewModels.ActionViewModel
@@ -385,6 +386,47 @@ class BusinessPartnerViewModel : ViewModel(), ActionViewModel {
     fun validateEmail(email: String): Boolean {
         val pattern = Regex("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\$")
         return pattern.matches(email)
+    }
+
+    fun showDialogfilterItem(){
+
+        val cardCode = _uiState.value.CardCode
+
+        if (cardCode.isNotEmpty()) {
+
+            OrderCRUD.getAllObjectOrdeByCarCodeAndDocDueDate(cardCode){ list ->
+                val listAux: MutableList<String> = mutableListOf()
+                if (list != null) {
+                    for(x in list){
+                        for(y in x.DocumentLines){
+                            listAux+= y.ItemCode
+                        }
+                    }
+                    val listWithoutDuplicates: MutableList<String> = listAux.distinct().toMutableList()
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            showDialogFilter = true,
+                            ItemBPList = listWithoutDuplicates
+                        )
+                    }
+                }
+            }
+
+        }else{
+            _uiState.update { currentState ->
+                currentState.copy(
+                    showDialogFilter = true
+                )
+            }
+        }
+    }
+
+    fun closeDialogfilterItem(){
+        _uiState.update { currentState ->
+            currentState.copy(
+                showDialogFilter = false
+            )
+        }
     }
 
 }

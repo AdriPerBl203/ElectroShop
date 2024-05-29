@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -46,13 +47,18 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.AddCard
+import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.CallMade
+import androidx.compose.material.icons.filled.Camera
 import androidx.compose.material.icons.filled.Inbox
 import androidx.compose.material.icons.filled.LocalActivity
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.AG_AP.electroshop.components.TopBarButton
@@ -75,9 +81,45 @@ fun BusinessPartnerUltimate(innerPadding: PaddingValues, viewModel: BusinessPart
             viewModel.refresh()
         }
 
+        if(dataUiState.showDialogFilter){
+            Dialog(onDismissRequest = { viewModel.closeDialogfilterItem() }) {
+                // Draw a rectangle shape with rounded corners inside the dialog
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(375.dp)
+                        .padding(16.dp),
+                    shape = RoundedCornerShape(16.dp),
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        /*verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,*/
+                    ) {
+                        for (item in dataUiState.ItemBPList) {
+                            ListItem(
+                                headlineContent = {Text(text = item) },
+                                trailingContent = {
+                                    IconButton(onClick = {/*TODO*/}) {
+                                        Icon(
+                                            imageVector = Icons.Filled.Camera,
+                                            contentDescription = "Settings",
+                                            tint = MaterialTheme.colorScheme.primaryContainer
+                                        )
+                                    }
+                                }
+                            )
+
+                        }
+                    }
+                }
+            }
+        }
+
         Row(
         ) {
-            Column {
+            Column {//
 
                 val coffeeDrinks = arrayOf("Cliente", "Proveedor", "Lead")
                 var expanded by remember { mutableStateOf(false) }
@@ -140,18 +182,18 @@ fun BusinessPartnerUltimate(innerPadding: PaddingValues, viewModel: BusinessPart
                         .padding(8.dp),
                     label = { Text("Email") }
                 )
-            }
+            }  //
             Row(
                 modifier = Modifier.width(500.dp)
             ) {
-                OutlinedTextField(
+                OutlinedTextField(//
                     value = dataUiState.FilterByName,
                     onValueChange = { viewModel.changeFilter(it) },
                     modifier = Modifier
                         .width(300.dp)
                         .padding(8.dp),
                     label = { Text("Buscar por nombre") }
-                )
+                ) //
 
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -163,6 +205,10 @@ fun BusinessPartnerUltimate(innerPadding: PaddingValues, viewModel: BusinessPart
 
                     ElevatedButton(onClick = { /*TODO*/ }) {
                         Text("Opciones avanzadas")
+                    }
+
+                    ElevatedButton(onClick = { viewModel.showDialogfilterItem()}) {
+                        Text("Últimos articulos")
                     }
                 }
             }
