@@ -27,7 +27,8 @@ data class OrderUiState(
     val ListItems: List<OrderFireBase> = listOf(),
     val showDialogBusinessPartner: Boolean = false,
     val ListBusinessPartner: List<BusinessPartner> = listOf(),
-    val ListOrders: List<OrderFireBase> = listOf(),
+    val ListOrdersInSap: List<OrderFireBase> = listOf(),
+    val ListOrdersInDevice: List<OrderFireBase> = listOf(),
     val dialogAddArticleUpdate: Boolean = false,
     val ActionButton: String = "Añadir y ver",
     val totalPrice: Double = 0.0

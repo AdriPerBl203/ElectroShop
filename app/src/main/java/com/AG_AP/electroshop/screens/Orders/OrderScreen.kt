@@ -1,6 +1,5 @@
 package com.AG_AP.electroshop.screens.Orders
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -61,6 +60,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -73,6 +73,7 @@ import com.AG_AP.electroshop.uiState.Orders.OrderUiState
 import com.AG_AP.electroshop.components.DialogOandPO
 import com.AG_AP.electroshop.components.TopBarButton
 import com.AG_AP.electroshop.firebase.models.BusinessPartner
+import com.AG_AP.electroshop.firebase.models.OrderFireBase
 import com.AG_AP.electroshop.functions.InterconexionUpdateArticle
 import com.AG_AP.electroshop.functions.ObjectContext
 import com.AG_AP.electroshop.nav.Routes
@@ -242,7 +243,23 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
             }
 
             item { //
-                ListaPedidos(dataUiState, viewModel)
+                Column {
+                    Text(
+                        text = "Lista pedidos disponibles en SAP"
+                    )
+                    ListaPedidos(dataUiState, viewModel, dataUiState.ListOrdersInSap)
+                }
+
+            } //
+
+            item { //
+                Column {
+                    Text(
+                        text = "Lista pedidos disponibles en dispositivo"
+                    )
+                    ListaPedidos(dataUiState, viewModel, dataUiState.ListOrdersInDevice)
+                }
+
             } //
 
         }
@@ -315,7 +332,8 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
 @Composable
 private fun ListaPedidos(
     dataUiState: OrderUiState,
-    viewModel: OrderViewModel
+    viewModel: OrderViewModel,
+    list: List<OrderFireBase>
 ) {
     LazyColumn(
         modifier = Modifier
@@ -323,45 +341,60 @@ private fun ListaPedidos(
             .height(350.dp)
             .padding(horizontal = 10.dp)
     ) {
-        items(dataUiState.ListOrders) { order ->
-            Card(
-                modifier = Modifier
-                    .padding(10.dp)
-                    .height(200.dp)
-            ) {
-                Column(
-                    modifier = Modifier.padding(3.dp)
+        if (list.isNotEmpty()) {
+            items(list) { order ->
+                Card(
+                    modifier = Modifier
+                        .padding(10.dp)
+                        .height(200.dp)
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
+                    Column(
+                        modifier = Modifier.padding(3.dp)
                     ) {
-                        Text(text = order.DocDate.split("T").firstOrNull() ?: "Sin fecha")
-                        IconButton(onClick = {
-                            viewModel.showOrderComplete(order)
-                        }) {
-                            Icon(
-                                imageVector = Icons.Filled.Camera,
-                                contentDescription = "Settings",
-                                tint = MaterialTheme.colorScheme.primaryContainer
-                            )
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                        ) {
+                            Text(text = order.DocDate.split("T").firstOrNull() ?: "Sin fecha")
+                            IconButton(onClick = {
+                                viewModel.showOrderComplete(order)
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Filled.Camera,
+                                    contentDescription = "Settings",
+                                    tint = MaterialTheme.colorScheme.primaryContainer
+                                )
+                            }
                         }
-                    }
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                    ) {
-                        Text(text = order.CardCode)
-                    }
-                    Spacer(modifier = Modifier.height(5.dp))
-                    order.DocumentLines.forEachIndexed { index, line ->
-                        Row {
-                            Text(text = "${line.ItemCode} -- ${line.Quantity} -- ${line.Price}€")
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                        ) {
+                            Text(text = order.CardCode)
+                        }
+                        Spacer(modifier = Modifier.height(5.dp))
+                        order.DocumentLines.forEachIndexed { index, line ->
+                            Row {
+                                Text(text = "${line.ItemCode} -- ${line.Quantity} -- ${line.Price}€")
+                            }
                         }
                     }
                 }
             }
+        } else {
+            item {
+                Card(
+                    modifier = Modifier
+                        .padding(10.dp)
+                        .height(200.dp)
+                ) {
+                    Text (
+                        text = "No hay datos"
+                    )
+                }
+            }
         }
+
     }
 }
 
@@ -397,7 +430,8 @@ fun TableDocumentLineOrder(dataUiState: OrderUiState, viewModel: OrderViewModel)
                     it,
                     Modifier
                         .height(50.dp)
-                        .wrapContentSize()
+                        .wrapContentSize(),
+                    textAlign = TextAlign.Center
                 )
             }
 
