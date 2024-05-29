@@ -117,8 +117,6 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
         )
     }*/
 
-    Log.i("Pruebas", "Lineas de documento: ${dataUiState.DocumentLine.toString()}")
-    Log.i("Pruebas", "Lineas de chachi: ${dataUiState.DocumentLineList.toString()}")
     Column(
         modifier = Modifier
             .padding(innerPadding)
