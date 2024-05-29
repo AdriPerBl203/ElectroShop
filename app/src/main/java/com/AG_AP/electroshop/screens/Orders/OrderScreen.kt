@@ -30,6 +30,7 @@ import androidx.compose.material.icons.filled.AddBox
 import androidx.compose.material.icons.filled.AddCard
 import androidx.compose.material.icons.filled.CallMade
 import androidx.compose.material.icons.filled.Camera
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Inbox
 import androidx.compose.material.icons.filled.LocalActivity
@@ -240,9 +241,9 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
                 }
             }
 
-            item {
+            item { //
                 ListaPedidos(dataUiState, viewModel)
-            }
+            } //
 
         }
 
@@ -367,10 +368,11 @@ private fun ListaPedidos(
 @Composable
 fun TableDocumentLineOrder(dataUiState: OrderUiState, viewModel: OrderViewModel) {
 
-    val numCols = 7
+    val numCols = 8
 
     // Datos de ejemplo para las cabeceras
     val headers = listOf(
+        "Borrar",
         "Editar",
         "Nº",
         "Código Articulo",
@@ -405,6 +407,27 @@ fun TableDocumentLineOrder(dataUiState: OrderUiState, viewModel: OrderViewModel)
 
     LazyVerticalGrid(columns = GridCells.Fixed(numCols)) {
         dataUiState.DocumentLineList.forEach { index, value ->
+            item {
+                Box(
+                    modifier = Modifier
+                        .border(1.dp, MaterialTheme.colorScheme.primary)
+                        .background(MaterialTheme.colorScheme.secondaryContainer)
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    IconButton(
+                        modifier = Modifier
+                            .height(50.dp)
+                            .wrapContentSize(),
+                        onClick = {
+                            viewModel.deleteObject(value)
+                            //TODO
+                        }
+                    ) {
+                        Icon(Icons.Filled.Delete, contentDescription = "+ Icon")
+                    }
+                }
+            }
             item {
                 Box(
                     modifier = Modifier
