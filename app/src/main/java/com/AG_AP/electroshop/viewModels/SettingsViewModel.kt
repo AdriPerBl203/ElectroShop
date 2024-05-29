@@ -644,7 +644,7 @@ class SettingsViewModel : ViewModel() {
                             listOrderSAP += it
                         }
                         val num: List<String> = orders.odataNextLink.split("=")
-                        orders = OrdersObj.getOrdersExtenExten(Config.rulUse, num[1].toInt())
+                        orders = OrdersObj.getOrdersExtenExten(Config.rulUse, num[2].toInt())
                     }
                 }
             }
