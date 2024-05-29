@@ -4,6 +4,7 @@ import com.AG_AP.electroshop.firebase.models.BusinessPartner
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
 import io.realm.kotlin.delete
 import io.realm.kotlin.ext.query
+import io.realm.kotlin.query.Sort
 
 object OrderCRUD : ActionFirebase {
 
@@ -100,6 +101,13 @@ object OrderCRUD : ActionFirebase {
         realm.writeBlocking {
             delete<OrderFireBase>()
         }
+    }
+
+    fun getAllObjectOrdeByCarCodeAndDocDueDate(cardCode: String,callback: (MutableList<OrderFireBase>?) -> Unit) {
+        val all = realm.query<OrderFireBase>("CardCode = $0", cardCode).sort("CardName", Sort.ASCENDING)
+            .sort("DocDueDate", Sort.ASCENDING)
+            .find()
+        callback(all.toMutableList())
     }
 
 
