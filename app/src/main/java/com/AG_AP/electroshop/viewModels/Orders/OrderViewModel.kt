@@ -838,7 +838,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
 
         var allCheck = false
 
-        if (cardCode.isNotEmpty() && mainSupplier.isNotEmpty() && fechaContabilizacion.isNotEmpty() && fechaEntrega.isNotEmpty() && fechaDocumento.isNotEmpty() && lista.isNotEmpty()) {
+        if (cardCode.isNotEmpty() && fechaContabilizacion.isNotEmpty() && fechaEntrega.isNotEmpty() && fechaDocumento.isNotEmpty() && lista.isNotEmpty()) {
             allCheck = true
         }
 
