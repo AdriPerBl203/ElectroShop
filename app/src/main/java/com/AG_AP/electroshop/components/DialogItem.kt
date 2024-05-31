@@ -8,11 +8,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -28,7 +31,9 @@ fun DialogActivity(
     data: () -> List<Any>,
     infoDialog: String,
     clasedDialog: () -> Unit,
-    returnData: (Any) -> Unit
+    returnData: (Any) -> Unit,
+    returnDataSearch:(Any) -> Unit,
+    valueSearch: String
 ) {
 
     Dialog(onDismissRequest = { clasedDialog() }) {
@@ -43,6 +48,14 @@ fun DialogActivity(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 10.dp), text = infoDialog
+                )
+                OutlinedTextField(
+                    value = valueSearch,
+                    trailingIcon = { Icon(imageVector = Icons.Default.Search, contentDescription = "emailIcon") },
+                    onValueChange = {
+                        returnDataSearch(it)
+                    },
+                    label = { Text(text = "Buscar") },
                 )
                 LazyColumn {
                     items(data()) { x ->
