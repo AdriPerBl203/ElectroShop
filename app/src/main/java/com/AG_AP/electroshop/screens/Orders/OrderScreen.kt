@@ -130,7 +130,11 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
                     viewModel.changeName(data.CardName)
                 }
 
-            }
+            },
+            {x ->
+                //TODO HACER LOS ODS
+            },
+            ""
         )
     }
     /*if(dataUiState.showDialogSelectCodeArticle){

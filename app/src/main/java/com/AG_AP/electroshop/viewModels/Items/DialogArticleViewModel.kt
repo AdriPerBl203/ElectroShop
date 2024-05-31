@@ -25,7 +25,9 @@ class DialogArticleViewModel : ViewModel() {
             mutableList?.let {
                 _uiState.update { currentState ->
                     currentState.copy(
-                        ListItems = it.toList()
+                        ListItems = it.toList(),
+                        ListItemsAux=it.toList(),
+                        ListItemsBackund=it.toList()
                     )
                 }
             }
@@ -64,6 +66,14 @@ class DialogArticleViewModel : ViewModel() {
             }
         }
 
+    }
+
+    fun changeInputSearch(it: String) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                inputSearch = it
+            )
+        }
     }
 
     fun changePrice(it: String) {
@@ -177,6 +187,30 @@ class DialogArticleViewModel : ViewModel() {
                     count = d.Quantity.toDouble(),
                     description = d.ItemDescription.toString(),
                     codeArticle = d.ItemCode.toString(),
+                )
+            }
+        }
+    }
+
+    fun searchItemSinceInput() {
+        val data = _uiState.value.inputSearch
+        _uiState.value.ListItemsAux = _uiState.value.ListItems
+        if(data.length >3){
+            _uiState.value.ListItemsAux = mutableListOf()
+            _uiState.value.ListItems.forEach {item ->
+                if(item.ItemCode.contains(data) || item.itemName.contains(data)){
+                    _uiState.value.ListItemsAux+= item
+                }
+            }
+            _uiState.update { currentState ->
+                currentState.copy(
+                    ListItems = _uiState.value.ListItemsAux
+                )
+            }
+        }else{
+            _uiState.update { currentState ->
+                currentState.copy(
+                    ListItems = _uiState.value.ListItemsBackund
                 )
             }
         }

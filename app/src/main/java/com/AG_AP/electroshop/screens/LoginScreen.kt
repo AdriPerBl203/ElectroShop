@@ -40,7 +40,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
-import coil.decode.GifDecoder
 import coil.request.ImageRequest
 import coil.size.Size
 import com.AG_AP.electroshop.R
@@ -60,12 +59,12 @@ fun LoginFrontView(
 ) {
     val dataUiState by viewModel.uiState.collectAsState()
 
-    val painter = rememberAsyncImagePainter(
+    /*val painter = rememberAsyncImagePainter(
         ImageRequest.Builder(ObjectContext.context)
             .data(R.drawable.fondoanimado)
             .decoderFactory(GifDecoder.Factory())
             .build()
-    )
+    )*/
 
     /* Content */
     Box(
@@ -82,12 +81,12 @@ fun LoginFrontView(
                 .fillMaxSize()
         ) {
 
-            Image(
+            /*Image(
                 painter = painter,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
-            )
+            )*/
 
 
         }

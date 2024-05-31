@@ -64,7 +64,12 @@ fun DialogOandPO(
                         viewModel.changeCodeArticle(data.toString())
                     }
 
-                }
+                },
+                { returnValue ->
+                    viewModel.changeInputSearch(returnValue as String)
+                    viewModel.searchItemSinceInput()
+                },
+                dataUiState.inputSearch
             )
         }
         Card(
