@@ -344,6 +344,9 @@ fun PriceListList(dataUiState: ItemUiState, viewModel: ItemViewModel) {
     ) {
         dataUiState.itemPrice?.let { price ->
             items(price) { individualPrice ->
+                dataUiState.PriceListObject?.forEach {
+
+                }
                 ListItem(
                     headlineContent = { Text(text = individualPrice.price.toString()) },
                     supportingContent = { Text(text = individualPrice.currency) },

@@ -32,11 +32,13 @@ class DialogPLViewModel : ViewModel() {
 
     fun updateCurrencyList() {
         PriceListCRUD.getAllPrecios { prices ->
-            prices.let {
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        AvailablePriceList = prices
-                    )
+            if (prices is MutableList<ItemPrice>) {
+                prices.let {
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            AvailablePriceList = prices
+                        )
+                    }
                 }
             }
         }

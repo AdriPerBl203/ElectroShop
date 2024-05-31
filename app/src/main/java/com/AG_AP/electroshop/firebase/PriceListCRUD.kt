@@ -24,8 +24,8 @@ object PriceListCRUD {
     }
 
     fun getAllPrecios(callback: (MutableList<ItemPrice>) -> Unit) {
-        val all = realm.query<ItemPrice>().find() as MutableList<ItemPrice>
-        callback(all)
+        val all = realm.query<ItemPrice>().find()
+        callback(all.toMutableList())
     }
 
     suspend fun updatePrecioById(idPrecio: String, itemPrice: ItemPrice) {

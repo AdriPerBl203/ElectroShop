@@ -29,7 +29,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.AG_AP.electroshop.firebase.PriceListForListCRUD
 import com.AG_AP.electroshop.firebase.models.ItemPrice
+import com.AG_AP.electroshop.firebase.models.PriceListRealm
 import com.AG_AP.electroshop.viewModels.Items.DialogPLViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -56,27 +58,40 @@ fun DialogCustomPriceList(
                     .fillMaxSize()
             ) {
                 val availablePrices = dataUiState.AvailablePriceList
+                var availableItemPriceList: MutableList<PriceListRealm> = mutableListOf()
+                PriceListForListCRUD.getAllPrecios {
+                    availableItemPriceList = it
+                }
                 var newList: MutableList<ItemPrice?> = mutableListOf()
+                var newListName: MutableList<String> = mutableListOf()
 
                 if (!itemPricesAlreadyInserted.isNullOrEmpty()) {
                     availablePrices.forEach { price ->
                         if (price != null) {
                             var priceToInsert: ItemPrice? = null
+                            var name: String = ""
                             itemPricesAlreadyInserted.forEach { priceInserted ->
-                                if (price.currency == priceInserted.currency) {
-                                    priceToInsert = null
-                                    return@forEach
-                                } else {
-                                    priceToInsert = price
+                                if (availableItemPriceList.isNotEmpty()) {
+                                    availableItemPriceList.forEach { priceList ->
+                                        if ((price.priceList == priceInserted.priceList) && priceInserted.priceList == priceList.PriceListNo.toInt()) {
+                                            priceToInsert = null
+                                            return@forEach
+                                        } else {
+                                            priceToInsert = price
+                                            name = priceList.PriceListName
+                                        }
+                                    }
                                 }
                             }
                             if (priceToInsert != null) {
                                 newList.add(price)
+                                newListName.add(name)
                             }
                         }
                     }
                 } else {
                     newList = dataUiState.AvailablePriceList.toMutableList()
+                    newListName = dataUiState.PriceNameList.toMutableList()
                 }
 
 
@@ -91,14 +106,14 @@ fun DialogCustomPriceList(
                         expanded = !expanded
                     }
                 ) {
-                    dataUiState.ChoosenCurrency?.let {
+                    dataUiState.PriceListName.let {
                         TextField(
                             value = it,
                             onValueChange = {},
                             readOnly = true,
                             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                             modifier = Modifier.menuAnchor(),
-                            label = { Text(text = "Moneda") }
+                            label = { Text(text = "Nombre") }
                         )
                     }
 
@@ -107,19 +122,22 @@ fun DialogCustomPriceList(
                         onDismissRequest = { expanded = false }
                     ) {
                         coffeeDrinks.forEach { price ->
-                            if (price != null) {
-                                DropdownMenuItem(
-                                    text = {
-                                        Text(text = price.currency)
-                                    },
-                                    onClick = {
-                                        viewModel.changeChoosenCurrency(price.currency)
-                                        viewModel.changePriceList(price.priceList)
-                                        viewModel.changePrice()
-                                        expanded = false
-                                    }
-                                )
+                            newListName.forEach { nombre ->
+                                if (price != null) {
+                                    DropdownMenuItem(
+                                        text = {
+                                            Text(text = price.currency)
+                                        },
+                                        onClick = {
+                                            viewModel.changeChoosenCurrency(price.currency)
+                                            viewModel.changePriceList(price.priceList)
+                                            viewModel.changePrice()
+                                            expanded = false
+                                        }
+                                    )
+                                }
                             }
+
                         }
 
                     }
