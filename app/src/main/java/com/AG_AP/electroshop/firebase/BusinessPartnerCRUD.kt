@@ -331,9 +331,18 @@ object BusinessPartnerCRUD : ActionFirebase {
     }
 
     fun deleteAll() {
-        realm.writeBlocking {
-            delete<BusinessPartner>()
+        val objectListToDelete = realm.query<BusinessPartner>("SAP == $0", true).find()
+        if (objectListToDelete.isNotEmpty()) {
+            realm.writeBlocking {
+                objectListToDelete.forEach {
+                    val deleteableObject = findLatest(it)
+                    if (deleteableObject != null) {
+                        delete(deleteableObject)
+                    }
+                }
+            }
         }
+
     }
 
 
