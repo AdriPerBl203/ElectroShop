@@ -45,9 +45,18 @@ object PriceListForListCRUD {
     }
 
     fun deleteAll() {
-        SEIConfigCRUD.realm.writeBlocking {
-            delete<PriceListRealm>()
+        val objectListToDelete = realm.query<PriceListRealm>("SAP == $0", true).find()
+        if (objectListToDelete.isNotEmpty()) {
+            realm.writeBlocking {
+                objectListToDelete.forEach {
+                    val deleteableObject = findLatest(it)
+                    if (deleteableObject != null) {
+                        delete(deleteableObject)
+                    }
+                }
+            }
         }
+
     }
 
 
