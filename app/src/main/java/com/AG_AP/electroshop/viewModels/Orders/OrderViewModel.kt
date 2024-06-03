@@ -955,6 +955,39 @@ class OrderViewModel : ViewModel(), ActionViewModel {
         }
     }
 
+    fun changeInputSearch(it: String) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                inputSearch = it
+            )
+        }
+    }
+
+    fun searchItemSinceInput() {
+        //TODO
+        /*val data = _uiState.value.inputSearch
+        _uiState.value.ListBusinessPartnerAux = _uiState.value.ListItems
+        if(data.length >3){
+            _uiState.value.ListBusinessPartnerAux = mutableListOf()
+            _uiState.value.ListItems.forEach {item ->
+                if(item.ItemCode.contains(data) || item.itemName.contains(data)){
+                    _uiState.value.ListBusinessPartnerAux+= item
+                }
+            }
+            _uiState.update { currentState ->
+                currentState.copy(
+                    ListItems = _uiState.value.ListBusinessPartnerAux
+                )
+            }
+        }else{
+            _uiState.update { currentState ->
+                currentState.copy(
+                    ListItems = _uiState.value.ListBusinessPartnerAux
+                )
+            }
+        }*/
+    }
+
 
     fun editarArticulo(index: Int) {
         Log.i("EditarArticulo", index.toString())
