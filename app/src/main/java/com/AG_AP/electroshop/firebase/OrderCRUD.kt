@@ -4,6 +4,7 @@ import com.AG_AP.electroshop.firebase.models.BusinessPartner
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
 import io.realm.kotlin.delete
 import io.realm.kotlin.ext.query
+import io.realm.kotlin.internal.getRealm
 import io.realm.kotlin.query.Sort
 
 object OrderCRUD : ActionFirebase {
@@ -92,7 +93,10 @@ object OrderCRUD : ActionFirebase {
         val deleteObejct = realm.query<OrderFireBase>("DocNum = $0", id).find().firstOrNull()
         if (deleteObejct != null) {
             realm.writeBlocking {
-                delete(deleteObejct)
+                val del = findLatest(deleteObejct)
+                if (del != null) {
+                    delete(del)
+                }
             }
         }
     }
