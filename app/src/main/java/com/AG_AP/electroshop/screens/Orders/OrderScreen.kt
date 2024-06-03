@@ -132,9 +132,11 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
 
             },
             {x ->
-                //TODO HACER LOS ODS
+                //TODO
+                viewModel.changeInputSearch(x as String)
+                viewModel.searchItemSinceInput()
             },
-            ""
+            dataUiState.inputSearch
         )
     }
     /*if(dataUiState.showDialogSelectCodeArticle){

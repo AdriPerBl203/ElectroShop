@@ -50,6 +50,7 @@ fun DialogActivity(
                         .padding(bottom = 10.dp), text = infoDialog
                 )
                 OutlinedTextField(
+                    modifier=Modifier.padding(vertical = 10.dp),
                     value = valueSearch,
                     trailingIcon = { Icon(imageVector = Icons.Default.Search, contentDescription = "emailIcon") },
                     onValueChange = {
@@ -58,59 +59,68 @@ fun DialogActivity(
                     label = { Text(text = "Buscar") },
                 )
                 LazyColumn {
-                    items(data()) { x ->
-                        if (x is OrderFireBase) {
+
+                    if(data().size == 0){
+                        item {
                             ListItem(
-                                headlineContent = { Text("${x.DocNum}") },
-                                trailingContent = {
-                                    IconButton(onClick = {
-                                        returnData(x.DocNum.toString())
-                                        clasedDialog()
-                                    }) {
-                                        Icon(
-                                            imageVector = Icons.Filled.AddCircle,
-                                            contentDescription = "Settings",
-                                            tint = MaterialTheme.colorScheme.primaryContainer
-                                        )
-                                    }
-                                }
+                                headlineContent = { Text("Sin resultados con la busqueda.") }
                             )
                         }
-
-                        if (x is BusinessPartner) {
-                            ListItem(
-                                headlineContent = { Text("${x.CardCode} -- ${x.CardName}") },
-                                trailingContent = {
-                                    IconButton(onClick = {
-                                        returnData(x)
-                                        clasedDialog()
-                                    }) {
-                                        Icon(
-                                            imageVector = Icons.Filled.AddCircle,
-                                            contentDescription = "Settings",
-                                            tint = MaterialTheme.colorScheme.primaryContainer
-                                        )
+                    }else{
+                        items(data()) { x ->
+                            if (x is OrderFireBase) {
+                                ListItem(
+                                    headlineContent = { Text("${x.DocNum}") },
+                                    trailingContent = {
+                                        IconButton(onClick = {
+                                            returnData(x.DocNum.toString())
+                                            clasedDialog()
+                                        }) {
+                                            Icon(
+                                                imageVector = Icons.Filled.AddCircle,
+                                                contentDescription = "Settings",
+                                                tint = MaterialTheme.colorScheme.primaryContainer
+                                            )
+                                        }
                                     }
-                                }
-                            )
-                        }
+                                )
+                            }
 
-                        if (x is Item) {
-                            ListItem(
-                                headlineContent = { Text("${x.ItemCode} -- ${x.itemName}") },
-                                trailingContent = {
-                                    IconButton(onClick = {
-                                        returnData(x)
-                                        clasedDialog()
-                                    }) {
-                                        Icon(
-                                            imageVector = Icons.Filled.AddCircle,
-                                            contentDescription = "Settings",
-                                            tint = MaterialTheme.colorScheme.primaryContainer
-                                        )
+                            if (x is BusinessPartner) {
+                                ListItem(
+                                    headlineContent = { Text("${x.CardCode} -- ${x.CardName}") },
+                                    trailingContent = {
+                                        IconButton(onClick = {
+                                            returnData(x)
+                                            clasedDialog()
+                                        }) {
+                                            Icon(
+                                                imageVector = Icons.Filled.AddCircle,
+                                                contentDescription = "Settings",
+                                                tint = MaterialTheme.colorScheme.primaryContainer
+                                            )
+                                        }
                                     }
-                                }
-                            )
+                                )
+                            }
+
+                            if (x is Item) {
+                                ListItem(
+                                    headlineContent = { Text("${x.ItemCode} -- ${x.itemName}") },
+                                    trailingContent = {
+                                        IconButton(onClick = {
+                                            returnData(x)
+                                            clasedDialog()
+                                        }) {
+                                            Icon(
+                                                imageVector = Icons.Filled.AddCircle,
+                                                contentDescription = "Settings",
+                                                tint = MaterialTheme.colorScheme.primaryContainer
+                                            )
+                                        }
+                                    }
+                                )
+                            }
                         }
                     }
                 }

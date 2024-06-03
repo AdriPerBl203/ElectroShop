@@ -58,7 +58,8 @@ class OrderViewModel : ViewModel(), ActionViewModel {
             mutableList?.let {
                 _uiState.update { currentState ->
                     currentState.copy(
-                        ListBusinessPartner = it.toList()
+                        ListBusinessPartner = it.toList(),
+                        ListBusinessPartnerBackund = it.toList()
                     )
                 }
             }
@@ -951,6 +952,39 @@ class OrderViewModel : ViewModel(), ActionViewModel {
                         trash = tastAux
                     )
                 }
+            }
+        }
+    }
+
+    fun changeInputSearch(it: String) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                inputSearch = it
+            )
+        }
+    }
+
+    fun searchItemSinceInput() {
+        //TODO
+        val data = _uiState.value.inputSearch
+        _uiState.value.ListBusinessPartnerAux = _uiState.value.ListBusinessPartnerBackund
+        if(data.length >3){
+            _uiState.value.ListBusinessPartnerAux = mutableListOf()
+            _uiState.value.ListBusinessPartnerBackund.forEach {item ->
+                if(item.CardCode.contains(data) || item.CardName.contains(data)){
+                    _uiState.value.ListBusinessPartnerAux+= item
+                }
+            }
+            _uiState.update { currentState ->
+                currentState.copy(
+                    ListBusinessPartner = _uiState.value.ListBusinessPartnerAux
+                )
+            }
+        }else{
+            _uiState.update { currentState ->
+                currentState.copy(
+                    ListBusinessPartner = _uiState.value.ListBusinessPartnerBackund
+                )
             }
         }
     }
