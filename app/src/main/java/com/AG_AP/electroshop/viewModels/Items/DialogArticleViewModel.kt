@@ -197,7 +197,7 @@ class DialogArticleViewModel : ViewModel() {
         _uiState.value.ListItemsAux = _uiState.value.ListItems
         if(data.length >3){
             _uiState.value.ListItemsAux = mutableListOf()
-            _uiState.value.ListItems.forEach {item ->
+            _uiState.value.ListItemsBackund.forEach {item ->
                 if(item.ItemCode.contains(data) || item.itemName.contains(data)){
                     _uiState.value.ListItemsAux+= item
                 }
