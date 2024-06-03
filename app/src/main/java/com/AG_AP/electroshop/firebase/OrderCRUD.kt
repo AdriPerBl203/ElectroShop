@@ -102,9 +102,18 @@ object OrderCRUD : ActionFirebase {
     }
 
     fun deleteAll() {
-        realm.writeBlocking {
-            delete<OrderFireBase>()
+        val deleteObject = realm.query<OrderFireBase>("SAP == $0", true).find()
+        if (deleteObject.isNotEmpty()) {
+            realm.writeBlocking {
+                deleteObject.forEach {
+                    val objetoABorrar = findLatest(it)
+                    if (objetoABorrar != null) {
+                        delete(objetoABorrar)
+                    }
+                }
+            }
         }
+
     }
 
     fun getAllObjectOrdeByCarCodeAndDocDueDate(cardCode: String,callback: (MutableList<OrderFireBase>?) -> Unit) {

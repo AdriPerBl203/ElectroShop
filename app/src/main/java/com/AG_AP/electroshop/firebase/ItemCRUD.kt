@@ -62,8 +62,17 @@ object ItemCRUD {
     }
 
     fun deleteAll() {
-        realm.writeBlocking {
-            delete<Item>()
+        val objectToDelete = realm.query<Item>("SAP == $0", true).find()
+        if (objectToDelete.isNotEmpty()) {
+            realm.writeBlocking {
+                objectToDelete.forEach {
+                    val deleteableObject = findLatest(it)
+                    if (deleteableObject != null) {
+                        delete(deleteableObject)
+                    }
+                }
+
+            }
         }
     }
 
