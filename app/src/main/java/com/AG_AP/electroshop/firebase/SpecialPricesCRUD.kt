@@ -64,7 +64,7 @@ object SpecialPricesCRUD : ActionFirebase {
 
     override suspend fun deleteObjectById(id: String) {
         //TODO
-        val deleteObejct = realm.query<SEIConfig>("Code = $0", id)
+        val deleteObejct = realm.query<SpecialPriceFireBase>("Code = $0", id)
         realm.writeBlocking {
             delete(deleteObejct)
         }
