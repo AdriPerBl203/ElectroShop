@@ -573,6 +573,7 @@ class SettingsViewModel : ViewModel() {
 
                 data.value.forEach { it ->
                     var cardCode = it.CardCode
+                    var DocNum= it.DocNum
                     var docEntry = it.DocEntry.toString()
                     var data: DataPostExportToPDF = DataPostExportToPDF()
                     data.add(
@@ -600,7 +601,7 @@ class SettingsViewModel : ViewModel() {
 
                             val Invoice = InvoiceData().apply {
                                 this.CardCode = cardCode
-                                this.DocNum = -1
+                                this.DocNum = DocNum
                                 this.DocEntry = docEntry.toLong()
                                 this.Base64String = responseText
                             }
