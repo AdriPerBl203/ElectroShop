@@ -572,7 +572,7 @@ class SettingsViewModel : ViewModel() {
                     var data: DataPostExportToPDF =DataPostExportToPDF()
                     data.add(DataPostExportToPDFItem("DocKey@","xsd:string",listOf(listOf(docEntry))))
                     data.add(DataPostExportToPDFItem("ObjectId@","xsd:decimal",listOf(listOf("13"))))
-                    var body: Response<ResponseBody>? = ExportToPDFObj.postExporToPDF(data,Config.rulUse)
+                    var body: Response<ResponseBody>? = ExportToPDFObj.postExporToPDF(data)
                     //TODO REALM
                     if(body != null){
                         Log.i("ExportToPDF",body.toString())

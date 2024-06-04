@@ -9,9 +9,8 @@ import retrofit2.Response
 object ExportToPDFObj {
 
     //TODO QUEDA TRAERSE EL BODY DE LA RESPUESTA
-    suspend fun postExporToPDF(data: DataPostExportToPDF, url: String): Response<ResponseBody>? {
-        RetrofitClient.baseUrl = url
-        val apiService = RetrofitClient.retrofit.create(ExportToPDF::class.java)
+    suspend fun postExporToPDF(data: DataPostExportToPDF): Response<ResponseBody>? {
+        val apiService = RetrofitClient.retrofitGetaway.create(ExportToPDF::class.java)
         return try {
             apiService.postExportToPDF(data)
         } catch (e: Exception) {
