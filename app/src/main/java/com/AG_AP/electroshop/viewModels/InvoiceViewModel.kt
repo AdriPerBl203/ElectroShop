@@ -31,10 +31,32 @@ class InvoiceViewModel : ViewModel() {
 
         _uiState.update { currentState ->
             currentState.copy(
-                BusinessPartnerWithInvoiceList = mutableList
+                BusinessPartnerWithInvoiceList = mutableList,
+                BusinessPartnerWithInvoiceListBackud = mutableList
             )
         }
 
+    }
+
+    fun cardNameChange(it: String) {
+
+        if(_uiState.value.CardName.length>2){
+            _uiState.value.BusinessPartnerWithInvoiceList =mutableListOf()
+            _uiState.value.BusinessPartnerWithInvoiceListBackud.forEach{ x ->
+                if (x != null) {
+                    if(x.CardCode.contains(it)){
+                        _uiState.value.BusinessPartnerWithInvoiceList+=x
+                    }
+                }
+            }
+        }else{
+            _uiState.value.BusinessPartnerWithInvoiceList = _uiState.value.BusinessPartnerWithInvoiceListBackud
+        }
+        _uiState.update { currentState ->
+            currentState.copy(
+                CardName = it
+            )
+        }
     }
 
     fun replaceData(item: InvoiceData?) {

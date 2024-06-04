@@ -4,7 +4,9 @@ import android.graphics.pdf.PdfRenderer
 import com.AG_AP.electroshop.firebase.models.InvoiceData
 
 data class InvoiceUiState(
-    val BusinessPartnerWithInvoiceList: MutableList<InvoiceData?> = mutableListOf(),
+    var BusinessPartnerWithInvoiceList: MutableList<InvoiceData?> = mutableListOf(),
+    val BusinessPartnerWithInvoiceListBackud: MutableList<InvoiceData?> = mutableListOf(),
     val Base64String: String = "",
+    val CardName: String = "",
     val ActualPdf: PdfRenderer? = null
 )

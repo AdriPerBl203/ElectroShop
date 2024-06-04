@@ -54,8 +54,8 @@ fun InvoiceUltimate(innerPadding: PaddingValues, viewModel: InvoiceViewModel) {
         //Left column
         Column {
             OutlinedTextField(
-                value = "dataUiState.CardName",
-                onValueChange = { /*TODO viewModel.changeSearch(it)*/ },
+                value = dataUiState.CardName,
+                onValueChange = { viewModel.cardNameChange(it) },
                 modifier = Modifier
                     .width(300.dp)
                     .padding(8.dp),
@@ -65,35 +65,59 @@ fun InvoiceUltimate(innerPadding: PaddingValues, viewModel: InvoiceViewModel) {
                 modifier = Modifier.padding(5.dp)
             )
             LazyColumn {
-                items(dataUiState.BusinessPartnerWithInvoiceList) { item ->
-                    if (item != null) {
-                        Card(
-                            modifier = Modifier
-                                .padding(4.dp)
-                                .width(200.dp)
-                                .height(150.dp)
-                        ) {
-                            Column(
-                                horizontalAlignment = Alignment.Start,
-                                verticalArrangement = Arrangement.SpaceBetween
+
+                if(dataUiState.BusinessPartnerWithInvoiceList.size == 0){
+                    items(1) {
+                            Card(
+                                modifier = Modifier
+                                    .padding(4.dp)
+                                    .width(200.dp)
+                                    .height(150.dp)
                             ) {
-                                Column {
-                                    Text(
-                                        text = item.CardCode,
-                                        modifier = Modifier.padding(start = 16.dp, 5.dp)
-                                    )
-                                    Text(
-                                        text = item.DocEntry.toString(),
-                                        modifier = Modifier.padding(start = 16.dp, 5.dp)
-                                    )
-                                    IconButton(onClick = {
-                                        viewModel.replaceData(item)
-                                    }) {
-                                        Icon(
-                                            imageVector = Icons.Filled.Add,
-                                            contentDescription = "Settings",
-                                            tint = MaterialTheme.colorScheme.primaryContainer
+                                Column(
+                                    horizontalAlignment = Alignment.Start,
+                                    verticalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Column {
+                                        Text(
+                                            text = "Sin datos con las búsqueda.",
+                                            modifier = Modifier.padding(start = 16.dp, 5.dp)
                                         )
+                                    }
+                                }
+                            }
+                    }
+                }else{
+                    items(dataUiState.BusinessPartnerWithInvoiceList) { item ->
+                        if (item != null) {
+                            Card(
+                                modifier = Modifier
+                                    .padding(4.dp)
+                                    .width(200.dp)
+                                    .height(150.dp)
+                            ) {
+                                Column(
+                                    horizontalAlignment = Alignment.Start,
+                                    verticalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Column {
+                                        Text(
+                                            text = item.CardCode,
+                                            modifier = Modifier.padding(start = 16.dp, 5.dp)
+                                        )
+                                        Text(
+                                            text = item.DocEntry.toString(),
+                                            modifier = Modifier.padding(start = 16.dp, 5.dp)
+                                        )
+                                        IconButton(onClick = {
+                                            viewModel.replaceData(item)
+                                        }) {
+                                            Icon(
+                                                imageVector = Icons.Filled.Add,
+                                                contentDescription = "Settings",
+                                                tint = MaterialTheme.colorScheme.primaryContainer
+                                            )
+                                        }
                                     }
                                 }
                             }
