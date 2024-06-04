@@ -15,6 +15,8 @@ import javax.net.ssl.X509TrustManager
 object RetrofitClient {
 
     var baseUrl: String = "https://10.129.22.179:50000/" // URL base predeterminada
+    var baseUrlGetaway: String = "https://10.129.22.179:50000/" // URL base predeterminada
+
 
     fun getUnsafeOkHttpClient(): OkHttpClient {
         try {
@@ -57,10 +59,28 @@ object RetrofitClient {
         .client(getUnsafeOkHttpClient()) // Usa el cliente personalizado aquí
         .build()
 
+    var retrofitGetaway = Retrofit.Builder()
+        .baseUrl(baseUrlGetaway)
+        .addConverterFactory(GsonConverterFactory.create())
+        .client(getUnsafeOkHttpClient()) // Usa el cliente personalizado aquí
+        .build()
+
     fun setURL(url: String) {
         baseUrl = url
         retrofit = Retrofit.Builder()
             .baseUrl(baseUrl)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(getUnsafeOkHttpClient()) // Usa el cliente personalizado aquí
+            .build()
+    }
+
+    fun setURLGetaway(url: String) {
+        var spliData :List<String> = url.split(":")
+        val urlCustonPort = spliData.get(0) + ":" + spliData.get(1) + ":60020/"
+
+        baseUrlGetaway = urlCustonPort
+        retrofitGetaway = Retrofit.Builder()
+            .baseUrl(baseUrlGetaway)
             .addConverterFactory(GsonConverterFactory.create())
             .client(getUnsafeOkHttpClient()) // Usa el cliente personalizado aquí
             .build()

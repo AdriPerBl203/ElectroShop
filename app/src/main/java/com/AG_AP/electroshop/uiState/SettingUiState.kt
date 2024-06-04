@@ -38,6 +38,7 @@ data class SettingUiState(
     val checkBoxOrders:Boolean = true,
     val checkBoxActivity:Boolean = true,
     val checkBoxClients:Boolean = true,
+    var checkInvoices:Boolean = false,
 )
 /*
 *

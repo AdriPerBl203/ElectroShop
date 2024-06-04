@@ -8,16 +8,21 @@ import androidx.compose.material.icons.filled.Sync
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.AG_AP.electroshop.endpoints.models.activity.Activity
+import com.AG_AP.electroshop.endpoints.models.exportToPDF.DataPostExportToPDF
+import com.AG_AP.electroshop.endpoints.models.exportToPDF.DataPostExportToPDFItem
+import com.AG_AP.electroshop.endpoints.models.invoices.InvoicesGet
 import com.AG_AP.electroshop.endpoints.models.item.getItems.GetItems
 import com.AG_AP.electroshop.endpoints.models.login.Login
 import com.AG_AP.electroshop.endpoints.models.orders.Orders
 import com.AG_AP.electroshop.endpoints.models.priceList.PriceList
 import com.AG_AP.electroshop.endpoints.objects.ActivityObj
 import com.AG_AP.electroshop.endpoints.objects.BusinessPartnersObj
+import com.AG_AP.electroshop.endpoints.objects.ExportToPDFObj
 import com.AG_AP.electroshop.endpoints.objects.ItemObj
 import com.AG_AP.electroshop.endpoints.objects.LoginObj
 import com.AG_AP.electroshop.endpoints.objects.OrdersObj
 import com.AG_AP.electroshop.endpoints.objects.PriceListObj
+import com.AG_AP.electroshop.endpoints.retrofit.RetrofitClient
 import com.AG_AP.electroshop.endpoints.udo.models.CreateField
 import com.AG_AP.electroshop.endpoints.udo.models.createUdo.CreateUdo
 import com.AG_AP.electroshop.endpoints.udo.models.createUdo.UserObjectMDFindColumn
@@ -55,6 +60,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import okhttp3.ResponseBody
+import retrofit2.Response
 
 class SettingsViewModel : ViewModel() {
 
@@ -478,7 +485,7 @@ class SettingsViewModel : ViewModel() {
     }
 
     fun sync(context: Context) {
-
+        _uiState.value.checkInvoices = false
         viewModelScope.launch() {
             _uiState.update { currentState ->
                 currentState.copy(
@@ -495,9 +502,10 @@ class SettingsViewModel : ViewModel() {
             val dataLogin = Login(Config.dataBase, Config.password, Config.login)
             LoginObj.loginAcessTwoversion(dataLogin, Config.rulUse)
             //TODO
-            deleteAndInsertSpecialPrice() // correcta
-            deleteAndInsertPriceList() // correcta
-            if(_uiState.value.checkBoxItems){
+            //deleteAndInsertSpecialPrice() // correcta
+            //deleteAndInsertPriceList() // correcta
+            deleteAndInsertInvoice()
+            /*if(_uiState.value.checkBoxItems){
                 deleteAndInsertItem()// Correcta
             }else{
                 _uiState.update { currentState ->
@@ -543,11 +551,38 @@ class SettingsViewModel : ViewModel() {
                         checkOrder = true
                     )
                 }
-            }
+            }*/
             enablebtn(Config.rulUse)
         }
          Log.e("SettingViewModel","Datos obtenidos")
 
+    }
+
+    private fun deleteAndInsertInvoice() {
+        //TODO
+        viewModelScope.launch(Dispatchers.IO) {
+            val data: InvoicesGet? = OrdersObj.getInvoices(Config.rulUse)
+            _uiState.value.checkInvoices = true
+            if(data != null){
+                val dataLogin = Login(Config.dataBase, Config.password, Config.login)
+                LoginObj.loginAcessGateway(dataLogin,Config.rulUse)
+                data.value.forEach{it->
+                    var cardCode = it.CardCode
+                    var docEntry = it.DocEntry.toString()
+                    var data: DataPostExportToPDF =DataPostExportToPDF()
+                    data.add(DataPostExportToPDFItem("DocKey@","xsd:string",listOf(listOf(docEntry))))
+                    data.add(DataPostExportToPDFItem("ObjectId@","xsd:decimal",listOf(listOf("13"))))
+                    var body: Response<ResponseBody>? = ExportToPDFObj.postExporToPDF(data,Config.rulUse)
+                    //TODO REALM
+                    if(body != null){
+                        Log.i("ExportToPDF",body.toString())
+                    }
+                }
+                //Fin de la conexión
+                LoginObj.logoutGateway(Config.rulUse)
+            }
+
+        }
     }
 
     private fun deleteAndInsertSpecialPrice() {
@@ -608,7 +643,7 @@ class SettingsViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             var aux: Boolean = true
             while (aux){
-                if(_uiState.value.checkUserUdo && _uiState.value.checkBusinessPartner && _uiState.value.checkActivity && _uiState.value.checkItem && _uiState.value.checkPreciosEspeciales && _uiState.value.checkPriceLists){
+                if(_uiState.value.checkUserUdo && _uiState.value.checkBusinessPartner && _uiState.value.checkActivity && _uiState.value.checkItem && _uiState.value.checkPreciosEspeciales && _uiState.value.checkPriceLists && _uiState.value.checkInvoices){
 
                     aux = false
                     LoginObj.logout(url)
