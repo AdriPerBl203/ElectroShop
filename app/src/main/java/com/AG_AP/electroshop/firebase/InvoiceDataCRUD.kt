@@ -22,7 +22,7 @@ object InvoiceDataCRUD {
         callback(ObjectbyId)
     }
 
-    fun getAllObject(callback: (MutableList<InvoiceData>?) -> Unit) {
+    fun getAllObject(callback: (MutableList<InvoiceData?>) -> Unit) {
         val ObjectbyId =
             realm.query<InvoiceData>().find()
         callback(ObjectbyId.toMutableList())
