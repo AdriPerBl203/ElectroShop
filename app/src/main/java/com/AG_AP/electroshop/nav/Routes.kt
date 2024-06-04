@@ -26,6 +26,8 @@ enum class Routes(val route: String) {
 
     ItemScreen(route = "ItemScreen"),
     ItemScreenList(route = "ItemScreenList"),
-    ItemScreenAux(route = "ItemScreen")
+    ItemScreenAux(route = "ItemScreen"),
+
+    InvoiceScreen(route = "InvoiceScreen")
 
 }

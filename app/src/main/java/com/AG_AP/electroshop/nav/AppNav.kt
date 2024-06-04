@@ -24,6 +24,7 @@ import com.AG_AP.electroshop.screens.Items.ScaffoldItem
 import com.AG_AP.electroshop.screens.Items.ScaffoldListItems
 import com.AG_AP.electroshop.screens.Orders.ScaffoldListOrder
 import com.AG_AP.electroshop.screens.Orders.ScaffoldOrder
+import com.AG_AP.electroshop.screens.ScaffoldInvoiceUltimate
 import com.AG_AP.electroshop.screens.SettingScreen
 
 /**
@@ -180,6 +181,12 @@ fun AppNav(navController: NavHostController = rememberNavController(), context: 
             route = Routes.ActivityUltimate.route
         ) {
             ScaffoldActivityUltimate(navController =navController)
+        }
+
+        composable(
+            route = Routes.InvoiceScreen.route
+        ) {
+            ScaffoldInvoiceUltimate(navController = navController)
         }
     }
 }
