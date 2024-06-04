@@ -66,40 +66,35 @@ fun InvoiceUltimate(innerPadding: PaddingValues, viewModel: InvoiceViewModel) {
             )
             LazyColumn {
                 items(dataUiState.BusinessPartnerWithInvoiceList) { item ->
-                    Card(
-                        modifier = Modifier
-                            .padding(4.dp)
-                            .width(200.dp)
-                            .height(150.dp)
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.Start,
-                            verticalArrangement = Arrangement.SpaceBetween
+                    if (item != null) {
+                        Card(
+                            modifier = Modifier
+                                .padding(4.dp)
+                                .width(200.dp)
+                                .height(150.dp)
                         ) {
-                            Column {
-                                if (item != null) {
+                            Column(
+                                horizontalAlignment = Alignment.Start,
+                                verticalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Column {
                                     Text(
                                         text = item.CardCode,
                                         modifier = Modifier.padding(start = 16.dp, 5.dp)
                                     )
                                     Text(
-                                        text = item.CardCode,
+                                        text = item.DocEntry.toString(),
                                         modifier = Modifier.padding(start = 16.dp, 5.dp)
                                     )
-                                } else {
-                                    Text(
-                                        text = "",
-                                        modifier = Modifier.padding(start = 16.dp, 5.dp)
-                                    )
-                                }
-                                IconButton(onClick = {
-                                    viewModel.replaceData(item)
-                                }) {
-                                    Icon(
-                                        imageVector = Icons.Filled.Add,
-                                        contentDescription = "Settings",
-                                        tint = MaterialTheme.colorScheme.primaryContainer
-                                    )
+                                    IconButton(onClick = {
+                                        viewModel.replaceData(item)
+                                    }) {
+                                        Icon(
+                                            imageVector = Icons.Filled.Add,
+                                            contentDescription = "Settings",
+                                            tint = MaterialTheme.colorScheme.primaryContainer
+                                        )
+                                    }
                                 }
                             }
                         }

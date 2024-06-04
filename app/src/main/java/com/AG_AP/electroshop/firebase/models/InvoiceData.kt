@@ -7,5 +7,8 @@ import io.realm.kotlin.types.RealmObject
 
 class InvoiceData : RealmObject {
     var CardCode: String = ""
-    var Invoice: RealmList<Invoice> = realmListOf()
+    var DocNum: Int = -1
+    //Esto no lo quería hacer me ha obligado Aaron
+    var DocEntry: Long = -1
+    var Base64String: String = ""
 }

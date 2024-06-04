@@ -15,7 +15,7 @@ class InvoiceViewModel : ViewModel() {
     val uiState: StateFlow<InvoiceUiState> = _uiState.asStateFlow()
 
     init {
-        //searchData()
+        searchData()
     }
 
 

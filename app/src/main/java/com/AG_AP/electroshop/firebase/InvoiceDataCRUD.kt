@@ -36,7 +36,9 @@ object InvoiceDataCRUD {
                 realm.write {
                     findLatest(oldObject)?.let { it ->
                         it.CardCode = data.CardCode
-                        it.Invoice = data.Invoice
+                        it.DocEntry = data.DocEntry
+                        it.DocNum = data.DocNum
+                        it.Base64String = data.Base64String
                     }
                 }
             }
