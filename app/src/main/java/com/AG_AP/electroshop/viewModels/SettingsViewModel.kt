@@ -565,7 +565,6 @@ class SettingsViewModel : ViewModel() {
         //TODO
         viewModelScope.launch(Dispatchers.IO) {
             val data: InvoicesGet? = OrdersObj.getInvoices(Config.rulUse)
-            _uiState.value.checkInvoices = true
             if (data != null) {
                 val dataLogin = Login(Config.dataBase, Config.password, Config.login)
                 LoginObj.loginAcessGateway(dataLogin, Config.rulUse)
@@ -612,6 +611,9 @@ class SettingsViewModel : ViewModel() {
                 }
                 //Fin de la conexión
                 LoginObj.logoutGateway(Config.rulUse)
+                _uiState.value.checkInvoices = true
+            }else{
+                _uiState.value.checkInvoices = true
             }
 
         }
