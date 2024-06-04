@@ -505,10 +505,10 @@ class SettingsViewModel : ViewModel() {
             val dataLogin = Login(Config.dataBase, Config.password, Config.login)
             LoginObj.loginAcessTwoversion(dataLogin, Config.rulUse)
             //TODO
-            //deleteAndInsertSpecialPrice() // correcta
-            //deleteAndInsertPriceList() // correcta
+            deleteAndInsertSpecialPrice() // correcta
+            deleteAndInsertPriceList() // correcta
             deleteAndInsertInvoice()
-            /*if(_uiState.value.checkBoxItems){
+            if(_uiState.value.checkBoxItems){
                 deleteAndInsertItem()// Correcta
             }else{
                 _uiState.update { currentState ->
@@ -554,7 +554,7 @@ class SettingsViewModel : ViewModel() {
                         checkOrder = true
                     )
                 }
-            }*/
+            }
             enablebtn(Config.rulUse)
         }
         Log.e("SettingViewModel", "Datos obtenidos")
