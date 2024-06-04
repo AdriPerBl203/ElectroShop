@@ -1,6 +1,8 @@
 package com.AG_AP.electroshop.nav
 
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -30,6 +32,7 @@ import com.AG_AP.electroshop.screens.SettingScreen
 /**
  * Method called at the beginning of the initialization
  */
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppNav(navController: NavHostController = rememberNavController(), context: Context) {
     /* Starts with Login Screen */

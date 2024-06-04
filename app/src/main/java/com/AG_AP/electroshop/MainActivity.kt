@@ -39,7 +39,6 @@ class MainActivity : ComponentActivity() {
                     ObjectContext.context = context
                     Config.initConfig(context)
                     AppNav(context=context)
-                    //PdfViewer()
                 }
             }
         }
