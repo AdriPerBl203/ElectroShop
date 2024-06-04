@@ -60,6 +60,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Response
 
@@ -572,10 +573,14 @@ class SettingsViewModel : ViewModel() {
                     var data: DataPostExportToPDF =DataPostExportToPDF()
                     data.add(DataPostExportToPDFItem("DocKey@","xsd:string",listOf(listOf(docEntry))))
                     data.add(DataPostExportToPDFItem("ObjectId@","xsd:decimal",listOf(listOf("13"))))
-                    var body: Response<ResponseBody>? = ExportToPDFObj.postExporToPDF(data)
-                    //TODO REALM
-                    if(body != null){
-                        Log.i("ExportToPDF",body.toString())
+                    var response: Response<ResponseBody>? = ExportToPDFObj.postExporToPDF(data)
+                    if(response != null && response.isSuccessful){
+                        val responseBody: ResponseBody? = response.body()
+                        if (responseBody != null) {
+                            val responseText = responseBody.string()
+                            Log.i("ExportToPDF", responseText)
+                            //TODO REALM
+                        }
                     }
                 }
                 //Fin de la conexión

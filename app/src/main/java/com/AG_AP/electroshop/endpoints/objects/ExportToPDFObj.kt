@@ -3,6 +3,7 @@ package com.AG_AP.electroshop.endpoints.objects
 import com.AG_AP.electroshop.endpoints.interfaces.ExportToPDF
 import com.AG_AP.electroshop.endpoints.models.exportToPDF.DataPostExportToPDF
 import com.AG_AP.electroshop.endpoints.retrofit.RetrofitClient
+import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Response
 
