@@ -3,6 +3,7 @@ package com.AG_AP.electroshop
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -38,6 +39,7 @@ class MainActivity : ComponentActivity() {
                     val context: Context = application.applicationContext
                     ObjectContext.context = context
                     Config.initConfig(context)
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
                     AppNav(context=context)
                 }
             }

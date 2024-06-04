@@ -2,6 +2,7 @@ package com.AG_AP.electroshop.viewModels
 
 import android.graphics.pdf.PdfRenderer
 import android.os.Build
+import android.os.Environment
 import android.os.ParcelFileDescriptor
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
@@ -49,17 +50,18 @@ class InvoiceViewModel : ViewModel() {
 
     fun cardNameChange(it: String) {
 
-        if(_uiState.value.CardName.length>2){
-            _uiState.value.BusinessPartnerWithInvoiceList =mutableListOf()
-            _uiState.value.BusinessPartnerWithInvoiceListBackud.forEach{ x ->
+        if (_uiState.value.CardName.length > 2) {
+            _uiState.value.BusinessPartnerWithInvoiceList = mutableListOf()
+            _uiState.value.BusinessPartnerWithInvoiceListBackud.forEach { x ->
                 if (x != null) {
-                    if(x.CardCode.contains(it)){
-                        _uiState.value.BusinessPartnerWithInvoiceList+=x
+                    if (x.CardCode.contains(it)) {
+                        _uiState.value.BusinessPartnerWithInvoiceList += x
                     }
                 }
             }
-        }else{
-            _uiState.value.BusinessPartnerWithInvoiceList = _uiState.value.BusinessPartnerWithInvoiceListBackud
+        } else {
+            _uiState.value.BusinessPartnerWithInvoiceList =
+                _uiState.value.BusinessPartnerWithInvoiceListBackud
         }
         _uiState.update { currentState ->
             currentState.copy(
@@ -74,13 +76,15 @@ class InvoiceViewModel : ViewModel() {
             // Actualizamos el base64
             _uiState.update { currentState ->
                 currentState.copy(
+                    ActualCardCode = item.CardCode,
                     Base64String = item.Base64String
                 )
             }
 
             val pdfFile =
                 decodeBase64ToPdfFile(ObjectContext.context.cacheDir, _uiState.value.Base64String)
-            val pdfRenderer = PdfRenderer(ParcelFileDescriptor.open(pdfFile, ParcelFileDescriptor.MODE_READ_ONLY))
+            val pdfRenderer =
+                PdfRenderer(ParcelFileDescriptor.open(pdfFile, ParcelFileDescriptor.MODE_READ_ONLY))
 
             _uiState.update { currentState ->
                 currentState.copy(
@@ -102,6 +106,30 @@ class InvoiceViewModel : ViewModel() {
             e.printStackTrace()
         }
         return pdfFile
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun downloadIntoDocuments() {
+        //TODO cambiar el nombre del documento
+        val CardCode = _uiState.value.ActualCardCode
+        val base64String = _uiState.value.Base64String
+
+        val pdfBytes = Base64.getDecoder().decode(base64String)
+        val pdfFile = File(
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),
+            "${CardCode}.pdf"
+        )
+        try {
+            /*
+            FileOutputStream(pdfFile).use { outputStream ->
+                outputStream.write(pdfBytes)
+            }
+
+             */
+            pdfFile.copyTo(pdfFile, true)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
     }
 
 }

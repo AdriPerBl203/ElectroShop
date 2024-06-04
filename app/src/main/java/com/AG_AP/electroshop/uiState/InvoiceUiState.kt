@@ -8,5 +8,6 @@ data class InvoiceUiState(
     val BusinessPartnerWithInvoiceListBackud: MutableList<InvoiceData?> = mutableListOf(),
     val Base64String: String = "",
     val CardName: String = "",
-    val ActualPdf: PdfRenderer? = null
+    val ActualPdf: PdfRenderer? = null,
+    val ActualCardCode: String = ""
 )
