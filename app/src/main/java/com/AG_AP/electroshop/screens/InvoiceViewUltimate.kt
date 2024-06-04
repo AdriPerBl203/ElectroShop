@@ -64,7 +64,10 @@ fun InvoiceUltimate(innerPadding: PaddingValues, viewModel: InvoiceViewModel) {
             .padding(innerPadding)
     ) {
         //Left column
-        Column {
+        Column (
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             OutlinedTextField(
                 value = "dataUiState.CardName",
                 onValueChange = { /*TODO viewModel.changeSearch(it)*/ },
