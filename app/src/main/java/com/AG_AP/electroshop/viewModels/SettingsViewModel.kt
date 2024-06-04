@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Sync
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.AG_AP.electroshop.endpoints.models.activity.Activity
@@ -22,7 +21,6 @@ import com.AG_AP.electroshop.endpoints.objects.ItemObj
 import com.AG_AP.electroshop.endpoints.objects.LoginObj
 import com.AG_AP.electroshop.endpoints.objects.OrdersObj
 import com.AG_AP.electroshop.endpoints.objects.PriceListObj
-import com.AG_AP.electroshop.endpoints.retrofit.RetrofitClient
 import com.AG_AP.electroshop.endpoints.udo.models.CreateField
 import com.AG_AP.electroshop.endpoints.udo.models.createUdo.CreateUdo
 import com.AG_AP.electroshop.endpoints.udo.models.createUdo.UserObjectMDFindColumn
@@ -32,14 +30,15 @@ import com.AG_AP.electroshop.endpoints.udo.models.getUserUdo.SeiConfigUser
 import com.AG_AP.electroshop.endpoints.udo.objects.UDOobj
 import com.AG_AP.electroshop.firebase.ActivityCRUD
 import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
+import com.AG_AP.electroshop.firebase.InvoiceDataCRUD
 import com.AG_AP.electroshop.firebase.ItemCRUD
 import com.AG_AP.electroshop.firebase.OrderCRUD
-import com.AG_AP.electroshop.firebase.PriceListCRUD
 import com.AG_AP.electroshop.firebase.PriceListForListCRUD
 import com.AG_AP.electroshop.firebase.SEIConfigCRUD
 import com.AG_AP.electroshop.firebase.SpecialPricesCRUD
 import com.AG_AP.electroshop.firebase.models.BusinessPartner
 import com.AG_AP.electroshop.firebase.models.DocumentLineFireBase
+import com.AG_AP.electroshop.firebase.models.InvoiceData
 import com.AG_AP.electroshop.firebase.models.Item
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
 import com.AG_AP.electroshop.firebase.models.ItemPrice
@@ -163,12 +162,12 @@ class SettingsViewModel : ViewModel() {
             }
             val dataLogin = Login(dataBase, password, login)
             val data = LoginObj.loginAcessTwoversion(dataLogin, urlInt)
-            var dataUrlExt:Boolean =false
-            var urlCheck:String =urlInt
-            var urlCheckTip:String = "Int"
-            if(!data){
+            var dataUrlExt: Boolean = false
+            var urlCheck: String = urlInt
+            var urlCheckTip: String = "Int"
+            if (!data) {
                 dataUrlExt = LoginObj.loginAcessTwoversion(dataLogin, urlExt)
-                urlCheck =urlExt
+                urlCheck = urlExt
                 urlCheckTip = "Ext"
             }
             var text: String = ""
@@ -176,7 +175,7 @@ class SettingsViewModel : ViewModel() {
             //LoginObj.logout(urlInt)
             if (data || dataUrlExt) {
                 text = "Test realizado con éxito."
-                if(data){
+                if (data) {
                     _uiState.update { currentState ->
                         currentState.copy(
                             message = true,
@@ -189,7 +188,7 @@ class SettingsViewModel : ViewModel() {
                         )
                     }
                     LoginObj.logout(urlInt)
-                }else if(dataUrlExt){
+                } else if (dataUrlExt) {
                     _uiState.update { currentState ->
                         currentState.copy(
                             message = true,
@@ -343,8 +342,8 @@ class SettingsViewModel : ViewModel() {
 
     private fun deleteAndInsertUserUdo() {
         viewModelScope.launch(Dispatchers.IO) {
-            val res : Boolean = UDOobj.createTable(Config.rulUse)
-            if(res){
+            val res: Boolean = UDOobj.createTable(Config.rulUse)
+            if (res) {
                 creatingUDO()
                 createUsers()
             }
@@ -392,7 +391,7 @@ class SettingsViewModel : ViewModel() {
             listBusinessPartnerSAP.forEach { element ->
                 var email: String = ""
                 var phone1: String = ""
-                var CardName:String = ""
+                var CardName: String = ""
                 if (!element.Phone1.isNullOrEmpty()) {
                     phone1 = element.Phone1
                 }
@@ -554,7 +553,7 @@ class SettingsViewModel : ViewModel() {
             }*/
             enablebtn(Config.rulUse)
         }
-         Log.e("SettingViewModel","Datos obtenidos")
+        Log.e("SettingViewModel", "Datos obtenidos")
 
     }
 
@@ -563,19 +562,39 @@ class SettingsViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             val data: InvoicesGet? = OrdersObj.getInvoices(Config.rulUse)
             _uiState.value.checkInvoices = true
-            if(data != null){
+            if (data != null) {
                 val dataLogin = Login(Config.dataBase, Config.password, Config.login)
-                LoginObj.loginAcessGateway(dataLogin,Config.rulUse)
-                data.value.forEach{it->
+                LoginObj.loginAcessGateway(dataLogin, Config.rulUse)
+                InvoiceDataCRUD.deleteAll()
+                data.value.forEach {
                     var cardCode = it.CardCode
                     var docEntry = it.DocEntry.toString()
-                    var data: DataPostExportToPDF =DataPostExportToPDF()
-                    data.add(DataPostExportToPDFItem("DocKey@","xsd:string",listOf(listOf(docEntry))))
-                    data.add(DataPostExportToPDFItem("ObjectId@","xsd:decimal",listOf(listOf("13"))))
+                    var data: DataPostExportToPDF = DataPostExportToPDF()
+                    data.add(
+                        DataPostExportToPDFItem(
+                            "DocKey@",
+                            "xsd:string",
+                            listOf(listOf(docEntry))
+                        )
+                    )
+                    data.add(
+                        DataPostExportToPDFItem(
+                            "ObjectId@",
+                            "xsd:decimal",
+                            listOf(listOf("13"))
+                        )
+                    )
                     var body: Response<ResponseBody>? = ExportToPDFObj.postExporToPDF(data)
-                    //TODO REALM
-                    if(body != null){
-                        Log.i("ExportToPDF",body.toString())
+                    if (body != null) {
+                        Log.i("Pruebas", body.toString())
+
+                        val invoiceData = InvoiceData().apply {
+                            CardCode = cardCode
+                            DocEntry = docEntry.toLong()
+                            //TODO rellenar aquí Aaron
+                        }
+
+                        //TODO REALM
                     }
                 }
                 //Fin de la conexión
@@ -642,8 +661,8 @@ class SettingsViewModel : ViewModel() {
     private fun enablebtn(url: String) {
         viewModelScope.launch(Dispatchers.IO) {
             var aux: Boolean = true
-            while (aux){
-                if(_uiState.value.checkUserUdo && _uiState.value.checkBusinessPartner && _uiState.value.checkActivity && _uiState.value.checkItem && _uiState.value.checkPreciosEspeciales && _uiState.value.checkPriceLists && _uiState.value.checkInvoices){
+            while (aux) {
+                if (_uiState.value.checkUserUdo && _uiState.value.checkBusinessPartner && _uiState.value.checkActivity && _uiState.value.checkItem && _uiState.value.checkPreciosEspeciales && _uiState.value.checkPriceLists && _uiState.value.checkInvoices) {
 
                     aux = false
                     LoginObj.logout(url)
@@ -777,7 +796,8 @@ class SettingsViewModel : ViewModel() {
                     mainSupplier = element.ItemName ?: ""
                     this.itemPrice = listPrice.toRealmList()
                     manageSerialNumbers = element.ManageSerialNumbers ?: ""
-                    autoCreateSerialNumbersOnRelease = element.AutoCreateSerialNumbersOnRelease ?: ""
+                    autoCreateSerialNumbersOnRelease =
+                        element.AutoCreateSerialNumbersOnRelease ?: ""
                     SAP = true
 
                 }
@@ -802,7 +822,8 @@ class SettingsViewModel : ViewModel() {
         val dataBase = _uiState.value.dataBase
         val url = _uiState.value.urlCheck
         val urlTipCheck = _uiState.value.urlTipCheck
-        val dataConfiguration = ConfigurationApplication(login, password, dataBase, url,urlTipCheck)
+        val dataConfiguration =
+            ConfigurationApplication(login, password, dataBase, url, urlTipCheck)
         val gson = Gson()
         val jsonData: String = gson.toJson(dataConfiguration)
 
@@ -830,7 +851,7 @@ class SettingsViewModel : ViewModel() {
         val json = sharedPref?.getString("configuration", null)
         if (!json.isNullOrEmpty()) {
             val dataConfig = gson.fromJson(json, ConfigurationApplication::class.java)
-            if(dataConfig.urlTipCheck == "Int"){
+            if (dataConfig.urlTipCheck == "Int") {
                 _uiState.update { currentState ->
 
                     currentState.copy(
@@ -841,7 +862,7 @@ class SettingsViewModel : ViewModel() {
                         init = false
                     )
                 }
-            }else if(dataConfig.urlTipCheck == "Ext"){
+            } else if (dataConfig.urlTipCheck == "Ext") {
                 _uiState.update { currentState ->
                     currentState.copy(
                         urlExt = dataConfig.url,
@@ -884,13 +905,13 @@ class SettingsViewModel : ViewModel() {
     }
 
     fun changecheckBoxClients() {
-        if(_uiState.value.checkBoxClients){
+        if (_uiState.value.checkBoxClients) {
             _uiState.update { currentState ->
                 currentState.copy(
                     checkBoxClients = false
                 )
             }
-        }else{
+        } else {
             _uiState.update { currentState ->
                 currentState.copy(
                     checkBoxClients = true,
@@ -901,13 +922,13 @@ class SettingsViewModel : ViewModel() {
     }
 
     fun changecheckBoxOrders() {
-        if(_uiState.value.checkBoxOrders){
+        if (_uiState.value.checkBoxOrders) {
             _uiState.update { currentState ->
                 currentState.copy(
                     checkBoxOrders = false
                 )
             }
-        }else{
+        } else {
             _uiState.update { currentState ->
                 currentState.copy(
                     checkBoxOrders = true,
@@ -918,13 +939,13 @@ class SettingsViewModel : ViewModel() {
     }
 
     fun changecheckBoxUDO() {
-        if(_uiState.value.checkBoxUDO){
+        if (_uiState.value.checkBoxUDO) {
             _uiState.update { currentState ->
                 currentState.copy(
                     checkBoxUDO = false
                 )
             }
-        }else{
+        } else {
             _uiState.update { currentState ->
                 currentState.copy(
                     checkBoxUDO = true,
@@ -935,13 +956,13 @@ class SettingsViewModel : ViewModel() {
     }
 
     fun changecheckBoxItems() {
-        if(_uiState.value.checkBoxItems){
+        if (_uiState.value.checkBoxItems) {
             _uiState.update { currentState ->
                 currentState.copy(
                     checkBoxItems = false
                 )
             }
-        }else{
+        } else {
             _uiState.update { currentState ->
                 currentState.copy(
                     checkBoxItems = true,
@@ -952,13 +973,13 @@ class SettingsViewModel : ViewModel() {
     }
 
     fun changecheckBoxActivity() {
-        if(_uiState.value.checkBoxActivity){
+        if (_uiState.value.checkBoxActivity) {
             _uiState.update { currentState ->
                 currentState.copy(
                     checkBoxActivity = false
                 )
             }
-        }else{
+        } else {
             _uiState.update { currentState ->
                 currentState.copy(
                     checkBoxActivity = true,
@@ -969,7 +990,7 @@ class SettingsViewModel : ViewModel() {
     }
 
     fun changecheckBoxTodo() {
-        if(_uiState.value.checkBoxTodo){
+        if (_uiState.value.checkBoxTodo) {
             _uiState.update { currentState ->
                 currentState.copy(
                     checkBoxTodo = false,
@@ -980,7 +1001,7 @@ class SettingsViewModel : ViewModel() {
                     checkBoxItems = false
                 )
             }
-        }else{
+        } else {
             _uiState.update { currentState ->
                 currentState.copy(
                     checkBoxTodo = true,
