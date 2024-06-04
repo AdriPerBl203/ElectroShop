@@ -1,5 +1,12 @@
 package com.AG_AP.electroshop.screens
 
+import android.graphics.Bitmap
+import android.graphics.pdf.PdfRenderer
+import android.os.Build
+import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,14 +42,19 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.AG_AP.electroshop.components.TopBarButton
+import com.AG_AP.electroshop.functions.ObjectContext
 import com.AG_AP.electroshop.nav.Routes
 import com.AG_AP.electroshop.viewModels.InvoiceViewModel
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun InvoiceUltimate(innerPadding: PaddingValues, viewModel: InvoiceViewModel) {
     val dataUiState by viewModel.uiState.collectAsState()
@@ -52,7 +64,10 @@ fun InvoiceUltimate(innerPadding: PaddingValues, viewModel: InvoiceViewModel) {
             .padding(innerPadding)
     ) {
         //Left column
-        Column {
+        Column (
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             OutlinedTextField(
                 value = dataUiState.CardName,
                 onValueChange = { viewModel.cardNameChange(it) },
@@ -128,21 +143,54 @@ fun InvoiceUltimate(innerPadding: PaddingValues, viewModel: InvoiceViewModel) {
         }
 
         //Right column
-        Column(
+        LazyColumn(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             if (dataUiState.ActualPdf == null) {
-                Text(
-                    text = "No hay ningún pdf cargado"
-                )
+                item {
+                    Text(
+                        text = "No hay ningún pdf cargado",
+                        textAlign = TextAlign.Center
+                    )
+                }
             } else {
-                //TODO cargar pdf
+                item {
+                    //TODO cargar pdf
+                    dataUiState.ActualPdf!!.openPage(0).use { page ->
+                        val bitmap = Bitmap.createBitmap(2800, 4000, Bitmap.Config.ARGB_8888)
+                        page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+                        Image(
+                            bitmap = bitmap.asImageBitmap(),
+                            contentDescription = "PDF Page",
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(color = Color.White)
+                        )
+                    }
+                }
+
+                item {
+                    Button(onClick = {
+                        /*TODO guardar pdf*/
+                        Toast.makeText(
+                            ObjectContext.context,
+                            "Pdf descargado en \"Documentos\"",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }) {
+                        Text(
+                            text = "Descargar pdf"
+                        )
+                    }
+                    //Mostrar toast
+                }
             }
         }
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScaffoldInvoiceUltimate(
