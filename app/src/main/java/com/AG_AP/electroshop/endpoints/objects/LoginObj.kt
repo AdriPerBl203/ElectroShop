@@ -46,8 +46,7 @@ object LoginObj {
     }
 
     suspend fun logoutGateway(urlInt: String): Boolean {
-        RetrofitClient.baseUrl = urlInt
-        val apiService = RetrofitClient.retrofit.create(LoginInterface::class.java)
+        val apiService = RetrofitClient.retrofitGetaway.create(LoginInterface::class.java)
         return try {
             apiService.logoutGateway()
             true
