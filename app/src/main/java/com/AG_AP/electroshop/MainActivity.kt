@@ -39,7 +39,6 @@ class MainActivity : ComponentActivity() {
                     val context: Context = application.applicationContext
                     ObjectContext.context = context
                     Config.initConfig(context)
-                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
                     AppNav(context=context)
                 }
             }
