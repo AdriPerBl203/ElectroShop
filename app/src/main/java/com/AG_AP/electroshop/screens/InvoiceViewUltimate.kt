@@ -172,7 +172,7 @@ fun InvoiceUltimate(innerPadding: PaddingValues, viewModel: InvoiceViewModel) {
 
                 item {
                     Button(onClick = {
-                        /*TODO guardar pdf*/
+                        viewModel.savePDF()
                         Toast.makeText(
                             ObjectContext.context,
                             "Pdf descargado en \"Documentos\"",
