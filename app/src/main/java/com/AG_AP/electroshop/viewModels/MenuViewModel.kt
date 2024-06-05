@@ -242,11 +242,15 @@ class MenuViewModel : ViewModel() {
                                         CardTypeAux = "cCustomer"
                                         SeriesAux = 71
                                     }
-
                                     "Proveedor" -> {
                                         CardTypeAux = "cSupplier"
                                         SeriesAux = 72
                                     }
+                                    "Lead" -> {
+                                        CardTypeAux = "cLid"
+                                        SeriesAux = 71
+                                    }
+                                    //TODO hacerlo para el lee
                                 }
 
 
