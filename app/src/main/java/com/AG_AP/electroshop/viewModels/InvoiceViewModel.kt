@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.Environment
 import android.os.ParcelFileDescriptor
 import android.provider.MediaStore
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import com.AG_AP.electroshop.firebase.InvoiceDataCRUD
@@ -137,7 +138,7 @@ class InvoiceViewModel : ViewModel() {
                     }
                 }
             } catch (e: IOException) {
-                e.printStackTrace()
+                Log.e("Errores", e.stackTraceToString())
             }
         }
     }
@@ -151,7 +152,7 @@ class InvoiceViewModel : ViewModel() {
                 outputStream.write(pdfBytes)
             }
         } catch (e: IOException) {
-            e.printStackTrace()
+            Log.e("Errores", e.stackTraceToString())
         }
         return pdfFile
     }
