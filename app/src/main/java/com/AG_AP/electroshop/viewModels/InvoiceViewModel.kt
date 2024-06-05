@@ -76,6 +76,7 @@ class InvoiceViewModel : ViewModel() {
     @RequiresApi(Build.VERSION_CODES.O)
     fun replaceData(item: InvoiceData?) {
         if (item != null) {
+            _uiState.value.itemActual= item
             // Actualizamos el base64
             _uiState.update { currentState ->
                 currentState.copy(
@@ -106,9 +107,10 @@ class InvoiceViewModel : ViewModel() {
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val namePDF = _uiState.value.itemActual?.CardCode + "-" + _uiState.value.itemActual?.DocEntry
             val resolver = context.contentResolver
             val contentValues = ContentValues().apply {
-                put(MediaStore.MediaColumns.DISPLAY_NAME, pdfFile.name)
+                put(MediaStore.MediaColumns.DISPLAY_NAME, namePDF)
                 put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf")
                 put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOCUMENTS)
             }
