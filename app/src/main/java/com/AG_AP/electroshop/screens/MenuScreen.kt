@@ -417,6 +417,36 @@ fun MenuBody(
                         }
                     }
                 }
+
+                item {
+                    Card(
+                        onClick = { navController.navigate(route = Routes.InvoiceScreen.route) }) {
+                        Column(
+                            verticalArrangement = Arrangement.Top,
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier
+                                .size(height = 280.dp, width = 320.dp)
+                        ) {
+                            Box (
+                                modifier = Modifier.padding(bottom = 40.dp)
+                            ) {
+                                Image(
+                                    painter = painterResource(R.drawable.actividades), //TODO cambiar
+                                    contentDescription = "Facturas",
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier
+                                        .clip(RoundedCornerShape(16.dp))
+                                        .aspectRatio(16f / 9f)
+                                )
+                            }
+                            Text(
+                                "Facturas",
+                                color = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.padding(5.dp)
+                            )
+                        }
+                    }
+                }
             }
         }
     }

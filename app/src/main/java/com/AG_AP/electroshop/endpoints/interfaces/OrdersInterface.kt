@@ -1,5 +1,6 @@
 package com.AG_AP.electroshop.endpoints.interfaces
 
+import com.AG_AP.electroshop.endpoints.models.invoices.InvoicesGet
 import com.AG_AP.electroshop.endpoints.models.orders.Orders
 import com.AG_AP.electroshop.endpoints.models.orders.orderFilterClientAndDocument.OrdersFilterClientAndDocumentLines
 import com.AG_AP.electroshop.endpoints.models.orders.post.PostOrder
@@ -24,4 +25,9 @@ interface OrdersInterface {
     @Headers("Prefer: odata.maxpagesize=0")
     @GET("b1s/v1/Orders?\$select=CardCode, DocumentLines, DocDueDate&\$orderby=CardCode asc, DocDueDate desc")
     suspend fun getClientAndDocumentLinesFilter(): OrdersFilterClientAndDocumentLines
+
+
+    @Headers("Prefer: odata.maxpagesize=0")
+    @GET("b1s/v1/Invoices")
+    suspend fun getInvoices(): InvoicesGet
 }

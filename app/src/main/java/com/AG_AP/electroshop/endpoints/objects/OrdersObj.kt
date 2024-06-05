@@ -2,6 +2,7 @@ package com.AG_AP.electroshop.endpoints.objects
 
 import com.AG_AP.electroshop.endpoints.interfaces.ItemInterface
 import com.AG_AP.electroshop.endpoints.interfaces.OrdersInterface
+import com.AG_AP.electroshop.endpoints.models.invoices.InvoicesGet
 import com.AG_AP.electroshop.endpoints.models.item.getItems.GetItems
 import com.AG_AP.electroshop.endpoints.models.orders.Orders
 import com.AG_AP.electroshop.endpoints.models.orders.orderFilterClientAndDocument.OrdersFilterClientAndDocumentLines
@@ -49,6 +50,17 @@ object OrdersObj {
         val apiService = RetrofitClient.retrofit.create(OrdersInterface::class.java)
         return try {
             apiService.getOrdersExten(num)
+        } catch (e: Exception) {
+            println(e.message)
+            null
+        }
+    }
+
+    suspend fun getInvoices(urlInt: String): InvoicesGet? {
+        RetrofitClient.baseUrl = urlInt
+        val apiService = RetrofitClient.retrofit.create(OrdersInterface::class.java)
+        return try {
+            apiService.getInvoices()
         } catch (e: Exception) {
             println(e.message)
             null

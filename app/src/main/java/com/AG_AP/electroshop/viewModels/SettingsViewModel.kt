@@ -3,21 +3,27 @@ package com.AG_AP.electroshop.viewModels
 import android.content.Context
 import android.util.Log
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Sync
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.AG_AP.electroshop.endpoints.models.activity.Activity
+import com.AG_AP.electroshop.endpoints.models.exportToPDF.DataPostExportToPDF
+import com.AG_AP.electroshop.endpoints.models.exportToPDF.DataPostExportToPDFItem
+import com.AG_AP.electroshop.endpoints.models.invoices.InvoicesGet
 import com.AG_AP.electroshop.endpoints.models.item.getItems.GetItems
 import com.AG_AP.electroshop.endpoints.models.login.Login
 import com.AG_AP.electroshop.endpoints.models.orders.Orders
 import com.AG_AP.electroshop.endpoints.models.priceList.PriceList
 import com.AG_AP.electroshop.endpoints.objects.ActivityObj
 import com.AG_AP.electroshop.endpoints.objects.BusinessPartnersObj
+import com.AG_AP.electroshop.endpoints.objects.ExportToPDFObj
 import com.AG_AP.electroshop.endpoints.objects.ItemObj
 import com.AG_AP.electroshop.endpoints.objects.LoginObj
 import com.AG_AP.electroshop.endpoints.objects.OrdersObj
 import com.AG_AP.electroshop.endpoints.objects.PriceListObj
+import com.AG_AP.electroshop.endpoints.retrofit.RetrofitClient
 import com.AG_AP.electroshop.endpoints.udo.models.CreateField
 import com.AG_AP.electroshop.endpoints.udo.models.createUdo.CreateUdo
 import com.AG_AP.electroshop.endpoints.udo.models.createUdo.UserObjectMDFindColumn
@@ -27,6 +33,7 @@ import com.AG_AP.electroshop.endpoints.udo.models.getUserUdo.SeiConfigUser
 import com.AG_AP.electroshop.endpoints.udo.objects.UDOobj
 import com.AG_AP.electroshop.firebase.ActivityCRUD
 import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
+import com.AG_AP.electroshop.firebase.InvoiceDataCRUD
 import com.AG_AP.electroshop.firebase.ItemCRUD
 import com.AG_AP.electroshop.firebase.OrderCRUD
 import com.AG_AP.electroshop.firebase.PriceListCRUD
@@ -35,6 +42,7 @@ import com.AG_AP.electroshop.firebase.SEIConfigCRUD
 import com.AG_AP.electroshop.firebase.SpecialPricesCRUD
 import com.AG_AP.electroshop.firebase.models.BusinessPartner
 import com.AG_AP.electroshop.firebase.models.DocumentLineFireBase
+import com.AG_AP.electroshop.firebase.models.InvoiceData
 import com.AG_AP.electroshop.firebase.models.Item
 import com.AG_AP.electroshop.firebase.models.OrderFireBase
 import com.AG_AP.electroshop.firebase.models.ItemPrice
@@ -55,6 +63,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import okhttp3.RequestBody
+import okhttp3.ResponseBody
+import retrofit2.Response
 
 class SettingsViewModel : ViewModel() {
 
@@ -156,12 +167,12 @@ class SettingsViewModel : ViewModel() {
             }
             val dataLogin = Login(dataBase, password, login)
             val data = LoginObj.loginAcessTwoversion(dataLogin, urlInt)
-            var dataUrlExt:Boolean =false
-            var urlCheck:String =urlInt
-            var urlCheckTip:String = "Int"
-            if(!data){
+            var dataUrlExt: Boolean = false
+            var urlCheck: String = urlInt
+            var urlCheckTip: String = "Int"
+            if (!data) {
                 dataUrlExt = LoginObj.loginAcessTwoversion(dataLogin, urlExt)
-                urlCheck =urlExt
+                urlCheck = urlExt
                 urlCheckTip = "Ext"
             }
             var text: String = ""
@@ -169,7 +180,7 @@ class SettingsViewModel : ViewModel() {
             //LoginObj.logout(urlInt)
             if (data || dataUrlExt) {
                 text = "Test realizado con éxito."
-                if(data){
+                if (data) {
                     _uiState.update { currentState ->
                         currentState.copy(
                             message = true,
@@ -178,11 +189,12 @@ class SettingsViewModel : ViewModel() {
                             ButtomEnable = true,
                             urlCheck = urlCheck,
                             urlTipCheck = urlCheckTip,
-                            iconInt = Icons.Default.CheckCircle
+                            iconInt = Icons.Default.CheckCircle,
+                            iconExt = Icons.Default.Cancel
                         )
                     }
                     LoginObj.logout(urlInt)
-                }else if(dataUrlExt){
+                } else if (dataUrlExt) {
                     _uiState.update { currentState ->
                         currentState.copy(
                             message = true,
@@ -191,7 +203,8 @@ class SettingsViewModel : ViewModel() {
                             ButtomEnable = true,
                             urlCheck = urlCheck,
                             urlTipCheck = urlCheckTip,
-                            iconExt = Icons.Default.CheckCircle
+                            iconExt = Icons.Default.CheckCircle,
+                            iconInt = Icons.Default.Cancel
                         )
                     }
                     LoginObj.logout(urlExt)
@@ -336,8 +349,8 @@ class SettingsViewModel : ViewModel() {
 
     private fun deleteAndInsertUserUdo() {
         viewModelScope.launch(Dispatchers.IO) {
-            val res : Boolean = UDOobj.createTable(Config.rulUse)
-            if(res){
+            val res: Boolean = UDOobj.createTable(Config.rulUse)
+            if (res) {
                 creatingUDO()
                 createUsers()
             }
@@ -385,7 +398,7 @@ class SettingsViewModel : ViewModel() {
             listBusinessPartnerSAP.forEach { element ->
                 var email: String = ""
                 var phone1: String = ""
-                var CardName:String = ""
+                var CardName: String = ""
                 if (!element.Phone1.isNullOrEmpty()) {
                     phone1 = element.Phone1
                 }
@@ -478,7 +491,7 @@ class SettingsViewModel : ViewModel() {
     }
 
     fun sync(context: Context) {
-
+        _uiState.value.checkInvoices = false
         viewModelScope.launch() {
             _uiState.update { currentState ->
                 currentState.copy(
@@ -497,6 +510,7 @@ class SettingsViewModel : ViewModel() {
             //TODO
             deleteAndInsertSpecialPrice() // correcta
             deleteAndInsertPriceList() // correcta
+            deleteAndInsertInvoice()
             if(_uiState.value.checkBoxItems){
                 deleteAndInsertItem()// Correcta
             }else{
@@ -546,8 +560,67 @@ class SettingsViewModel : ViewModel() {
             }
             enablebtn(Config.rulUse)
         }
-         Log.e("SettingViewModel","Datos obtenidos")
+        Log.e("SettingViewModel", "Datos obtenidos")
 
+    }
+
+    private fun deleteAndInsertInvoice() {
+        //TODO
+        viewModelScope.launch(Dispatchers.IO) {
+            val data: InvoicesGet? = OrdersObj.getInvoices(Config.rulUse)
+            if (data != null) {
+                val dataLogin = Login(Config.dataBase, Config.password, Config.login)
+                LoginObj.loginAcessGateway(dataLogin, Config.rulUse)
+
+                InvoiceDataCRUD.deleteAll()
+
+                data.value.forEach { it ->
+                    var cardCode = it.CardCode
+                    var DocNum= it.DocNum
+                    var docEntry = it.DocEntry.toString()
+                    var data: DataPostExportToPDF = DataPostExportToPDF()
+                    data.add(
+                        DataPostExportToPDFItem(
+                            "DocKey@",
+                            "xsd:string",
+                            listOf(listOf(docEntry))
+                        )
+                    )
+                    data.add(
+                        DataPostExportToPDFItem(
+                            "ObjectId@",
+                            "xsd:decimal",
+                            listOf(listOf("13"))
+                        )
+                    )
+                    var response: Response<ResponseBody>? = ExportToPDFObj.postExporToPDF(data)
+                    if (response != null && response.isSuccessful) {
+                        val responseBody: ResponseBody? = response.body()
+                        if (responseBody != null) {
+                            val responseText = responseBody.string()
+                            Log.i("ExportToPDF", responseText)
+                            //TODO REALM
+
+
+                            val Invoice = InvoiceData().apply {
+                                this.CardCode = cardCode
+                                this.DocNum = DocNum
+                                this.DocEntry = docEntry.toLong()
+                                this.Base64String = responseText
+                            }
+
+                            InvoiceDataCRUD.insert(Invoice)
+                        }
+                    }
+                }
+                //Fin de la conexión
+                LoginObj.logoutGateway(Config.rulUse)
+                _uiState.value.checkInvoices = true
+            }else{
+                _uiState.value.checkInvoices = true
+            }
+
+        }
     }
 
     private fun deleteAndInsertSpecialPrice() {
@@ -607,8 +680,8 @@ class SettingsViewModel : ViewModel() {
     private fun enablebtn(url: String) {
         viewModelScope.launch(Dispatchers.IO) {
             var aux: Boolean = true
-            while (aux){
-                if(_uiState.value.checkUserUdo && _uiState.value.checkBusinessPartner && _uiState.value.checkActivity && _uiState.value.checkItem && _uiState.value.checkPreciosEspeciales && _uiState.value.checkPriceLists){
+            while (aux) {
+                if (_uiState.value.checkUserUdo && _uiState.value.checkBusinessPartner && _uiState.value.checkActivity && _uiState.value.checkItem && _uiState.value.checkPreciosEspeciales && _uiState.value.checkPriceLists && _uiState.value.checkInvoices) {
 
                     aux = false
                     LoginObj.logout(url)
@@ -742,7 +815,8 @@ class SettingsViewModel : ViewModel() {
                     mainSupplier = element.ItemName ?: ""
                     this.itemPrice = listPrice.toRealmList()
                     manageSerialNumbers = element.ManageSerialNumbers ?: ""
-                    autoCreateSerialNumbersOnRelease = element.AutoCreateSerialNumbersOnRelease ?: ""
+                    autoCreateSerialNumbersOnRelease =
+                        element.AutoCreateSerialNumbersOnRelease ?: ""
                     SAP = true
 
                 }
@@ -767,7 +841,8 @@ class SettingsViewModel : ViewModel() {
         val dataBase = _uiState.value.dataBase
         val url = _uiState.value.urlCheck
         val urlTipCheck = _uiState.value.urlTipCheck
-        val dataConfiguration = ConfigurationApplication(login, password, dataBase, url,urlTipCheck)
+        val dataConfiguration =
+            ConfigurationApplication(login, password, dataBase, url, urlTipCheck)
         val gson = Gson()
         val jsonData: String = gson.toJson(dataConfiguration)
 
@@ -795,7 +870,7 @@ class SettingsViewModel : ViewModel() {
         val json = sharedPref?.getString("configuration", null)
         if (!json.isNullOrEmpty()) {
             val dataConfig = gson.fromJson(json, ConfigurationApplication::class.java)
-            if(dataConfig.urlTipCheck == "Int"){
+            if (dataConfig.urlTipCheck == "Int") {
                 _uiState.update { currentState ->
 
                     currentState.copy(
@@ -806,7 +881,7 @@ class SettingsViewModel : ViewModel() {
                         init = false
                     )
                 }
-            }else if(dataConfig.urlTipCheck == "Ext"){
+            } else if (dataConfig.urlTipCheck == "Ext") {
                 _uiState.update { currentState ->
                     currentState.copy(
                         urlExt = dataConfig.url,
@@ -849,13 +924,13 @@ class SettingsViewModel : ViewModel() {
     }
 
     fun changecheckBoxClients() {
-        if(_uiState.value.checkBoxClients){
+        if (_uiState.value.checkBoxClients) {
             _uiState.update { currentState ->
                 currentState.copy(
                     checkBoxClients = false
                 )
             }
-        }else{
+        } else {
             _uiState.update { currentState ->
                 currentState.copy(
                     checkBoxClients = true,
@@ -866,13 +941,13 @@ class SettingsViewModel : ViewModel() {
     }
 
     fun changecheckBoxOrders() {
-        if(_uiState.value.checkBoxOrders){
+        if (_uiState.value.checkBoxOrders) {
             _uiState.update { currentState ->
                 currentState.copy(
                     checkBoxOrders = false
                 )
             }
-        }else{
+        } else {
             _uiState.update { currentState ->
                 currentState.copy(
                     checkBoxOrders = true,
@@ -883,13 +958,13 @@ class SettingsViewModel : ViewModel() {
     }
 
     fun changecheckBoxUDO() {
-        if(_uiState.value.checkBoxUDO){
+        if (_uiState.value.checkBoxUDO) {
             _uiState.update { currentState ->
                 currentState.copy(
                     checkBoxUDO = false
                 )
             }
-        }else{
+        } else {
             _uiState.update { currentState ->
                 currentState.copy(
                     checkBoxUDO = true,
@@ -900,13 +975,13 @@ class SettingsViewModel : ViewModel() {
     }
 
     fun changecheckBoxItems() {
-        if(_uiState.value.checkBoxItems){
+        if (_uiState.value.checkBoxItems) {
             _uiState.update { currentState ->
                 currentState.copy(
                     checkBoxItems = false
                 )
             }
-        }else{
+        } else {
             _uiState.update { currentState ->
                 currentState.copy(
                     checkBoxItems = true,
@@ -917,13 +992,13 @@ class SettingsViewModel : ViewModel() {
     }
 
     fun changecheckBoxActivity() {
-        if(_uiState.value.checkBoxActivity){
+        if (_uiState.value.checkBoxActivity) {
             _uiState.update { currentState ->
                 currentState.copy(
                     checkBoxActivity = false
                 )
             }
-        }else{
+        } else {
             _uiState.update { currentState ->
                 currentState.copy(
                     checkBoxActivity = true,
@@ -934,7 +1009,7 @@ class SettingsViewModel : ViewModel() {
     }
 
     fun changecheckBoxTodo() {
-        if(_uiState.value.checkBoxTodo){
+        if (_uiState.value.checkBoxTodo) {
             _uiState.update { currentState ->
                 currentState.copy(
                     checkBoxTodo = false,
@@ -945,7 +1020,7 @@ class SettingsViewModel : ViewModel() {
                     checkBoxItems = false
                 )
             }
-        }else{
+        } else {
             _uiState.update { currentState ->
                 currentState.copy(
                     checkBoxTodo = true,
