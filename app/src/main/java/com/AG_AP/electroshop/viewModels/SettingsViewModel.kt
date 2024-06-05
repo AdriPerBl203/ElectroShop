@@ -3,6 +3,7 @@ package com.AG_AP.electroshop.viewModels
 import android.content.Context
 import android.util.Log
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Sync
 import androidx.lifecycle.ViewModel
@@ -188,7 +189,8 @@ class SettingsViewModel : ViewModel() {
                             ButtomEnable = true,
                             urlCheck = urlCheck,
                             urlTipCheck = urlCheckTip,
-                            iconInt = Icons.Default.CheckCircle
+                            iconInt = Icons.Default.CheckCircle,
+                            iconExt = Icons.Default.Cancel
                         )
                     }
                     LoginObj.logout(urlInt)
@@ -201,7 +203,8 @@ class SettingsViewModel : ViewModel() {
                             ButtomEnable = true,
                             urlCheck = urlCheck,
                             urlTipCheck = urlCheckTip,
-                            iconExt = Icons.Default.CheckCircle
+                            iconExt = Icons.Default.CheckCircle,
+                            iconInt = Icons.Default.Cancel
                         )
                     }
                     LoginObj.logout(urlExt)
