@@ -135,7 +135,15 @@ class OrderViewModel : ViewModel(), ActionViewModel {
         val docDueDate = _uiState.value.DocDueDate
         val taxDate = _uiState.value.TaxDate
         val discountPercent = _uiState.value.DiscountPercent
-        val SalesPersonCode = _uiState.value.SalesPersonCode.toInt()
+
+        var SalesPersonCode: Int = -1
+        try {
+            SalesPersonCode = _uiState.value.SalesPersonCode.toInt()
+        } catch (e: Exception) {
+            Log.e("Errores", e.stackTraceToString())
+        }
+
+
         _uiState.update { currentState ->
             currentState.copy(
                 DocumentLineList = trimDocumentLineList()
@@ -224,7 +232,12 @@ class OrderViewModel : ViewModel(), ActionViewModel {
         val docDate = _uiState.value.DocDate
         val docDueDate = _uiState.value.DocDueDate
         val taxDate = _uiState.value.TaxDate
-        val SalesPersonCode = _uiState.value.SalesPersonCode.toInt()
+        var SalesPersonCode: Int = -1
+        try {
+            SalesPersonCode = _uiState.value.SalesPersonCode.toInt()
+        } catch (e: Exception) {
+            Log.e("Errores", e.stackTraceToString())
+        }
         val discountPercent = _uiState.value.DiscountPercent
         _uiState.update { currentState ->
             currentState.copy(
@@ -330,6 +343,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
                             DiscountPercent = dataAux.DiscountPercent,
                             DocumentLine = dataList,
                             DocumentLineList = mutableDataList,
+                            SalesPersonCode = dataAux.Slpcode
                         )
                     }
                 } else {
@@ -878,7 +892,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
                 DocDueDate = order.DocDueDate,
                 TaxDate = order.TaxDate,
                 DiscountPercent = order.DiscountPercent,
-                SalesPersonCode = order.Slpcode,
+                SalesPersonCode = order.SalesPersonCode.toString(),
                 DocumentLine = documentLine,
                 DocumentLineList = DocumentLineForMutableListSinceListOrder(order.DocumentLines.toMutableList()),
                 actualDate = true
@@ -968,11 +982,11 @@ class OrderViewModel : ViewModel(), ActionViewModel {
         //TODO
         val data = _uiState.value.inputSearch
         _uiState.value.ListBusinessPartnerAux = _uiState.value.ListBusinessPartnerBackund
-        if(data.length >3){
+        if (data.length > 3) {
             _uiState.value.ListBusinessPartnerAux = mutableListOf()
-            _uiState.value.ListBusinessPartnerBackund.forEach {item ->
-                if(item.CardCode.contains(data) || item.CardName.contains(data)){
-                    _uiState.value.ListBusinessPartnerAux+= item
+            _uiState.value.ListBusinessPartnerBackund.forEach { item ->
+                if (item.CardCode.contains(data) || item.CardName.contains(data)) {
+                    _uiState.value.ListBusinessPartnerAux += item
                 }
             }
             _uiState.update { currentState ->
@@ -980,7 +994,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
                     ListBusinessPartner = _uiState.value.ListBusinessPartnerAux
                 )
             }
-        }else{
+        } else {
             _uiState.update { currentState ->
                 currentState.copy(
                     ListBusinessPartner = _uiState.value.ListBusinessPartnerBackund
