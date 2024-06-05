@@ -19,7 +19,7 @@ class OrderFireBase : RealmObject {
     var TaxDate: String = ""
     var DiscountPercent: Double = 0.0
     var DocumentLines: RealmList<DocumentLineFireBase> = realmListOf()
-    var Slpcode: String = ""
+    var Slpcode: String = "-1"
     var SAP: Boolean = false
-    var SalesPersonCode:Int = 0
+    var SalesPersonCode:Int = -1
 }
