@@ -1,16 +1,22 @@
 package com.AG_AP.electroshop.viewModels
 
+import android.Manifest
 import android.content.ContentValues
+import android.content.pm.PackageManager
 import android.graphics.pdf.PdfRenderer
 import android.os.Build
 import android.os.Environment
 import android.os.ParcelFileDescriptor
 import android.provider.MediaStore
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import com.AG_AP.electroshop.firebase.InvoiceDataCRUD
 import com.AG_AP.electroshop.firebase.models.InvoiceData
+import com.AG_AP.electroshop.functions.ActivityObj
 import com.AG_AP.electroshop.functions.ObjectContext
 import com.AG_AP.electroshop.uiState.InvoiceUiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -77,7 +83,7 @@ class InvoiceViewModel : ViewModel() {
     @RequiresApi(Build.VERSION_CODES.O)
     fun replaceData(item: InvoiceData?) {
         if (item != null) {
-            _uiState.value.itemActual= item
+            _uiState.value.itemActual = item
             // Actualizamos el base64
             _uiState.update { currentState ->
                 currentState.copy(
@@ -100,46 +106,64 @@ class InvoiceViewModel : ViewModel() {
         }
     }
 
-    fun savePDF(){
-        val context = ObjectContext.context // Reemplaza `yourContext` con el contexto adecuado
-        val pdfFile = _uiState.value.pdfFile
-        if (pdfFile == null) {
-            return
-        }
+    fun savePDF() {
+        //Comprueba primeramente los permisos
+        checkPermissions()
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            val namePDF = _uiState.value.itemActual?.CardCode + "-" + _uiState.value.itemActual?.DocEntry
-            val resolver = context.contentResolver
-            val contentValues = ContentValues().apply {
-                put(MediaStore.MediaColumns.DISPLAY_NAME, namePDF)
-                put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf")
-                put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOCUMENTS)
+
+        if (ContextCompat.checkSelfPermission(
+                ObjectContext.context,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            val context = ObjectContext.context // Reemplaza `yourContext` con el contexto adecuado
+            val pdfFile = _uiState.value.pdfFile
+            if (pdfFile == null) {
+                return
             }
 
-            val uri = resolver.insert(MediaStore.Files.getContentUri("external"), contentValues)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val namePDF =
+                    _uiState.value.itemActual?.CardCode + "-" + _uiState.value.itemActual?.DocEntry
+                val resolver = context.contentResolver
+                val contentValues = ContentValues().apply {
+                    put(MediaStore.MediaColumns.DISPLAY_NAME, namePDF)
+                    put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf")
+                    put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOCUMENTS)
+                }
 
-            uri?.let {
-                resolver.openOutputStream(it).use { outputStream ->
-                    pdfFile.inputStream().use { inputStream ->
-                        inputStream.copyTo(outputStream!!)
+                val uri = resolver.insert(MediaStore.Files.getContentUri("external"), contentValues)
+
+                uri?.let {
+                    resolver.openOutputStream(it).use { outputStream ->
+                        pdfFile.inputStream().use { inputStream ->
+                            inputStream.copyTo(outputStream!!)
+                        }
                     }
+                }
+            } else {
+                val namePDF =
+                    _uiState.value.itemActual?.CardCode + "-" + _uiState.value.itemActual?.DocEntry + ".pdf"
+                val documentsFolder = File(
+                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),
+                    ""
+                )
+                if (!documentsFolder.exists()) {
+                    documentsFolder.mkdirs()
+                }
+                val newPdfFile = File(documentsFolder, namePDF)
+                try {
+                    pdfFile.inputStream().use { input ->
+                        FileOutputStream(newPdfFile).use { output ->
+                            input.copyTo(output)
+                        }
+                    }
+                } catch (e: IOException) {
+                    Log.e("Errores", e.stackTraceToString())
                 }
             }
         } else {
-            val documentsFolder = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "")
-            if (!documentsFolder.exists()) {
-                documentsFolder.mkdirs()
-            }
-            val newPdfFile = File(documentsFolder, pdfFile.name)
-            try {
-                pdfFile.inputStream().use { input ->
-                    FileOutputStream(newPdfFile).use { output ->
-                        input.copyTo(output)
-                    }
-                }
-            } catch (e: IOException) {
-                Log.e("Errores", e.stackTraceToString())
-            }
+            Toast.makeText(ObjectContext.context,"Se deben de aceptar los permisos de escritura", Toast.LENGTH_LONG ).show()
         }
     }
 
@@ -157,7 +181,36 @@ class InvoiceViewModel : ViewModel() {
         return pdfFile
     }
 
+    private fun checkPermissions() {
+        if (ContextCompat.checkSelfPermission(
+                ObjectContext.context,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            //Permiso no aceptado por el momento
+            //Solicitamos el permiso
+            requestWritePermission()
+        } else {
+            //El permiso se encuentra ya aceptado
+        }
+    }
 
+    private fun requestWritePermission() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(
+                ActivityObj.ObjectActivity,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+        ) {
+            //El usuario ha rechazado los permisos
+        } else {
+            //Pedir permiso
+            ActivityCompat.requestPermissions(
+                ActivityObj.ObjectActivity,
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                1234
+            )
+        }
+    }
 
 
 }
