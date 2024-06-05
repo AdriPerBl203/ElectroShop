@@ -10,5 +10,6 @@ data class InvoiceUiState(
     val Base64String: String = "",
     val CardName: String = "",
     val ActualPdf: PdfRenderer? = null,
-    var pdfFile: File? = null
+    var pdfFile: File? = null,
+    val ActualCardCode: String = ""
 )

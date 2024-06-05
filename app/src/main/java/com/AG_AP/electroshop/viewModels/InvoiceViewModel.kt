@@ -1,7 +1,6 @@
 package com.AG_AP.electroshop.viewModels
 
 import android.content.ContentValues
-import android.content.Context
 import android.graphics.pdf.PdfRenderer
 import android.os.Build
 import android.os.Environment
@@ -54,17 +53,18 @@ class InvoiceViewModel : ViewModel() {
 
     fun cardNameChange(it: String) {
 
-        if(_uiState.value.CardName.length>2){
-            _uiState.value.BusinessPartnerWithInvoiceList =mutableListOf()
-            _uiState.value.BusinessPartnerWithInvoiceListBackud.forEach{ x ->
+        if (_uiState.value.CardName.length > 2) {
+            _uiState.value.BusinessPartnerWithInvoiceList = mutableListOf()
+            _uiState.value.BusinessPartnerWithInvoiceListBackud.forEach { x ->
                 if (x != null) {
-                    if(x.CardCode.contains(it)){
-                        _uiState.value.BusinessPartnerWithInvoiceList+=x
+                    if (x.CardCode.contains(it)) {
+                        _uiState.value.BusinessPartnerWithInvoiceList += x
                     }
                 }
             }
-        }else{
-            _uiState.value.BusinessPartnerWithInvoiceList = _uiState.value.BusinessPartnerWithInvoiceListBackud
+        } else {
+            _uiState.value.BusinessPartnerWithInvoiceList =
+                _uiState.value.BusinessPartnerWithInvoiceListBackud
         }
         _uiState.update { currentState ->
             currentState.copy(
@@ -79,6 +79,7 @@ class InvoiceViewModel : ViewModel() {
             // Actualizamos el base64
             _uiState.update { currentState ->
                 currentState.copy(
+                    ActualCardCode = item.CardCode,
                     Base64String = item.Base64String
                 )
             }
@@ -86,7 +87,8 @@ class InvoiceViewModel : ViewModel() {
             val pdfFile =
                 decodeBase64ToPdfFile(ObjectContext.context.cacheDir, _uiState.value.Base64String)
             _uiState.value.pdfFile = pdfFile
-            val pdfRenderer = PdfRenderer(ParcelFileDescriptor.open(pdfFile, ParcelFileDescriptor.MODE_READ_ONLY))
+            val pdfRenderer =
+                PdfRenderer(ParcelFileDescriptor.open(pdfFile, ParcelFileDescriptor.MODE_READ_ONLY))
 
             _uiState.update { currentState ->
                 currentState.copy(
