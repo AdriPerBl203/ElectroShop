@@ -61,7 +61,7 @@ fun InvoiceUltimate(innerPadding: PaddingValues, viewModel: InvoiceViewModel) {
     val dataUiState by viewModel.uiState.collectAsState()
 
     BoxWithConstraints {
-        if (maxWidth > 730.dp) {
+        if (maxWidth > 360.dp) {
             Row(
                 modifier = Modifier
                     .padding(innerPadding)
