@@ -74,7 +74,7 @@ fun ItemView(innerPadding: PaddingValues, viewModel: ItemViewModel, id: String?)
     ) {
         LazyRow() {
             dataUiState.itemsList?.let {
-                items(it.toList()){ it->
+                items(it.toList()) { it ->
                     Card(
                         modifier = Modifier
                             .padding(10.dp)
@@ -89,7 +89,7 @@ fun ItemView(innerPadding: PaddingValues, viewModel: ItemViewModel, id: String?)
                             ) {
                                 Text(text = it.ItemCode)
                                 IconButton(onClick = {
-                                    //viewModel.showOrderComplete(order)
+                                    viewModel.copyData(it)
                                 }) {
                                     Icon(
                                         imageVector = Icons.Filled.Camera,
@@ -105,12 +105,12 @@ fun ItemView(innerPadding: PaddingValues, viewModel: ItemViewModel, id: String?)
                                 Text(text = it.itemName)
                             }
                             Spacer(modifier = Modifier.height(5.dp))
-                            var aux =0
+                            var aux = 0
                             it.itemPrice?.forEachIndexed { index, priceItem ->
                                 Row {
-                                    for(i in dataUiState.PriceListObject!!){
-                                        if(i.PriceListNo.toInt() == priceItem.priceList){
-                                            if(priceItem.price != 0.0){
+                                    for (i in dataUiState.PriceListObject!!) {
+                                        if (i.PriceListNo.toInt() == priceItem.priceList) {
+                                            if (priceItem.price != 0.0) {
                                                 Text(text = "${i.PriceListName} -- ${priceItem.price}€")
                                                 aux++
                                             }
@@ -119,9 +119,9 @@ fun ItemView(innerPadding: PaddingValues, viewModel: ItemViewModel, id: String?)
 
                                 }
                             }
-                            if(aux == 0){
+                            if (aux == 0) {
                                 Text(text = "No hay precios")
-                                aux=0
+                                aux = 0
                             }
                         }
                     }
@@ -395,22 +395,22 @@ fun ScaffoldItem(
                     ) {
                         TopBarButton(
                             "Activiades",
-                            { navController.navigate(route = Routes.ActivityUltimate.route)},
+                            { navController.navigate(route = Routes.ActivityUltimate.route) },
                             Icons.Default.LocalActivity
                         )
                         TopBarButton(
                             "Clientes",
-                            { navController.navigate(route = Routes.BusinessPartnerUltimate.route)},
+                            { navController.navigate(route = Routes.BusinessPartnerUltimate.route) },
                             Icons.Default.AccountBox
                         )
                         TopBarButton(
                             "Articulos",
-                            { navController.navigate(route = Routes.ItemScreen.route)},
+                            { navController.navigate(route = Routes.ItemScreen.route) },
                             Icons.Default.Inbox
                         )
                         TopBarButton(
                             "Pedidos",
-                            { navController.navigate(route = Routes.ScreenOrder.route)},
+                            { navController.navigate(route = Routes.ScreenOrder.route) },
                             Icons.Default.AddCard
                         )
                     }

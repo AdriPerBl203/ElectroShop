@@ -81,6 +81,35 @@ class ItemViewModel : ViewModel(), ActionViewModel {
         }
     }
 
+    fun copyData(item: Item) {
+        var manageSerialNumbers = false
+        if (item.manageSerialNumbers == "tYES") {
+            manageSerialNumbers = true
+        } else if (item.manageSerialNumbers == "tNO") {
+            manageSerialNumbers = false
+        }
+
+        var autoCreateSerialNumbers = false
+        if (item.autoCreateSerialNumbersOnRelease == "tYES") {
+            autoCreateSerialNumbers = true
+        } else if (item.autoCreateSerialNumbersOnRelease == "tNO") {
+            autoCreateSerialNumbers = false
+        }
+
+        _uiState.update { currentState ->
+            currentState.copy(
+                ItemCode = item.ItemCode,
+                itemName = item.itemName,
+                itemType = item.itemType,
+                mainSupplier = item.mainSupplier ?: "",
+                itemPrice = item.itemPrice,
+                manageSerialNumbers = manageSerialNumbers,
+                autoCreateSerialNumbersOnRelease = autoCreateSerialNumbers
+
+            )
+        }
+    }
+
     fun changeItemCode(itemCode: String) {
         _uiState.update { currentState ->
             currentState.copy(
