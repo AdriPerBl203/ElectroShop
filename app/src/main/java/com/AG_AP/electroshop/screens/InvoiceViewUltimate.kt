@@ -20,6 +20,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Add
@@ -67,7 +69,7 @@ fun InvoiceUltimate(innerPadding: PaddingValues, viewModel: InvoiceViewModel) {
                     .padding(innerPadding)
             ) {
                 //Left column
-                Column (
+                Column(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -84,7 +86,7 @@ fun InvoiceUltimate(innerPadding: PaddingValues, viewModel: InvoiceViewModel) {
                     )
                     LazyColumn {
 
-                        if(dataUiState.BusinessPartnerWithInvoiceList.size == 0){
+                        if (dataUiState.BusinessPartnerWithInvoiceList.size == 0) {
                             items(1) {
                                 Card(
                                     modifier = Modifier
@@ -105,7 +107,7 @@ fun InvoiceUltimate(innerPadding: PaddingValues, viewModel: InvoiceViewModel) {
                                     }
                                 }
                             }
-                        }else{
+                        } else {
                             items(dataUiState.BusinessPartnerWithInvoiceList) { item ->
                                 if (item != null) {
                                     Card(
@@ -161,8 +163,14 @@ fun InvoiceUltimate(innerPadding: PaddingValues, viewModel: InvoiceViewModel) {
                         item {
                             //TODO cargar pdf
                             dataUiState.ActualPdf!!.openPage(0).use { page ->
-                                val bitmap = Bitmap.createBitmap(2800, 4000, Bitmap.Config.ARGB_8888)
-                                page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+                                val bitmap =
+                                    Bitmap.createBitmap(2800, 4000, Bitmap.Config.ARGB_8888)
+                                page.render(
+                                    bitmap,
+                                    null,
+                                    null,
+                                    PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY
+                                )
                                 Image(
                                     bitmap = bitmap.asImageBitmap(),
                                     contentDescription = "PDF Page",
@@ -192,12 +200,13 @@ fun InvoiceUltimate(innerPadding: PaddingValues, viewModel: InvoiceViewModel) {
                 }
             }
         } else {
-            Column (
+            Column(
                 modifier = Modifier
                     .padding(innerPadding)
+                    .verticalScroll(state = rememberScrollState())
             ) {
                 //Left column
-                Column (
+                Column(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -214,7 +223,7 @@ fun InvoiceUltimate(innerPadding: PaddingValues, viewModel: InvoiceViewModel) {
                     )
                     LazyColumn {
 
-                        if(dataUiState.BusinessPartnerWithInvoiceList.size == 0){
+                        if (dataUiState.BusinessPartnerWithInvoiceList.size == 0) {
                             items(1) {
                                 Card(
                                     modifier = Modifier
@@ -235,7 +244,7 @@ fun InvoiceUltimate(innerPadding: PaddingValues, viewModel: InvoiceViewModel) {
                                     }
                                 }
                             }
-                        }else{
+                        } else {
                             items(dataUiState.BusinessPartnerWithInvoiceList) { item ->
                                 if (item != null) {
                                     Card(
@@ -276,48 +285,47 @@ fun InvoiceUltimate(innerPadding: PaddingValues, viewModel: InvoiceViewModel) {
                 }
 
                 //Right column
-                LazyColumn(
+                Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
                     if (dataUiState.ActualPdf == null) {
-                        item {
-                            Text(
-                                text = "No hay ningún pdf cargado",
-                                textAlign = TextAlign.Center
+                        Text(
+                            text = "No hay ningún pdf cargado",
+                            textAlign = TextAlign.Center
+                        )
+                    } else {
+                        dataUiState.ActualPdf!!.openPage(0).use { page ->
+                            val bitmap = Bitmap.createBitmap(2800, 4000, Bitmap.Config.ARGB_8888)
+                            page.render(
+                                bitmap,
+                                null,
+                                null,
+                                PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY
+                            )
+                            Image(
+                                bitmap = bitmap.asImageBitmap(),
+                                contentDescription = "PDF Page",
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(color = Color.White)
                             )
                         }
-                    } else {
-                        item {
-                            //TODO cargar pdf
-                            dataUiState.ActualPdf!!.openPage(0).use { page ->
-                                val bitmap = Bitmap.createBitmap(2800, 4000, Bitmap.Config.ARGB_8888)
-                                page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
-                                Image(
-                                    bitmap = bitmap.asImageBitmap(),
-                                    contentDescription = "PDF Page",
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .background(color = Color.White)
-                                )
-                            }
-                        }
 
-                        item {
-                            Button(onClick = {
-                                viewModel.savePDF()
-                                Toast.makeText(
-                                    ObjectContext.context,
-                                    "Pdf descargado en \"Documentos\"",
-                                    Toast.LENGTH_LONG
-                                ).show()
-                            }) {
-                                Text(
-                                    text = "Descargar pdf"
-                                )
-                            }
-                            //Mostrar toast
+                        Button(onClick = {
+                            viewModel.savePDF()
+                            Toast.makeText(
+                                ObjectContext.context,
+                                "Pdf descargado en \"Documentos\"",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }) {
+                            Text(
+                                text = "Descargar pdf"
+                            )
                         }
+                        //Mostrar toast
+
                     }
                 }
             }
