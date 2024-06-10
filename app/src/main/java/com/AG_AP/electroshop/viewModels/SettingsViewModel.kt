@@ -316,13 +316,8 @@ class SettingsViewModel : ViewModel() {
     }
 
     private suspend fun createUsers() {
-        //val user1: CreateUserUDO = CreateUserUDO("1", 3, "N", "N", "N", "N", "JFR", "usuario")
-        //val user2: CreateUserUDO = CreateUserUDO("2", 2, "N", "N", "N", "N", "ARM", "usuario")
-        //val user3: CreateUserUDO = CreateUserUDO("3", 4, "N", "N", "N", "N", "SCE", "usuario")
         val user4: CreateUserUDO = CreateUserUDO("1", 5, "S", "S", "S", "S", "manager", "usuario")
-        //UDOobj.createuserSEICONFIG(Config.rulUse, user1)
-        //UDOobj.createuserSEICONFIG(Config.rulUse, user2)
-        //UDOobj.createuserSEICONFIG(Config.rulUse, user3)
+
         UDOobj.createuserSEICONFIG(Config.rulUse, user4)
         Log.e("UDO", "Usuarios añadidos")
     }
