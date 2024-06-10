@@ -1,8 +1,10 @@
 package com.AG_AP.electroshop.screens.Activities
 
 import android.app.TimePickerDialog
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -129,267 +131,516 @@ fun ActivityUltimate(
             { data -> viewModel.changeCardCode(data) }
         )
     }
-    Column(
-        modifier = Modifier
-            .padding(innerPadding)
-        //.verticalScroll(rememberScrollState())
-    ) {
-        Row(
-        ) {
-            Column { //
-                val coffeeDrinks =
-                    arrayOf("Llamada telefónica", "Reunión", "Tarea", "Nota", "Campaña", "Otros")
-                var expanded by remember { mutableStateOf(false) }
 
-                ExposedDropdownMenuBox(
-                    expanded = expanded,
-                    onExpandedChange = {
-                        expanded = !expanded
-                    }
-                ) {
-                    TextField(
-                        value = dataUiState.Action,
-                        onValueChange = {},
-                        readOnly = true,
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                        modifier = Modifier
-                            .menuAnchor()
-                            .width(300.dp)
-                            .padding(8.dp)
-                    )
-
-                    ExposedDropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false }
-                    ) {
-                        coffeeDrinks.forEach { item ->
-                            DropdownMenuItem(
-                                text = { Text(text = item) },
-                                onClick = {
-                                    viewModel.changeAction(item)
-                                    expanded = false
-                                }
-                            )
-                        }
-                    }
-                }
-
-                OutlinedTextField(
-                    value = dataUiState.nota,
-                    onValueChange = { viewModel.changenota(it) },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    label = { Text("Nota") }
-                )
-                DatePicker(
-                    label = "Fecha", dataUiState.ActivityDate, modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp)
-                ) {
-                    viewModel.changeActivityDate(it)
-                }
-                OutlinedTextField(
-                    value = dataUiState.ActivityTime,
-                    onValueChange = { viewModel.changeActivityTime(it) },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    label = { Text("Hora inicio") },
-                    readOnly = true,
-                    trailingIcon = {
-                        IconButton(
-                            onClick = {
-                                DialogStartTime.show()
-                            }
-                        ) {
-                            Icon(Icons.Filled.AccessTime, contentDescription = "Shopping Cart Icon")
-                        }
-                    }
-                )
-
-                OutlinedTextField(
-                    value = dataUiState.U_SEIPEDIDOCLIENTE,
-                    onValueChange = { /*dataUiState.U_SEIPEDIDOCLIENTE*/ },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    label = { Text("Asociar pedido de cliente") },
-                    readOnly = true,
-                    trailingIcon = {
-                        IconButton(
-                            onClick = {
-                                viewModel.showDialogOrder()
-                            }
-                        ) {
-                            Icon(Icons.Filled.Add, contentDescription = "Shopping Cart Icon")
-                        }
-                    }
-                )
-                OutlinedTextField(
-                    value = dataUiState.ClgCode,
-                    onValueChange = { viewModel.changeClgCode(it) },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    label = { Text("Id") },
-                    enabled = false
-                )
-            }
-
-            Column {
-                val priority = arrayOf("Bajo", "Normal", "Alto")
-                var expandedTwo by remember { mutableStateOf(false) }
-                OutlinedTextField(
-                    value = dataUiState.EndTime,
-                    onValueChange = { viewModel.changeEndTime(it) },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    label = { Text("Hora fin") },
-                    readOnly = true,
-                    trailingIcon = {
-                        IconButton(
-                            onClick = {
-                                DialogStartEnd.show()
-                            }
-                        ) {
-                            Icon(Icons.Filled.AccessTime, contentDescription = "Shopping Cart Icon")
-                        }
-                    }
-                )
-                OutlinedTextField(
-                    value = dataUiState.CardCode,
-                    onValueChange = { viewModel.changeCardCode(it) },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    label = { Text("Código cliente") },
-                    readOnly = true,
-                    trailingIcon = {
-                        IconButton(
-                            onClick = {
-                                viewModel.showDialogBusinessPartner()
-                            }
-                        ) {
-                            Icon(Icons.Filled.Add, contentDescription = "Shopping Cart Icon")
-                        }
-                    }
-                )
-                OutlinedTextField(
-                    value = dataUiState.Tel,
-                    onValueChange = { viewModel.changeTel(it) },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    label = { Text("Teléfono") }
-                )
-                ExposedDropdownMenuBox(
-                    expanded = expandedTwo,
-                    onExpandedChange = {
-                        expandedTwo = !expandedTwo
-                    }
-                ) {
-                    TextField(
-                        value = dataUiState.Priority,
-                        onValueChange = {},
-                        readOnly = true,
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedTwo) },
-                        modifier = Modifier
-                            .menuAnchor()
-                            .width(300.dp)
-                            .padding(8.dp)
-                    )
-
-                    ExposedDropdownMenu(
-                        expanded = expandedTwo,
-                        onDismissRequest = { expandedTwo = false }
-                    ) {
-                        priority.forEach { item ->
-                            DropdownMenuItem(
-                                text = { Text(text = item) },
-                                onClick = {
-                                    viewModel.changePriority(item)
-                                    expandedTwo = false
-                                }
-                            )
-                        }
-                    }
-                }
-
-            }
-            Column(
-                modifier = Modifier.width(200.dp)
+    BoxWithConstraints {
+        if (maxWidth > 360.dp) {
+            Row(
+                modifier = Modifier
+                    .padding(innerPadding)
             ) {
-                OutlinedTextField(
-                    value = dataUiState.dataFilter,
-                    onValueChange = { viewModel.changeDataFilter(it) },
-                    modifier = Modifier
-                        .width(200.dp)
-                        .padding(8.dp),
-                    label = { Text("Buscar") }
-                )
+                //Contiene los datos principales
+                Row {
+                    Column { //
+                        val coffeeDrinks =
+                            arrayOf("Llamada telefónica", "Reunión", "Tarea", "Nota", "Campaña", "Otros")
+                        var expanded by remember { mutableStateOf(false) }
 
-                ElevatedButton(onClick = { viewModel.findFilter() }) {
-                    Text("Buscar")
-                }
+                        ExposedDropdownMenuBox(
+                            expanded = expanded,
+                            onExpandedChange = {
+                                expanded = !expanded
+                            }
+                        ) {
+                            TextField(
+                                value = dataUiState.Action,
+                                onValueChange = {},
+                                readOnly = true,
+                                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                                modifier = Modifier
+                                    .menuAnchor()
+                                    .width(300.dp)
+                                    .padding(8.dp)
+                            )
 
-                ElevatedButton(onClick = { /*TODO*/ }) {
-                    Text("Opciones avanzadas")
-                }
-            }
+                            ExposedDropdownMenu(
+                                expanded = expanded,
+                                onDismissRequest = { expanded = false }
+                            ) {
+                                coffeeDrinks.forEach { item ->
+                                    DropdownMenuItem(
+                                        text = { Text(text = item) },
+                                        onClick = {
+                                            viewModel.changeAction(item)
+                                            expanded = false
+                                        }
+                                    )
+                                }
+                            }
+                        }
 
-            /*Column(
-                modifier= Modifier.fillMaxHeight(),
-                horizontalAlignment= Alignment.CenterHorizontally,
-                verticalArrangement= Arrangement.Center
-            ){*/
+                        OutlinedTextField(
+                            value = dataUiState.nota,
+                            onValueChange = { viewModel.changenota(it) },
+                            modifier = Modifier
+                                .width(300.dp)
+                                .padding(8.dp),
+                            label = { Text("Nota") }
+                        )
+                        DatePicker(
+                            label = "Fecha", dataUiState.ActivityDate, modifier = Modifier
+                                .width(300.dp)
+                                .padding(8.dp)
+                        ) {
+                            viewModel.changeActivityDate(it)
+                        }
+                        OutlinedTextField(
+                            value = dataUiState.ActivityTime,
+                            onValueChange = { viewModel.changeActivityTime(it) },
+                            modifier = Modifier
+                                .width(300.dp)
+                                .padding(8.dp),
+                            label = { Text("Hora inicio") },
+                            readOnly = true,
+                            trailingIcon = {
+                                IconButton(
+                                    onClick = {
+                                        DialogStartTime.show()
+                                    }
+                                ) {
+                                    Icon(Icons.Filled.AccessTime, contentDescription = "Shopping Cart Icon")
+                                }
+                            }
+                        )
 
-            Column() {
-                Row(
-                    modifier = Modifier.padding(5.dp)
-                ) {
-                    Text(text = "Total de resultados: ${dataUiState.totalSearch}")
-                }
+                        OutlinedTextField(
+                            value = dataUiState.U_SEIPEDIDOCLIENTE,
+                            onValueChange = { /*dataUiState.U_SEIPEDIDOCLIENTE*/ },
+                            modifier = Modifier
+                                .width(300.dp)
+                                .padding(8.dp),
+                            label = { Text("Asociar pedido de cliente") },
+                            readOnly = true,
+                            trailingIcon = {
+                                IconButton(
+                                    onClick = {
+                                        viewModel.showDialogOrder()
+                                    }
+                                ) {
+                                    Icon(Icons.Filled.Add, contentDescription = "Shopping Cart Icon")
+                                }
+                            }
+                        )
+                        OutlinedTextField(
+                            value = dataUiState.ClgCode,
+                            onValueChange = { viewModel.changeClgCode(it) },
+                            modifier = Modifier
+                                .width(300.dp)
+                                .padding(8.dp),
+                            label = { Text("Id") },
+                            enabled = false
+                        )
+                    }
 
-                Row() {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text("Clientes en SAP")
-                        LazyColumnWithCards(dataUiState.ListActivityTheSAP, viewModel)
+                    Column {
+                        val priority = arrayOf("Bajo", "Normal", "Alto")
+                        var expandedTwo by remember { mutableStateOf(false) }
+                        OutlinedTextField(
+                            value = dataUiState.EndTime,
+                            onValueChange = { viewModel.changeEndTime(it) },
+                            modifier = Modifier
+                                .width(300.dp)
+                                .padding(8.dp),
+                            label = { Text("Hora fin") },
+                            readOnly = true,
+                            trailingIcon = {
+                                IconButton(
+                                    onClick = {
+                                        DialogStartEnd.show()
+                                    }
+                                ) {
+                                    Icon(Icons.Filled.AccessTime, contentDescription = "Shopping Cart Icon")
+                                }
+                            }
+                        )
+                        OutlinedTextField(
+                            value = dataUiState.CardCode,
+                            onValueChange = { viewModel.changeCardCode(it) },
+                            modifier = Modifier
+                                .width(300.dp)
+                                .padding(8.dp),
+                            label = { Text("Código cliente") },
+                            readOnly = true,
+                            trailingIcon = {
+                                IconButton(
+                                    onClick = {
+                                        viewModel.showDialogBusinessPartner()
+                                    }
+                                ) {
+                                    Icon(Icons.Filled.Add, contentDescription = "Shopping Cart Icon")
+                                }
+                            }
+                        )
+                        OutlinedTextField(
+                            value = dataUiState.Tel,
+                            onValueChange = { viewModel.changeTel(it) },
+                            modifier = Modifier
+                                .width(300.dp)
+                                .padding(8.dp),
+                            label = { Text("Teléfono") }
+                        )
+                        ExposedDropdownMenuBox(
+                            expanded = expandedTwo,
+                            onExpandedChange = {
+                                expandedTwo = !expandedTwo
+                            }
+                        ) {
+                            TextField(
+                                value = dataUiState.Priority,
+                                onValueChange = {},
+                                readOnly = true,
+                                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedTwo) },
+                                modifier = Modifier
+                                    .menuAnchor()
+                                    .width(300.dp)
+                                    .padding(8.dp)
+                            )
+
+                            ExposedDropdownMenu(
+                                expanded = expandedTwo,
+                                onDismissRequest = { expandedTwo = false }
+                            ) {
+                                priority.forEach { item ->
+                                    DropdownMenuItem(
+                                        text = { Text(text = item) },
+                                        onClick = {
+                                            viewModel.changePriority(item)
+                                            expandedTwo = false
+                                        }
+                                    )
+                                }
+                            }
+                        }
 
                     }
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
+                }
+
+                //Contiene los filtros de búsqueda
+                Column(
+                    modifier = Modifier.width(200.dp)
+                ) {
+                    OutlinedTextField(
+                        value = dataUiState.dataFilter,
+                        onValueChange = { viewModel.changeDataFilter(it) },
+                        modifier = Modifier
+                            .width(200.dp)
+                            .padding(8.dp),
+                        label = { Text("Buscar") }
+                    )
+
+                    ElevatedButton(onClick = { viewModel.findFilter() }) {
+                        Text("Buscar")
+                    }
+
+                }
+
+                //Contiene la lista de las actividades almacenadas
+                Column {
+                    Row(
+                        modifier = Modifier.padding(5.dp)
                     ) {
-                        Text("Clientes en la tablet")
-                        LazyColumnWithCards(dataUiState.ListActivityTheTablet, viewModel)
+                        Text(text = "Total de resultados: ${dataUiState.totalSearch}")
+                    }
+
+                    Row {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text("Clientes en SAP")
+                            LazyColumnWithCards(dataUiState.ListActivityTheSAP, viewModel)
+
+                        }
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text("Clientes en la tablet")
+                            LazyColumnWithCards(dataUiState.ListActivityTheTablet, viewModel)
+                        }
+                    }
+                }
+            }
+        } else {
+            Column(
+                modifier = Modifier
+                    .padding(innerPadding)
+            ) {
+                Column(
+                    modifier = Modifier.
+                            verticalScroll(state = rememberScrollState())
+                ) {
+                    //Contiene los datos principales
+                    Column (
+                        modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
+                    ) {
+                        Column { //
+                            val coffeeDrinks =
+                                arrayOf(
+                                    "Llamada telefónica",
+                                    "Reunión",
+                                    "Tarea",
+                                    "Nota",
+                                    "Campaña",
+                                    "Otros"
+                                )
+                            var expanded by remember { mutableStateOf(false) }
+
+                            ExposedDropdownMenuBox(
+                                expanded = expanded,
+                                onExpandedChange = {
+                                    expanded = !expanded
+                                }
+                            ) {
+                                TextField(
+                                    value = dataUiState.Action,
+                                    onValueChange = {},
+                                    readOnly = true,
+                                    trailingIcon = {
+                                        ExposedDropdownMenuDefaults.TrailingIcon(
+                                            expanded = expanded
+                                        )
+                                    },
+                                    modifier = Modifier
+                                        .menuAnchor()
+                                        .width(100.dp)
+                                        .padding(8.dp)
+                                )
+
+                                ExposedDropdownMenu(
+                                    expanded = expanded,
+                                    onDismissRequest = { expanded = false }
+                                ) {
+                                    coffeeDrinks.forEach { item ->
+                                        DropdownMenuItem(
+                                            text = { Text(text = item) },
+                                            onClick = {
+                                                viewModel.changeAction(item)
+                                                expanded = false
+                                            }
+                                        )
+                                    }
+                                }
+                            }
+
+                            OutlinedTextField(
+                                value = dataUiState.nota,
+                                onValueChange = { viewModel.changenota(it) },
+                                modifier = Modifier
+                                    .width(100.dp)
+                                    .padding(8.dp),
+                                label = { Text("Nota") }
+                            )
+                            DatePicker(
+                                label = "Fecha", dataUiState.ActivityDate, modifier = Modifier
+                                    .width(100.dp)
+                                    .padding(8.dp)
+                            ) {
+                                viewModel.changeActivityDate(it)
+                            }
+                            OutlinedTextField(
+                                value = dataUiState.ActivityTime,
+                                onValueChange = { viewModel.changeActivityTime(it) },
+                                modifier = Modifier
+                                    .width(100.dp)
+                                    .padding(8.dp),
+                                label = { Text("Hora inicio") },
+                                readOnly = true,
+                                trailingIcon = {
+                                    IconButton(
+                                        onClick = {
+                                            DialogStartTime.show()
+                                        }
+                                    ) {
+                                        Icon(
+                                            Icons.Filled.AccessTime,
+                                            contentDescription = "Shopping Cart Icon"
+                                        )
+                                    }
+                                }
+                            )
+
+                            OutlinedTextField(
+                                value = dataUiState.U_SEIPEDIDOCLIENTE,
+                                onValueChange = { /*dataUiState.U_SEIPEDIDOCLIENTE*/ },
+                                modifier = Modifier
+                                    .width(100.dp)
+                                    .padding(8.dp),
+                                label = { Text("Asociar pedido de cliente") },
+                                readOnly = true,
+                                trailingIcon = {
+                                    IconButton(
+                                        onClick = {
+                                            viewModel.showDialogOrder()
+                                        }
+                                    ) {
+                                        Icon(
+                                            Icons.Filled.Add,
+                                            contentDescription = "Shopping Cart Icon"
+                                        )
+                                    }
+                                }
+                            )
+                            OutlinedTextField(
+                                value = dataUiState.ClgCode,
+                                onValueChange = { viewModel.changeClgCode(it) },
+                                modifier = Modifier
+                                    .width(100.dp)
+                                    .padding(8.dp),
+                                label = { Text("Id") },
+                                enabled = false
+                            )
+                        }
+
+                        Column {
+                            val priority = arrayOf("Bajo", "Normal", "Alto")
+                            var expandedTwo by remember { mutableStateOf(false) }
+                            OutlinedTextField(
+                                value = dataUiState.EndTime,
+                                onValueChange = { viewModel.changeEndTime(it) },
+                                modifier = Modifier
+                                    .width(100.dp)
+                                    .padding(8.dp),
+                                label = { Text("Hora fin") },
+                                readOnly = true,
+                                trailingIcon = {
+                                    IconButton(
+                                        onClick = {
+                                            DialogStartEnd.show()
+                                        }
+                                    ) {
+                                        Icon(
+                                            Icons.Filled.AccessTime,
+                                            contentDescription = "Shopping Cart Icon"
+                                        )
+                                    }
+                                }
+                            )
+                            OutlinedTextField(
+                                value = dataUiState.CardCode,
+                                onValueChange = { viewModel.changeCardCode(it) },
+                                modifier = Modifier
+                                    .width(100.dp)
+                                    .padding(8.dp),
+                                label = { Text("Código cliente") },
+                                readOnly = true,
+                                trailingIcon = {
+                                    IconButton(
+                                        onClick = {
+                                            viewModel.showDialogBusinessPartner()
+                                        }
+                                    ) {
+                                        Icon(
+                                            Icons.Filled.Add,
+                                            contentDescription = "Shopping Cart Icon"
+                                        )
+                                    }
+                                }
+                            )
+                            OutlinedTextField(
+                                value = dataUiState.Tel,
+                                onValueChange = { viewModel.changeTel(it) },
+                                modifier = Modifier
+                                    .width(100.dp)
+                                    .padding(8.dp),
+                                label = { Text("Teléfono") }
+                            )
+                            ExposedDropdownMenuBox(
+                                expanded = expandedTwo,
+                                onExpandedChange = {
+                                    expandedTwo = !expandedTwo
+                                }
+                            ) {
+                                TextField(
+                                    value = dataUiState.Priority,
+                                    onValueChange = {},
+                                    readOnly = true,
+                                    trailingIcon = {
+                                        ExposedDropdownMenuDefaults.TrailingIcon(
+                                            expanded = expandedTwo
+                                        )
+                                    },
+                                    modifier = Modifier
+                                        .menuAnchor()
+                                        .width(100.dp)
+                                        .padding(8.dp)
+                                )
+
+                                ExposedDropdownMenu(
+                                    expanded = expandedTwo,
+                                    onDismissRequest = { expandedTwo = false }
+                                ) {
+                                    priority.forEach { item ->
+                                        DropdownMenuItem(
+                                            text = { Text(text = item) },
+                                            onClick = {
+                                                viewModel.changePriority(item)
+                                                expandedTwo = false
+                                            }
+                                        )
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+
+                    //Contiene los filtros de búsqueda
+                    Column(
+                        modifier = Modifier.width(200.dp)
+                    ) {
+                        OutlinedTextField(
+                            value = dataUiState.dataFilter,
+                            onValueChange = { viewModel.changeDataFilter(it) },
+                            modifier = Modifier
+                                .width(100.dp)
+                                .padding(8.dp),
+                            label = { Text("Buscar") }
+                        )
+
+                        ElevatedButton(onClick = { viewModel.findFilter() }) {
+                            Text("Buscar")
+                        }
+
+                    }
+
+                }
+                //Contiene la lista de las actividades almacenadas
+                Column {
+                    Row(
+                        modifier = Modifier.padding(5.dp)
+                    ) {
+                        Text(text = "Total de resultados: ${dataUiState.totalSearch}")
+                    }
+
+                    Row {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text("Clientes en SAP")
+                            LazyColumnWithCards(dataUiState.ListActivityTheSAP, viewModel)
+
+                        }
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text("Clientes en la tablet")
+                            LazyColumnWithCards(dataUiState.ListActivityTheTablet, viewModel)
+                        }
                     }
                 }
             }
         }
-
-        /*Column {
-            if (dataUiState.message) {
-                Snackbar(
-                    modifier = Modifier.padding(16.dp),
-                    action = {
-                        Button(
-                            onClick = {
-                                viewModel.menssageFunFalse()
-                            }
-                        ) {
-                            Text("Cerrar")
-                        }
-                    },
-                    content = {
-                        Text(dataUiState.text)
-                    }
-                )
-            }
-        }*/
     }
+
+
 }
 
 @Composable
@@ -511,24 +762,24 @@ fun ScaffoldActivityUltimate(
                     ) {
                         TopBarButton(
                             "Activiades",
-                            { navController.navigate(route = Routes.ActivityUltimate.route)},
+                            { navController.navigate(route = Routes.ActivityUltimate.route) },
                             Icons.Default.LocalActivity
                         )
                         TopBarButton(
                             "Clientes",
-                            { navController.navigate(route = Routes.BusinessPartnerUltimate.route)},
+                            { navController.navigate(route = Routes.BusinessPartnerUltimate.route) },
                             Icons.Default.AccountBox
                         )
                         TopBarButton(
                             "Articulos",
-                            { navController.navigate(route = Routes.ItemScreen.route)},
+                            { navController.navigate(route = Routes.ItemScreen.route) },
                             Icons.Default.Inbox
-                            )
+                        )
                         TopBarButton(
                             "Pedidos",
-                            { navController.navigate(route = Routes.ScreenOrder.route)},
+                            { navController.navigate(route = Routes.ScreenOrder.route) },
                             Icons.Default.AddCard
-                            )
+                        )
                     }
                 }
             )
