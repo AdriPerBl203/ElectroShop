@@ -241,25 +241,25 @@ class SettingsViewModel : ViewModel() {
 
     private suspend fun creatingUDO() {
         val createFieldEmpleado: CreateField = CreateField(
-            "SEIempleado",
-            "SEIempleado",
+            "SEI_empleado",
+            "SEI_empleado",
             "st_None",
             "@SEICONFIG",
             "db_Numeric",
             LinkedSystemObject = "ulEmployeesInfo"
         )
         val createFieldName: CreateField =
-            CreateField("SEIname", "SEIname", "st_None", "@SEICONFIG", "db_Alpha", 50)
+            CreateField("SEI_name", "SEI_name", "st_None", "@SEICONFIG", "db_Alpha", 50)
         val createFielPassword: CreateField =
-            CreateField("SEIpassword", "SEIpassword", "st_None", "@SEICONFIG", "db_Alpha", 50)
+            CreateField("SEI_password", "SEI_password", "st_None", "@SEICONFIG", "db_Alpha", 50)
         val createFieldItems: CreateField =
-            CreateField("SEIarticulo", "SEIarticulo", "st_None", "@SEICONFIG", "db_Alpha", 1)
+            CreateField("SEI_articulo", "SEI_articulo", "st_None", "@SEICONFIG", "db_Alpha", 1)
         val createFieldActivity: CreateField =
-            CreateField("SEIactividad", "SEIactividad", "st_None", "@SEICONFIG", "db_Alpha", 1)
+            CreateField("SEI_actividad", "SEI_actividad", "st_None", "@SEICONFIG", "db_Alpha", 1)
         val createFieldSalesOrder: CreateField =
-            CreateField("SEIpedidoCl", "SEIpedidoCl", "st_None", "@SEICONFIG", "db_Alpha", 1)
+            CreateField("SEI_pedidoCl", "SEI_pedidoCl", "st_None", "@SEICONFIG", "db_Alpha", 1)
         val createFieldPruchaseOrde: CreateField =
-            CreateField("SEIpedidoCO", "SEIpedidoCO", "st_None", "@SEICONFIG", "db_Alpha", 1)
+            CreateField("SEI_pedidoCO", "SEI_pedidoCO", "st_None", "@SEICONFIG", "db_Alpha", 1)
 
         UDOobj.createField(Config.rulUse, createFieldEmpleado)
         UDOobj.createField(Config.rulUse, createFieldName)
@@ -273,23 +273,23 @@ class SettingsViewModel : ViewModel() {
         //find
         val listFind: List<UserObjectMDFindColumn> = listOf(
             UserObjectMDFindColumn("SEICONFIG", "Code", "Code", 1),
-            UserObjectMDFindColumn("SEICONFIG", "U_SEIempleado", "SEIempleado", 2),
-            UserObjectMDFindColumn("SEICONFIG", "U_SEIname", "SEIname", 3),
-            UserObjectMDFindColumn("SEICONFIG", "U_SEIpassword", "SEIpassword", 4),
-            UserObjectMDFindColumn("SEICONFIG", "U_SEIarticulo", "SEIarticulo", 5),
-            UserObjectMDFindColumn("SEICONFIG", "U_SEIactividad", "SEIactividad", 6),
-            UserObjectMDFindColumn("SEICONFIG", "U_SEIpedidoCl", "SEIpedidoCl", 7),
-            UserObjectMDFindColumn("SEICONFIG", "U_SEIpedidoCO", "SEIpedidoCO", 8)
+            UserObjectMDFindColumn("SEICONFIG", "U_SEI_empleado", "SEI_empleado", 2),
+            UserObjectMDFindColumn("SEICONFIG", "U_SEI_name", "SEI_name", 3),
+            UserObjectMDFindColumn("SEICONFIG", "U_SEI_password", "SEI_password", 4),
+            UserObjectMDFindColumn("SEICONFIG", "U_SEI_articulo", "SEI_articulo", 5),
+            UserObjectMDFindColumn("SEICONFIG", "U_SEI_actividad", "SEI_actividad", 6),
+            UserObjectMDFindColumn("SEICONFIG", "U_SEI_pedidoCl", "SEI_pedidoCl", 7),
+            UserObjectMDFindColumn("SEICONFIG", "U_SEI_pedidoCO", "SEI_pedidoCO", 8)
         )
         val listForm: List<UserObjectMDFormColumn> = listOf(
             UserObjectMDFormColumn("SEICONFIG", "tYES", "Code", "Code", 1, 0),
-            UserObjectMDFormColumn("SEICONFIG", "tYES", "U_SEIempleado", "SEIempleado", 2, 0),
-            UserObjectMDFormColumn("SEICONFIG", "tYES", "U_SEIname", "SEIname", 3, 0),
-            UserObjectMDFormColumn("SEICONFIG", "tYES", "U_SEIpassword", "SEIpassword", 4, 0),
-            UserObjectMDFormColumn("SEICONFIG", "tYES", "U_SEIarticulo", "SEIarticulo", 5, 0),
-            UserObjectMDFormColumn("SEICONFIG", "tYES", "U_SEIactividad", "SEIactividad", 6, 0),
-            UserObjectMDFormColumn("SEICONFIG", "tYES", "U_SEIpedidoCl", "SEIpedidoCl", 7, 0),
-            UserObjectMDFormColumn("SEICONFIG", "tYES", "U_SEIpedidoCO", "SEIpedidoCO", 8, 0)
+            UserObjectMDFormColumn("SEICONFIG", "tYES", "U_SEI_empleado", "SEI_empleado", 2, 0),
+            UserObjectMDFormColumn("SEICONFIG", "tYES", "U_SEI_name", "SEI_name", 3, 0),
+            UserObjectMDFormColumn("SEICONFIG", "tYES", "U_SEI_password", "SEI_password", 4, 0),
+            UserObjectMDFormColumn("SEICONFIG", "tYES", "U_SEI_articulo", "SEI_articulo", 5, 0),
+            UserObjectMDFormColumn("SEICONFIG", "tYES", "U_SEI_actividad", "SEI_actividad", 6, 0),
+            UserObjectMDFormColumn("SEICONFIG", "tYES", "U_SEI_pedidoCl", "SEI_pedidoCl", 7, 0),
+            UserObjectMDFormColumn("SEICONFIG", "tYES", "U_SEI_pedidoCO", "SEI_pedidoCO", 8, 0)
         )
         UDOobj.createUDO(
             Config.rulUse,
@@ -303,7 +303,8 @@ class SettingsViewModel : ViewModel() {
                 "tYES",
                 "tYES",
                 listFind,
-                listForm
+                listForm,
+                "tNO"
             )
         )
         Log.e("UDO", "UDO CREADO")

@@ -11,4 +11,5 @@ data class CreateUdo(
     val CanClose:String,
     val UserObjectMD_FindColumns: List<UserObjectMDFindColumn>,
     val UserObjectMD_FormColumns: List<UserObjectMDFormColumn>,
+    val EnableEnhancedForm: String
 )
