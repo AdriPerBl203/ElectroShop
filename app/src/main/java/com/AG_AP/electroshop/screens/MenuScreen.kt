@@ -261,8 +261,7 @@ fun MenuBody(
     dataUiState: MenuUiState
 ) {
     BoxWithConstraints {
-        Log.i("Pruebas", "El tamaño máximo es $maxWidth y la anchura máxima es $maxHeight")
-        if (maxWidth > 400.dp) {
+        if (maxWidth > 730.dp) {
             Box(
                 modifier = Modifier
                     .padding(innerPadding)
