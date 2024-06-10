@@ -9,6 +9,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -59,79 +60,83 @@ import com.AG_AP.electroshop.viewModels.InvoiceViewModel
 fun InvoiceUltimate(innerPadding: PaddingValues, viewModel: InvoiceViewModel) {
     val dataUiState by viewModel.uiState.collectAsState()
 
-    Row(
-        modifier = Modifier
-            .padding(innerPadding)
-    ) {
-        //Left column
-        Column (
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            OutlinedTextField(
-                value = dataUiState.CardName,
-                onValueChange = { viewModel.cardNameChange(it) },
+    BoxWithConstraints {
+        if (maxWidth > 730.dp) {
+            Row(
                 modifier = Modifier
-                    .width(300.dp)
-                    .padding(8.dp),
-                label = { Text("Búsqueda") }
-            )
-            Spacer(
-                modifier = Modifier.padding(5.dp)
-            )
-            LazyColumn {
+                    .padding(innerPadding)
+            ) {
+                //Left column
+                Column (
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    OutlinedTextField(
+                        value = dataUiState.CardName,
+                        onValueChange = { viewModel.cardNameChange(it) },
+                        modifier = Modifier
+                            .width(300.dp)
+                            .padding(8.dp),
+                        label = { Text("Búsqueda") }
+                    )
+                    Spacer(
+                        modifier = Modifier.padding(5.dp)
+                    )
+                    LazyColumn {
 
-                if(dataUiState.BusinessPartnerWithInvoiceList.size == 0){
-                    items(1) {
-                            Card(
-                                modifier = Modifier
-                                    .padding(4.dp)
-                                    .width(200.dp)
-                                    .height(150.dp)
-                            ) {
-                                Column(
-                                    horizontalAlignment = Alignment.Start,
-                                    verticalArrangement = Arrangement.SpaceBetween
+                        if(dataUiState.BusinessPartnerWithInvoiceList.size == 0){
+                            items(1) {
+                                Card(
+                                    modifier = Modifier
+                                        .padding(4.dp)
+                                        .width(200.dp)
+                                        .height(150.dp)
                                 ) {
-                                    Column {
-                                        Text(
-                                            text = "Sin datos con las búsqueda.",
-                                            modifier = Modifier.padding(start = 16.dp, 5.dp)
-                                        )
+                                    Column(
+                                        horizontalAlignment = Alignment.Start,
+                                        verticalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        Column {
+                                            Text(
+                                                text = "Sin datos con las búsqueda.",
+                                                modifier = Modifier.padding(start = 16.dp, 5.dp)
+                                            )
+                                        }
                                     }
                                 }
                             }
-                    }
-                }else{
-                    items(dataUiState.BusinessPartnerWithInvoiceList) { item ->
-                        if (item != null) {
-                            Card(
-                                modifier = Modifier
-                                    .padding(4.dp)
-                                    .width(200.dp)
-                                    .height(150.dp)
-                            ) {
-                                Column(
-                                    horizontalAlignment = Alignment.Start,
-                                    verticalArrangement = Arrangement.SpaceBetween
-                                ) {
-                                    Column {
-                                        Text(
-                                            text = item.CardCode,
-                                            modifier = Modifier.padding(start = 16.dp, 5.dp)
-                                        )
-                                        Text(
-                                            text = item.DocEntry.toString(),
-                                            modifier = Modifier.padding(start = 16.dp, 5.dp)
-                                        )
-                                        IconButton(onClick = {
-                                            viewModel.replaceData(item)
-                                        }) {
-                                            Icon(
-                                                imageVector = Icons.Filled.Add,
-                                                contentDescription = "Settings",
-                                                tint = MaterialTheme.colorScheme.primaryContainer
-                                            )
+                        }else{
+                            items(dataUiState.BusinessPartnerWithInvoiceList) { item ->
+                                if (item != null) {
+                                    Card(
+                                        modifier = Modifier
+                                            .padding(4.dp)
+                                            .width(200.dp)
+                                            .height(150.dp)
+                                    ) {
+                                        Column(
+                                            horizontalAlignment = Alignment.Start,
+                                            verticalArrangement = Arrangement.SpaceBetween
+                                        ) {
+                                            Column {
+                                                Text(
+                                                    text = item.CardCode,
+                                                    modifier = Modifier.padding(start = 16.dp, 5.dp)
+                                                )
+                                                Text(
+                                                    text = item.DocEntry.toString(),
+                                                    modifier = Modifier.padding(start = 16.dp, 5.dp)
+                                                )
+                                                IconButton(onClick = {
+                                                    viewModel.replaceData(item)
+                                                }) {
+                                                    Icon(
+                                                        imageVector = Icons.Filled.Add,
+                                                        contentDescription = "Settings",
+                                                        tint = MaterialTheme.colorScheme.primaryContainer
+                                                    )
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -139,55 +144,186 @@ fun InvoiceUltimate(innerPadding: PaddingValues, viewModel: InvoiceViewModel) {
                         }
                     }
                 }
+
+                //Right column
+                LazyColumn(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    if (dataUiState.ActualPdf == null) {
+                        item {
+                            Text(
+                                text = "No hay ningún pdf cargado",
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    } else {
+                        item {
+                            //TODO cargar pdf
+                            dataUiState.ActualPdf!!.openPage(0).use { page ->
+                                val bitmap = Bitmap.createBitmap(2800, 4000, Bitmap.Config.ARGB_8888)
+                                page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+                                Image(
+                                    bitmap = bitmap.asImageBitmap(),
+                                    contentDescription = "PDF Page",
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .background(color = Color.White)
+                                )
+                            }
+                        }
+
+                        item {
+                            Button(onClick = {
+                                viewModel.savePDF()
+                                Toast.makeText(
+                                    ObjectContext.context,
+                                    "Pdf descargado en \"Documentos\"",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }) {
+                                Text(
+                                    text = "Descargar pdf"
+                                )
+                            }
+                            //Mostrar toast
+                        }
+                    }
+                }
             }
-        }
-
-        //Right column
-        LazyColumn(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            if (dataUiState.ActualPdf == null) {
-                item {
-                    Text(
-                        text = "No hay ningún pdf cargado",
-                        textAlign = TextAlign.Center
+        } else {
+            Column (
+                modifier = Modifier
+                    .padding(innerPadding)
+            ) {
+                //Left column
+                Column (
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    OutlinedTextField(
+                        value = dataUiState.CardName,
+                        onValueChange = { viewModel.cardNameChange(it) },
+                        modifier = Modifier
+                            .width(300.dp)
+                            .padding(8.dp),
+                        label = { Text("Búsqueda") }
                     )
-                }
-            } else {
-                item {
-                    //TODO cargar pdf
-                    dataUiState.ActualPdf!!.openPage(0).use { page ->
-                        val bitmap = Bitmap.createBitmap(2800, 4000, Bitmap.Config.ARGB_8888)
-                        page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
-                        Image(
-                            bitmap = bitmap.asImageBitmap(),
-                            contentDescription = "PDF Page",
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(color = Color.White)
-                        )
+                    Spacer(
+                        modifier = Modifier.padding(5.dp)
+                    )
+                    LazyColumn {
+
+                        if(dataUiState.BusinessPartnerWithInvoiceList.size == 0){
+                            items(1) {
+                                Card(
+                                    modifier = Modifier
+                                        .padding(4.dp)
+                                        .width(200.dp)
+                                        .height(150.dp)
+                                ) {
+                                    Column(
+                                        horizontalAlignment = Alignment.Start,
+                                        verticalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        Column {
+                                            Text(
+                                                text = "Sin datos con las búsqueda.",
+                                                modifier = Modifier.padding(start = 16.dp, 5.dp)
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        }else{
+                            items(dataUiState.BusinessPartnerWithInvoiceList) { item ->
+                                if (item != null) {
+                                    Card(
+                                        modifier = Modifier
+                                            .padding(4.dp)
+                                            .width(200.dp)
+                                            .height(150.dp)
+                                    ) {
+                                        Column(
+                                            horizontalAlignment = Alignment.Start,
+                                            verticalArrangement = Arrangement.SpaceBetween
+                                        ) {
+                                            Column {
+                                                Text(
+                                                    text = item.CardCode,
+                                                    modifier = Modifier.padding(start = 16.dp, 5.dp)
+                                                )
+                                                Text(
+                                                    text = item.DocEntry.toString(),
+                                                    modifier = Modifier.padding(start = 16.dp, 5.dp)
+                                                )
+                                                IconButton(onClick = {
+                                                    viewModel.replaceData(item)
+                                                }) {
+                                                    Icon(
+                                                        imageVector = Icons.Filled.Add,
+                                                        contentDescription = "Settings",
+                                                        tint = MaterialTheme.colorScheme.primaryContainer
+                                                    )
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
 
-                item {
-                    Button(onClick = {
-                        viewModel.savePDF()
-                        Toast.makeText(
-                            ObjectContext.context,
-                            "Pdf descargado en \"Documentos\"",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }) {
-                        Text(
-                            text = "Descargar pdf"
-                        )
+                //Right column
+                LazyColumn(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    if (dataUiState.ActualPdf == null) {
+                        item {
+                            Text(
+                                text = "No hay ningún pdf cargado",
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    } else {
+                        item {
+                            //TODO cargar pdf
+                            dataUiState.ActualPdf!!.openPage(0).use { page ->
+                                val bitmap = Bitmap.createBitmap(2800, 4000, Bitmap.Config.ARGB_8888)
+                                page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
+                                Image(
+                                    bitmap = bitmap.asImageBitmap(),
+                                    contentDescription = "PDF Page",
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .background(color = Color.White)
+                                )
+                            }
+                        }
+
+                        item {
+                            Button(onClick = {
+                                viewModel.savePDF()
+                                Toast.makeText(
+                                    ObjectContext.context,
+                                    "Pdf descargado en \"Documentos\"",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }) {
+                                Text(
+                                    text = "Descargar pdf"
+                                )
+                            }
+                            //Mostrar toast
+                        }
                     }
-                    //Mostrar toast
                 }
             }
         }
     }
+
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
