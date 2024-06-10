@@ -2,6 +2,7 @@ package com.AG_AP.electroshop.screens.BusinessPartners
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -81,7 +82,7 @@ fun BusinessPartnerUltimate(innerPadding: PaddingValues, viewModel: BusinessPart
             viewModel.refresh()
         }
 
-        if(dataUiState.showDialogFilter){
+        if (dataUiState.showDialogFilter) {
             Dialog(onDismissRequest = { viewModel.closeDialogfilterItem() }) {
                 // Draw a rectangle shape with rounded corners inside the dialog
                 Card(
@@ -99,9 +100,9 @@ fun BusinessPartnerUltimate(innerPadding: PaddingValues, viewModel: BusinessPart
                     ) {
                         for (item in dataUiState.ItemBPList) {
                             ListItem(
-                                headlineContent = {Text(text = item) },
+                                headlineContent = { Text(text = item) },
                                 trailingContent = {
-                                    IconButton(onClick = {/*TODO*/}) {
+                                    IconButton(onClick = {/*TODO*/ }) {
                                         Icon(
                                             imageVector = Icons.Filled.Camera,
                                             contentDescription = "Settings",
@@ -117,132 +118,272 @@ fun BusinessPartnerUltimate(innerPadding: PaddingValues, viewModel: BusinessPart
             }
         }
 
-        Row(
-        ) {
-            Column {//
-
-                val coffeeDrinks = arrayOf("Cliente", "Proveedor", "Lead")
-                var expanded by remember { mutableStateOf(false) }
-                ExposedDropdownMenuBox(
-                    expanded = expanded,
-                    onExpandedChange = {
-                        expanded = !expanded
-                    }
+        BoxWithConstraints {
+            if (maxWidth > 360.dp) {
+                Row(
                 ) {
-                    TextField(
-                        value = dataUiState.CardType,
-                        onValueChange = {},
-                        readOnly = true,
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                        modifier = Modifier
-                            .menuAnchor()
-                            .width(300.dp)
-                            .padding(8.dp)
-                    )
+                    Column {//
 
-                    ExposedDropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false }
-                    ) {
-                        coffeeDrinks.forEach { item ->
-                            DropdownMenuItem(
-                                text = { Text(text = item) },
-                                onClick = {
-                                    viewModel.changeCardType(item)
-                                    expanded = false
-                                }
+                        val coffeeDrinks = arrayOf("Cliente", "Proveedor", "Lead")
+                        var expanded by remember { mutableStateOf(false) }
+                        ExposedDropdownMenuBox(
+                            expanded = expanded,
+                            onExpandedChange = {
+                                expanded = !expanded
+                            }
+                        ) {
+                            TextField(
+                                value = dataUiState.CardType,
+                                onValueChange = {},
+                                readOnly = true,
+                                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                                modifier = Modifier
+                                    .menuAnchor()
+                                    .width(300.dp)
+                                    .padding(8.dp)
                             )
+
+                            ExposedDropdownMenu(
+                                expanded = expanded,
+                                onDismissRequest = { expanded = false }
+                            ) {
+                                coffeeDrinks.forEach { item ->
+                                    DropdownMenuItem(
+                                        text = { Text(text = item) },
+                                        onClick = {
+                                            viewModel.changeCardType(item)
+                                            expanded = false
+                                        }
+                                    )
+                                }
+                            }
+                        }
+
+                        OutlinedTextField(
+                            value = dataUiState.CardName,
+                            onValueChange = { viewModel.changeCardName(it) },
+                            modifier = Modifier
+                                .width(300.dp)
+                                .padding(8.dp),
+                            label = { Text("Nombre") }
+                        )
+                        OutlinedTextField(
+                            value = dataUiState.Cellular,
+                            onValueChange = { viewModel.changeCellular(it) },
+                            modifier = Modifier
+                                .width(300.dp)
+                                .padding(8.dp),
+                            label = { Text("Teléfono móvil") },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                        )
+
+                        OutlinedTextField(
+                            value = dataUiState.EmailAddress,
+                            onValueChange = { viewModel.changeEmailAddress(it) },
+                            modifier = Modifier
+                                .width(300.dp)
+                                .padding(8.dp),
+                            label = { Text("Email") }
+                        )
+                    }  //
+
+                    Row(
+                        modifier = Modifier.width(500.dp)
+                    ) {
+                        OutlinedTextField(//
+                            value = dataUiState.FilterByName,
+                            onValueChange = { viewModel.changeFilter(it) },
+                            modifier = Modifier
+                                .width(300.dp)
+                                .padding(8.dp),
+                            label = { Text("Buscar por nombre") }
+                        ) //
+
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+
+                            ElevatedButton(onClick = { viewModel.refresh() }) {
+                                Text("Buscar")
+                            }
+
+                            ElevatedButton(onClick = { /*TODO*/ }) {
+                                Text("Opciones avanzadas")
+                            }
+
+                            ElevatedButton(onClick = { viewModel.showDialogfilterItem() }) {
+                                Text("Últimos articulos")
+                            }
+                        }
+                    }
+
+                    Row(
+                        modifier = Modifier.fillMaxHeight(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        val listaUno = dataUiState.BPSapList
+                        val listaDos = dataUiState.BPDeviceList
+                        Box(
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text("Clientes en SAP")
+                                LazyColumnWithCards(listaUno, viewModel)
+                            }
+                        }
+                        Box(
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text("Clientes en la tablet")
+                                LazyColumnWithCards(listaDos, viewModel)
+                            }
                         }
                     }
                 }
-
-                OutlinedTextField(
-                    value = dataUiState.CardName,
-                    onValueChange = { viewModel.changeCardName(it) },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    label = { Text("Nombre") }
-                )
-                OutlinedTextField(
-                    value = dataUiState.Cellular,
-                    onValueChange = { viewModel.changeCellular(it) },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    label = { Text("Teléfono móvil") },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-                )
-
-                OutlinedTextField(
-                    value = dataUiState.EmailAddress,
-                    onValueChange = { viewModel.changeEmailAddress(it) },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    label = { Text("Email") }
-                )
-            }  //
-            Row(
-                modifier = Modifier.width(500.dp)
-            ) {
-                OutlinedTextField(//
-                    value = dataUiState.FilterByName,
-                    onValueChange = { viewModel.changeFilter(it) },
-                    modifier = Modifier
-                        .width(300.dp)
-                        .padding(8.dp),
-                    label = { Text("Buscar por nombre") }
-                ) //
-
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-
-                    ElevatedButton(onClick = { viewModel.refresh() }) {
-                        Text("Buscar")
-                    }
-
-                    ElevatedButton(onClick = { /*TODO*/ }) {
-                        Text("Opciones avanzadas")
-                    }
-
-                    ElevatedButton(onClick = { viewModel.showDialogfilterItem()}) {
-                        Text("Últimos articulos")
-                    }
-                }
-            }
-
-            Row(
-                modifier = Modifier.fillMaxHeight(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                val listaUno = dataUiState.BPSapList
-                val listaDos = dataUiState.BPDeviceList
-                Box(
-                    contentAlignment = Alignment.Center
-                ) {
+            } else {
+                Column {
                     Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
+                        modifier = Modifier.verticalScroll(state = rememberScrollState())
                     ) {
-                        Text("Clientes en SAP")
-                        LazyColumnWithCards(listaUno, viewModel)
+                        Column {//
+
+                            val coffeeDrinks = arrayOf("Cliente", "Proveedor", "Lead")
+                            var expanded by remember { mutableStateOf(false) }
+                            ExposedDropdownMenuBox(
+                                expanded = expanded,
+                                onExpandedChange = {
+                                    expanded = !expanded
+                                }
+                            ) {
+                                TextField(
+                                    value = dataUiState.CardType,
+                                    onValueChange = {},
+                                    readOnly = true,
+                                    trailingIcon = {
+                                        ExposedDropdownMenuDefaults.TrailingIcon(
+                                            expanded = expanded
+                                        )
+                                    },
+                                    modifier = Modifier
+                                        .menuAnchor()
+                                        .width(100.dp)
+                                        .padding(8.dp)
+                                )
+
+                                ExposedDropdownMenu(
+                                    expanded = expanded,
+                                    onDismissRequest = { expanded = false }
+                                ) {
+                                    coffeeDrinks.forEach { item ->
+                                        DropdownMenuItem(
+                                            text = { Text(text = item) },
+                                            onClick = {
+                                                viewModel.changeCardType(item)
+                                                expanded = false
+                                            }
+                                        )
+                                    }
+                                }
+                            }
+
+                            OutlinedTextField(
+                                value = dataUiState.CardName,
+                                onValueChange = { viewModel.changeCardName(it) },
+                                modifier = Modifier
+                                    .width(100.dp)
+                                    .padding(8.dp),
+                                label = { Text("Nombre") }
+                            )
+                            OutlinedTextField(
+                                value = dataUiState.Cellular,
+                                onValueChange = { viewModel.changeCellular(it) },
+                                modifier = Modifier
+                                    .width(100.dp)
+                                    .padding(8.dp),
+                                label = { Text("Teléfono móvil") },
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                            )
+
+                            OutlinedTextField(
+                                value = dataUiState.EmailAddress,
+                                onValueChange = { viewModel.changeEmailAddress(it) },
+                                modifier = Modifier
+                                    .width(100.dp)
+                                    .padding(8.dp),
+                                label = { Text("Email") }
+                            )
+                        }  //
+
+                        Row(
+                            modifier = Modifier.width(300.dp)
+                        ) {
+                            OutlinedTextField(//
+                                value = dataUiState.FilterByName,
+                                onValueChange = { viewModel.changeFilter(it) },
+                                modifier = Modifier
+                                    .width(100.dp)
+                                    .padding(8.dp),
+                                label = { Text("Buscar por nombre") }
+                            ) //
+
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+
+                                ElevatedButton(onClick = { viewModel.refresh() }) {
+                                    Text("Buscar")
+                                }
+
+                                ElevatedButton(onClick = { /*TODO*/ }) {
+                                    Text("Opciones avanzadas")
+                                }
+
+                                ElevatedButton(onClick = { viewModel.showDialogfilterItem() }) {
+                                    Text("Últimos articulos")
+                                }
+                            }
+                        }
+
                     }
-                }
-                Box(
-                    contentAlignment = Alignment.Center
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
+                    Row(
+                        modifier = Modifier.fillMaxHeight(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text("Clientes en la tablet")
-                        LazyColumnWithCards(listaDos, viewModel)
+                        val listaUno = dataUiState.BPSapList
+                        val listaDos = dataUiState.BPDeviceList
+                        Box(
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text("Clientes en SAP")
+                                LazyColumnWithCards(listaUno, viewModel)
+                            }
+                        }
+                        Box(
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text("Clientes en la tablet")
+                                LazyColumnWithCards(listaDos, viewModel)
+                            }
+                        }
                     }
                 }
             }
         }
-        /*Column {
+
+        /* Column {
             if (dataUiState.message) {
                 Snackbar(
                     modifier = Modifier.padding(16.dp),
@@ -362,22 +503,22 @@ fun ScaffoldBusinessPartnerUltimate(
                     ) {
                         TopBarButton(
                             "Activiades",
-                            { navController.navigate(route = Routes.ActivityUltimate.route)},
+                            { navController.navigate(route = Routes.ActivityUltimate.route) },
                             Icons.Default.LocalActivity
                         )
                         TopBarButton(
                             "Clientes",
-                            { navController.navigate(route = Routes.BusinessPartnerUltimate.route)},
+                            { navController.navigate(route = Routes.BusinessPartnerUltimate.route) },
                             Icons.Default.AccountBox
                         )
                         TopBarButton(
                             "Articulos",
-                            { navController.navigate(route = Routes.ItemScreen.route)},
+                            { navController.navigate(route = Routes.ItemScreen.route) },
                             Icons.Default.Inbox
                         )
                         TopBarButton(
                             "Pedidos",
-                            { navController.navigate(route = Routes.ScreenOrder.route)},
+                            { navController.navigate(route = Routes.ScreenOrder.route) },
                             Icons.Default.AddCard
                         )
                     }
