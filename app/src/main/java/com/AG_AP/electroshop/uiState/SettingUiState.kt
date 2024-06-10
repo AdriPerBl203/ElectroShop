@@ -39,6 +39,7 @@ data class SettingUiState(
     val checkBoxActivity:Boolean = true,
     val checkBoxClients:Boolean = true,
     var checkInvoices:Boolean = false,
+    val codePDF:String = "",
 )
 /*
 *

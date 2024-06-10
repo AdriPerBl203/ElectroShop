@@ -88,6 +88,14 @@ class SettingsViewModel : ViewModel() {
         }
     }
 
+    fun changeCodePDF(it: String) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                codePDF = it
+            )
+        }
+    }
+
     fun changeUrlExt(it: String) {
         _uiState.update { currentState ->
             currentState.copy(
@@ -134,10 +142,22 @@ class SettingsViewModel : ViewModel() {
         var login = _uiState.value.login
         var password = _uiState.value.password
         val dataBase = _uiState.value.dataBase
+        val codePDF = _uiState.value.codePDF
         var textShow = ""
 
-        if (urlInt.isEmpty() || urlExt.isEmpty() || login.isEmpty() || password.isEmpty() || dataBase.isEmpty()) {
-            textShow = "Todos los campos deben de estar rellenos."
+        if (urlInt.isEmpty() || urlExt.isEmpty()) {
+            textShow = "URL vacía."
+            _uiState.update { currentState ->
+                currentState.copy(
+                    message = true,
+                    text = textShow
+                )
+            }
+            return;
+        }
+
+        if (login.isEmpty() || password.isEmpty() || dataBase.isEmpty() || codePDF.isEmpty()) {
+            textShow = "Campos de configuración no rellenos"
             _uiState.update { currentState ->
                 currentState.copy(
                     message = true,
@@ -178,6 +198,7 @@ class SettingsViewModel : ViewModel() {
             var text: String = ""
             Log.e("SettingScreen", "Conexión realizada")
             //LoginObj.logout(urlInt)
+            Config.codePDF = codePDF
             if (data || dataUrlExt) {
                 text = "Test realizado con éxito."
                 if (data) {

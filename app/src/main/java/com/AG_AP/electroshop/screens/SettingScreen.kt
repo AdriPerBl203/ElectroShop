@@ -20,6 +20,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.ContentPasteSearch
+import androidx.compose.material.icons.filled.DocumentScanner
 import androidx.compose.material.icons.filled.KeyboardReturn
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Save
@@ -100,6 +101,17 @@ fun SettingScreen(
                     onValueChange = { viewModel.changeUrlInt(it) },
                     label = { Text("URL interna") },
                     trailingIcon = { Icon(imageVector = dataUiState.iconInt, contentDescription = "emailIcon") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp)
+                )
+
+                OutlinedTextField(
+                    //TODO
+                    value = dataUiState.codePDF,
+                    onValueChange = { viewModel.changeCodePDF(it) },
+                    label = { Text("Código PDF.") },
+                    trailingIcon = { Icon(imageVector = Icons.Default.DocumentScanner, contentDescription = "emailIcon") },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 16.dp)

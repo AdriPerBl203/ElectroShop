@@ -9,6 +9,7 @@ object Config {
     var login:String =""
     var password:String =""
     var dataBase:String =""
+    var codePDF:String =""
 
     fun initConfig(context: Context){
         val gson = Gson()
