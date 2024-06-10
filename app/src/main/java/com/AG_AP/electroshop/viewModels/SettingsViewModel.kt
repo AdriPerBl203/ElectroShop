@@ -240,7 +240,6 @@ class SettingsViewModel : ViewModel() {
 
 
     private suspend fun creatingUDO() {
-        //TODO("Cambiar los campos.")
         val createFieldEmpleado: CreateField = CreateField(
             "SEIempleado",
             "SEIempleado",
