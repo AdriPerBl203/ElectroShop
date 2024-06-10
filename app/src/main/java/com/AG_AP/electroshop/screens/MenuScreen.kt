@@ -1,9 +1,11 @@
 package com.AG_AP.electroshop.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -14,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -257,115 +260,85 @@ fun MenuBody(
     navController: NavHostController,
     dataUiState: MenuUiState
 ) {
-    Box(
-        modifier = Modifier
-            .padding(innerPadding)
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(25.dp)
-                .background(
-                    MaterialTheme.colorScheme.background,
-                    shape = RoundedCornerShape(20.dp)
-                ),
-            contentAlignment = Alignment.Center
-        ) {
-            LazyRow(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically,
+    BoxWithConstraints {
+        Log.i("Pruebas", "El tamaño máximo es $maxWidth y la anchura máxima es $maxHeight")
+        if (maxWidth > 400.dp) {
+            Box(
                 modifier = Modifier
-                    .padding(5.dp)
-                    .background(
-                        MaterialTheme.colorScheme.primaryContainer,
-                        shape = RoundedCornerShape(20.dp)
-                    )
+                    .padding(innerPadding)
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background)
             ) {
-                item {
-                    Row (
-                        modifier = Modifier.padding(10.dp)
-                    ) {
-                        if (dataUiState.actividad == "S") {
-                            Card(
-                                onClick = { navController.navigate(route = Routes.ActivityUltimate.route) }) {
-                                Column(
-                                    verticalArrangement = Arrangement.Top,
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                    modifier = Modifier
-                                        .size(height = 280.dp, width = 320.dp)
-                                ) {
-                                    Box (
-                                        modifier = Modifier.padding(bottom = 40.dp)
-                                    ) {
-                                        Image(
-                                            painter = painterResource(R.drawable.actividades),
-                                            contentDescription = "Actividades",
-                                            contentScale = ContentScale.Crop,
-                                            modifier = Modifier
-                                                .clip(RoundedCornerShape(16.dp))
-                                                .aspectRatio(16f / 9f)
-                                        )
-                                    }
-                                    Text(
-                                        "Actividades",
-                                        color = MaterialTheme.colorScheme.primary,
-                                        modifier = Modifier.padding(5.dp)
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
-                item {
-                    Card(
-                        onClick = { navController.navigate(route = Routes.BusinessPartnerUltimate.route) }) {
-                        Column(
-                            verticalArrangement = Arrangement.Top,
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier
-                                .size(height = 280.dp, width = 320.dp)
-                        ) {
-                            Box (
-                                modifier = Modifier.padding(bottom = 40.dp)
-                            ) {
-                                Image(
-                                    painter = painterResource(R.drawable.clientes),
-                                    contentDescription = "Clientes",
-                                    contentScale = ContentScale.Crop,
-                                    modifier = Modifier
-                                        .clip(RoundedCornerShape(16.dp))
-                                        .aspectRatio(16f / 9f)
-                                )
-                            }
-                            Text(
-                                "Clientes",
-                                color = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.padding(5.dp)
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(25.dp)
+                        .background(
+                            MaterialTheme.colorScheme.background,
+                            shape = RoundedCornerShape(20.dp)
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    LazyRow(
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .padding(5.dp)
+                            .background(
+                                MaterialTheme.colorScheme.primaryContainer,
+                                shape = RoundedCornerShape(20.dp)
                             )
-                        }
-                    }
-                }
-                item {
-                    Row (
-                        modifier = Modifier.padding(10.dp)
                     ) {
-                        if (dataUiState.pedidoCL == "S") {
+                        item {
+                            Row(
+                                modifier = Modifier.padding(10.dp)
+                            ) {
+                                if (dataUiState.actividad == "S") {
+                                    Card(
+                                        onClick = { navController.navigate(route = Routes.ActivityUltimate.route) }) {
+                                        Column(
+                                            verticalArrangement = Arrangement.Top,
+                                            horizontalAlignment = Alignment.CenterHorizontally,
+                                            modifier = Modifier
+                                                .size(height = 280.dp, width = 320.dp)
+                                        ) {
+                                            Box(
+                                                modifier = Modifier.padding(bottom = 40.dp)
+                                            ) {
+                                                Image(
+                                                    painter = painterResource(R.drawable.actividades),
+                                                    contentDescription = "Actividades",
+                                                    contentScale = ContentScale.Crop,
+                                                    modifier = Modifier
+                                                        .clip(RoundedCornerShape(16.dp))
+                                                        .aspectRatio(16f / 9f)
+                                                )
+                                            }
+                                            Text(
+                                                "Actividades",
+                                                color = MaterialTheme.colorScheme.primary,
+                                                modifier = Modifier.padding(5.dp)
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        item {
                             Card(
-                                onClick = { navController.navigate(route = Routes.ScreenOrder.route) }) {
+                                onClick = { navController.navigate(route = Routes.BusinessPartnerUltimate.route) }) {
                                 Column(
                                     verticalArrangement = Arrangement.Top,
                                     horizontalAlignment = Alignment.CenterHorizontally,
                                     modifier = Modifier
                                         .size(height = 280.dp, width = 320.dp)
                                 ) {
-                                    Box (
+                                    Box(
                                         modifier = Modifier.padding(bottom = 40.dp)
                                     ) {
                                         Image(
-                                            painter = painterResource(R.drawable.pedidocliente),
-                                            contentDescription = "Pedido de cliente",
+                                            painter = painterResource(R.drawable.clientes),
+                                            contentDescription = "Clientes",
                                             contentScale = ContentScale.Crop,
                                             modifier = Modifier
                                                 .clip(RoundedCornerShape(16.dp))
@@ -373,84 +346,316 @@ fun MenuBody(
                                         )
                                     }
                                     Text(
-                                        "Pedido de cliente",
+                                        "Clientes",
                                         color = MaterialTheme.colorScheme.primary,
                                         modifier = Modifier.padding(5.dp)
                                     )
                                 }
                             }
                         }
-                    }
-                }
-                item {
-                    Row (
-                        modifier = Modifier.padding(10.dp)
-                    ) {
-                        if (dataUiState.articulo == "S") {
-                            Card(
-                                onClick = { navController.navigate(route = Routes.ItemScreen.route) }) {
-                                Column(
-                                    verticalArrangement = Arrangement.Top,
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                    modifier = Modifier
-                                        .size(height = 280.dp, width = 320.dp)
-                                ) {
-                                    Box (
-                                        modifier = Modifier.padding(bottom = 40.dp)
-                                    ) {
-                                        Image(
-                                            painter = painterResource(R.drawable.articulos),
-                                            contentDescription = "Articulos",
-                                            contentScale = ContentScale.Crop,
+                        item {
+                            Row(
+                                modifier = Modifier.padding(10.dp)
+                            ) {
+                                if (dataUiState.pedidoCL == "S") {
+                                    Card(
+                                        onClick = { navController.navigate(route = Routes.ScreenOrder.route) }) {
+                                        Column(
+                                            verticalArrangement = Arrangement.Top,
+                                            horizontalAlignment = Alignment.CenterHorizontally,
                                             modifier = Modifier
-                                                .clip(RoundedCornerShape(16.dp))
-                                                .aspectRatio(16f / 9f)
-                                        )
+                                                .size(height = 280.dp, width = 320.dp)
+                                        ) {
+                                            Box(
+                                                modifier = Modifier.padding(bottom = 40.dp)
+                                            ) {
+                                                Image(
+                                                    painter = painterResource(R.drawable.pedidocliente),
+                                                    contentDescription = "Pedido de cliente",
+                                                    contentScale = ContentScale.Crop,
+                                                    modifier = Modifier
+                                                        .clip(RoundedCornerShape(16.dp))
+                                                        .aspectRatio(16f / 9f)
+                                                )
+                                            }
+                                            Text(
+                                                "Pedido de cliente",
+                                                color = MaterialTheme.colorScheme.primary,
+                                                modifier = Modifier.padding(5.dp)
+                                            )
+                                        }
                                     }
-                                    Text(
-                                        "Articulos",
-                                        color = MaterialTheme.colorScheme.primary,
-                                        modifier = Modifier.padding(5.dp)
-                                    )
                                 }
                             }
                         }
-                    }
-                }
+                        item {
+                            Row(
+                                modifier = Modifier.padding(10.dp)
+                            ) {
+                                if (dataUiState.articulo == "S") {
+                                    Card(
+                                        onClick = { navController.navigate(route = Routes.ItemScreen.route) }) {
+                                        Column(
+                                            verticalArrangement = Arrangement.Top,
+                                            horizontalAlignment = Alignment.CenterHorizontally,
+                                            modifier = Modifier
+                                                .size(height = 280.dp, width = 320.dp)
+                                        ) {
+                                            Box(
+                                                modifier = Modifier.padding(bottom = 40.dp)
+                                            ) {
+                                                Image(
+                                                    painter = painterResource(R.drawable.articulos),
+                                                    contentDescription = "Articulos",
+                                                    contentScale = ContentScale.Crop,
+                                                    modifier = Modifier
+                                                        .clip(RoundedCornerShape(16.dp))
+                                                        .aspectRatio(16f / 9f)
+                                                )
+                                            }
+                                            Text(
+                                                "Articulos",
+                                                color = MaterialTheme.colorScheme.primary,
+                                                modifier = Modifier.padding(5.dp)
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        }
 
-                item {
-                    Card(
-                        onClick = { navController.navigate(route = Routes.InvoiceScreen.route) }) {
-                        Column(
-                            verticalArrangement = Arrangement.Top,
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier
-                                .size(height = 280.dp, width = 320.dp)
-                        ) {
-                            Box (
-                                modifier = Modifier.padding(bottom = 40.dp)
-                            ) {
-                                Image(
-                                    painter = painterResource(R.drawable.actividades), //TODO cambiar
-                                    contentDescription = "Facturas",
-                                    contentScale = ContentScale.Crop,
+                        item {
+                            Card(
+                                onClick = { navController.navigate(route = Routes.InvoiceScreen.route) }) {
+                                Column(
+                                    verticalArrangement = Arrangement.Top,
+                                    horizontalAlignment = Alignment.CenterHorizontally,
                                     modifier = Modifier
-                                        .clip(RoundedCornerShape(16.dp))
-                                        .aspectRatio(16f / 9f)
-                                )
+                                        .size(height = 280.dp, width = 320.dp)
+                                ) {
+                                    Box(
+                                        modifier = Modifier.padding(bottom = 40.dp)
+                                    ) {
+                                        Image(
+                                            painter = painterResource(R.drawable.actividades), //TODO cambiar
+                                            contentDescription = "Facturas",
+                                            contentScale = ContentScale.Crop,
+                                            modifier = Modifier
+                                                .clip(RoundedCornerShape(16.dp))
+                                                .aspectRatio(16f / 9f)
+                                        )
+                                    }
+                                    Text(
+                                        "Facturas",
+                                        color = MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier.padding(5.dp)
+                                    )
+                                }
                             }
-                            Text(
-                                "Facturas",
-                                color = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.padding(5.dp)
+                        }
+                    }
+                }
+            }
+        } else {
+            Box(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(25.dp)
+                        .background(
+                            MaterialTheme.colorScheme.background,
+                            shape = RoundedCornerShape(20.dp)
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    LazyColumn(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
+                        modifier = Modifier
+                            .padding(5.dp)
+                            .background(
+                                MaterialTheme.colorScheme.primaryContainer,
+                                shape = RoundedCornerShape(20.dp)
                             )
+                    ) {
+                        item {
+                            Row(
+                                modifier = Modifier.padding(10.dp)
+                            ) {
+                                if (dataUiState.actividad == "S") {
+                                    Card(
+                                        onClick = { navController.navigate(route = Routes.ActivityUltimate.route) }) {
+                                        Column(
+                                            verticalArrangement = Arrangement.Top,
+                                            horizontalAlignment = Alignment.CenterHorizontally,
+                                            modifier = Modifier
+                                                .size(height = 280.dp, width = 320.dp)
+                                        ) {
+                                            Box(
+                                                modifier = Modifier.padding(bottom = 40.dp)
+                                            ) {
+                                                Image(
+                                                    painter = painterResource(R.drawable.actividades),
+                                                    contentDescription = "Actividades",
+                                                    contentScale = ContentScale.Crop,
+                                                    modifier = Modifier
+                                                        .clip(RoundedCornerShape(16.dp))
+                                                        .aspectRatio(16f / 9f)
+                                                )
+                                            }
+                                            Text(
+                                                "Actividades",
+                                                color = MaterialTheme.colorScheme.primary,
+                                                modifier = Modifier.padding(5.dp)
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        item {
+                            Card(
+                                onClick = { navController.navigate(route = Routes.BusinessPartnerUltimate.route) }) {
+                                Column(
+                                    verticalArrangement = Arrangement.Top,
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    modifier = Modifier
+                                        .size(height = 280.dp, width = 320.dp)
+                                ) {
+                                    Box(
+                                        modifier = Modifier.padding(bottom = 40.dp)
+                                    ) {
+                                        Image(
+                                            painter = painterResource(R.drawable.clientes),
+                                            contentDescription = "Clientes",
+                                            contentScale = ContentScale.Crop,
+                                            modifier = Modifier
+                                                .clip(RoundedCornerShape(16.dp))
+                                                .aspectRatio(16f / 9f)
+                                        )
+                                    }
+                                    Text(
+                                        "Clientes",
+                                        color = MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier.padding(5.dp)
+                                    )
+                                }
+                            }
+                        }
+                        item {
+                            Row(
+                                modifier = Modifier.padding(10.dp)
+                            ) {
+                                if (dataUiState.pedidoCL == "S") {
+                                    Card(
+                                        onClick = { navController.navigate(route = Routes.ScreenOrder.route) }) {
+                                        Column(
+                                            verticalArrangement = Arrangement.Top,
+                                            horizontalAlignment = Alignment.CenterHorizontally,
+                                            modifier = Modifier
+                                                .size(height = 280.dp, width = 320.dp)
+                                        ) {
+                                            Box(
+                                                modifier = Modifier.padding(bottom = 40.dp)
+                                            ) {
+                                                Image(
+                                                    painter = painterResource(R.drawable.pedidocliente),
+                                                    contentDescription = "Pedido de cliente",
+                                                    contentScale = ContentScale.Crop,
+                                                    modifier = Modifier
+                                                        .clip(RoundedCornerShape(16.dp))
+                                                        .aspectRatio(16f / 9f)
+                                                )
+                                            }
+                                            Text(
+                                                "Pedido de cliente",
+                                                color = MaterialTheme.colorScheme.primary,
+                                                modifier = Modifier.padding(5.dp)
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        item {
+                            Row(
+                                modifier = Modifier.padding(10.dp)
+                            ) {
+                                if (dataUiState.articulo == "S") {
+                                    Card(
+                                        onClick = { navController.navigate(route = Routes.ItemScreen.route) }) {
+                                        Column(
+                                            verticalArrangement = Arrangement.Top,
+                                            horizontalAlignment = Alignment.CenterHorizontally,
+                                            modifier = Modifier
+                                                .size(height = 280.dp, width = 320.dp)
+                                        ) {
+                                            Box(
+                                                modifier = Modifier.padding(bottom = 40.dp)
+                                            ) {
+                                                Image(
+                                                    painter = painterResource(R.drawable.articulos),
+                                                    contentDescription = "Articulos",
+                                                    contentScale = ContentScale.Crop,
+                                                    modifier = Modifier
+                                                        .clip(RoundedCornerShape(16.dp))
+                                                        .aspectRatio(16f / 9f)
+                                                )
+                                            }
+                                            Text(
+                                                "Articulos",
+                                                color = MaterialTheme.colorScheme.primary,
+                                                modifier = Modifier.padding(5.dp)
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        item {
+                            Card(
+                                onClick = { navController.navigate(route = Routes.InvoiceScreen.route) }) {
+                                Column(
+                                    verticalArrangement = Arrangement.Top,
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    modifier = Modifier
+                                        .size(height = 280.dp, width = 320.dp)
+                                ) {
+                                    Box(
+                                        modifier = Modifier.padding(bottom = 40.dp)
+                                    ) {
+                                        Image(
+                                            painter = painterResource(R.drawable.actividades), //TODO cambiar
+                                            contentDescription = "Facturas",
+                                            contentScale = ContentScale.Crop,
+                                            modifier = Modifier
+                                                .clip(RoundedCornerShape(16.dp))
+                                                .aspectRatio(16f / 9f)
+                                        )
+                                    }
+                                    Text(
+                                        "Facturas",
+                                        color = MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier.padding(5.dp)
+                                    )
+                                }
+                            }
                         }
                     }
                 }
             }
         }
+
     }
+
 }
+
 /*
 @Preview(
     showBackground = true,
