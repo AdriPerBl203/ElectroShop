@@ -327,13 +327,13 @@ class SettingsViewModel : ViewModel() {
             userForUdo.value.forEach { element ->
                 val seiConfig = SEIConfig().apply {
                     this.Code = element.Code.toInt()
-                    this.U_Empleado = element.U_Empleado ?: 0
-                    this.U_name = element.U_name ?: ""
-                    this.U_password = element.U_password ?: ""
-                    this.U_articulo = element.U_articulo ?: ""
-                    this.U_actividad = element.U_actividad ?: ""
-                    this.U_PedidoCI = element.U_PedidoCl ?: ""
-                    this.U_PedidoCO = element.U_PedidoCO ?: ""
+                    this.U_Empleado = element.U_SEI_Empleado ?: 0
+                    this.U_name = element.U_SEI_name ?: ""
+                    this.U_password = element.U_SEI_password ?: ""
+                    this.U_articulo = element.U_SEI_articulo ?: ""
+                    this.U_actividad = element.U_SEI_actividad ?: ""
+                    this.U_PedidoCI = element.U_SEI_PedidoCl ?: ""
+                    this.U_PedidoCO = element.U_SEI_PedidoCO ?: ""
                 }
                 SEIConfigCRUD.insertSEIConfig(
                     seiConfig
