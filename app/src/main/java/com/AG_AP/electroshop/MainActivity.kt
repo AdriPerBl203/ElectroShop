@@ -1,12 +1,9 @@
 package com.AG_AP.electroshop
 
-import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -17,18 +14,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import com.AG_AP.electroshop.firebase.ActivityCRUD
-import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
-import com.AG_AP.electroshop.firebase.ItemCRUD
-import com.AG_AP.electroshop.firebase.OrderCRUD
-import com.AG_AP.electroshop.firebase.SEIConfigCRUD
 import com.AG_AP.electroshop.functions.ActivityObj
 import com.AG_AP.electroshop.functions.Config
 import com.AG_AP.electroshop.functions.ObjectContext
 import com.AG_AP.electroshop.nav.AppNav
-import com.AG_AP.electroshop.screens.PdfViewer
 
 
 class MainActivity : ComponentActivity() {

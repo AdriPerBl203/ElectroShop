@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
@@ -22,9 +21,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.AG_AP.electroshop.firebase.models.BusinessPartner
-import com.AG_AP.electroshop.firebase.models.Item
-import com.AG_AP.electroshop.firebase.models.OrderFireBase
+import com.AG_AP.electroshop.realm.models.BusinessPartner
+import com.AG_AP.electroshop.realm.models.Item
+import com.AG_AP.electroshop.realm.models.OrderRealm
 
 @Composable
 fun DialogActivity(
@@ -68,7 +67,7 @@ fun DialogActivity(
                         }
                     }else{
                         items(data()) { x ->
-                            if (x is OrderFireBase) {
+                            if (x is OrderRealm) {
                                 ListItem(
                                     headlineContent = { Text("${x.DocNum}") },
                                     trailingContent = {

@@ -40,7 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.AG_AP.electroshop.firebase.models.OrderFireBase
+import com.AG_AP.electroshop.realm.models.OrderRealm
 import com.AG_AP.electroshop.uiState.Orders.ListOrderUiState
 import com.AG_AP.electroshop.viewModels.Orders.ListOrderViewModel
 import com.AG_AP.electroshop.nav.Routes
@@ -228,7 +228,7 @@ fun FilterBusinessPartner(viewModel: ListBusinessPartnerViewModel, dataUiState: 
  */
 
 @Composable
-fun LazyColumnOrder(data: List<OrderFireBase?>, navController: NavHostController) {
+fun LazyColumnOrder(data: List<OrderRealm?>, navController: NavHostController) {
     LazyColumn {
         items(data) { item ->
             // Aquí defines cómo se muestra cada elemento de la lista
@@ -238,7 +238,7 @@ fun LazyColumnOrder(data: List<OrderFireBase?>, navController: NavHostController
 }
 
 @Composable
-fun ElevatedCardOrder(x: OrderFireBase?, navController: NavHostController) {
+fun ElevatedCardOrder(x: OrderRealm?, navController: NavHostController) {
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp

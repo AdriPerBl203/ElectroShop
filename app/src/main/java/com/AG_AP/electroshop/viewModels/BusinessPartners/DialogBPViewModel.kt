@@ -3,8 +3,8 @@ package com.AG_AP.electroshop.viewModels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
-import com.AG_AP.electroshop.firebase.models.BusinessPartner
+import com.AG_AP.electroshop.realm.BusinessPartnerCRUD
+import com.AG_AP.electroshop.realm.models.BusinessPartner
 import com.AG_AP.electroshop.uiState.BusinessPartners.BusinessPartnerUiState
 import com.AG_AP.electroshop.uiState.BusinessPartners.DialogBPUiState
 import kotlinx.coroutines.Dispatchers

@@ -1,7 +1,7 @@
 package com.AG_AP.electroshop.viewModels.Activities
 
 import androidx.lifecycle.ViewModel
-import com.AG_AP.electroshop.firebase.ActivityCRUD
+import com.AG_AP.electroshop.realm.ActivityCRUD
 import com.AG_AP.electroshop.uiState.Activities.ListActivityUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

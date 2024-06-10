@@ -1,21 +1,18 @@
 package com.AG_AP.electroshop.screens.Activities
 
 import android.app.TimePickerDialog
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -25,7 +22,6 @@ import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddCard
 import androidx.compose.material.icons.filled.CallMade
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Inbox
 import androidx.compose.material.icons.filled.LocalActivity
 import androidx.compose.material3.BottomAppBar
@@ -64,7 +60,7 @@ import androidx.navigation.NavHostController
 import com.AG_AP.electroshop.components.DatePicker
 import com.AG_AP.electroshop.components.DialogActivity
 import com.AG_AP.electroshop.components.TopBarButton
-import com.AG_AP.electroshop.firebase.models.Activity
+import com.AG_AP.electroshop.realm.models.Activity
 import com.AG_AP.electroshop.nav.Routes
 import com.AG_AP.electroshop.uiState.Activities.ActivityUiState
 import com.AG_AP.electroshop.viewModels.Activities.ActivityViewModel

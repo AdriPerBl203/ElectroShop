@@ -14,8 +14,8 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
-import com.AG_AP.electroshop.firebase.InvoiceDataCRUD
-import com.AG_AP.electroshop.firebase.models.InvoiceData
+import com.AG_AP.electroshop.realm.InvoiceDataCRUD
+import com.AG_AP.electroshop.realm.models.InvoiceData
 import com.AG_AP.electroshop.functions.ActivityObj
 import com.AG_AP.electroshop.functions.ObjectContext
 import com.AG_AP.electroshop.uiState.InvoiceUiState
@@ -26,7 +26,6 @@ import kotlinx.coroutines.flow.update
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.io.InputStream
 import java.util.Base64
 
 class InvoiceViewModel : ViewModel() {

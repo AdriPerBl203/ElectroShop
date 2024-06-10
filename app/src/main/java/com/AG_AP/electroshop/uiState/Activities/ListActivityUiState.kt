@@ -1,6 +1,6 @@
 package com.AG_AP.electroshop.uiState.Activities
 
-import com.AG_AP.electroshop.firebase.models.Activity
+import com.AG_AP.electroshop.realm.models.Activity
 
 data class ListActivityUiState(
     val DateInit:String ="",

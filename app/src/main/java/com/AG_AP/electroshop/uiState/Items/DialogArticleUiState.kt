@@ -1,8 +1,6 @@
 package com.AG_AP.electroshop.uiState.Items
 
-import com.AG_AP.electroshop.firebase.models.BusinessPartner
-import com.AG_AP.electroshop.firebase.models.Item
-import com.AG_AP.electroshop.firebase.models.OrderFireBase
+import com.AG_AP.electroshop.realm.models.Item
 
 data class DialogArticleUiState(
     val codeArticle: String = "",

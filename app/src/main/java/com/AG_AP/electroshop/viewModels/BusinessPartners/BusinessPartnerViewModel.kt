@@ -1,12 +1,11 @@
 package com.AG_AP.electroshop.viewModels.BusinessPartners
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
-import com.AG_AP.electroshop.firebase.OrderCRUD
-import com.AG_AP.electroshop.firebase.models.BusinessPartner
+import com.AG_AP.electroshop.realm.BusinessPartnerCRUD
+import com.AG_AP.electroshop.realm.OrderCRUD
+import com.AG_AP.electroshop.realm.models.BusinessPartner
 import com.AG_AP.electroshop.uiState.BusinessPartners.BusinessPartnerUiState
 import com.AG_AP.electroshop.viewModels.ActionViewModel
 import kotlinx.coroutines.Dispatchers

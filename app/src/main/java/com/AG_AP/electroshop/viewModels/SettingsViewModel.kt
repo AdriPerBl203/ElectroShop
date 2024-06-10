@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Sync
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.AG_AP.electroshop.endpoints.models.activity.Activity
@@ -23,7 +22,6 @@ import com.AG_AP.electroshop.endpoints.objects.ItemObj
 import com.AG_AP.electroshop.endpoints.objects.LoginObj
 import com.AG_AP.electroshop.endpoints.objects.OrdersObj
 import com.AG_AP.electroshop.endpoints.objects.PriceListObj
-import com.AG_AP.electroshop.endpoints.retrofit.RetrofitClient
 import com.AG_AP.electroshop.endpoints.udo.models.CreateField
 import com.AG_AP.electroshop.endpoints.udo.models.createUdo.CreateUdo
 import com.AG_AP.electroshop.endpoints.udo.models.createUdo.UserObjectMDFindColumn
@@ -31,24 +29,23 @@ import com.AG_AP.electroshop.endpoints.udo.models.createUdo.UserObjectMDFormColu
 import com.AG_AP.electroshop.endpoints.udo.models.createUserUDO.CreateUserUDO
 import com.AG_AP.electroshop.endpoints.udo.models.getUserUdo.SeiConfigUser
 import com.AG_AP.electroshop.endpoints.udo.objects.UDOobj
-import com.AG_AP.electroshop.firebase.ActivityCRUD
-import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
-import com.AG_AP.electroshop.firebase.InvoiceDataCRUD
-import com.AG_AP.electroshop.firebase.ItemCRUD
-import com.AG_AP.electroshop.firebase.OrderCRUD
-import com.AG_AP.electroshop.firebase.PriceListCRUD
-import com.AG_AP.electroshop.firebase.PriceListForListCRUD
-import com.AG_AP.electroshop.firebase.SEIConfigCRUD
-import com.AG_AP.electroshop.firebase.SpecialPricesCRUD
-import com.AG_AP.electroshop.firebase.models.BusinessPartner
-import com.AG_AP.electroshop.firebase.models.DocumentLineFireBase
-import com.AG_AP.electroshop.firebase.models.InvoiceData
-import com.AG_AP.electroshop.firebase.models.Item
-import com.AG_AP.electroshop.firebase.models.OrderFireBase
-import com.AG_AP.electroshop.firebase.models.ItemPrice
-import com.AG_AP.electroshop.firebase.models.PriceListRealm
-import com.AG_AP.electroshop.firebase.models.SEIConfig
-import com.AG_AP.electroshop.firebase.models.SpecialPriceFireBase
+import com.AG_AP.electroshop.realm.ActivityCRUD
+import com.AG_AP.electroshop.realm.BusinessPartnerCRUD
+import com.AG_AP.electroshop.realm.InvoiceDataCRUD
+import com.AG_AP.electroshop.realm.ItemCRUD
+import com.AG_AP.electroshop.realm.OrderCRUD
+import com.AG_AP.electroshop.realm.PriceListForListCRUD
+import com.AG_AP.electroshop.realm.SEIConfigCRUD
+import com.AG_AP.electroshop.realm.SpecialPricesCRUD
+import com.AG_AP.electroshop.realm.models.BusinessPartner
+import com.AG_AP.electroshop.realm.models.DocumentLineRealm
+import com.AG_AP.electroshop.realm.models.InvoiceData
+import com.AG_AP.electroshop.realm.models.Item
+import com.AG_AP.electroshop.realm.models.OrderRealm
+import com.AG_AP.electroshop.realm.models.ItemPrice
+import com.AG_AP.electroshop.realm.models.PriceListRealm
+import com.AG_AP.electroshop.realm.models.SEIConfig
+import com.AG_AP.electroshop.realm.models.SpecialPriceRealm
 import com.AG_AP.electroshop.functions.Config
 import com.AG_AP.electroshop.functions.ConfigurationApplication
 import com.AG_AP.electroshop.functions.validarURL
@@ -63,7 +60,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Response
 
@@ -464,8 +460,8 @@ class SettingsViewModel : ViewModel() {
                 ActivityCRUD.deleteActivityById(element.ActivityCode.toString())
             }
             listActivitySAP.forEach { element ->
-                val activity: com.AG_AP.electroshop.firebase.models.Activity =
-                    com.AG_AP.electroshop.firebase.models.Activity().apply {
+                val activity: com.AG_AP.electroshop.realm.models.Activity =
+                    com.AG_AP.electroshop.realm.models.Activity().apply {
                         this.idFireBase = ""
                         this.nota = element.Notes ?: ""
                         this.ActivityDate = element.ActivityDate ?: ""
@@ -656,7 +652,7 @@ class SettingsViewModel : ViewModel() {
 
             listSpecialPricesSAP.forEach { element ->
 
-                val bp = SpecialPriceFireBase().apply {
+                val bp = SpecialPriceRealm().apply {
                     this.Price = element.Price ?: 0.0
                     this.CardCode = element.CardCode ?: ""
                     this.ItemCode = element.ItemCode ?: ""
@@ -728,9 +724,9 @@ class SettingsViewModel : ViewModel() {
 
             listOrderSAP.forEach { element ->
                 //lista de precios
-                val documentList: MutableList<DocumentLineFireBase> = mutableListOf()
+                val documentList: MutableList<DocumentLineRealm> = mutableListOf()
                 element.DocumentLines.forEachIndexed { index, it ->
-                    val line = DocumentLineFireBase().apply {
+                    val line = DocumentLineRealm().apply {
                         ItemCode = it.ItemCode
                         ItemDescription = it.ItemDescription ?: ""
                         Quantity = it.Quantity
@@ -743,7 +739,7 @@ class SettingsViewModel : ViewModel() {
                         line
                     )
                 }
-                val orderInsert: OrderFireBase = OrderFireBase().apply {
+                val orderInsert: OrderRealm = OrderRealm().apply {
                     this.idFireBase = ""
                     DocNum = element.DocNum
                     CardCode = element.CardCode

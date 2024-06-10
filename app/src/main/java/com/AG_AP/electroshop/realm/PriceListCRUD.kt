@@ -1,33 +1,30 @@
-package com.AG_AP.electroshop.firebase
+package com.AG_AP.electroshop.realm
 
-import com.AG_AP.electroshop.firebase.models.ItemPrice
-import com.AG_AP.electroshop.firebase.models.PriceListRealm
-import io.realm.kotlin.delete
+import com.AG_AP.electroshop.realm.models.ItemPrice
 import io.realm.kotlin.ext.query
 
-object PriceListForListCRUD {
+object PriceListCRUD {
 
     val realm = DatabaseInitializer.realm
 
-    fun insert(ItemPrice: PriceListRealm) {
+    fun insertPrecio(ItemPrice: ItemPrice) {
         realm.writeBlocking {
             copyToRealm(ItemPrice)
         }
     }
 
-    fun getPrecioById(idLista: Int, callback: (ItemPrice?) -> Unit) {
+    fun getPrecioById(idPrecio: String, callback: (ItemPrice?) -> Unit) {
         val byId =
-            realm.query<PriceListRealm>("priceList = $0", idLista).first()
+            realm.query<ItemPrice>("priceList = $0", idPrecio).first()
                 .find() as ItemPrice
         callback(byId)
     }
 
-    fun getAllPrecios(callback: (MutableList<PriceListRealm>) -> Unit) {
-        val all = realm.query<PriceListRealm>().find()
-        callback(all.toMutableList())
+    fun getAllPrecios(callback: (MutableList<ItemPrice>) -> Unit) {
+        val all = realm.query<ItemPrice>().find() as MutableList<ItemPrice>
+        callback(all)
     }
 
-    @Deprecated("NO ES  NECESARIO DESARROLLAR ESTE MÉTODO")
     suspend fun updatePrecioById(idPrecio: String, itemPrice: ItemPrice) {
         realm.query<ItemPrice>("priceList == $0", idPrecio)
             .first()
@@ -44,12 +41,14 @@ object PriceListForListCRUD {
             }
     }
 
-    fun deleteAll() {
-        SEIConfigCRUD.realm.writeBlocking {
-            delete<PriceListRealm>()
+    suspend fun deletePrecioById(idPrecio: String) {
+
+        val deleteObejct = realm.query<ItemPrice>("priceList == $0", idPrecio).find()
+        realm.writeBlocking {
+            if(!deleteObejct.isNotEmpty()){
+                delete(deleteObejct)
+            }
         }
     }
-
-
 
 }

@@ -1,7 +1,7 @@
 package com.AG_AP.electroshop.uiState
 
 import android.graphics.pdf.PdfRenderer
-import com.AG_AP.electroshop.firebase.models.InvoiceData
+import com.AG_AP.electroshop.realm.models.InvoiceData
 import java.io.File
 
 data class InvoiceUiState(

@@ -2,9 +2,9 @@ package com.AG_AP.electroshop.viewModels.Items
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.AG_AP.electroshop.firebase.ItemCRUD
-import com.AG_AP.electroshop.firebase.SpecialPricesCRUD
-import com.AG_AP.electroshop.firebase.models.Item
+import com.AG_AP.electroshop.realm.ItemCRUD
+import com.AG_AP.electroshop.realm.SpecialPricesCRUD
+import com.AG_AP.electroshop.realm.models.Item
 import com.AG_AP.electroshop.functions.InterconexionUpdateArticle
 import com.AG_AP.electroshop.uiState.Items.ArticleUiState
 import com.AG_AP.electroshop.uiState.Items.DialogArticleUiState

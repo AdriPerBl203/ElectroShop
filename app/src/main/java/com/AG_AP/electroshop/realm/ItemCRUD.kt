@@ -1,8 +1,6 @@
-package com.AG_AP.electroshop.firebase
+package com.AG_AP.electroshop.realm
 
-import com.AG_AP.electroshop.firebase.models.Item
-import com.AG_AP.electroshop.firebase.models.SEIConfig
-import io.realm.kotlin.delete
+import com.AG_AP.electroshop.realm.models.Item
 import io.realm.kotlin.ext.query
 
 object ItemCRUD {

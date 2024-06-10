@@ -38,7 +38,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.AG_AP.electroshop.firebase.models.Item
+import com.AG_AP.electroshop.realm.models.Item
 import com.AG_AP.electroshop.uiState.Items.ListItemsUiState
 import com.AG_AP.electroshop.viewModels.Items.ListItemsViewModel
 import com.AG_AP.electroshop.nav.Routes

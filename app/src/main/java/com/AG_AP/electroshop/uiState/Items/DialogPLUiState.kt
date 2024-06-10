@@ -1,6 +1,6 @@
 package com.AG_AP.electroshop.uiState.Items
 
-import com.AG_AP.electroshop.firebase.models.ItemPrice
+import com.AG_AP.electroshop.realm.models.ItemPrice
 
 data class DialogPLUiState(
     val AvailablePriceList: List<ItemPrice?> = listOf(),

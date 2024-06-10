@@ -11,8 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import at.favre.lib.crypto.bcrypt.BCrypt
-import com.AG_AP.electroshop.firebase.SEIConfigCRUD
-import com.AG_AP.electroshop.functions.Config
+import com.AG_AP.electroshop.realm.SEIConfigCRUD
 import com.AG_AP.electroshop.functions.ObjectContext
 import com.AG_AP.electroshop.functions.SessionObj
 import com.AG_AP.electroshop.nav.Routes

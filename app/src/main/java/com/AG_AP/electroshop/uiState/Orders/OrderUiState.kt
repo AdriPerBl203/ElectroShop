@@ -1,9 +1,8 @@
 package com.AG_AP.electroshop.uiState.Orders
 
-import com.AG_AP.electroshop.firebase.models.BusinessPartner
-import com.AG_AP.electroshop.firebase.models.Item
+import com.AG_AP.electroshop.realm.models.BusinessPartner
 import com.AG_AP.electroshop.uiState.Items.ArticleUiState
-import com.AG_AP.electroshop.firebase.models.OrderFireBase
+import com.AG_AP.electroshop.realm.models.OrderRealm
 import java.util.concurrent.ConcurrentHashMap
 
 data class OrderUiState(
@@ -26,13 +25,13 @@ data class OrderUiState(
     val showDialogAddArticle: Boolean = false,
     val showDialogSelectCodeArticle: Boolean = false,
     val showToast: Boolean = false,
-    val ListItems: List<OrderFireBase> = listOf(),
+    val ListItems: List<OrderRealm> = listOf(),
     var ListBusinessPartnerAux: List<BusinessPartner> = listOf(),
     var ListBusinessPartnerBackund: List<BusinessPartner> = listOf(),
     val showDialogBusinessPartner: Boolean = false,
     val ListBusinessPartner: List<BusinessPartner> = listOf(),
-    val ListOrdersInSap: List<OrderFireBase> = listOf(),
-    val ListOrdersInDevice: List<OrderFireBase> = listOf(),
+    val ListOrdersInSap: List<OrderRealm> = listOf(),
+    val ListOrdersInDevice: List<OrderRealm> = listOf(),
     val dialogAddArticleUpdate: Boolean = false,
     val ActionButton: String = "Añadir y ver",
     val totalPrice: Double = 0.0,

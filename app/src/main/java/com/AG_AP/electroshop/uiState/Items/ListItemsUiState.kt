@@ -1,6 +1,6 @@
 package com.AG_AP.electroshop.uiState.Items
 
-import com.AG_AP.electroshop.firebase.models.Item
+import com.AG_AP.electroshop.realm.models.Item
 
 data class ListItemsUiState(
     val ListItems: List<Item?> = listOf(),

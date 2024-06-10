@@ -1,6 +1,6 @@
-package com.AG_AP.electroshop.firebase
+package com.AG_AP.electroshop.realm
 
-import com.AG_AP.electroshop.firebase.models.InvoiceData
+import com.AG_AP.electroshop.realm.models.InvoiceData
 import io.realm.kotlin.delete
 import io.realm.kotlin.ext.query
 

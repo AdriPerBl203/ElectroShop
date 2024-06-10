@@ -57,7 +57,7 @@ import androidx.navigation.NavHostController
 import com.AG_AP.electroshop.components.DialogCustomBusinessPartner
 import com.AG_AP.electroshop.components.DialogCustomPriceList
 import com.AG_AP.electroshop.components.TopBarButton
-import com.AG_AP.electroshop.firebase.models.ItemType
+import com.AG_AP.electroshop.realm.models.ItemType
 import com.AG_AP.electroshop.nav.Routes
 import com.AG_AP.electroshop.uiState.Items.ItemUiState
 import com.AG_AP.electroshop.viewModels.Items.ItemViewModel

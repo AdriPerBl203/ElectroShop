@@ -1,6 +1,6 @@
 package com.AG_AP.electroshop.uiState.BusinessPartners
 
-import com.AG_AP.electroshop.firebase.models.BusinessPartner
+import com.AG_AP.electroshop.realm.models.BusinessPartner
 
 data class ListBusinessPartnerUiState(
     val ListBusinessPartner: List<BusinessPartner?> = listOf(),

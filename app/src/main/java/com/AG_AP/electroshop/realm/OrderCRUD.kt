@@ -1,22 +1,20 @@
-package com.AG_AP.electroshop.firebase
+package com.AG_AP.electroshop.realm
 
-import com.AG_AP.electroshop.firebase.models.BusinessPartner
-import com.AG_AP.electroshop.firebase.models.OrderFireBase
-import io.realm.kotlin.delete
+import com.AG_AP.electroshop.realm.models.BusinessPartner
+import com.AG_AP.electroshop.realm.models.OrderRealm
 import io.realm.kotlin.ext.query
-import io.realm.kotlin.internal.getRealm
 import io.realm.kotlin.query.Sort
 
-object OrderCRUD : ActionFirebase {
+object OrderCRUD : ActionRealm {
 
 
     val realm = DatabaseInitializer.realm
 
     override fun insert(data: Any) {
-        val orderFireBase = data as OrderFireBase
+        val orderRealm = data as OrderRealm
 
         realm.writeBlocking {
-            copyToRealm(orderFireBase)
+            copyToRealm(orderRealm)
         }
     }
 
@@ -27,8 +25,8 @@ object OrderCRUD : ActionFirebase {
 
     override fun getObjectById(id: Int, callback: (Any?) -> Unit) {
         val byId =
-            realm.query<OrderFireBase>("DocNum = $0", id.toString()).first()
-                .find() as OrderFireBase
+            realm.query<OrderRealm>("DocNum = $0", id.toString()).first()
+                .find() as OrderRealm
         callback(byId)
     }
 
@@ -37,7 +35,7 @@ object OrderCRUD : ActionFirebase {
     }
 
     override fun getAllObject(callback: (MutableList<*>?) -> Unit) {
-        val all = realm.query<OrderFireBase>().find()
+        val all = realm.query<OrderRealm>().find()
         callback(all.toMutableList())
     }
 
@@ -46,29 +44,29 @@ object OrderCRUD : ActionFirebase {
      * otherwise it returns those which aren't
      */
     fun getOrdersInSap(sap: Boolean, callback: (MutableList<*>?) -> Unit) {
-        val all = realm.query<OrderFireBase>("SAP == $0", sap).find()
+        val all = realm.query<OrderRealm>("SAP == $0", sap).find()
         callback(all.toMutableList())
     }
 
     override suspend fun updateObjectById(data: Any) {
-        val orderFireBase = data as OrderFireBase
-        realm.query<OrderFireBase>("DocNum = $0", orderFireBase.DocNum)
+        val orderRealm = data as OrderRealm
+        realm.query<OrderRealm>("DocNum = $0", orderRealm.DocNum)
             .find()
             .first()
             .also { oldActivity ->
                 realm.write {
                     findLatest(oldActivity)?.let { it ->
-                        it.DocNum = orderFireBase.DocNum
-                        it.CardCode = orderFireBase.CardCode
-                        it.CardName = orderFireBase.CardName
-                        it.DocDate = orderFireBase.DocDate
-                        it.DocDueDate = orderFireBase.DocDueDate
-                        it.TaxDate = orderFireBase.TaxDate
-                        it.DiscountPercent = orderFireBase.DiscountPercent
-                        it.DocumentLines = orderFireBase.DocumentLines
-                        it.SAP = orderFireBase.SAP
-                        it.SalesPersonCode = orderFireBase.SalesPersonCode
-                        it.Slpcode = orderFireBase.Slpcode
+                        it.DocNum = orderRealm.DocNum
+                        it.CardCode = orderRealm.CardCode
+                        it.CardName = orderRealm.CardName
+                        it.DocDate = orderRealm.DocDate
+                        it.DocDueDate = orderRealm.DocDueDate
+                        it.TaxDate = orderRealm.TaxDate
+                        it.DiscountPercent = orderRealm.DiscountPercent
+                        it.DocumentLines = orderRealm.DocumentLines
+                        it.SAP = orderRealm.SAP
+                        it.SalesPersonCode = orderRealm.SalesPersonCode
+                        it.Slpcode = orderRealm.Slpcode
                         //
                     }
                 }
@@ -76,7 +74,7 @@ object OrderCRUD : ActionFirebase {
     }
 
     suspend fun updateOrderToSAPTrue() {
-        realm.query<OrderFireBase>("SAP == $0", false).find().also { list ->
+        realm.query<OrderRealm>("SAP == $0", false).find().also { list ->
             realm.write {
                 list.forEach { obj ->
                     findLatest(obj)?.apply {
@@ -90,7 +88,7 @@ object OrderCRUD : ActionFirebase {
     }
 
     override suspend fun deleteObjectById(id: String) {
-        val deleteObejct = realm.query<OrderFireBase>("DocNum = $0", id).find().firstOrNull()
+        val deleteObejct = realm.query<OrderRealm>("DocNum = $0", id).find().firstOrNull()
         if (deleteObejct != null) {
             realm.writeBlocking {
                 val del = findLatest(deleteObejct)
@@ -102,7 +100,7 @@ object OrderCRUD : ActionFirebase {
     }
 
     fun deleteAll() {
-        val deleteObject = realm.query<OrderFireBase>("SAP == $0", true).find()
+        val deleteObject = realm.query<OrderRealm>("SAP == $0", true).find()
         if (deleteObject.isNotEmpty()) {
             realm.writeBlocking {
                 deleteObject.forEach {
@@ -116,8 +114,8 @@ object OrderCRUD : ActionFirebase {
 
     }
 
-    fun getAllObjectOrdeByCarCodeAndDocDueDate(cardCode: String,callback: (MutableList<OrderFireBase>?) -> Unit) {
-        val all = realm.query<OrderFireBase>("CardCode = $0", cardCode).sort("CardName", Sort.ASCENDING)
+    fun getAllObjectOrdeByCarCodeAndDocDueDate(cardCode: String,callback: (MutableList<OrderRealm>?) -> Unit) {
+        val all = realm.query<OrderRealm>("CardCode = $0", cardCode).sort("CardName", Sort.ASCENDING)
             .sort("DocDueDate", Sort.ASCENDING)
             .find()
         callback(all.toMutableList())

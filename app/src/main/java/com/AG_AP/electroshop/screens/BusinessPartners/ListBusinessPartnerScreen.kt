@@ -40,7 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.AG_AP.electroshop.firebase.models.BusinessPartner
+import com.AG_AP.electroshop.realm.models.BusinessPartner
 import com.AG_AP.electroshop.uiState.BusinessPartners.ListBusinessPartnerUiState
 import com.AG_AP.electroshop.viewModels.BusinessPartners.ListBusinessPartnerViewModel
 import com.AG_AP.electroshop.nav.Routes

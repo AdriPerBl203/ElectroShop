@@ -1,13 +1,12 @@
-package com.AG_AP.electroshop.firebase.models
+package com.AG_AP.electroshop.realm.models
 
 
 import io.realm.kotlin.ext.realmListOf
 import io.realm.kotlin.types.RealmList
 import io.realm.kotlin.types.RealmObject
-import org.mongodb.kbson.BsonObjectId
 import org.mongodb.kbson.ObjectId
 
-class OrderFireBase : RealmObject {
+class OrderRealm : RealmObject {
 
     var idRealm: ObjectId = ObjectId()
     var idFireBase: String? = null
@@ -18,7 +17,7 @@ class OrderFireBase : RealmObject {
     var DocDueDate: String = ""
     var TaxDate: String = ""
     var DiscountPercent: Double = 0.0
-    var DocumentLines: RealmList<DocumentLineFireBase> = realmListOf()
+    var DocumentLines: RealmList<DocumentLineRealm> = realmListOf()
     var Slpcode: String = "-1"
     var SAP: Boolean = false
     var SalesPersonCode:Int = -1

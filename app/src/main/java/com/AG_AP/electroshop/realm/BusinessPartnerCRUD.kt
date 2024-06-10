@@ -1,14 +1,9 @@
-package com.AG_AP.electroshop.firebase
+package com.AG_AP.electroshop.realm
 
-import android.annotation.SuppressLint
-import android.util.Log
-import com.AG_AP.electroshop.firebase.models.Activity
-import com.AG_AP.electroshop.firebase.models.BusinessPartner
-import io.realm.kotlin.delete
+import com.AG_AP.electroshop.realm.models.BusinessPartner
 import io.realm.kotlin.ext.query
-import io.realm.kotlin.query.RealmResults
 
-object BusinessPartnerCRUD : ActionFirebase {
+object BusinessPartnerCRUD : ActionRealm {
     /*
     @SuppressLint("StaticFieldLeak")
     var database: FirebaseFirestore = DatabaseInitializer.database

@@ -19,9 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.AG_AP.electroshop.firebase.models.BusinessPartner
-import com.AG_AP.electroshop.firebase.models.Item
-import com.AG_AP.electroshop.firebase.models.OrderFireBase
+import com.AG_AP.electroshop.realm.models.BusinessPartner
+import com.AG_AP.electroshop.realm.models.OrderRealm
 
 
 @Composable
@@ -47,7 +46,7 @@ fun DialogActivity(
                 )
                 LazyColumn {
                     items(data()) { x ->
-                        if (x is OrderFireBase) {
+                        if (x is OrderRealm) {
                             ListItem(
                                 headlineContent = { Text("${x.DocNum}") },
                                 trailingContent = {

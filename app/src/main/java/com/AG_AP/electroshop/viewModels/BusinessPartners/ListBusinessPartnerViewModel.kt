@@ -1,8 +1,8 @@
 package com.AG_AP.electroshop.viewModels.BusinessPartners
 
 import androidx.lifecycle.ViewModel
-import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
-import com.AG_AP.electroshop.firebase.models.BusinessPartner
+import com.AG_AP.electroshop.realm.BusinessPartnerCRUD
+import com.AG_AP.electroshop.realm.models.BusinessPartner
 import com.AG_AP.electroshop.uiState.BusinessPartners.ListBusinessPartnerUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

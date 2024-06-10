@@ -2,8 +2,8 @@ package com.AG_AP.electroshop.viewModels.Items
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.AG_AP.electroshop.firebase.PriceListCRUD
-import com.AG_AP.electroshop.firebase.models.ItemPrice
+import com.AG_AP.electroshop.realm.PriceListCRUD
+import com.AG_AP.electroshop.realm.models.ItemPrice
 import com.AG_AP.electroshop.uiState.Items.DialogPLUiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

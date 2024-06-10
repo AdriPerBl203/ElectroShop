@@ -5,13 +5,13 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
-import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
-import com.AG_AP.electroshop.firebase.OrderCRUD
-import com.AG_AP.electroshop.firebase.SEIConfigCRUD
-import com.AG_AP.electroshop.firebase.models.BusinessPartner
-import com.AG_AP.electroshop.firebase.models.DocumentLineFireBase
-import com.AG_AP.electroshop.firebase.models.OrderFireBase
-import com.AG_AP.electroshop.firebase.models.SEIConfig
+import com.AG_AP.electroshop.realm.BusinessPartnerCRUD
+import com.AG_AP.electroshop.realm.OrderCRUD
+import com.AG_AP.electroshop.realm.SEIConfigCRUD
+import com.AG_AP.electroshop.realm.models.BusinessPartner
+import com.AG_AP.electroshop.realm.models.DocumentLineRealm
+import com.AG_AP.electroshop.realm.models.OrderRealm
+import com.AG_AP.electroshop.realm.models.SEIConfig
 import com.AG_AP.electroshop.functions.InterconexionUpdateArticle
 import com.AG_AP.electroshop.functions.ObjectContext
 import com.AG_AP.electroshop.uiState.Items.ArticleUiState
@@ -69,7 +69,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
 
     fun updateLists() {
         OrderCRUD.getAllObject { list ->
-            val mutableList = list as? MutableList<OrderFireBase>
+            val mutableList = list as? MutableList<OrderRealm>
             mutableList?.let {
                 _uiState.update { currentState ->
                     currentState.copy(
@@ -80,7 +80,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
         }
 
         OrderCRUD.getOrdersInSap(true) { list ->
-            val mutableList = list as? MutableList<OrderFireBase>
+            val mutableList = list as? MutableList<OrderRealm>
             mutableList?.let {
                 _uiState.update { currentState ->
                     currentState.copy(
@@ -91,7 +91,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
         }
 
         OrderCRUD.getOrdersInSap(false) { list ->
-            val mutableList = list as? MutableList<OrderFireBase>
+            val mutableList = list as? MutableList<OrderRealm>
             mutableList?.let {
                 _uiState.update { currentState ->
                     currentState.copy(
@@ -153,7 +153,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
         var text = "Pedido de venta actualizado"
 
 
-        var orderFireBase: OrderFireBase = OrderFireBase().apply {
+        var orderRealm: OrderRealm = OrderRealm().apply {
             this.CardCode = cardCode
             this.CardName = cardName
             this.DocDate = docDate
@@ -167,7 +167,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                OrderCRUD.insert(orderFireBase)
+                OrderCRUD.insert(orderRealm)
             } catch (e: Exception) {
                 Log.e("Errores", e.stackTraceToString())
                 text = "Hubo un error con la creación del pedido de venta"
@@ -247,7 +247,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
         val documentLine = hashMapToDocumentLine()
         var text = "Pedido actualizado"
 
-        val orderFireBase = OrderFireBase().apply {
+        val orderRealm = OrderRealm().apply {
             this.DocNum = docNum
             this.CardCode = cardCode
             this.CardName = cardName
@@ -261,7 +261,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
 
         viewModelScope.launch {
             try {
-                OrderCRUD.updateObjectById(orderFireBase)
+                OrderCRUD.updateObjectById(orderRealm)
             } catch (e: Exception) {
                 Log.e("Errores", e.stackTraceToString())
                 text = "Hubo un error actualizando el pedido"
@@ -328,7 +328,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
         }
         viewModelScope.launch(Dispatchers.IO) {
             OrderCRUD.getObjectById(_uiState.value.DocNum) { dataAux ->
-                if (dataAux != null && dataAux is OrderFireBase) {
+                if (dataAux != null && dataAux is OrderRealm) {
                     val dataList = getDataFromList(dataAux.DocumentLines)
                     val mutableDataList = DocumentLineForMutableList()
 
@@ -358,7 +358,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
         }
     }
 
-    private fun getDataFromList(list: List<DocumentLineFireBase>): MutableList<ArticleUiState?> {
+    private fun getDataFromList(list: List<DocumentLineRealm>): MutableList<ArticleUiState?> {
         val returnList: MutableList<ArticleUiState?> = mutableListOf()
         list.forEach { data ->
             val lineNum = data.LineNum
@@ -467,8 +467,8 @@ class OrderViewModel : ViewModel(), ActionViewModel {
     }
 
 
-    private fun hashMapToDocumentLine(): RealmList<DocumentLineFireBase> {
-        val listDocumentLineFireBase: MutableList<DocumentLineFireBase> = mutableListOf()
+    private fun hashMapToDocumentLine(): RealmList<DocumentLineRealm> {
+        val listDocumentLineRealm: MutableList<DocumentLineRealm> = mutableListOf()
 
         val documentLineList = _uiState.value.DocumentLineList
 
@@ -480,7 +480,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
             val price = value[4].toDouble()
             val discountPercent = value[5].toDouble()
 
-            val newDocumentLine = DocumentLineFireBase().apply {
+            val newDocumentLine = DocumentLineRealm().apply {
                 this.LineNum = index
                 this.ItemCode = itemCode
                 this.ItemDescription = itemDescription
@@ -488,10 +488,10 @@ class OrderViewModel : ViewModel(), ActionViewModel {
                 this.Price = price
                 this.DiscountPercent = discountPercent
             }
-            listDocumentLineFireBase.add(newDocumentLine)
+            listDocumentLineRealm.add(newDocumentLine)
         }
 
-        return listDocumentLineFireBase.toRealmList()
+        return listDocumentLineRealm.toRealmList()
     }
 
     private fun DocumentLineForMutableList(list: MutableList<ArticleUiState?>): ConcurrentHashMap<Int, MutableList<String>> {
@@ -860,7 +860,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
         return allCheck
     }
 
-    fun showOrderComplete(order: OrderFireBase) {
+    fun showOrderComplete(order: OrderRealm) {
         val documentLine: MutableList<ArticleUiState?> = mutableListOf()
         var numInicial = 0
 
@@ -901,7 +901,7 @@ class OrderViewModel : ViewModel(), ActionViewModel {
 
     }
 
-    private fun DocumentLineForMutableListSinceListOrder(listItems: MutableList<DocumentLineFireBase>): ConcurrentHashMap<Int, MutableList<String>> {
+    private fun DocumentLineForMutableListSinceListOrder(listItems: MutableList<DocumentLineRealm>): ConcurrentHashMap<Int, MutableList<String>> {
         listItems.forEachIndexed { index, element ->
             if (element != null) {
                 val listToAdd = element.let {

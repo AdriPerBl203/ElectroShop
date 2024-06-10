@@ -1,8 +1,8 @@
 package com.AG_AP.electroshop.viewModels.Items
 
 import androidx.lifecycle.ViewModel
-import com.AG_AP.electroshop.firebase.ItemCRUD
-import com.AG_AP.electroshop.firebase.models.Item
+import com.AG_AP.electroshop.realm.ItemCRUD
+import com.AG_AP.electroshop.realm.models.Item
 import com.AG_AP.electroshop.uiState.Items.ListItemsUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

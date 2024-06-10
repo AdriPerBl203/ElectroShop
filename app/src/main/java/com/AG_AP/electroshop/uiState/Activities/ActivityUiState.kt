@@ -1,9 +1,8 @@
 package com.AG_AP.electroshop.uiState.Activities
 
-import com.AG_AP.electroshop.firebase.models.Activity
-import com.AG_AP.electroshop.firebase.models.BusinessPartner
-import com.AG_AP.electroshop.firebase.models.DocumentLineFireBase
-import com.AG_AP.electroshop.firebase.models.OrderFireBase
+import com.AG_AP.electroshop.realm.models.Activity
+import com.AG_AP.electroshop.realm.models.BusinessPartner
+import com.AG_AP.electroshop.realm.models.OrderRealm
 
 data class ActivityUiState(
     val nota:String = "Esto es una nota",
@@ -23,8 +22,8 @@ data class ActivityUiState(
     val showDialogOrder:Boolean = false,
     val showDialogPurchaseOrder:Boolean = false,
     val showDialogBussinesPartner:Boolean = false,
-    val ListOrders:List<OrderFireBase> = listOf(),
-    val ListPurchaseOrders:List<OrderFireBase> = listOf(),
+    val ListOrders:List<OrderRealm> = listOf(),
+    val ListPurchaseOrders:List<OrderRealm> = listOf(),
     val ListBusinessPartner:List<BusinessPartner> = listOf(),
     val ListActivityTheSAP:List<Activity> = listOf(),
     val ListActivityTheTablet:List<Activity> = listOf(),

@@ -4,12 +4,12 @@ package com.AG_AP.electroshop.viewModels.Activities
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
-import com.AG_AP.electroshop.firebase.ActivityCRUD
-import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
-import com.AG_AP.electroshop.firebase.OrderCRUD
-import com.AG_AP.electroshop.firebase.models.Activity
-import com.AG_AP.electroshop.firebase.models.BusinessPartner
-import com.AG_AP.electroshop.firebase.models.OrderFireBase
+import com.AG_AP.electroshop.realm.ActivityCRUD
+import com.AG_AP.electroshop.realm.BusinessPartnerCRUD
+import com.AG_AP.electroshop.realm.OrderCRUD
+import com.AG_AP.electroshop.realm.models.Activity
+import com.AG_AP.electroshop.realm.models.BusinessPartner
+import com.AG_AP.electroshop.realm.models.OrderRealm
 import com.AG_AP.electroshop.uiState.Activities.ActivityUiState
 import com.AG_AP.electroshop.viewModels.ActionViewModel
 import kotlinx.coroutines.Dispatchers
@@ -33,7 +33,7 @@ class ActivityViewModel : ViewModel(), ActionViewModel {
 
         //order
         OrderCRUD.getAllObject { list ->
-            val mutableList = list as? MutableList<OrderFireBase>
+            val mutableList = list as? MutableList<OrderRealm>
             mutableList?.let {
                 _uiState.update { currentState ->
                     currentState.copy(

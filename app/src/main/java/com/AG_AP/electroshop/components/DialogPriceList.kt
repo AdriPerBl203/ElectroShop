@@ -29,7 +29,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.AG_AP.electroshop.firebase.models.ItemPrice
+import com.AG_AP.electroshop.realm.models.ItemPrice
 import com.AG_AP.electroshop.viewModels.Items.DialogPLViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)

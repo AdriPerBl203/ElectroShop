@@ -17,15 +17,14 @@ import com.AG_AP.electroshop.endpoints.objects.BusinessPartnersObj
 import com.AG_AP.electroshop.endpoints.objects.ItemObj
 import com.AG_AP.electroshop.endpoints.objects.LoginObj
 import com.AG_AP.electroshop.endpoints.objects.OrdersObj
-import com.AG_AP.electroshop.firebase.ActivityCRUD
-import com.AG_AP.electroshop.firebase.BusinessPartnerCRUD
-import com.AG_AP.electroshop.firebase.ItemCRUD
-import com.AG_AP.electroshop.firebase.OrderCRUD
-import com.AG_AP.electroshop.firebase.models.BusinessPartner
-import com.AG_AP.electroshop.firebase.models.Item
-import com.AG_AP.electroshop.firebase.models.ItemType
-import com.AG_AP.electroshop.firebase.models.OrderFireBase
-import com.AG_AP.electroshop.firebase.models.ItemPrice
+import com.AG_AP.electroshop.realm.ActivityCRUD
+import com.AG_AP.electroshop.realm.BusinessPartnerCRUD
+import com.AG_AP.electroshop.realm.ItemCRUD
+import com.AG_AP.electroshop.realm.OrderCRUD
+import com.AG_AP.electroshop.realm.models.BusinessPartner
+import com.AG_AP.electroshop.realm.models.Item
+import com.AG_AP.electroshop.realm.models.OrderRealm
+import com.AG_AP.electroshop.realm.models.ItemPrice
 import com.AG_AP.electroshop.functions.Config
 import com.AG_AP.electroshop.functions.ListCheckTotal
 import com.AG_AP.electroshop.functions.SessionObj
@@ -95,7 +94,7 @@ class MenuViewModel : ViewModel() {
                     LoginObj.loginAcessTwoversion(dataLogin, Config.rulUse)
                 }
                 if (list != null) {
-                    val listAux = list as MutableList<OrderFireBase>
+                    val listAux = list as MutableList<OrderRealm>
                     for (x in listAux) {
                         if (!x.SAP) {
                             var documentLineAux: MutableList<DocumentLine> =
@@ -506,8 +505,8 @@ class MenuViewModel : ViewModel() {
                             ActivityCRUD.deleteActivityById(element.ActivityCode.toString())
                         }
                         listActivitySAP.forEach { element ->
-                            val activity: com.AG_AP.electroshop.firebase.models.Activity =
-                                com.AG_AP.electroshop.firebase.models.Activity().apply {
+                            val activity: com.AG_AP.electroshop.realm.models.Activity =
+                                com.AG_AP.electroshop.realm.models.Activity().apply {
                                     ""
                                     element.Notes ?: ""
                                     element.ActivityDate ?: ""

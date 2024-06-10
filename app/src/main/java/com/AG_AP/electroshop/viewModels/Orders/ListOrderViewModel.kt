@@ -1,8 +1,8 @@
 package com.AG_AP.electroshop.viewModels.Orders
 
 import androidx.lifecycle.ViewModel
-import com.AG_AP.electroshop.firebase.OrderCRUD
-import com.AG_AP.electroshop.firebase.models.OrderFireBase
+import com.AG_AP.electroshop.realm.OrderCRUD
+import com.AG_AP.electroshop.realm.models.OrderRealm
 import com.AG_AP.electroshop.uiState.Orders.ListOrderUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,7 +18,7 @@ class ListOrderViewModel : ViewModel() {
         OrderCRUD.getAllObject { list ->
             _uiState.update {
                 currentState -> currentState.copy(
-                    ListOrder = list as List<OrderFireBase?>
+                    ListOrder = list as List<OrderRealm?>
                 )
             }
         }

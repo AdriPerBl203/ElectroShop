@@ -1,8 +1,8 @@
-package com.AG_AP.electroshop.firebase
+package com.AG_AP.electroshop.realm
 
 
 
-interface ActionFirebase {
+interface ActionRealm {
 
     fun insert(data: Any)
     fun getObjectById(id: Int,callback:(Any?)->Unit)

@@ -1,9 +1,8 @@
 package com.AG_AP.electroshop.uiState.Items
 
-import com.AG_AP.electroshop.endpoints.models.priceList.PriceList
-import com.AG_AP.electroshop.firebase.models.Item
-import com.AG_AP.electroshop.firebase.models.ItemPrice
-import com.AG_AP.electroshop.firebase.models.PriceListRealm
+import com.AG_AP.electroshop.realm.models.Item
+import com.AG_AP.electroshop.realm.models.ItemPrice
+import com.AG_AP.electroshop.realm.models.PriceListRealm
 
 data class ItemUiState(
     val ItemCode: String = "",

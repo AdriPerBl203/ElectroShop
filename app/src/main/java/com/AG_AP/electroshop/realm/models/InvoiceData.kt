@@ -1,8 +1,5 @@
-package com.AG_AP.electroshop.firebase.models
+package com.AG_AP.electroshop.realm.models
 
-import io.realm.kotlin.ext.realmDictionaryOf
-import io.realm.kotlin.ext.realmListOf
-import io.realm.kotlin.types.RealmList
 import io.realm.kotlin.types.RealmObject
 
 class InvoiceData : RealmObject {

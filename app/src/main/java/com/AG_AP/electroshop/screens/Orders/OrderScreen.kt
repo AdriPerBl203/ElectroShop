@@ -74,8 +74,8 @@ import com.AG_AP.electroshop.components.DialogActivity
 import com.AG_AP.electroshop.uiState.Orders.OrderUiState
 import com.AG_AP.electroshop.components.DialogOandPO
 import com.AG_AP.electroshop.components.TopBarButton
-import com.AG_AP.electroshop.firebase.models.BusinessPartner
-import com.AG_AP.electroshop.firebase.models.OrderFireBase
+import com.AG_AP.electroshop.realm.models.BusinessPartner
+import com.AG_AP.electroshop.realm.models.OrderRealm
 import com.AG_AP.electroshop.functions.InterconexionUpdateArticle
 import com.AG_AP.electroshop.functions.ObjectContext
 import com.AG_AP.electroshop.nav.Routes
@@ -365,7 +365,7 @@ fun OrderView(innerPadding: PaddingValues, viewModel: OrderViewModel, id: String
 @Composable
 private fun ListaPedidos(
     viewModel: OrderViewModel,
-    list: List<OrderFireBase>
+    list: List<OrderRealm>
 ) {
     LazyColumn(
         modifier = Modifier

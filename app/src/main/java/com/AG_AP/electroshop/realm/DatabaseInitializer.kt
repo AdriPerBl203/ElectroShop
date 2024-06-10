@@ -1,16 +1,16 @@
-package com.AG_AP.electroshop.firebase
+package com.AG_AP.electroshop.realm
 
 
-import com.AG_AP.electroshop.firebase.models.Activity
-import com.AG_AP.electroshop.firebase.models.BusinessPartner
-import com.AG_AP.electroshop.firebase.models.DocumentLineFireBase
-import com.AG_AP.electroshop.firebase.models.InvoiceData
-import com.AG_AP.electroshop.firebase.models.Item
-import com.AG_AP.electroshop.firebase.models.OrderFireBase
-import com.AG_AP.electroshop.firebase.models.ItemPrice
-import com.AG_AP.electroshop.firebase.models.PriceListRealm
-import com.AG_AP.electroshop.firebase.models.SEIConfig
-import com.AG_AP.electroshop.firebase.models.SpecialPriceFireBase
+import com.AG_AP.electroshop.realm.models.Activity
+import com.AG_AP.electroshop.realm.models.BusinessPartner
+import com.AG_AP.electroshop.realm.models.DocumentLineRealm
+import com.AG_AP.electroshop.realm.models.InvoiceData
+import com.AG_AP.electroshop.realm.models.Item
+import com.AG_AP.electroshop.realm.models.OrderRealm
+import com.AG_AP.electroshop.realm.models.ItemPrice
+import com.AG_AP.electroshop.realm.models.PriceListRealm
+import com.AG_AP.electroshop.realm.models.SEIConfig
+import com.AG_AP.electroshop.realm.models.SpecialPriceRealm
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
 
@@ -23,9 +23,9 @@ object DatabaseInitializer {
             Item::class,
             ItemPrice::class,
             SEIConfig::class,
-            SpecialPriceFireBase::class,
-            OrderFireBase::class,
-            DocumentLineFireBase::class,
+            SpecialPriceRealm::class,
+            OrderRealm::class,
+            DocumentLineRealm::class,
             PriceListRealm::class,
             InvoiceData::class
         )

@@ -1,33 +1,33 @@
-package com.AG_AP.electroshop.firebase
+package com.AG_AP.electroshop.realm
 
-import com.AG_AP.electroshop.firebase.models.ItemPrice
-import com.AG_AP.electroshop.firebase.models.PriceListRealm
-import com.AG_AP.electroshop.firebase.models.SEIConfig
+import com.AG_AP.electroshop.realm.models.ItemPrice
+import com.AG_AP.electroshop.realm.models.PriceListRealm
 import io.realm.kotlin.delete
 import io.realm.kotlin.ext.query
 
-object PriceListCRUD {
+object PriceListForListCRUD {
 
     val realm = DatabaseInitializer.realm
 
-    fun insertPrecio(ItemPrice: ItemPrice) {
+    fun insert(ItemPrice: PriceListRealm) {
         realm.writeBlocking {
             copyToRealm(ItemPrice)
         }
     }
 
-    fun getPrecioById(idPrecio: String, callback: (ItemPrice?) -> Unit) {
+    fun getPrecioById(idLista: Int, callback: (ItemPrice?) -> Unit) {
         val byId =
-            realm.query<ItemPrice>("priceList = $0", idPrecio).first()
+            realm.query<PriceListRealm>("priceList = $0", idLista).first()
                 .find() as ItemPrice
         callback(byId)
     }
 
-    fun getAllPrecios(callback: (MutableList<ItemPrice>) -> Unit) {
-        val all = realm.query<ItemPrice>().find() as MutableList<ItemPrice>
-        callback(all)
+    fun getAllPrecios(callback: (MutableList<PriceListRealm>) -> Unit) {
+        val all = realm.query<PriceListRealm>().find()
+        callback(all.toMutableList())
     }
 
+    @Deprecated("NO ES  NECESARIO DESARROLLAR ESTE MÉTODO")
     suspend fun updatePrecioById(idPrecio: String, itemPrice: ItemPrice) {
         realm.query<ItemPrice>("priceList == $0", idPrecio)
             .first()
@@ -44,14 +44,12 @@ object PriceListCRUD {
             }
     }
 
-    suspend fun deletePrecioById(idPrecio: String) {
-
-        val deleteObejct = realm.query<ItemPrice>("priceList == $0", idPrecio).find()
-        realm.writeBlocking {
-            if(!deleteObejct.isNotEmpty()){
-                delete(deleteObejct)
-            }
+    fun deleteAll() {
+        SEIConfigCRUD.realm.writeBlocking {
+            delete<PriceListRealm>()
         }
     }
+
+
 
 }
