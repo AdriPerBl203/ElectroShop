@@ -68,8 +68,8 @@ object ActivityCRUD {
 
     fun filterForCardCode(cardCode: String, callback: (MutableList<Activity>) -> Unit) {
         val byId =
-            realm.query<Activity>("CardCode = $0", cardCode).find() as MutableList<Activity>
-        callback(byId)
+            realm.query<Activity>("CardCode = $0", cardCode).find()
+        callback(byId.toMutableList())
     }
 
     fun deleteAll() {
