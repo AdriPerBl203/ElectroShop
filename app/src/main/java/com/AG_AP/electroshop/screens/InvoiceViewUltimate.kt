@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -63,7 +64,7 @@ fun InvoiceUltimate(innerPadding: PaddingValues, viewModel: InvoiceViewModel) {
     val dataUiState by viewModel.uiState.collectAsState()
 
     BoxWithConstraints {
-        if (maxWidth > 360.dp) {
+        if (maxWidth > 800.dp) {
             Row(
                 modifier = Modifier
                     .padding(innerPadding)
@@ -200,31 +201,60 @@ fun InvoiceUltimate(innerPadding: PaddingValues, viewModel: InvoiceViewModel) {
                 }
             }
         } else {
-            Column(
+            Column (
                 modifier = Modifier
                     .padding(innerPadding)
-                    .verticalScroll(state = rememberScrollState())
             ) {
-                //Left column
                 Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    modifier = Modifier
+                        .verticalScroll(state = rememberScrollState())
                 ) {
-                    OutlinedTextField(
-                        value = dataUiState.CardName,
-                        onValueChange = { viewModel.cardNameChange(it) },
-                        modifier = Modifier
-                            .width(300.dp)
-                            .padding(8.dp),
-                        label = { Text("Búsqueda") }
-                    )
-                    Spacer(
-                        modifier = Modifier.padding(5.dp)
-                    )
-                    LazyColumn {
+                    //Top column
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        OutlinedTextField(
+                            value = dataUiState.CardName,
+                            onValueChange = { viewModel.cardNameChange(it) },
+                            modifier = Modifier
+                                .width(300.dp)
+                                .padding(8.dp),
+                            label = { Text("Búsqueda") }
+                        )
+                    }
+                }
 
-                        if (dataUiState.BusinessPartnerWithInvoiceList.size == 0) {
-                            items(1) {
+                Spacer(
+                    modifier = Modifier.padding(5.dp)
+                )
+
+                LazyRow {
+
+                    if (dataUiState.BusinessPartnerWithInvoiceList.size == 0) {
+                        items(1) {
+                            Card(
+                                modifier = Modifier
+                                    .padding(4.dp)
+                                    .width(200.dp)
+                                    .height(150.dp)
+                            ) {
+                                Column(
+                                    horizontalAlignment = Alignment.Start,
+                                    verticalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Column {
+                                        Text(
+                                            text = "Sin datos con las búsqueda.",
+                                            modifier = Modifier.padding(start = 16.dp, 5.dp)
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        items(dataUiState.BusinessPartnerWithInvoiceList) { item ->
+                            if (item != null) {
                                 Card(
                                     modifier = Modifier
                                         .padding(4.dp)
@@ -237,44 +267,27 @@ fun InvoiceUltimate(innerPadding: PaddingValues, viewModel: InvoiceViewModel) {
                                     ) {
                                         Column {
                                             Text(
-                                                text = "Sin datos con las búsqueda.",
-                                                modifier = Modifier.padding(start = 16.dp, 5.dp)
+                                                text = item.CardCode,
+                                                modifier = Modifier.padding(
+                                                    start = 16.dp,
+                                                    5.dp
+                                                )
                                             )
-                                        }
-                                    }
-                                }
-                            }
-                        } else {
-                            items(dataUiState.BusinessPartnerWithInvoiceList) { item ->
-                                if (item != null) {
-                                    Card(
-                                        modifier = Modifier
-                                            .padding(4.dp)
-                                            .width(200.dp)
-                                            .height(150.dp)
-                                    ) {
-                                        Column(
-                                            horizontalAlignment = Alignment.Start,
-                                            verticalArrangement = Arrangement.SpaceBetween
-                                        ) {
-                                            Column {
-                                                Text(
-                                                    text = item.CardCode,
-                                                    modifier = Modifier.padding(start = 16.dp, 5.dp)
+                                            Text(
+                                                text = item.DocEntry.toString(),
+                                                modifier = Modifier.padding(
+                                                    start = 16.dp,
+                                                    5.dp
                                                 )
-                                                Text(
-                                                    text = item.DocEntry.toString(),
-                                                    modifier = Modifier.padding(start = 16.dp, 5.dp)
+                                            )
+                                            IconButton(onClick = {
+                                                viewModel.replaceData(item)
+                                            }) {
+                                                Icon(
+                                                    imageVector = Icons.Filled.Add,
+                                                    contentDescription = "Settings",
+                                                    tint = MaterialTheme.colorScheme.primaryContainer
                                                 )
-                                                IconButton(onClick = {
-                                                    viewModel.replaceData(item)
-                                                }) {
-                                                    Icon(
-                                                        imageVector = Icons.Filled.Add,
-                                                        contentDescription = "Settings",
-                                                        tint = MaterialTheme.colorScheme.primaryContainer
-                                                    )
-                                                }
                                             }
                                         }
                                     }
@@ -284,10 +297,12 @@ fun InvoiceUltimate(innerPadding: PaddingValues, viewModel: InvoiceViewModel) {
                     }
                 }
 
-                //Right column
+                //Bottom column
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier
+                        .verticalScroll(state = rememberScrollState())
                 ) {
                     if (dataUiState.ActualPdf == null) {
                         Text(
@@ -296,7 +311,8 @@ fun InvoiceUltimate(innerPadding: PaddingValues, viewModel: InvoiceViewModel) {
                         )
                     } else {
                         dataUiState.ActualPdf!!.openPage(0).use { page ->
-                            val bitmap = Bitmap.createBitmap(2800, 4000, Bitmap.Config.ARGB_8888)
+                            val bitmap =
+                                Bitmap.createBitmap(2800, 4000, Bitmap.Config.ARGB_8888)
                             page.render(
                                 bitmap,
                                 null,

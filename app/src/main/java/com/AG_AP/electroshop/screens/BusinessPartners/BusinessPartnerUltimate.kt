@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -116,7 +117,7 @@ fun BusinessPartnerUltimate(innerPadding: PaddingValues, viewModel: BusinessPart
         }
 
         BoxWithConstraints {
-            if (maxWidth > 360.dp) {
+            if (maxWidth > 800.dp) {
                 Row(
                 ) {
                     Column {//
@@ -228,7 +229,7 @@ fun BusinessPartnerUltimate(innerPadding: PaddingValues, viewModel: BusinessPart
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Text("Clientes en SAP")
-                                LazyColumnWithCards(listaUno, viewModel)
+                                LazyColumnWithCards(listaUno, viewModel, true)
                             }
                         }
                         Box(
@@ -238,7 +239,7 @@ fun BusinessPartnerUltimate(innerPadding: PaddingValues, viewModel: BusinessPart
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Text("Clientes en la tablet")
-                                LazyColumnWithCards(listaDos, viewModel)
+                                LazyColumnWithCards(listaDos, viewModel, true)
                             }
                         }
                     }
@@ -269,7 +270,7 @@ fun BusinessPartnerUltimate(innerPadding: PaddingValues, viewModel: BusinessPart
                                     },
                                     modifier = Modifier
                                         .menuAnchor()
-                                        .width(100.dp)
+                                        .width(250.dp)
                                         .padding(8.dp)
                                 )
 
@@ -293,7 +294,7 @@ fun BusinessPartnerUltimate(innerPadding: PaddingValues, viewModel: BusinessPart
                                 value = dataUiState.CardName,
                                 onValueChange = { viewModel.changeCardName(it) },
                                 modifier = Modifier
-                                    .width(100.dp)
+                                    .width(250.dp)
                                     .padding(8.dp),
                                 label = { Text("Nombre") }
                             )
@@ -301,7 +302,7 @@ fun BusinessPartnerUltimate(innerPadding: PaddingValues, viewModel: BusinessPart
                                 value = dataUiState.Cellular,
                                 onValueChange = { viewModel.changeCellular(it) },
                                 modifier = Modifier
-                                    .width(100.dp)
+                                    .width(250.dp)
                                     .padding(8.dp),
                                 label = { Text("Teléfono móvil") },
                                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
@@ -311,7 +312,7 @@ fun BusinessPartnerUltimate(innerPadding: PaddingValues, viewModel: BusinessPart
                                 value = dataUiState.EmailAddress,
                                 onValueChange = { viewModel.changeEmailAddress(it) },
                                 modifier = Modifier
-                                    .width(100.dp)
+                                    .width(250.dp)
                                     .padding(8.dp),
                                 label = { Text("Email") }
                             )
@@ -324,7 +325,7 @@ fun BusinessPartnerUltimate(innerPadding: PaddingValues, viewModel: BusinessPart
                                 value = dataUiState.FilterByName,
                                 onValueChange = { viewModel.changeFilter(it) },
                                 modifier = Modifier
-                                    .width(100.dp)
+                                    .width(250.dp)
                                     .padding(8.dp),
                                 label = { Text("Buscar por nombre") }
                             ) //
@@ -348,10 +349,10 @@ fun BusinessPartnerUltimate(innerPadding: PaddingValues, viewModel: BusinessPart
                         }
 
                     }
-                    Row(
+                    Column(
                         modifier = Modifier.fillMaxHeight(),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
                     ) {
                         val listaUno = dataUiState.BPSapList
                         val listaDos = dataUiState.BPDeviceList
@@ -362,7 +363,7 @@ fun BusinessPartnerUltimate(innerPadding: PaddingValues, viewModel: BusinessPart
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Text("Clientes en SAP")
-                                LazyColumnWithCards(listaUno, viewModel)
+                                LazyColumnWithCards(listaUno, viewModel, false)
                             }
                         }
                         Box(
@@ -372,7 +373,7 @@ fun BusinessPartnerUltimate(innerPadding: PaddingValues, viewModel: BusinessPart
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Text("Clientes en la tablet")
-                                LazyColumnWithCards(listaDos, viewModel)
+                                LazyColumnWithCards(listaDos, viewModel, false)
                             }
                         }
                     }
@@ -403,80 +404,157 @@ fun BusinessPartnerUltimate(innerPadding: PaddingValues, viewModel: BusinessPart
 }
 
 @Composable
-fun LazyColumnWithCards(data: List<BusinessPartner?>, viewModel: BusinessPartnerViewModel) {
-    LazyColumn(
-        modifier = Modifier.padding(horizontal = 10.dp, vertical = 15.dp)
-    ) {
-        if (data.isNotEmpty()) {
-            items(data) { item ->
-                Card(
-                    modifier = Modifier
-                        .padding(4.dp)
-                        .width(200.dp)
-                        .height(150.dp)
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.Start,
-                        verticalArrangement = Arrangement.SpaceBetween
+fun LazyColumnWithCards(data: List<BusinessPartner?>, viewModel: BusinessPartnerViewModel, isLazyColumn: Boolean) {
+    if (isLazyColumn) {
+        LazyColumn(
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 15.dp)
+        ) {
+            if (data.isNotEmpty()) {
+                items(data) { item ->
+                    Card(
+                        modifier = Modifier
+                            .padding(4.dp)
+                            .width(200.dp)
+                            .height(150.dp)
                     ) {
-                        Column {
-                            if (item != null) {
-                                Text(
-                                    text = item.CardCode,
-                                    modifier = Modifier.padding(start = 16.dp, 5.dp)
-                                )
-                                Text(
-                                    text = item.CardName,
-                                    modifier = Modifier.padding(start = 16.dp, 5.dp)
-                                )
-                                Text(
-                                    text = item.Cellular,
-                                    modifier = Modifier.padding(start = 16.dp, 5.dp)
-                                )
-                            } else {
-                                Text(
-                                    text = "",
-                                    modifier = Modifier.padding(start = 16.dp, 5.dp)
-                                )
-                            }
-                            IconButton(onClick = {
-                                viewModel.replaceData(item)
-                            }) {
-                                Icon(
-                                    imageVector = Icons.Filled.Add,
-                                    contentDescription = "Settings",
-                                    tint = MaterialTheme.colorScheme.primaryContainer
-                                )
+                        Column(
+                            horizontalAlignment = Alignment.Start,
+                            verticalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Column {
+                                if (item != null) {
+                                    Text(
+                                        text = item.CardCode,
+                                        modifier = Modifier.padding(start = 16.dp, 5.dp)
+                                    )
+                                    Text(
+                                        text = item.CardName,
+                                        modifier = Modifier.padding(start = 16.dp, 5.dp)
+                                    )
+                                    Text(
+                                        text = item.Cellular,
+                                        modifier = Modifier.padding(start = 16.dp, 5.dp)
+                                    )
+                                } else {
+                                    Text(
+                                        text = "",
+                                        modifier = Modifier.padding(start = 16.dp, 5.dp)
+                                    )
+                                }
+                                IconButton(onClick = {
+                                    viewModel.replaceData(item)
+                                }) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Add,
+                                        contentDescription = "Settings",
+                                        tint = MaterialTheme.colorScheme.primaryContainer
+                                    )
+                                }
                             }
                         }
                     }
                 }
-            }
-        } else {
-            item {
-                Card(
-                    modifier = Modifier
-                        .padding(4.dp)
-                        .width(200.dp)
-                        .height(150.dp)
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.Start,
-                        verticalArrangement = Arrangement.SpaceBetween
+            } else {
+                item {
+                    Card(
+                        modifier = Modifier
+                            .padding(4.dp)
+                            .width(200.dp)
+                            .height(150.dp)
                     ) {
-                        Column {
-                            Text(
-                                text = "No hay datos",
-                                modifier = Modifier.padding(24.dp)
-                            )
+                        Column(
+                            horizontalAlignment = Alignment.Start,
+                            verticalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Column {
+                                Text(
+                                    text = "No hay datos",
+                                    modifier = Modifier.padding(24.dp)
+                                )
 
+                            }
                         }
                     }
                 }
             }
+
         }
+    } else {
+        LazyRow(
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 15.dp)
+        ) {
+            if (data.isNotEmpty()) {
+                items(data) { item ->
+                    Card(
+                        modifier = Modifier
+                            .padding(4.dp)
+                            .width(200.dp)
+                            .height(150.dp)
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.Start,
+                            verticalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Column {
+                                if (item != null) {
+                                    Text(
+                                        text = item.CardCode,
+                                        modifier = Modifier.padding(start = 16.dp, 5.dp)
+                                    )
+                                    Text(
+                                        text = item.CardName,
+                                        modifier = Modifier.padding(start = 16.dp, 5.dp)
+                                    )
+                                    Text(
+                                        text = item.Cellular,
+                                        modifier = Modifier.padding(start = 16.dp, 5.dp)
+                                    )
+                                } else {
+                                    Text(
+                                        text = "",
+                                        modifier = Modifier.padding(start = 16.dp, 5.dp)
+                                    )
+                                }
+                                IconButton(onClick = {
+                                    viewModel.replaceData(item)
+                                }) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Add,
+                                        contentDescription = "Settings",
+                                        tint = MaterialTheme.colorScheme.primaryContainer
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                item {
+                    Card(
+                        modifier = Modifier
+                            .padding(4.dp)
+                            .width(200.dp)
+                            .height(150.dp)
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.Start,
+                            verticalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Column {
+                                Text(
+                                    text = "No hay datos",
+                                    modifier = Modifier.padding(24.dp)
+                                )
 
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
     }
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

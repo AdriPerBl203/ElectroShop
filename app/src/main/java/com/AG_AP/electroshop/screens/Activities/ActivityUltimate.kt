@@ -129,7 +129,7 @@ fun ActivityUltimate(
     }
 
     BoxWithConstraints {
-        if (maxWidth > 360.dp) {
+        if (maxWidth > 800.dp) {
             Row(
                 modifier = Modifier
                     .padding(innerPadding)
@@ -406,7 +406,7 @@ fun ActivityUltimate(
                                     },
                                     modifier = Modifier
                                         .menuAnchor()
-                                        .width(100.dp)
+                                        .width(250.dp)
                                         .padding(8.dp)
                                 )
 
@@ -430,13 +430,13 @@ fun ActivityUltimate(
                                 value = dataUiState.nota,
                                 onValueChange = { viewModel.changenota(it) },
                                 modifier = Modifier
-                                    .width(100.dp)
+                                    .width(250.dp)
                                     .padding(8.dp),
                                 label = { Text("Nota") }
                             )
                             DatePicker(
                                 label = "Fecha", dataUiState.ActivityDate, modifier = Modifier
-                                    .width(100.dp)
+                                    .width(250.dp)
                                     .padding(8.dp)
                             ) {
                                 viewModel.changeActivityDate(it)
@@ -445,7 +445,7 @@ fun ActivityUltimate(
                                 value = dataUiState.ActivityTime,
                                 onValueChange = { viewModel.changeActivityTime(it) },
                                 modifier = Modifier
-                                    .width(100.dp)
+                                    .width(250.dp)
                                     .padding(8.dp),
                                 label = { Text("Hora inicio") },
                                 readOnly = true,
@@ -467,7 +467,7 @@ fun ActivityUltimate(
                                 value = dataUiState.U_SEIPEDIDOCLIENTE,
                                 onValueChange = { /*dataUiState.U_SEIPEDIDOCLIENTE*/ },
                                 modifier = Modifier
-                                    .width(100.dp)
+                                    .width(250.dp)
                                     .padding(8.dp),
                                 label = { Text("Asociar pedido de cliente") },
                                 readOnly = true,
@@ -488,7 +488,7 @@ fun ActivityUltimate(
                                 value = dataUiState.ClgCode,
                                 onValueChange = { viewModel.changeClgCode(it) },
                                 modifier = Modifier
-                                    .width(100.dp)
+                                    .width(250.dp)
                                     .padding(8.dp),
                                 label = { Text("Id") },
                                 enabled = false
@@ -502,7 +502,7 @@ fun ActivityUltimate(
                                 value = dataUiState.EndTime,
                                 onValueChange = { viewModel.changeEndTime(it) },
                                 modifier = Modifier
-                                    .width(100.dp)
+                                    .width(250.dp)
                                     .padding(8.dp),
                                 label = { Text("Hora fin") },
                                 readOnly = true,
@@ -523,7 +523,7 @@ fun ActivityUltimate(
                                 value = dataUiState.CardCode,
                                 onValueChange = { viewModel.changeCardCode(it) },
                                 modifier = Modifier
-                                    .width(100.dp)
+                                    .width(250.dp)
                                     .padding(8.dp),
                                 label = { Text("Código cliente") },
                                 readOnly = true,
@@ -544,7 +544,7 @@ fun ActivityUltimate(
                                 value = dataUiState.Tel,
                                 onValueChange = { viewModel.changeTel(it) },
                                 modifier = Modifier
-                                    .width(100.dp)
+                                    .width(250.dp)
                                     .padding(8.dp),
                                 label = { Text("Teléfono") }
                             )
@@ -565,7 +565,7 @@ fun ActivityUltimate(
                                     },
                                     modifier = Modifier
                                         .menuAnchor()
-                                        .width(100.dp)
+                                        .width(250.dp)
                                         .padding(8.dp)
                                 )
 
@@ -596,7 +596,7 @@ fun ActivityUltimate(
                             value = dataUiState.dataFilter,
                             onValueChange = { viewModel.changeDataFilter(it) },
                             modifier = Modifier
-                                .width(100.dp)
+                                .width(250.dp)
                                 .padding(8.dp),
                             label = { Text("Buscar") }
                         )
