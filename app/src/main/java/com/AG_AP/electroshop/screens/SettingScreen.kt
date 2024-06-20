@@ -96,6 +96,41 @@ fun SettingScreen(
                         .fillMaxWidth()
                         .padding(bottom = 16.dp)
                 )
+
+                OutlinedTextField(
+                    //TODO
+                    value = dataUiState.puertoExterno,
+                    onValueChange = { viewModel.changePuertoExterno(it) },
+                    label = { Text("Puerto externo") },
+                    trailingIcon = { Icon(imageVector = dataUiState.iconInt, contentDescription = "emailIcon") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp)
+                )
+
+                OutlinedTextField(
+                    value = dataUiState.urlExtPDF,
+                    onValueChange = { viewModel.changeUrlExtPDF(it) },
+                    label = { Text("URL externa") },
+                    trailingIcon = { Icon(imageVector = dataUiState.iconExt, contentDescription = "emailIcon") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp)
+                )
+
+                OutlinedTextField(
+                    //TODO
+                    value = dataUiState.puertoExternoPDF,
+                    onValueChange = { viewModel.changePuertoExternoPDF(it) },
+                    label = { Text("Puerto externo") },
+                    trailingIcon = { Icon(imageVector = dataUiState.iconInt, contentDescription = "emailIcon") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp)
+                )
+
+                Spacer(modifier = Modifier.height(40.dp))
+
                 OutlinedTextField(
                     value = dataUiState.urlInt,
                     onValueChange = { viewModel.changeUrlInt(it) },
@@ -105,6 +140,41 @@ fun SettingScreen(
                         .fillMaxWidth()
                         .padding(bottom = 16.dp)
                 )
+
+                OutlinedTextField(
+                    //TODO
+                    value = dataUiState.puertoInterno,
+                    onValueChange = { viewModel.changePuertoInterno(it) },
+                    label = { Text("Puerto interno") },
+                    trailingIcon = { Icon(imageVector = dataUiState.iconInt, contentDescription = "emailIcon") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp)
+                )
+
+                OutlinedTextField(
+                    value = dataUiState.urlIntPDF,
+                    onValueChange = { viewModel.changeUrlIntPDF(it) },
+                    label = { Text("URL interna") },
+                    trailingIcon = { Icon(imageVector = dataUiState.iconInt, contentDescription = "emailIcon") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp)
+                )
+
+                OutlinedTextField(
+                    //TODO
+                    value = dataUiState.puertoInternoPDF,
+                    onValueChange = { viewModel.changePuertoInternoPDF(it) },
+                    label = { Text("Puerto interno") },
+                    trailingIcon = { Icon(imageVector = dataUiState.iconInt, contentDescription = "emailIcon") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp)
+                )
+
+                Spacer(modifier = Modifier.height(40.dp))
+
 
                 OutlinedTextField(
                     //TODO

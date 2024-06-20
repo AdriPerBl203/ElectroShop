@@ -80,6 +80,56 @@ class SettingsViewModel : ViewModel() {
         }
     }
 
+    fun changePuertoExterno(data: String) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                puertoExterno = data
+            )
+        }
+    }
+
+    fun changeUrlExtPDF(data: String) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                urlExtPDF = data
+            )
+        }
+    }
+
+    fun changePuertoExternoPDF(data: String) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                puertoExternoPDF = data
+            )
+        }
+    }
+
+    fun changePuertoInternoPDF(data: String) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                puertoInternoPDF = data
+            )
+        }
+    }
+
+    fun changeUrlIntPDF(data: String) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                urlIntPDF = data
+            )
+        }
+    }
+
+
+
+    fun changePuertoInterno(data: String) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                puertoInterno = data
+            )
+        }
+    }
+
     fun urlInt(data: String) {
         _uiState.update { currentState ->
             currentState.copy(
@@ -533,9 +583,9 @@ class SettingsViewModel : ViewModel() {
             deleteAndInsertSpecialPrice() // correcta
             deleteAndInsertPriceList() // correcta
             deleteAndInsertInvoice()
-            if(_uiState.value.checkBoxItems){
+            if (_uiState.value.checkBoxItems) {
                 deleteAndInsertItem()// Correcta
-            }else{
+            } else {
                 _uiState.update { currentState ->
                     currentState.copy(
                         checkItem = true
@@ -543,9 +593,9 @@ class SettingsViewModel : ViewModel() {
                 }
             }
 
-            if(_uiState.value.checkBoxUDO){
+            if (_uiState.value.checkBoxUDO) {
                 deleteAndInsertUserUdo() // revisado
-            }else{
+            } else {
                 _uiState.update { currentState ->
                     currentState.copy(
                         checkUserUdo = true
@@ -553,27 +603,27 @@ class SettingsViewModel : ViewModel() {
                 }
             }
 
-            if(_uiState.value.checkBoxClients){
+            if (_uiState.value.checkBoxClients) {
                 deleteAndInsertBusinessPartner() // revisado
-            }else{
+            } else {
                 _uiState.update { currentState ->
                     currentState.copy(
                         checkBusinessPartner = true
                     )
                 }
             }
-            if(_uiState.value.checkBoxActivity){
+            if (_uiState.value.checkBoxActivity) {
                 deleteAndInsertActivity() // revisado
-            }else{
+            } else {
                 _uiState.update { currentState ->
                     currentState.copy(
                         checkActivity = true
                     )
                 }
             }
-            if(_uiState.value.checkBoxOrders){
+            if (_uiState.value.checkBoxOrders) {
                 deleteAndInsertOrders() //
-            }else{
+            } else {
                 _uiState.update { currentState ->
                     currentState.copy(
                         checkOrder = true
@@ -598,7 +648,7 @@ class SettingsViewModel : ViewModel() {
 
                 data.value.forEach { it ->
                     var cardCode = it.CardCode
-                    var DocNum= it.DocNum
+                    var DocNum = it.DocNum
                     var docEntry = it.DocEntry.toString()
                     var data: DataPostExportToPDF = DataPostExportToPDF()
                     data.add(
@@ -638,7 +688,7 @@ class SettingsViewModel : ViewModel() {
                 //Fin de la conexión
                 LoginObj.logoutGateway(Config.rulUse)
                 _uiState.value.checkInvoices = true
-            }else{
+            } else {
                 _uiState.value.checkInvoices = true
             }
 
