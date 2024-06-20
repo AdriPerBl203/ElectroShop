@@ -195,6 +195,12 @@ class SettingsViewModel : ViewModel() {
         val codePDF = _uiState.value.codePDF
         var textShow = ""
 
+        val puertoInterno = _uiState.value.puertoInterno
+        val puertoExterno = _uiState.value.puertoExterno
+
+        val urlIntTest: String = "https://$urlInt:$puertoInterno/"
+        val urlExtTest: String = "https://$urlExt:$puertoExterno/"
+
         if (urlInt.isEmpty() || urlExt.isEmpty()) {
             textShow = "URL vacía."
             _uiState.update { currentState ->
@@ -206,6 +212,7 @@ class SettingsViewModel : ViewModel() {
             return;
         }
 
+        //TODO añadir codePDF cuando se incorpore el PDF
         if (login.isEmpty() || password.isEmpty() || dataBase.isEmpty() || codePDF.isEmpty()) {
             textShow = "Campos de configuración no rellenos"
             _uiState.update { currentState ->
@@ -217,7 +224,7 @@ class SettingsViewModel : ViewModel() {
             return;
         }
 
-        if (!validarURL(urlInt) || !validarURL(urlExt)) {
+        /*if (!validarURL(urlInt) || !validarURL(urlExt)) {
             textShow = "Campos de las URL no validos."
             _uiState.update { currentState ->
                 currentState.copy(
@@ -226,7 +233,7 @@ class SettingsViewModel : ViewModel() {
                 )
             }
             return;
-        }
+        }*/
 
         /*Hacer la conexió*/
         viewModelScope.launch {
@@ -236,13 +243,13 @@ class SettingsViewModel : ViewModel() {
                 )
             }
             val dataLogin = Login(dataBase, password, login)
-            val data = LoginObj.loginAcessTwoversion(dataLogin, urlInt)
+            val data = LoginObj.loginAcessTwoversion(dataLogin, urlIntTest)
             var dataUrlExt: Boolean = false
-            var urlCheck: String = urlInt
+            var urlCheck: String = urlIntTest
             var urlCheckTip: String = "Int"
             if (!data) {
-                dataUrlExt = LoginObj.loginAcessTwoversion(dataLogin, urlExt)
-                urlCheck = urlExt
+                dataUrlExt = LoginObj.loginAcessTwoversion(dataLogin, urlExtTest)
+                urlCheck = urlExtTest
                 urlCheckTip = "Ext"
             }
             var text: String = ""
@@ -264,6 +271,7 @@ class SettingsViewModel : ViewModel() {
                             iconExt = Icons.Default.Cancel
                         )
                     }
+                    Config.codePDF = codePDF
                     LoginObj.logout(urlInt)
                 } else if (dataUrlExt) {
                     _uiState.update { currentState ->
