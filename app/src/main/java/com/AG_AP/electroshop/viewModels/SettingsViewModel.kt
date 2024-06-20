@@ -673,7 +673,7 @@ class SettingsViewModel : ViewModel() {
                             listOf(listOf("13"))
                         )
                     )
-                    var response: Response<ResponseBody>? = ExportToPDFObj.postExporToPDF(data)
+                    var response: Response<ResponseBody>? = ExportToPDFObj.postExporToPDF(data,Config.codePDF)
                     if (response != null && response.isSuccessful) {
                         val responseBody: ResponseBody? = response.body()
                         if (responseBody != null) {

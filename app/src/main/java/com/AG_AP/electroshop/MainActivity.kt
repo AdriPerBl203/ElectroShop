@@ -46,7 +46,7 @@ class MainActivity : ComponentActivity() {
                     val activity: ComponentActivity = this
                     ObjectContext.context = context
                     ActivityObj.ObjectActivity = activity
-
+                    //CODE DE PRUEBA PAR PDF: INV20015
                     Config.initConfig(context)
                     AppNav(context = context)
                 }
