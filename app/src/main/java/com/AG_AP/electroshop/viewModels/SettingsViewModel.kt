@@ -247,10 +247,24 @@ class SettingsViewModel : ViewModel() {
             var dataUrlExt: Boolean = false
             var urlCheck: String = urlIntTest
             var urlCheckTip: String = "Int"
+            //TODO 21/06/24
+            //configuración a guardar.
+            _uiState.value.ipORNombre = urlInt
+            _uiState.value.puerto = puertoExterno
+            _uiState.value.ipORNombrePDF
+            _uiState.value.puertoPDF
+            _uiState.value.codigoPDF = codePDF
             if (!data) {
                 dataUrlExt = LoginObj.loginAcessTwoversion(dataLogin, urlExtTest)
                 urlCheck = urlExtTest
                 urlCheckTip = "Ext"
+                //TODO 21/06/24
+                //configuración a guardar.
+                _uiState.value.ipORNombre = urlExt
+                _uiState.value.puerto = puertoExterno
+                _uiState.value.ipORNombrePDF
+                _uiState.value.puertoPDF
+                _uiState.value.codigoPDF = codePDF
             }
             var text: String = ""
             Log.e("SettingScreen", "Conexión realizada")
@@ -921,8 +935,29 @@ class SettingsViewModel : ViewModel() {
         val dataBase = _uiState.value.dataBase
         val url = _uiState.value.urlCheck
         val urlTipCheck = _uiState.value.urlTipCheck
+
+        //TODO nuevos datos, borrar los otro cuando funcionen estos
+
+        val ipORNombre: String = _uiState.value.ipORNombre
+        val puerto: String = _uiState.value.puerto
+        val ipORNombrePDF: String =""
+        val puertoPDF: String = ""
+        val codigoPDF: String = _uiState.value.codePDF
+
+
         val dataConfiguration =
-            ConfigurationApplication(login, password, dataBase, url, urlTipCheck)
+            ConfigurationApplication(
+                login,
+                password,
+                dataBase,
+                url,
+                urlTipCheck,
+                ipORNombre,
+                puerto,
+                ipORNombrePDF,
+                puertoPDF,
+                codigoPDF
+            )
         val gson = Gson()
         val jsonData: String = gson.toJson(dataConfiguration)
 
@@ -954,20 +989,24 @@ class SettingsViewModel : ViewModel() {
                 _uiState.update { currentState ->
 
                     currentState.copy(
-                        urlInt = dataConfig.url,
+                        urlInt = dataConfig.ipORNombre,
+                        puertoInterno = dataConfig.puerto,
                         login = dataConfig.login,
                         password = dataConfig.password,
                         dataBase = dataConfig.dataBase,
+                        puertoPDF = dataConfig.puertoPDF,
                         init = false
                     )
                 }
             } else if (dataConfig.urlTipCheck == "Ext") {
                 _uiState.update { currentState ->
                     currentState.copy(
-                        urlExt = dataConfig.url,
+                        urlExt = dataConfig.ipORNombre,
+                        puertoExterno = dataConfig.puerto,
                         login = dataConfig.login,
                         password = dataConfig.password,
                         dataBase = dataConfig.dataBase,
+                        puertoPDF = dataConfig.puertoPDF,
                         init = false
                     )
                 }

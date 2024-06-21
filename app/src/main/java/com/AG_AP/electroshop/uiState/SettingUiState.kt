@@ -46,6 +46,11 @@ data class SettingUiState(
     val puertoExternoPDF:String="",
     val urlIntPDF:String = "",
     val puertoInternoPDF:String="",
+    var ipORNombre: String ="",
+    var puerto: String ="",
+    var ipORNombrePDF: String ="",
+    var puertoPDF: String ="",
+    var codigoPDF: String ="",
 )
 /*
 *

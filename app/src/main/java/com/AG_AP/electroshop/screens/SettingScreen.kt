@@ -113,7 +113,7 @@ fun SettingScreen(
                 OutlinedTextField(
                     value = dataUiState.urlExtPDF,
                     onValueChange = { viewModel.changeUrlExtPDF(it) },
-                    label = { Text("URL externa") },
+                    label = { Text("URL externa PDF") },
                     trailingIcon = { Icon(imageVector = dataUiState.iconExt, contentDescription = "emailIcon") },
                     modifier = Modifier
                         .padding(bottom = 16.dp)
@@ -124,7 +124,7 @@ fun SettingScreen(
                     //TODO
                     value = dataUiState.puertoExternoPDF,
                     onValueChange = { viewModel.changePuertoExternoPDF(it) },
-                    label = { Text("Puerto externo") },
+                    label = { Text("Puerto externo PDF") },
                     trailingIcon = { Icon(imageVector = dataUiState.iconInt, contentDescription = "emailIcon") },
                     modifier = Modifier
                         .padding(bottom = 16.dp)
@@ -135,11 +135,11 @@ fun SettingScreen(
                         //TODO
                         value = dataUiState.codePDF,
                         onValueChange = { viewModel.changeCodePDF(it) },
-                        label = { Text("Código PDF.") },
+                        label = { Text("Código PDF") },
                         trailingIcon = { Icon(imageVector = Icons.Default.DocumentScanner, contentDescription = "emailIcon") },
                         modifier = Modifier
-                            .fillMaxWidth()
                             .padding(bottom = 16.dp)
+                            .width(250.dp)
                     )
                 }
 
@@ -164,7 +164,7 @@ fun SettingScreen(
                         //TODO
                         value = dataUiState.puertoInterno,
                         onValueChange = { viewModel.changePuertoInterno(it) },
-                        label = { Text("Puerto interno") },
+                        label = { Text("Puerto interno PDF") },
                         trailingIcon = {
                             Icon(
                                 imageVector = dataUiState.iconInt,
@@ -179,7 +179,7 @@ fun SettingScreen(
                     OutlinedTextField(
                         value = dataUiState.urlIntPDF,
                         onValueChange = { viewModel.changeUrlIntPDF(it) },
-                        label = { Text("URL interna") },
+                        label = { Text("URL interna PDF") },
                         trailingIcon = {
                             Icon(
                                 imageVector = dataUiState.iconInt,
