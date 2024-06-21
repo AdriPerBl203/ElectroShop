@@ -143,6 +143,8 @@ fun SettingScreen(
                     )
                 }
 
+                Spacer(modifier = Modifier.width(10.dp))
+
                 Column() {
 
                     OutlinedTextField(

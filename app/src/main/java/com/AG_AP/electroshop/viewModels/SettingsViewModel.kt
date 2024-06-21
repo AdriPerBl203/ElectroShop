@@ -252,7 +252,7 @@ class SettingsViewModel : ViewModel() {
             var dataUrlExt: Boolean = false
             var urlCheck: String = urlIntTest
             var urlCheckTip: String = "Int"
-            //TODO 21/06/24
+            // 21/06/24
             //configuración a guardar.
             _uiState.value.ipORNombre = urlInt
             _uiState.value.puerto = puertoInterno
@@ -263,7 +263,7 @@ class SettingsViewModel : ViewModel() {
                 dataUrlExt = LoginObj.loginAcessTwoversion(dataLogin, urlExtTest)
                 urlCheck = urlExtTest
                 urlCheckTip = "Ext"
-                //TODO 21/06/24
+                // 21/06/24
                 //configuración a guardar.
                 _uiState.value.ipORNombre = urlExt
                 _uiState.value.puerto = puertoExterno
@@ -282,35 +282,59 @@ class SettingsViewModel : ViewModel() {
                     testApiGateway(urlIntPDF,puertoInternoPDF);
                     val checkCode: Boolean = testApiGatewayCode(codePDF);
 
+                    if(checkCode){
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                message = true,
+                                text = text,
+                                progress = false,
+                                ButtomEnable = true,
+                                urlCheck = urlCheck,
+                                urlTipCheck = urlCheckTip,
+                                iconInt = Icons.Default.CheckCircle,
+                                iconExt = Icons.Default.Cancel
+                            )
+                        }
+
+                    }else{
+                    text = "Código de PDF no valido."
                     _uiState.update { currentState ->
                         currentState.copy(
                             message = true,
                             text = text,
-                            progress = false,
-                            ButtomEnable = true,
-                            urlCheck = urlCheck,
-                            urlTipCheck = urlCheckTip,
-                            iconInt = Icons.Default.CheckCircle,
-                            iconExt = Icons.Default.Cancel
+                            progress = false
                         )
                     }
+                }
                     LoginObj.logout(urlInt)
                 } else if (dataUrlExt) {
                     //TODO test PDF añadi los campos que son necesarios.
                     testApiGateway(urlExtPDF, puertoExternoPDF);
                     val checkCode: Boolean = testApiGatewayCode(codePDF);
 
-                    _uiState.update { currentState ->
-                        currentState.copy(
-                            message = true,
-                            text = text,
-                            progress = false,
-                            ButtomEnable = true,
-                            urlCheck = urlCheck,
-                            urlTipCheck = urlCheckTip,
-                            iconExt = Icons.Default.CheckCircle,
-                            iconInt = Icons.Default.Cancel
-                        )
+                    if(checkCode){
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                message = true,
+                                text = text,
+                                progress = false,
+                                ButtomEnable = true,
+                                urlCheck = urlCheck,
+                                urlTipCheck = urlCheckTip,
+                                iconExt = Icons.Default.CheckCircle,
+                                iconInt = Icons.Default.Cancel
+                            )
+                        }
+
+                    }else{
+                        text = "Código de PDF no valido."
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                message = true,
+                                text = text,
+                                progress = false
+                            )
+                        }
                     }
                     LoginObj.logout(urlExt)
                 }
