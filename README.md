@@ -1,0 +1,1 @@
+--- añadir el campo nuevo a seiconfig- que sea el usuario del departamento de ventas.
