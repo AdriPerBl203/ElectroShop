@@ -6,6 +6,7 @@ import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
 
@@ -14,5 +15,10 @@ interface ExportToPDF {
     suspend fun postExportToPDF(
         @Query("DocCode") docCode: String,
         @Body data: DataPostExportToPDF
+    ): Response<ResponseBody>
+
+    @GET("rs/v1/LoadCR")
+    suspend fun checkExportToPDF(
+        @Query("DocCode") DocCode: String
     ): Response<ResponseBody>
 }

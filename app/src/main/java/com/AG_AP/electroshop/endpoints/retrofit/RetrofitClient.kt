@@ -75,10 +75,10 @@ object RetrofitClient {
     }
 
     fun setURLGetaway(url: String) {
-        var spliData :List<String> = url.split(":")
-        val urlCustonPort = spliData.get(0) + ":" + spliData.get(1) + ":60020/"
+        //var spliData :List<String> = url.split(":")
+        //val urlCustonPort = spliData.get(0) + ":" + spliData.get(1) + ":60020/"
 
-        baseUrlGetaway = urlCustonPort
+        baseUrlGetaway = url
         retrofitGetaway = Retrofit.Builder()
             .baseUrl(baseUrlGetaway)
             .addConverterFactory(GsonConverterFactory.create())

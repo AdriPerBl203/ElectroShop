@@ -198,6 +198,11 @@ class SettingsViewModel : ViewModel() {
         val puertoInterno = _uiState.value.puertoInterno
         val puertoExterno = _uiState.value.puertoExterno
 
+        val urlIntPDF = _uiState.value.urlIntPDF
+        val urlExtPDF = _uiState.value.urlExtPDF
+        val puertoInternoPDF = _uiState.value.puertoInternoPDF
+        val puertoExternoPDF = _uiState.value.puertoExternoPDF
+
         val urlIntTest: String = "https://$urlInt:$puertoInterno/"
         val urlExtTest: String = "https://$urlExt:$puertoExterno/"
 
@@ -224,17 +229,6 @@ class SettingsViewModel : ViewModel() {
             return;
         }
 
-        /*if (!validarURL(urlInt) || !validarURL(urlExt)) {
-            textShow = "Campos de las URL no validos."
-            _uiState.update { currentState ->
-                currentState.copy(
-                    message = true,
-                    text = textShow
-                )
-            }
-            return;
-        }*/
-
         /*Hacer la conexió*/
         viewModelScope.launch {
             _uiState.update { currentState ->
@@ -250,9 +244,9 @@ class SettingsViewModel : ViewModel() {
             //TODO 21/06/24
             //configuración a guardar.
             _uiState.value.ipORNombre = urlInt
-            _uiState.value.puerto = puertoExterno
-            _uiState.value.ipORNombrePDF
-            _uiState.value.puertoPDF
+            _uiState.value.puerto = puertoInterno
+            _uiState.value.ipORNombrePDF = urlIntPDF
+            _uiState.value.puertoPDF = puertoInternoPDF
             _uiState.value.codigoPDF = codePDF
             if (!data) {
                 dataUrlExt = LoginObj.loginAcessTwoversion(dataLogin, urlExtTest)
@@ -262,17 +256,21 @@ class SettingsViewModel : ViewModel() {
                 //configuración a guardar.
                 _uiState.value.ipORNombre = urlExt
                 _uiState.value.puerto = puertoExterno
-                _uiState.value.ipORNombrePDF
-                _uiState.value.puertoPDF
+                _uiState.value.ipORNombrePDF = urlExtPDF
+                _uiState.value.puertoPDF = puertoExternoPDF
                 _uiState.value.codigoPDF = codePDF
             }
             var text: String = ""
             Log.e("SettingScreen", "Conexión realizada")
             //LoginObj.logout(urlInt)
-            Config.codePDF = codePDF
             if (data || dataUrlExt) {
+                Config.codePDF = codePDF
                 text = "Test realizado con éxito."
                 if (data) {
+                    //TODO test PDF añadi los campos que son necesarios.
+                    testApiGateway(urlIntPDF,puertoInternoPDF);
+                    val checkCode: Boolean = testApiGatewayCode(codePDF);
+
                     _uiState.update { currentState ->
                         currentState.copy(
                             message = true,
@@ -285,9 +283,12 @@ class SettingsViewModel : ViewModel() {
                             iconExt = Icons.Default.Cancel
                         )
                     }
-                    Config.codePDF = codePDF
                     LoginObj.logout(urlInt)
                 } else if (dataUrlExt) {
+                    //TODO test PDF añadi los campos que son necesarios.
+                    testApiGateway(urlExtPDF, puertoExternoPDF);
+                    val checkCode: Boolean = testApiGatewayCode(codePDF);
+
                     _uiState.update { currentState ->
                         currentState.copy(
                             message = true,
@@ -314,6 +315,19 @@ class SettingsViewModel : ViewModel() {
             }
         }
     }
+
+    suspend fun testApiGateway(cuerpo: String, puerto: String) {
+        //TODO test
+        var login = _uiState.value.login
+        var password = _uiState.value.password
+        val dataBase = _uiState.value.dataBase
+        val dataLogin = Login(dataBase, password, login)
+        val urlIntTest:String = "https://$cuerpo:$puerto/"
+        val data = LoginObj.loginAcessGateway(dataLogin, urlIntTest)
+
+    }
+
+    suspend fun testApiGatewayCode(code: String) = ExportToPDFObj.checkExporToPDF(code)
 
     fun menssageFunFalse() {
         _uiState.update { currentState ->
@@ -940,8 +954,8 @@ class SettingsViewModel : ViewModel() {
 
         val ipORNombre: String = _uiState.value.ipORNombre
         val puerto: String = _uiState.value.puerto
-        val ipORNombrePDF: String =""
-        val puertoPDF: String = ""
+        val ipORNombrePDF: String = _uiState.value.ipORNombrePDF
+        val puertoPDF: String = _uiState.value.puertoPDF
         val codigoPDF: String = _uiState.value.codePDF
 
 
@@ -994,7 +1008,9 @@ class SettingsViewModel : ViewModel() {
                         login = dataConfig.login,
                         password = dataConfig.password,
                         dataBase = dataConfig.dataBase,
-                        puertoPDF = dataConfig.puertoPDF,
+                        codePDF = dataConfig.codigoPDF,
+                        urlIntPDF= dataConfig.ipORNombrePDF,
+                        puertoInternoPDF= dataConfig.puertoPDF,
                         init = false
                     )
                 }
@@ -1006,7 +1022,9 @@ class SettingsViewModel : ViewModel() {
                         login = dataConfig.login,
                         password = dataConfig.password,
                         dataBase = dataConfig.dataBase,
-                        puertoPDF = dataConfig.puertoPDF,
+                        codePDF = dataConfig.codigoPDF,
+                        urlExtPDF= dataConfig.ipORNombrePDF,
+                        puertoExternoPDF = dataConfig.puertoPDF,
                         init = false
                     )
                 }
