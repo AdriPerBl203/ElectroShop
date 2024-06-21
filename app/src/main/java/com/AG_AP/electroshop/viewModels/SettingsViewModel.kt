@@ -206,8 +206,19 @@ class SettingsViewModel : ViewModel() {
         val urlIntTest: String = "https://$urlInt:$puertoInterno/"
         val urlExtTest: String = "https://$urlExt:$puertoExterno/"
 
-        if (urlInt.isEmpty() || urlExt.isEmpty()) {
-            textShow = "URL vacía."
+        if (urlInt.isEmpty() || puertoInterno.isEmpty() || urlIntPDF.isEmpty() || puertoInternoPDF.isEmpty() || codePDF.isEmpty()) {
+            textShow = "Faltan campos de la configuración interna"
+            _uiState.update { currentState ->
+                currentState.copy(
+                    message = true,
+                    text = textShow
+                )
+            }
+            return;
+        }
+
+        if (urlExt.isEmpty() || puertoExterno.isEmpty() || urlExtPDF.isEmpty() || puertoExternoPDF.isEmpty() || codePDF.isEmpty()) {
+            textShow = "Faltan campos de la configuración externa"
             _uiState.update { currentState ->
                 currentState.copy(
                     message = true,
