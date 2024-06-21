@@ -39,6 +39,18 @@ data class SettingUiState(
     val checkBoxActivity:Boolean = true,
     val checkBoxClients:Boolean = true,
     var checkInvoices:Boolean = false,
+    val codePDF:String = "",
+    val puertoInterno:String = "",
+    val puertoExterno:String = "",
+    val urlExtPDF:String = "",
+    val puertoExternoPDF:String="",
+    val urlIntPDF:String = "",
+    val puertoInternoPDF:String="",
+    var ipORNombre: String ="",
+    var puerto: String ="",
+    var ipORNombrePDF: String ="",
+    var puertoPDF: String ="",
+    var codigoPDF: String ="",
 )
 /*
 *

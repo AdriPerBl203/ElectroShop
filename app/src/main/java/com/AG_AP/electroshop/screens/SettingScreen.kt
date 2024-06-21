@@ -14,12 +14,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.ContentPasteSearch
+import androidx.compose.material.icons.filled.DocumentScanner
 import androidx.compose.material.icons.filled.KeyboardReturn
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Save
@@ -30,11 +32,15 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -78,32 +84,153 @@ fun SettingScreen(
                 )
                 .border(width = 1.dp, Color.Black, shape = RoundedCornerShape(25.dp))
         ){
-            Column(
-                modifier = Modifier.padding(start = 15.dp, end = 15.dp,top=20.dp, bottom = 20.dp)
+            Row(
+                modifier = Modifier.padding(start = 15.dp, end = 15.dp,top=20.dp, bottom = 20.dp).fillMaxWidth()
             ) {
-                Text(
+                /*Text(
                     text = "Conexión con SAP",
                     style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold),
                     modifier = Modifier.padding(bottom = 16.dp)
-                )
+                )*/
+                Column(){
                 OutlinedTextField(
                     value = dataUiState.urlExt,
                     onValueChange = { viewModel.changeUrlExt(it) },
                     label = { Text("URL externa") },
                     trailingIcon = { Icon(imageVector = dataUiState.iconExt, contentDescription = "emailIcon") },
                     modifier = Modifier
-                        .fillMaxWidth()
                         .padding(bottom = 16.dp)
+                        .width(250.dp)
                 )
+
                 OutlinedTextField(
-                    value = dataUiState.urlInt,
-                    onValueChange = { viewModel.changeUrlInt(it) },
-                    label = { Text("URL interna") },
+                    //TODO
+                    value = dataUiState.puertoExterno,
+                    onValueChange = { viewModel.changePuertoExterno(it) },
+                    label = { Text("Puerto externo") },
                     trailingIcon = { Icon(imageVector = dataUiState.iconInt, contentDescription = "emailIcon") },
                     modifier = Modifier
-                        .fillMaxWidth()
                         .padding(bottom = 16.dp)
+                        .width(250.dp)
                 )
+
+                OutlinedTextField(
+                    value = dataUiState.urlExtPDF,
+                    onValueChange = { viewModel.changeUrlExtPDF(it) },
+                    label = { Text("URL externa PDF") },
+                    trailingIcon = { Icon(imageVector = dataUiState.iconExt, contentDescription = "emailIcon") },
+                    modifier = Modifier
+                        .padding(bottom = 16.dp)
+                        .width(250.dp)
+                )
+
+                OutlinedTextField(
+                    //TODO
+                    value = dataUiState.puertoExternoPDF,
+                    onValueChange = { viewModel.changePuertoExternoPDF(it) },
+                    label = { Text("Puerto externo PDF") },
+                    trailingIcon = { Icon(imageVector = dataUiState.iconInt, contentDescription = "emailIcon") },
+                    modifier = Modifier
+                        .padding(bottom = 16.dp)
+                        .width(250.dp)
+                )
+
+                    OutlinedTextField(
+                        //TODO
+                        value = dataUiState.codePDF,
+                        onValueChange = { viewModel.changeCodePDF(it) },
+                        label = { Text("Código PDF") },
+                        trailingIcon = { Icon(imageVector = Icons.Default.DocumentScanner, contentDescription = "emailIcon") },
+                        modifier = Modifier
+                            .padding(bottom = 16.dp)
+                            .width(250.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(10.dp))
+
+                Column() {
+
+                    OutlinedTextField(
+                        value = dataUiState.urlInt,
+                        onValueChange = { viewModel.changeUrlInt(it) },
+                        label = { Text("URL interna") },
+                        trailingIcon = {
+                            Icon(
+                                imageVector = dataUiState.iconInt,
+                                contentDescription = "emailIcon"
+                            )
+                        },
+                        modifier = Modifier
+                            .padding(bottom = 16.dp)
+                            .width(250.dp)
+                    )
+
+                    OutlinedTextField(
+                        //TODO
+                        value = dataUiState.puertoInterno,
+                        onValueChange = { viewModel.changePuertoInterno(it) },
+                        label = { Text("Puerto interno PDF") },
+                        trailingIcon = {
+                            Icon(
+                                imageVector = dataUiState.iconInt,
+                                contentDescription = "emailIcon"
+                            )
+                        },
+                        modifier = Modifier
+                            .padding(bottom = 16.dp)
+                            .width(250.dp)
+                    )
+
+                    OutlinedTextField(
+                        value = dataUiState.urlIntPDF,
+                        onValueChange = { viewModel.changeUrlIntPDF(it) },
+                        label = { Text("URL interna PDF") },
+                        trailingIcon = {
+                            Icon(
+                                imageVector = dataUiState.iconInt,
+                                contentDescription = "emailIcon"
+                            )
+                        },
+                        modifier = Modifier
+                            .padding(bottom = 16.dp)
+                            .width(250.dp)
+                    )
+
+                    OutlinedTextField(
+                        //TODO
+                        value = dataUiState.puertoInternoPDF,
+                        onValueChange = { viewModel.changePuertoInternoPDF(it) },
+                        label = { Text("Puerto interno") },
+                        trailingIcon = {
+                            Icon(
+                                imageVector = dataUiState.iconInt,
+                                contentDescription = "emailIcon"
+                            )
+                        },
+                        modifier = Modifier
+                            .padding(bottom = 16.dp)
+                            .width(250.dp)
+                    )
+
+                    Row(){
+                        var selectedOption by remember { mutableStateOf("Option 1") }
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            RadioButton(
+                                selected = selectedOption == "Option 1",
+                                onClick = { selectedOption = "Option 1" }
+                            )
+                            Text(text = "Interna", modifier = Modifier.padding(start = 8.dp))
+                        }
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            RadioButton(
+                                selected = selectedOption == "Option 2",
+                                onClick = { selectedOption = "Option 2" }
+                            )
+                            Text(text = "Externa", modifier = Modifier.padding(start = 8.dp))
+                        }
+                    }
+                }
 
             }
         }

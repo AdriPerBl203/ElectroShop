@@ -35,10 +35,10 @@ import com.AG_AP.electroshop.screens.SettingScreen
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppNav(navController: NavHostController = rememberNavController(), context: Context) {
-    /* Starts with Login Screen */
+    /* Starts with Login Screen Routes.ScreenLogin.route */
     NavHost(
         navController = navController,
-        startDestination = Routes.ScreenLogin.route
+        startDestination = Routes.ScreenMenu.route
     ) {
         /* Login Screen */
         composable(

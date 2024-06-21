@@ -80,10 +80,68 @@ class SettingsViewModel : ViewModel() {
         }
     }
 
+    fun changePuertoExterno(data: String) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                puertoExterno = data
+            )
+        }
+    }
+
+    fun changeUrlExtPDF(data: String) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                urlExtPDF = data
+            )
+        }
+    }
+
+    fun changePuertoExternoPDF(data: String) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                puertoExternoPDF = data
+            )
+        }
+    }
+
+    fun changePuertoInternoPDF(data: String) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                puertoInternoPDF = data
+            )
+        }
+    }
+
+    fun changeUrlIntPDF(data: String) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                urlIntPDF = data
+            )
+        }
+    }
+
+
+
+    fun changePuertoInterno(data: String) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                puertoInterno = data
+            )
+        }
+    }
+
     fun urlInt(data: String) {
         _uiState.update { currentState ->
             currentState.copy(
                 urlInt = data
+            )
+        }
+    }
+
+    fun changeCodePDF(it: String) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                codePDF = it
             )
         }
     }
@@ -134,10 +192,22 @@ class SettingsViewModel : ViewModel() {
         var login = _uiState.value.login
         var password = _uiState.value.password
         val dataBase = _uiState.value.dataBase
+        val codePDF = _uiState.value.codePDF
         var textShow = ""
 
-        if (urlInt.isEmpty() || urlExt.isEmpty() || login.isEmpty() || password.isEmpty() || dataBase.isEmpty()) {
-            textShow = "Todos los campos deben de estar rellenos."
+        val puertoInterno = _uiState.value.puertoInterno
+        val puertoExterno = _uiState.value.puertoExterno
+
+        val urlIntPDF = _uiState.value.urlIntPDF
+        val urlExtPDF = _uiState.value.urlExtPDF
+        val puertoInternoPDF = _uiState.value.puertoInternoPDF
+        val puertoExternoPDF = _uiState.value.puertoExternoPDF
+
+        val urlIntTest: String = "https://$urlInt:$puertoInterno/"
+        val urlExtTest: String = "https://$urlExt:$puertoExterno/"
+
+        if (urlInt.isEmpty() || puertoInterno.isEmpty() || urlIntPDF.isEmpty() || puertoInternoPDF.isEmpty() || codePDF.isEmpty()) {
+            textShow = "Faltan campos de la configuración interna"
             _uiState.update { currentState ->
                 currentState.copy(
                     message = true,
@@ -147,8 +217,20 @@ class SettingsViewModel : ViewModel() {
             return;
         }
 
-        if (!validarURL(urlInt) || !validarURL(urlExt)) {
-            textShow = "Campos de las URL no validos."
+        if (urlExt.isEmpty() || puertoExterno.isEmpty() || urlExtPDF.isEmpty() || puertoExternoPDF.isEmpty() || codePDF.isEmpty()) {
+            textShow = "Faltan campos de la configuración externa"
+            _uiState.update { currentState ->
+                currentState.copy(
+                    message = true,
+                    text = textShow
+                )
+            }
+            return;
+        }
+
+        //TODO añadir codePDF cuando se incorpore el PDF
+        if (login.isEmpty() || password.isEmpty() || dataBase.isEmpty() || codePDF.isEmpty()) {
+            textShow = "Campos de configuración no rellenos"
             _uiState.update { currentState ->
                 currentState.copy(
                     message = true,
@@ -166,46 +248,93 @@ class SettingsViewModel : ViewModel() {
                 )
             }
             val dataLogin = Login(dataBase, password, login)
-            val data = LoginObj.loginAcessTwoversion(dataLogin, urlInt)
+            val data = LoginObj.loginAcessTwoversion(dataLogin, urlIntTest)
             var dataUrlExt: Boolean = false
-            var urlCheck: String = urlInt
+            var urlCheck: String = urlIntTest
             var urlCheckTip: String = "Int"
+            // 21/06/24
+            //configuración a guardar.
+            _uiState.value.ipORNombre = urlInt
+            _uiState.value.puerto = puertoInterno
+            _uiState.value.ipORNombrePDF = urlIntPDF
+            _uiState.value.puertoPDF = puertoInternoPDF
+            _uiState.value.codigoPDF = codePDF
             if (!data) {
-                dataUrlExt = LoginObj.loginAcessTwoversion(dataLogin, urlExt)
-                urlCheck = urlExt
+                dataUrlExt = LoginObj.loginAcessTwoversion(dataLogin, urlExtTest)
+                urlCheck = urlExtTest
                 urlCheckTip = "Ext"
+                // 21/06/24
+                //configuración a guardar.
+                _uiState.value.ipORNombre = urlExt
+                _uiState.value.puerto = puertoExterno
+                _uiState.value.ipORNombrePDF = urlExtPDF
+                _uiState.value.puertoPDF = puertoExternoPDF
+                _uiState.value.codigoPDF = codePDF
             }
             var text: String = ""
             Log.e("SettingScreen", "Conexión realizada")
             //LoginObj.logout(urlInt)
             if (data || dataUrlExt) {
+                Config.codePDF = codePDF
                 text = "Test realizado con éxito."
                 if (data) {
+                    //TODO test PDF añadi los campos que son necesarios.
+                    testApiGateway(urlIntPDF,puertoInternoPDF);
+                    val checkCode: Boolean = testApiGatewayCode(codePDF);
+
+                    if(checkCode){
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                message = true,
+                                text = text,
+                                progress = false,
+                                ButtomEnable = true,
+                                urlCheck = urlCheck,
+                                urlTipCheck = urlCheckTip,
+                                iconInt = Icons.Default.CheckCircle,
+                                iconExt = Icons.Default.Cancel
+                            )
+                        }
+
+                    }else{
+                    text = "Código de PDF no valido."
                     _uiState.update { currentState ->
                         currentState.copy(
                             message = true,
                             text = text,
-                            progress = false,
-                            ButtomEnable = true,
-                            urlCheck = urlCheck,
-                            urlTipCheck = urlCheckTip,
-                            iconInt = Icons.Default.CheckCircle,
-                            iconExt = Icons.Default.Cancel
+                            progress = false
                         )
                     }
+                }
                     LoginObj.logout(urlInt)
                 } else if (dataUrlExt) {
-                    _uiState.update { currentState ->
-                        currentState.copy(
-                            message = true,
-                            text = text,
-                            progress = false,
-                            ButtomEnable = true,
-                            urlCheck = urlCheck,
-                            urlTipCheck = urlCheckTip,
-                            iconExt = Icons.Default.CheckCircle,
-                            iconInt = Icons.Default.Cancel
-                        )
+                    //TODO test PDF añadi los campos que son necesarios.
+                    testApiGateway(urlExtPDF, puertoExternoPDF);
+                    val checkCode: Boolean = testApiGatewayCode(codePDF);
+
+                    if(checkCode){
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                message = true,
+                                text = text,
+                                progress = false,
+                                ButtomEnable = true,
+                                urlCheck = urlCheck,
+                                urlTipCheck = urlCheckTip,
+                                iconExt = Icons.Default.CheckCircle,
+                                iconInt = Icons.Default.Cancel
+                            )
+                        }
+
+                    }else{
+                        text = "Código de PDF no valido."
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                message = true,
+                                text = text,
+                                progress = false
+                            )
+                        }
                     }
                     LoginObj.logout(urlExt)
                 }
@@ -221,6 +350,19 @@ class SettingsViewModel : ViewModel() {
             }
         }
     }
+
+    suspend fun testApiGateway(cuerpo: String, puerto: String) {
+        //TODO test
+        var login = _uiState.value.login
+        var password = _uiState.value.password
+        val dataBase = _uiState.value.dataBase
+        val dataLogin = Login(dataBase, password, login)
+        val urlIntTest:String = "https://$cuerpo:$puerto/"
+        val data = LoginObj.loginAcessGateway(dataLogin, urlIntTest)
+
+    }
+
+    suspend fun testApiGatewayCode(code: String) = ExportToPDFObj.checkExporToPDF(code)
 
     fun menssageFunFalse() {
         _uiState.update { currentState ->
@@ -512,9 +654,9 @@ class SettingsViewModel : ViewModel() {
             deleteAndInsertSpecialPrice() // correcta
             deleteAndInsertPriceList() // correcta
             deleteAndInsertInvoice()
-            if(_uiState.value.checkBoxItems){
+            if (_uiState.value.checkBoxItems) {
                 deleteAndInsertItem()// Correcta
-            }else{
+            } else {
                 _uiState.update { currentState ->
                     currentState.copy(
                         checkItem = true
@@ -522,9 +664,9 @@ class SettingsViewModel : ViewModel() {
                 }
             }
 
-            if(_uiState.value.checkBoxUDO){
+            if (_uiState.value.checkBoxUDO) {
                 deleteAndInsertUserUdo() // revisado
-            }else{
+            } else {
                 _uiState.update { currentState ->
                     currentState.copy(
                         checkUserUdo = true
@@ -532,27 +674,27 @@ class SettingsViewModel : ViewModel() {
                 }
             }
 
-            if(_uiState.value.checkBoxClients){
+            if (_uiState.value.checkBoxClients) {
                 deleteAndInsertBusinessPartner() // revisado
-            }else{
+            } else {
                 _uiState.update { currentState ->
                     currentState.copy(
                         checkBusinessPartner = true
                     )
                 }
             }
-            if(_uiState.value.checkBoxActivity){
+            if (_uiState.value.checkBoxActivity) {
                 deleteAndInsertActivity() // revisado
-            }else{
+            } else {
                 _uiState.update { currentState ->
                     currentState.copy(
                         checkActivity = true
                     )
                 }
             }
-            if(_uiState.value.checkBoxOrders){
+            if (_uiState.value.checkBoxOrders) {
                 deleteAndInsertOrders() //
-            }else{
+            } else {
                 _uiState.update { currentState ->
                     currentState.copy(
                         checkOrder = true
@@ -577,7 +719,7 @@ class SettingsViewModel : ViewModel() {
 
                 data.value.forEach { it ->
                     var cardCode = it.CardCode
-                    var DocNum= it.DocNum
+                    var DocNum = it.DocNum
                     var docEntry = it.DocEntry.toString()
                     var data: DataPostExportToPDF = DataPostExportToPDF()
                     data.add(
@@ -594,7 +736,7 @@ class SettingsViewModel : ViewModel() {
                             listOf(listOf("13"))
                         )
                     )
-                    var response: Response<ResponseBody>? = ExportToPDFObj.postExporToPDF(data)
+                    var response: Response<ResponseBody>? = ExportToPDFObj.postExporToPDF(data,Config.codePDF)
                     if (response != null && response.isSuccessful) {
                         val responseBody: ResponseBody? = response.body()
                         if (responseBody != null) {
@@ -617,7 +759,7 @@ class SettingsViewModel : ViewModel() {
                 //Fin de la conexión
                 LoginObj.logoutGateway(Config.rulUse)
                 _uiState.value.checkInvoices = true
-            }else{
+            } else {
                 _uiState.value.checkInvoices = true
             }
 
@@ -842,8 +984,29 @@ class SettingsViewModel : ViewModel() {
         val dataBase = _uiState.value.dataBase
         val url = _uiState.value.urlCheck
         val urlTipCheck = _uiState.value.urlTipCheck
+
+        //TODO nuevos datos, borrar los otro cuando funcionen estos
+
+        val ipORNombre: String = _uiState.value.ipORNombre
+        val puerto: String = _uiState.value.puerto
+        val ipORNombrePDF: String = _uiState.value.ipORNombrePDF
+        val puertoPDF: String = _uiState.value.puertoPDF
+        val codigoPDF: String = _uiState.value.codePDF
+
+
         val dataConfiguration =
-            ConfigurationApplication(login, password, dataBase, url, urlTipCheck)
+            ConfigurationApplication(
+                login,
+                password,
+                dataBase,
+                url,
+                urlTipCheck,
+                ipORNombre,
+                puerto,
+                ipORNombrePDF,
+                puertoPDF,
+                codigoPDF
+            )
         val gson = Gson()
         val jsonData: String = gson.toJson(dataConfiguration)
 
@@ -875,20 +1038,28 @@ class SettingsViewModel : ViewModel() {
                 _uiState.update { currentState ->
 
                     currentState.copy(
-                        urlInt = dataConfig.url,
+                        urlInt = dataConfig.ipORNombre,
+                        puertoInterno = dataConfig.puerto,
                         login = dataConfig.login,
                         password = dataConfig.password,
                         dataBase = dataConfig.dataBase,
+                        codePDF = dataConfig.codigoPDF,
+                        urlIntPDF= dataConfig.ipORNombrePDF,
+                        puertoInternoPDF= dataConfig.puertoPDF,
                         init = false
                     )
                 }
             } else if (dataConfig.urlTipCheck == "Ext") {
                 _uiState.update { currentState ->
                     currentState.copy(
-                        urlExt = dataConfig.url,
+                        urlExt = dataConfig.ipORNombre,
+                        puertoExterno = dataConfig.puerto,
                         login = dataConfig.login,
                         password = dataConfig.password,
                         dataBase = dataConfig.dataBase,
+                        codePDF = dataConfig.codigoPDF,
+                        urlExtPDF= dataConfig.ipORNombrePDF,
+                        puertoExternoPDF = dataConfig.puertoPDF,
                         init = false
                     )
                 }
