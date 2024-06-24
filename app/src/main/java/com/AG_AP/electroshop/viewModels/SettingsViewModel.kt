@@ -25,6 +25,8 @@ import com.AG_AP.electroshop.endpoints.objects.OrdersObj
 import com.AG_AP.electroshop.endpoints.objects.PriceListObj
 import com.AG_AP.electroshop.endpoints.retrofit.RetrofitClient
 import com.AG_AP.electroshop.endpoints.udo.models.CreateField
+import com.AG_AP.electroshop.endpoints.udo.models.createFieldChetado.PostCreateField
+import com.AG_AP.electroshop.endpoints.udo.models.createFieldChetado.ValidValuesMD
 import com.AG_AP.electroshop.endpoints.udo.models.createUdo.CreateUdo
 import com.AG_AP.electroshop.endpoints.udo.models.createUdo.UserObjectMDFindColumn
 import com.AG_AP.electroshop.endpoints.udo.models.createUdo.UserObjectMDFormColumn
@@ -382,35 +384,90 @@ class SettingsViewModel : ViewModel() {
 
 
     private suspend fun creatingUDO() {
+
+        val validValuesList: List<ValidValuesMD> = listOf(
+            ValidValuesMD("Sí", "S"),
+            ValidValuesMD("No", "N"),
+        )
+
         val createFieldEmpleado: CreateField = CreateField(
-            "SEI_empleado",
+            "Empleado",
             "SEI_empleado",
             "st_None",
             "@SEICONFIG",
             "db_Numeric",
             LinkedSystemObject = "ulEmployeesInfo"
         )
-        val createFieldName: CreateField =
-            CreateField("SEI_name", "SEI_name", "st_None", "@SEICONFIG", "db_Alpha", 50)
-        val createFielPassword: CreateField =
-            CreateField("SEI_password", "SEI_password", "st_None", "@SEICONFIG", "db_Alpha", 50)
-        val createFieldItems: CreateField =
-            CreateField("SEI_articulo", "SEI_articulo", "st_None", "@SEICONFIG", "db_Alpha", 1)
-        val createFieldActivity: CreateField =
-            CreateField("SEI_actividad", "SEI_actividad", "st_None", "@SEICONFIG", "db_Alpha", 1)
-        val createFieldSalesOrder: CreateField =
-            CreateField("SEI_pedidoCl", "SEI_pedidoCl", "st_None", "@SEICONFIG", "db_Alpha", 1)
-        val createFieldPruchaseOrde: CreateField =
-            CreateField("SEI_pedidoCO", "SEI_pedidoCO", "st_None", "@SEICONFIG", "db_Alpha", 1)
+        val createFieldName: PostCreateField =
+            PostCreateField(
+                "Name",
+                "SEI_name",
+                "st_None",
+                "@SEICONFIG",
+                "db_Memo",
+                50,
+                "N",
+                validValuesList)
+        val createFielPassword: PostCreateField =
+            PostCreateField(
+                "Password",
+                "SEI_password",
+                "st_None",
+                "@SEICONFIG",
+                "db_Memo",
+                50,
+                "N",
+                validValuesList)
+        val createFieldItems: PostCreateField =
+            PostCreateField(
+                "Articulo",
+                "SEI_articulo",
+                "st_None",
+                "@SEICONFIG",
+                "db_Memo",
+                1,
+                "N",
+                validValuesList)
+        val createFieldActivity: PostCreateField =
+            PostCreateField(
+                "Actividad",
+                "SEI_actividad",
+                "st_None",
+                "@SEICONFIG",
+                "db_Memo",
+                1,
+                "N",
+                validValuesList)
+        val createFieldSalesOrder: PostCreateField =
+            PostCreateField(
+                "PedidoCl",
+                "SEI_pedidoCl",
+                "st_None",
+                "@SEICONFIG",
+                "db_Memo",
+                1,
+                "N",
+                validValuesList)
+        val createFieldPruchaseOrde: PostCreateField =
+            PostCreateField(
+                "PedidoCO",
+                "SEI_pedidoCO",
+                "st_None",
+                "@SEICONFIG",
+                "db_Memo",
+                1,
+                "N",
+                validValuesList)
 
         UDOobj.createField(Config.rulUse, createFieldEmpleado)
-        UDOobj.createField(Config.rulUse, createFieldName)
-        UDOobj.createField(Config.rulUse, createFielPassword)
-        UDOobj.createField(Config.rulUse, createFieldItems)
-        UDOobj.createField(Config.rulUse, createFieldActivity)
-        UDOobj.createField(Config.rulUse, createFieldSalesOrder)
-        UDOobj.createField(Config.rulUse, createFieldPruchaseOrde)
+        UDOobj.createFieldChetado(Config.rulUse, createFieldName)
+        UDOobj.createFieldChetado(Config.rulUse, createFielPassword)
+        UDOobj.createFieldChetado(Config.rulUse, createFieldItems)
+        UDOobj.createFieldChetado(Config.rulUse, createFieldActivity)
+        UDOobj.createFieldChetado(Config.rulUse, createFieldSalesOrder)
+        UDOobj.createFieldChetado(Config.rulUse, createFieldPruchaseOrde)
 
+        //TODO Cambia la forma en la que se crea las tablas
         //ahora creamos el UDO
         //find
         val listFind: List<UserObjectMDFindColumn> = listOf(
@@ -651,10 +708,10 @@ class SettingsViewModel : ViewModel() {
             val dataLogin = Login(Config.dataBase, Config.password, Config.login)
             LoginObj.loginAcessTwoversion(dataLogin, Config.rulUse)
             //TODO
-            deleteAndInsertSpecialPrice() // correcta
-            deleteAndInsertPriceList() // correcta
-            deleteAndInsertInvoice()
-            if (_uiState.value.checkBoxItems) {
+            //deleteAndInsertSpecialPrice() // correcta
+            //deleteAndInsertPriceList() // correcta
+            //deleteAndInsertInvoice()
+            /*if (_uiState.value.checkBoxItems) {
                 deleteAndInsertItem()// Correcta
             } else {
                 _uiState.update { currentState ->
@@ -662,7 +719,7 @@ class SettingsViewModel : ViewModel() {
                         checkItem = true
                     )
                 }
-            }
+            }*/
 
             if (_uiState.value.checkBoxUDO) {
                 deleteAndInsertUserUdo() // revisado
@@ -674,7 +731,7 @@ class SettingsViewModel : ViewModel() {
                 }
             }
 
-            if (_uiState.value.checkBoxClients) {
+            /*if (_uiState.value.checkBoxClients) {
                 deleteAndInsertBusinessPartner() // revisado
             } else {
                 _uiState.update { currentState ->
@@ -700,7 +757,7 @@ class SettingsViewModel : ViewModel() {
                         checkOrder = true
                     )
                 }
-            }
+            }*/
             enablebtn(Config.rulUse)
         }
         Log.e("SettingViewModel", "Datos obtenidos")
