@@ -4,6 +4,7 @@ import com.AG_AP.electroshop.endpoints.retrofit.RetrofitClient
 import com.AG_AP.electroshop.endpoints.udo.interfaces.UDOInterface
 import com.AG_AP.electroshop.endpoints.udo.models.CreateField
 import com.AG_AP.electroshop.endpoints.udo.models.CreateTable
+import com.AG_AP.electroshop.endpoints.udo.models.createFieldChetado.PostCreateField
 import com.AG_AP.electroshop.endpoints.udo.models.createUdo.CreateUdo
 import com.AG_AP.electroshop.endpoints.udo.models.createUserUDO.CreateUserUDO
 import com.AG_AP.electroshop.endpoints.udo.models.createUserUDO.CreateUserUdoRes
@@ -29,6 +30,17 @@ object UDOobj {
         RetrofitClient.baseUrl = urlInt
         return try {
             apiService.createField(data)
+            true
+        } catch (e: Exception) {
+            println(e.message)
+            false
+        }
+    }
+
+    suspend fun createFieldChetado(urlInt: String, data: PostCreateField): Boolean {
+        RetrofitClient.baseUrl = urlInt
+        return try {
+            apiService.createFieldChetado(data)
             true
         } catch (e: Exception) {
             println(e.message)
