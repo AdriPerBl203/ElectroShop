@@ -506,7 +506,7 @@ class SettingsViewModel : ViewModel() {
                 "tNO",
                 "tYES",
                 "SEICONFIG",
-                2048,
+                43525,
                 12,
                 "SEICONFIG"
             )
